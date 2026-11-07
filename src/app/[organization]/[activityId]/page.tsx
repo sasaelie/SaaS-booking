@@ -21,7 +21,11 @@ export default async function ActivityPage({
   });
   return (
     <main>
-      {result.ok ? <IceBookingWidget data={result.value} /> : <p>{UI_MESSAGES.UNAVAILABLE}</p>}
+      {result.ok ? (
+        <IceBookingWidget key={result.value.activityId} data={result.value} />
+      ) : (
+        <p>{UI_MESSAGES.UNAVAILABLE}</p>
+      )}
     </main>
   );
 }

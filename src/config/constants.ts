@@ -196,3 +196,4 @@ export const HTTP_STATUS = {
 } as const;
 
 export { HTTP_LIMITS } from './http-limits';
+export { BOOKING_UI, CALENDAR_UI } from './booking-ui';

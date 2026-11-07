@@ -5,16 +5,20 @@ Version : branche `fix/booking-integrity`, 7 novembre 2026. Base de comparaison 
 ## Résultats mesurés
 
 - Installation `npm ci` dans un dossier vide : réussie, sans contournement des peer dependencies.
-- `npm run verify` : réussi ; TypeScript strict et ESLint sans erreur, 27 tests unitaires réussis dans sept fichiers.
+- `npm run verify` : réussi ; TypeScript strict et ESLint sans erreur, 29 tests unitaires réussis dans huit fichiers.
 - `npm run test:integration` : 24 tests réussis dans six fichiers, sur PostgreSQL 17 local isolé, avec plusieurs connexions réelles.
 - `npm run build` : réussi avec Next.js 16.4.5, sans clé de production.
-- `npm run test:e2e` : parcours Chromium réussi (formulaire → Server Action → PostgreSQL → confirmation) avec un client fictif ; une seule réservation confirmée et montant encaissé nul en mode NONE.
+- `npm run test:e2e` : trois scénarios Chromium réussis sur le build de production local : réservation réelle (formulaire → Server Action → PostgreSQL → confirmation), navigation mobile au clavier avec conservation des coordonnées, et réaction du récapitulatif à des réponses API de report valides ou invalides. Une seule réservation confirmée et montant encaissé nul en mode NONE.
 - `npm audit --json` : zéro vulnérabilité signalée dans l’arbre résolu, dépendances de développement incluses, au moment du contrôle.
 - Règles automatiques : zéro `any`/`@ts-ignore`, frontières de couches, 200 lignes maximum par fichier TypeScript et 40 par fonction. Les fichiers générés tels que le lockfile suivent leur format standard.
 
 ## Scénarios SQL couverts
 
 Dix réservations simultanées pour cinq places ; dix répétitions de la même demande ; changement de contenu sous une même clé ; isolation d’organisation ; CGV obsolètes ; distinction confirmation/encaissement ; événement Stripe répété et identité financière invalide ; remboursement durable après collision ; émission unique d’un report ; réservation moins chère avec report ; rollback si séance pleine ; échange externe ; ancien paiement après réutilisation d’un report ; fermeture avec confirmation ; blocage déjà expiré ; reprise de tâches ; décision bancaire et purge ; respect du réglage de conservation des justificatifs ; revalidation de capacité après expiration ; pause protégée ; effacement réel des coordonnées et protection de la conservation comptable dans la transaction.
+
+## Interface
+
+La refonte est documentée dans [INTERFACE.md](INTERFACE.md), avec des captures Chromium à 1440 et 390 pixels de large. Les tests de calendrier vérifient les jours locaux, le changement d’année et les années bissextiles. La simulation du devis de report dans le test navigateur porte sur le comportement du formulaire ; les transactions réelles de consommation du report sont couvertes séparément par les tests PostgreSQL.
 
 ## Conditions des contrôles
 

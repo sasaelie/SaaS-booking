@@ -1,34 +1,25 @@
-'use client';
-import { FORM_LABELS, INPUT_LIMITS } from '../../config/constants';
-import { formatMoney } from './format-money';
-import { useVoucherQuote } from './use-voucher-quote';
-interface Props {
-  readonly organizationId: string;
-  readonly activityId: string;
-  readonly currency: string;
-}
-export function VoucherField(props: Props) {
-  const quote = useVoucherQuote(props);
+import { useEffect, useId, useRef } from 'react';
+import { BOOKING_UI } from '../../config/constants';
+import type { useVoucherQuote } from './use-voucher-quote';
+import { IceIcon } from './IceIcon';
+import { VoucherInput } from './VoucherInput';
+export function VoucherField({ quote }: { readonly quote: ReturnType<typeof useVoucherQuote> }) {
+  const id = useId();
+  const details = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    if (quote.code && details.current) details.current.open = true;
+  }, [quote.code]);
   return (
-    <section>
-      <label>
-        {FORM_LABELS.VOUCHER}
-        <input
-          className="ice-slot-pebble"
-          name="voucherCode"
-          value={quote.code}
-          maxLength={INPUT_LIMITS.KEY_MAX}
-          onChange={(event) => quote.change(event.target.value)}
-          onBlur={quote.verify}
-        />
-      </label>
-      <button type="button" className="liquid-ice-button" onClick={quote.verify}>
-        Vérifier le code
-      </button>
-      <p role="status">
-        {quote.message}
-        {quote.remaining !== null ? ` : ${formatMoney(quote.remaining, props.currency)}` : ''}
+    <details ref={details} className="ice-voucher">
+      <summary>
+        <IceIcon name="ticket" />
+        {BOOKING_UI.VOUCHER_PROMPT}
+        <span aria-hidden="true">+</span>
+      </summary>
+      <VoucherInput quote={quote} id={id} />
+      <p id={`${id}-status`} className="ice-hint" role="status">
+        {quote.message || (quote.code ? BOOKING_UI.VOUCHER_REVIEW : '')}
       </p>
-    </section>
+    </details>
   );
 }

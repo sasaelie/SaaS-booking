@@ -9,11 +9,11 @@ export function BookingTerms({ terms }: { readonly terms: BookingPageData['terms
       </details>
       <label className="ice-check">
         <input name="acceptedAgeAttestation" type="checkbox" required />
-        {terms.ageAttestationLabel}
+        <span>{terms.ageAttestationLabel}</span>
       </label>
       <label className="ice-check">
         <input name="acceptedTerms" type="checkbox" required />
-        {FORM_LABELS.TERMS}
+        <span>{FORM_LABELS.TERMS}</span>
       </label>
     </section>
   );

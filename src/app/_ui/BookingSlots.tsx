@@ -1,43 +1,28 @@
-import { DEFAULTS, FORM_LABELS } from '../../config/constants';
-import type { BookingPageData } from '../../core/use-cases/get-booking-page.use-case';
-interface Props {
-  readonly slots: BookingPageData['slots'];
-  readonly timezone: string;
-  readonly selected: string;
-  readonly onSelect: (value: string) => void;
-}
-export function BookingSlots({ slots, timezone, selected, onSelect }: Props) {
-  const formatter = new Intl.DateTimeFormat(DEFAULTS.LOCALE, {
-    timeZone: timezone,
-    dateStyle: 'full',
-    timeStyle: 'short',
-  });
+'use client';
+import { BOOKING_UI, FORM_LABELS } from '../../config/constants';
+import { BookingCalendar } from './BookingCalendar';
+import { useBookingCalendar, type BookingSlotsProps } from './use-booking-calendar';
+import { BookingTimes } from './BookingTimes';
+export function BookingSlots(props: BookingSlotsProps) {
+  const calendar = useBookingCalendar(props);
+  if (!props.slots.length) return <p className="ice-empty">{FORM_LABELS.NO_SLOTS}</p>;
   return (
-    <fieldset className="ice-slots">
-      <legend>{FORM_LABELS.SLOTS}</legend>
-      {slots.length ? (
-        slots.map((slot) => (
-          <label
-            key={slot.startsAtIso}
-            className="ice-slot-pebble ice-slot"
-            data-selected={slot.startsAtIso === selected}
-          >
-            <input
-              type="radio"
-              name="startsAtIso"
-              value={slot.startsAtIso}
-              checked={slot.startsAtIso === selected}
-              onChange={() => onSelect(slot.startsAtIso)}
-              disabled={!slot.isBookable}
-              required
-            />
-            <span>{formatter.format(new Date(slot.startsAtIso))}</span>
-            <strong>{slot.availabilityLabel}</strong>
-          </label>
-        ))
-      ) : (
-        <p>{FORM_LABELS.NO_SLOTS}</p>
-      )}
-    </fieldset>
+    <div className="ice-session-picker">
+      <BookingCalendar calendar={calendar} />
+      <div className="ice-times">
+        <h3>{BOOKING_UI.HOURS}</h3>
+        <BookingTimes
+          slots={calendar.visibleSlots}
+          timezone={props.timezone}
+          selected={props.selected}
+          onSelect={props.onSelect}
+        />
+        <p className="ice-timezone">
+          {BOOKING_UI.TIMEZONE}
+          <br />
+          <strong>{props.timezone}</strong>
+        </p>
+      </div>
+    </div>
   );
 }

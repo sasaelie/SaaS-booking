@@ -34,6 +34,7 @@ export function publicBookingPage(
     requirePhone,
     primaryTextColor,
     timezone,
+    paymentMode,
   } = activity;
   return {
     organizationId,
@@ -46,6 +47,7 @@ export function publicBookingPage(
     requirePhone,
     primaryTextColor,
     timezone,
+    paymentMode,
     terms,
     slots: schedule.map((session) => ({
       startsAtIso: session.startsAt.toISOString(),

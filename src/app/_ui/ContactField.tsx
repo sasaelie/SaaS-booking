@@ -1,4 +1,4 @@
-import type { HTMLInputTypeAttribute } from 'react';
+import { useId, type HTMLInputTypeAttribute } from 'react';
 interface Props {
   readonly label: string;
   readonly name: string;
@@ -7,13 +7,24 @@ interface Props {
   readonly required?: boolean;
   readonly minLength?: number;
   readonly maxLength?: number;
+  readonly hint?: string;
 }
 export function ContactField(props: Props) {
-  const { label, ...input } = props;
+  const { label, hint, ...input } = props;
+  const id = useId();
   return (
-    <label>
-      {label}
-      <input className="ice-slot-pebble" {...input} />
-    </label>
+    <div className="ice-field" data-field={props.name}>
+      <label htmlFor={id}>
+        {label}
+        {props.required ? <span aria-hidden="true"> *</span> : null}
+      </label>
+      <input
+        id={id}
+        className="ice-slot-pebble"
+        aria-describedby={hint ? `${id}-hint` : undefined}
+        {...input}
+      />
+      {hint ? <small id={`${id}-hint`}>{hint}</small> : null}
+    </div>
   );
 }

@@ -1,8 +1,8 @@
 # Inventaire de la version corrigée
 
-191 fichiers versionnés, dont 143 sources sous `src/`.
+230 fichiers versionnés, dont 175 sources sous `src/`.
 
-Les responsabilités ont été découpées afin de conserver les limites de taille. Les adaptateurs PostgreSQL, Stripe, stockage privé, images, identité OIDC et tâches durables sont assemblés dans `src/composition/`. Les régressions sont réparties entre `tests/unit/`, `tests/integration/` et `tests/e2e/`.
+Les responsabilités sont réparties entre cœur, ports, adaptateurs et composition. Le widget Liquid Ice utilise des composants de calendrier, de coordonnées, de devis et de résultat. Les styles sont séparés par responsabilité ; les captures réelles se trouvent dans `docs/previews/`.
 
 ```text
 .env.example
@@ -13,10 +13,15 @@ AGENTS.md
 MANIFEST.sha256
 README.md
 docs/ARCHITECTURE.md
+docs/INTERFACE.md
 docs/INVENTAIRE.md
 docs/OPERATIONS.md
 docs/POINTS-A-COMPLETER.md
 docs/VERIFICATION.md
+docs/previews/desktop-coordonnees.png
+docs/previews/desktop-seance.png
+docs/previews/mobile-coordonnees.png
+docs/previews/mobile-seance.png
 docs/references/design-system.json
 docs/references/ice-initial.css.txt
 docs/references/session-repository-initial.ts.txt
@@ -89,18 +94,49 @@ src/adapters/payments/stripe-validation.ts
 src/adapters/storage/proof-image.adapter.ts
 src/adapters/storage/s3-proof.adapter.ts
 src/app/[organization]/[activityId]/page.tsx
+src/app/_ui/BookingBankInstructions.tsx
+src/app/_ui/BookingBrand.tsx
+src/app/_ui/BookingCalendar.tsx
+src/app/_ui/BookingCheckout.tsx
+src/app/_ui/BookingDateStep.tsx
+src/app/_ui/BookingDetails.tsx
 src/app/_ui/BookingFields.tsx
+src/app/_ui/BookingFlow.tsx
 src/app/_ui/BookingHeader.tsx
+src/app/_ui/BookingProgress.tsx
 src/app/_ui/BookingResult.tsx
+src/app/_ui/BookingSelection.tsx
 src/app/_ui/BookingSlots.tsx
 src/app/_ui/BookingTerms.tsx
+src/app/_ui/BookingTimes.tsx
+src/app/_ui/CalendarDays.tsx
+src/app/_ui/CalendarNavigation.tsx
 src/app/_ui/ContactField.tsx
 src/app/_ui/IceBookingWidget.tsx
+src/app/_ui/IceIcon.tsx
 src/app/_ui/VoucherField.tsx
+src/app/_ui/VoucherInput.tsx
+src/app/_ui/booking-calendar.css
+src/app/_ui/booking-checkout.css
+src/app/_ui/booking-fields.css
 src/app/_ui/booking-form-input.ts
+src/app/_ui/booking-picker-responsive.css
+src/app/_ui/booking-pricing.ts
+src/app/_ui/booking-responsive.css
+src/app/_ui/booking-result.css
+src/app/_ui/booking-shell.css
+src/app/_ui/booking-slots.css
+src/app/_ui/booking-steps.css
+src/app/_ui/booking-story.css
+src/app/_ui/booking-submission.ts
+src/app/_ui/booking-voucher.css
+src/app/_ui/calendar-dates.ts
+src/app/_ui/calendar-slots.ts
 src/app/_ui/contact-fields.ts
 src/app/_ui/format-money.ts
 src/app/_ui/ice-tokens.css
+src/app/_ui/use-booking-calendar.ts
+src/app/_ui/use-booking-flow.ts
 src/app/_ui/use-booking-form.ts
 src/app/_ui/use-voucher-quote.ts
 src/app/_ui/widget-layout.css
@@ -122,6 +158,7 @@ src/composition/administration.ts
 src/composition/providers.ts
 src/composition/runtime.ts
 src/composition/unavailable.ts
+src/config/booking-ui.ts
 src/config/constants.ts
 src/config/env.ts
 src/config/file-signatures.ts
@@ -177,6 +214,7 @@ src/lib/modulo97.ts
 src/lib/result.ts
 src/lib/sha256.ts
 tests/e2e/booking.spec.ts
+tests/e2e/interface.spec.ts
 tests/integration/bank-and-pause.test.ts
 tests/integration/closure-jobs.test.ts
 tests/integration/database.ts
@@ -186,6 +224,7 @@ tests/integration/payment.test.ts
 tests/integration/privacy.test.ts
 tests/integration/reservation.test.ts
 tests/integration/vouchers.test.ts
+tests/unit/calendar.test.ts
 tests/unit/foundations.test.ts
 tests/unit/http-body.test.ts
 tests/unit/proof-and-auth.test.ts

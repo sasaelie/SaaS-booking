@@ -32,6 +32,12 @@ ALLOW_DEMO_SEED=true node --env-file=.env.local --import tsx scripts/seed.ts
 
 Le script affiche le chemin de l’activité de démonstration. Cette activité confirme les réservations sans paiement en ligne et ne les marque pas comme encaissées. Un utilisateur choisit une séance, fournit ses coordonnées et accepte les conditions. Le lien de gestion permet l’annulation et le dépôt d’un justificatif selon le mode de paiement du dossier.
 
+## Interface de réservation
+
+Le widget Liquid Ice présente un calendrier compact dans le fuseau de l’organisateur, les horaires et les places disponibles. Le parcours comporte deux étapes ; le retour au calendrier conserve les coordonnées saisies. Le récapitulatif suit le devis de report serveur et distingue les confirmations sans paiement en ligne des encaissements.
+
+[Voir la refonte et les captures ordinateur/mobile](docs/INTERFACE.md).
+
 ## Fonctions et garanties techniques
 
 - Réservation sous transaction et verrou SQL, contrôle de capacité, d’organisation, de créneau et de conditions côté serveur.

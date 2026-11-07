@@ -16,13 +16,16 @@ test('books through the browser and persists exactly one unpaid confirmation', a
   await page.goto(path);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Couture');
   await page.getByRole('radio').first().check();
-  await page.getByLabel('Prénom', { exact: true }).fill('Marie');
-  await page.getByLabel('Nom', { exact: true }).fill('Test');
-  await page.getByLabel('Adresse e-mail', { exact: true }).fill(email);
-  await page.getByLabel('Téléphone', { exact: true }).fill('+32470123456');
-  await page.getByRole('checkbox').nth(1).check();
-  await page.getByRole('checkbox').nth(2).check();
-  await page.getByRole('button', { name: 'Réserver une place', exact: true }).click();
+  await page.getByRole('button', { name: 'Continuer', exact: true }).click();
+  await page.getByRole('textbox', { name: 'Prénom', exact: true }).fill('Marie');
+  await page.getByRole('textbox', { name: 'Nom', exact: true }).fill('Test');
+  await page.getByRole('textbox', { name: 'Adresse e-mail', exact: true }).fill(email);
+  await page
+    .getByRole('textbox', { name: 'Téléphone d’urgence', exact: true })
+    .fill('+32470123456');
+  await page.getByRole('checkbox', { name: /Je certifie/ }).check();
+  await page.getByRole('checkbox', { name: /J’ai lu et j’accepte/ }).check();
+  await page.getByRole('button', { name: 'Confirmer ma place', exact: true }).click();
   await expect(
     page.getByRole('status').filter({ hasText: 'Votre place est réservée.' }),
   ).toContainText('Votre place est réservée.');

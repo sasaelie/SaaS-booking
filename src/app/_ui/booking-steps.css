@@ -1,0 +1,74 @@
+.ice-progress {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 11px;
+  margin-bottom: 32px;
+}
+.ice-progress button {
+  border: 0;
+  background: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ice-progress-current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ice-quiet);
+}
+.ice-progress button > span,
+.ice-progress-current > span {
+  border: 1px solid var(--ice-line);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 9px;
+  font-weight: 600;
+}
+.ice-progress [aria-current='step'] {
+  color: var(--ui-text-primary);
+  font-weight: 650;
+}
+.ice-progress [aria-current='step'] > span {
+  background: var(--ui-text-primary);
+  color: var(--ice-paper);
+  border-color: transparent;
+}
+.ice-progress .ice-icon {
+  width: 13px;
+  height: 13px;
+}
+.ice-progress i {
+  flex: 1;
+  max-width: 40px;
+  height: 1px;
+  background: var(--ice-line);
+}
+.ice-step {
+  border: 0;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 24px;
+}
+.ice-step-heading h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin: 0 0 9px;
+  text-wrap: balance;
+}
+.ice-step-heading > p {
+  font-size: 12px;
+  color: var(--ice-quiet);
+  margin: 0;
+}
