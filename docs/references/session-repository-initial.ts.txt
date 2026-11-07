@@ -1,0 +1,18 @@
+// Première version reçue — remplacée par reserveSeatAtomically.
+import type { AppError, Result } from '../../lib/result';
+import type { PersistedSession, SessionBookingSnapshot } from '../domain/session-types';
+export interface EnsureAndLockSessionInput {
+  readonly organizationId: string;
+  readonly activityId: string;
+  readonly startsAt: Date;
+  readonly endsAt: Date;
+  readonly defaultCapacity: number;
+}
+export interface LockedSessionContext {
+  readonly session: PersistedSession;
+  readonly activeBookings: readonly SessionBookingSnapshot[];
+}
+export interface SessionRepositoryPort {
+  /** Une transaction : INSERT ON CONFLICT, SELECT FOR UPDATE, lecture des réservations. */
+  ensureAndLockSessionForBooking(input: EnsureAndLockSessionInput): Promise<Result<LockedSessionContext, AppError>>;
+}

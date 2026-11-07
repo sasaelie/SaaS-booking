@@ -1,0 +1,17 @@
+# Dépendances et constructions locales
+node_modules/
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Secrets locaux : seul le modèle est versionné
+.env
+.env.*
+!.env.example
+
+# Journaux et fichiers système
+*.log
+.DS_Store
+Thumbs.db
