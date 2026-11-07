@@ -1,31 +1,17 @@
-// src/lib/modulo97.ts
-import { ERROR_CODES } from '../config/constants';
-import { failAndLog } from './logger';
-import { ok, type AppError, type Result } from './result';
-
-export function generateStructuredCommunication(
-  sequenceNumber: number,
-): Result<string, AppError> {
+import { BANK_REFERENCE, ERROR_CODES } from '../config/constants';
+import { failure } from './errors';
+import { ok, type Result } from './result';
+export function generateStructuredCommunication(sequenceNumber: number): Result<string> {
   if (
-    !Number.isInteger(sequenceNumber) ||
+    !Number.isSafeInteger(sequenceNumber) ||
     sequenceNumber <= 0 ||
-    sequenceNumber > 9_999_999_999
-  ) {
-    return failAndLog({
-      code: ERROR_CODES.VALIDATION_FAILED,
-      module: 'Modulo97',
-      fn: 'generateStructuredCommunication',
-      cause: 'Numéro de séquence hors limites (10 chiffres max)',
-      received: String(sequenceNumber),
-      expected: 'entier entre 1 et 9999999999',
-    });
-  }
-  const baseTenDigits = String(sequenceNumber).padStart(10, '0');
-  const remainder = sequenceNumber % 97;
-  const checkDigits = String(remainder === 0 ? 97 : remainder).padStart(2, '0');
-  const fullTwelve = `${baseTenDigits}${checkDigits}`;
-  const part1 = fullTwelve.slice(0, 3);
-  const part2 = fullTwelve.slice(3, 7);
-  const part3 = fullTwelve.slice(7, 12);
-  return ok(`+++${part1}/${part2}/${part3}+++`);
+    sequenceNumber > BANK_REFERENCE.MAX_SEQUENCE
+  )
+    return failure(ERROR_CODES.VALIDATION_FAILED, 'Modulo97', 'generateStructuredCommunication');
+  const base = String(sequenceNumber).padStart(BANK_REFERENCE.BASE_LENGTH, '0');
+  const check = sequenceNumber % BANK_REFERENCE.MODULUS || BANK_REFERENCE.MODULUS;
+  const full = `${base}${String(check).padStart(BANK_REFERENCE.CHECK_LENGTH, '0')}`;
+  return ok(
+    `${BANK_REFERENCE.PREFIX}${full.slice(0, BANK_REFERENCE.PART_ONE_END)}/${full.slice(BANK_REFERENCE.PART_ONE_END, BANK_REFERENCE.PART_TWO_END)}/${full.slice(BANK_REFERENCE.PART_TWO_END)}${BANK_REFERENCE.PREFIX}`,
+  );
 }

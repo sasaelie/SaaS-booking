@@ -1,109 +1,104 @@
-// src/core/use-cases/bank-transfer-workflow.use-case.ts
-import {
-  BOOKING_STATUSES,
-  DATA_RETENTION,
-  PAYMENT_RULES,
-} from '../../config/constants';
-import { ok, type AppError, type Result } from '../../lib/result';
+import { guardUseCase } from '../../lib/guard-use-case';
+import { PAYMENT_RULES } from '../../config/constants';
+
+import { ok, type Result } from '../../lib/result';
+import { verifySelfCancelToken } from '../domain/self-service-token';
 import { validateBankProofBinary } from '../domain/proof-validator';
 import type {
-  BankTransferRepositoryPort,
   PrivateProofStoragePort,
-} from '../ports/bank-and-closure.port';
-export interface SubmitBankProofInput {
-  readonly organizationId: string;
-  readonly bookingId: string;
-  readonly fileBytes: Uint8Array;
-}
-export interface SubmitBankProofOutput {
-  readonly bookingId: string;
-  readonly status: typeof BOOKING_STATUSES.PROOF_SUBMITTED;
-  readonly storageKey: string;
-}
-export interface AdminBankDecisionInput {
-  readonly organizationId: string;
-  readonly bookingId: string;
-  readonly decision: 'APPROVE' | 'REJECT';
-}
-export interface AdminBankDecisionOutput {
-  readonly bookingId: string;
-  readonly finalStatus:
-    | typeof BOOKING_STATUSES.CONFIRMED
-    | typeof BOOKING_STATUSES.CANCELLED_BY_ORGANIZER;
-  readonly proofImagePurged: boolean;
-}
+  ProofImagePort,
+  BankTransferRepositoryPort,
+} from '../ports/bank.port';
+import type { AuthorizationPort } from '../ports/authorization.port';
 export interface BankTransferWorkflowDeps {
   readonly storagePort: PrivateProofStoragePort;
+  readonly imagePort: ProofImagePort;
   readonly bankRepo: BankTransferRepositoryPort;
+  readonly authorization: AuthorizationPort;
+  readonly secret: string;
   readonly nowProvider?: () => Date;
 }
 export class BankTransferWorkflowUseCase {
-  public constructor(private readonly deps: BankTransferWorkflowDeps) {}
-  public async submitProof(
-    input: SubmitBankProofInput,
-  ): Promise<Result<SubmitBankProofOutput, AppError>> {
-    const validatedRes = validateBankProofBinary(input.fileBytes);
-    if (!validatedRes.ok) return validatedRes;
-    const now = this.deps.nowProvider ? this.deps.nowProvider() : new Date();
-    const storageKey = `org_${input.organizationId}/booking_${input.bookingId}_${now.getTime()}.${validatedRes.value.safeExtension}`;
-    const uploadRes = await this.deps.storagePort.uploadPrivateProof({
-      storageKey,
-      bytes: input.fileBytes,
-      contentType: validatedRes.value.detectedMimeType,
-    });
-    if (!uploadRes.ok) return uploadRes;
-    const newLockExpiresAt = new Date(
-      now.getTime() + PAYMENT_RULES.BANK_TRANSFER_HOLD_HOURS * 3_600_000,
-    );
-    const attachRes = await this.deps.bankRepo.attachProofToBookingAtomically({
-      organizationId: input.organizationId,
-      bookingId: input.bookingId,
-      proofStorageKey: storageKey,
-      newLockExpiresAt,
-    });
-    if (!attachRes.ok) return attachRes;
-    return ok({
-      bookingId: input.bookingId,
-      status: BOOKING_STATUSES.PROOF_SUBMITTED,
-      storageKey,
+  constructor(private readonly deps: BankTransferWorkflowDeps) {}
+  async submitProof(input: {
+    readonly token: string;
+    readonly fileBytes: Uint8Array;
+  }): Promise<Result<{ readonly status: 'PROOF_SUBMITTED' }>> {
+    return guardUseCase('bank-transfer-workflow.use-case.ts', 'submitProof', async () => {
+      const now = this.deps.nowProvider?.() ?? new Date();
+      const token = await verifySelfCancelToken(input.token, this.deps.secret, now);
+      if (!token.ok) return token;
+      const header = validateBankProofBinary(input.fileBytes);
+      if (!header.ok) return header;
+      const image = await this.deps.imagePort.sanitize(input.fileBytes);
+      if (!image.ok) return image;
+      const storageKey = `${token.value.organizationId}/${token.value.bookingId}/${crypto.randomUUID()}.png`;
+      const cleanup = await this.deps.bankRepo.scheduleUploadCleanup({
+        ...token.value,
+        storageKey,
+        now,
+      });
+      if (!cleanup.ok) return cleanup;
+      const uploaded = await this.deps.storagePort.uploadPrivateProof({
+        storageKey,
+        bytes: image.value,
+        contentType: 'image/png',
+      });
+      if (!uploaded.ok) return uploaded;
+      const attached = await this.deps.bankRepo.attachProofToBookingAtomically({
+        ...token.value,
+        proofStorageKey: storageKey,
+        now,
+      });
+      if (!attached.ok) {
+        await this.deps.storagePort.deleteProofImmediately(storageKey);
+        return attached;
+      }
+      return ok({ status: 'PROOF_SUBMITTED' });
     });
   }
-  public async reviewByAdmin(
-    input: AdminBankDecisionInput,
-  ): Promise<Result<AdminBankDecisionOutput, AppError>> {
-    const recordRes = await this.deps.bankRepo.getBankTransferBookingForReview(
-      input.organizationId,
-      input.bookingId,
-    );
-    if (!recordRes.ok) return recordRes;
-    const record = recordRes.value;
-    const finalStatus =
-      input.decision === 'APPROVE'
-        ? BOOKING_STATUSES.CONFIRMED
-        : BOOKING_STATUSES.CANCELLED_BY_ORGANIZER;
-    const amountPaidCents =
-      input.decision === 'APPROVE' ? record.unitPriceCents : 0;
-    const shouldPurgeProof =
-      (record.autoDeleteBankProof ||
-        DATA_RETENTION.AUTO_DELETE_BANK_PROOF_ON_DECISION) &&
-      record.proofStorageKey !== null;
-    let proofImagePurged = false;
-    if (shouldPurgeProof && record.proofStorageKey !== null) {
-      const purgeRes = await this.deps.storagePort.deleteProofImmediately(
-        record.proofStorageKey,
-      );
-      if (!purgeRes.ok) return purgeRes;
-      proofImagePurged = purgeRes.value.deleted;
-    }
-    const updateRes =
-      await this.deps.bankRepo.finalizeAdminBankDecisionAtomically({
-        organizationId: input.organizationId,
-        bookingId: input.bookingId,
-        nextStatus: finalStatus,
-        amountPaidCents,
-        clearProofStorageKey: proofImagePurged,
+  async reviewByAdmin(input: {
+    readonly organizationId: string;
+    readonly bookingId: string;
+    readonly decision: 'APPROVE' | 'REJECT';
+  }): Promise<Result<void>> {
+    return guardUseCase('bank-transfer-workflow.use-case.ts', 'reviewByAdmin', async () => {
+      const auth = await this.deps.authorization.authorizeOrganizationAdmin(input.organizationId);
+      if (!auth.ok) return auth;
+      const result = await this.deps.bankRepo.finalizeAdminBankDecisionAtomically({
+        ...input,
+        now: this.deps.nowProvider?.() ?? new Date(),
       });
-    if (!updateRes.ok) return updateRes;
-    return ok({ bookingId: input.bookingId, finalStatus, proofImagePurged });
+      if (!result.ok) return result;
+      const key = result.value.proofStorageKey;
+      if (key) {
+        const purged = await this.deps.storagePort.deleteProofImmediately(key);
+        if (purged.ok)
+          await this.deps.bankRepo.acknowledgeProofDeletion(
+            input.organizationId,
+            input.bookingId,
+            key,
+          );
+      }
+      return ok(undefined);
+    });
+  }
+  async viewProof(input: {
+    readonly organizationId: string;
+    readonly bookingId: string;
+  }): Promise<Result<{ readonly presignedUrl: string }>> {
+    return guardUseCase('bank-transfer-workflow.use-case.ts', 'viewProof', async () => {
+      const auth = await this.deps.authorization.authorizeOrganizationAdmin(input.organizationId);
+      if (!auth.ok) return auth;
+      const proof = await this.deps.bankRepo.getProofForAdmin(
+        input.organizationId,
+        input.bookingId,
+      );
+      if (!proof.ok) return proof;
+      return this.deps.storagePort.getTemporaryAdminViewUrl({
+        storageKey: proof.value.storageKey,
+        expiresInSeconds: PAYMENT_RULES.PRESIGNED_URL_EXPIRY_SECONDS,
+      });
+    });
   }
 }

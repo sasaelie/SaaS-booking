@@ -1,28 +1,27 @@
-// src/app/api/webhooks/stripe/route.ts
-import { headers } from 'next/headers';
-import { NextResponse } from 'next/server';
-import { StripePaymentAdapter } from '../../../../adapters/payments/stripe-payment.adapter';
-import { HandlePaymentWebhookUseCase } from '../../../../core/use-cases/handle-stripe-webhook.use-case';
-import Stripe from 'stripe';
-const stripeSecretKey = process.env['STRIPE_SECRET_KEY'] ?? '';
-const webhookSecret = process.env['STRIPE_WEBHOOK_SECRET'] ?? '';
-const stripeClient = new Stripe(stripeSecretKey, {
-  apiVersion: '2024-06-20' as Stripe.LatestApiVersion,
-});
-const paymentGateway = new StripePaymentAdapter(stripeClient, webhookSecret);
-export async function POST(request: Request): Promise<NextResponse> {
-  const bodyText = await request.text();
-  const signatureHeader = headers().get('stripe-signature') ?? '';
-  const useCase = new HandlePaymentWebhookUseCase({
-    paymentGateway,
-    paymentRepo: {} as any, // Injection du repository Drizzle de production
-    notificationPort: {} as any, // Injection du port de notification e-mail
-  });
-  const result = await useCase.execute(bodyText, signatureHeader);
+import { boundedBody } from '../../../../lib/http-body';
+import { HTTP_STATUS } from '../../../../config/constants';
+import { runtime as runtimeServices } from '../../../../composition/runtime';
+import { ERROR_CODES, JOB_RULES } from '../../../../config/constants';
+export const runtime = 'nodejs';
+export async function POST(request: Request): Promise<Response> {
+  const services = runtimeServices();
+  if (!services.ok) return Response.json({ received: false }, { status: HTTP_STATUS.UNAVAILABLE });
+  const bytes = await boundedBody(request, JOB_RULES.MAX_WEBHOOK_BYTES);
+  if (!bytes.ok) return new Response(null, { status: HTTP_STATUS.TOO_LARGE });
+  const body = new TextDecoder().decode(bytes.value);
+  const result = await services.value.webhook.execute(
+    body,
+    request.headers.get('stripe-signature') ?? '',
+  );
   if (!result.ok)
-    return NextResponse.json(
-      { error: result.error.cause, code: result.error.code },
-      { status: 400 },
+    return Response.json(
+      { received: false },
+      {
+        status:
+          result.error.code === ERROR_CODES.UNAUTHORIZED
+            ? HTTP_STATUS.BAD_REQUEST
+            : HTTP_STATUS.INTERNAL,
+      },
     );
-  return NextResponse.json({ received: true, data: result.value });
+  return Response.json({ received: true });
 }

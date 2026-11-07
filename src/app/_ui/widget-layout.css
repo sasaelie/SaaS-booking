@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, sans-serif;
+  background: linear-gradient(140deg, rgba(var(--ice-tint-rgb), 1), rgba(var(--ice-tint-rgb), 0.5));
+  color: var(--ui-text-primary);
+}
+main {
+  max-width: 42rem;
+  margin: 3rem auto;
+  padding: 1rem;
+}
+button,
+input,
+summary {
+  font: inherit;
+}
+button,
+summary {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.ice-form {
+  display: grid;
+  gap: 1.25rem;
+}
+.ice-fields,
+.ice-slots {
+  border: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.ice-fields label {
+  display: grid;
+  gap: 0.4rem;
+}
+.ice-fields input:not([type='checkbox']) {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  color: inherit;
+}
+.ice-check {
+  display: flex !important;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 0.75rem 0;
+}
+.ice-check input {
+  margin-top: 0.25rem;
+  flex: none;
+}
+.ice-slot {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem;
+}
+.ice-slot strong {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.ice-slot:has(input:disabled) {
+  opacity: 0.55;
+}
+.ice-terms-text {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+:focus-visible {
+  outline: 3px solid var(--ui-text-primary);
+  outline-offset: 3px;
+}
+header h1 {
+  margin: 0.25rem 0 0.75rem;
+}
+a {
+  color: inherit;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}

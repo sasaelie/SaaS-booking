@@ -1,184 +1,118 @@
-// src/core/domain/voucher-engine.ts
 import {
   ERROR_CODES,
+  INPUT_LIMITS,
+  TIME,
   VOUCHER_RULES,
   VOUCHER_STATUSES,
-  type VoucherStatus,
+  VOUCHER_CODE,
+  ENCODING,
 } from '../../config/constants';
-import { failAndLog } from '../../lib/logger';
-import { ok, type AppError, type Result } from '../../lib/result';
-const UNAMBIGUOUS_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
-export interface RescheduleVoucherSnapshot {
-  readonly id: string;
-  readonly organizationId: string;
-  readonly originActivityId: string;
-  readonly originBookingId: string;
-  readonly code: string;
-  readonly initialValueCents: number;
-  readonly status: VoucherStatus;
-  readonly lockedUntil: Date | null;
-  readonly expiresAt: Date;
-}
-export interface CancellationEligibilityInput {
-  readonly sessionStartsAt: Date;
-  readonly cancelledAt: Date;
-  readonly noticeHoursRequired: number;
-  readonly amountPaidCents: number;
-  readonly adminOverride?: boolean;
-}
-export interface CancellationEligibilityOutput {
-  readonly eligibleForVoucher: boolean;
-  readonly hoursBeforeSession: number;
-  readonly voucherValueCents: number;
-}
-export interface VoucherPricingCalculation {
-  readonly targetActivityPriceCents: number;
-  readonly voucherInitialValueCents: number;
-  readonly appliedDiscountCents: number;
-  readonly remainingToPayCents: number;
-  readonly forfeitedRemainderCents: number;
-  readonly requiresOnlinePayment: boolean;
-  readonly nextVoucherStatus: VoucherStatus;
-}
-export function generateFormattedVoucherCode(
-  randomBytes: Uint8Array,
-): Result<string, AppError> {
-  const segLen = VOUCHER_RULES.CODE_SEGMENT_LENGTH;
-  const requiredBytes = segLen * 2;
-  if (randomBytes.length < requiredBytes) {
-    return failAndLog({
-      code: ERROR_CODES.VALIDATION_FAILED,
-      module: 'VoucherEngine',
-      fn: 'generateFormattedVoucherCode',
-      cause: 'Nombre d’octets aléatoires insuffisant pour générer le code',
-      received: String(randomBytes.length),
-      expected: `au moins ${requiredBytes} octets`,
-    });
-  }
-  let chars = '';
-  for (let i = 0; i < requiredBytes; i += 1) {
-    const byte = randomBytes[i] ?? 0;
-    const char =
-      UNAMBIGUOUS_ALPHABET[byte % UNAMBIGUOUS_ALPHABET.length] ?? 'A';
-    chars += char;
-  }
-  const part1 = chars.slice(0, segLen);
-  const part2 = chars.slice(segLen, segLen * 2);
-  return ok(`${VOUCHER_RULES.CODE_PREFIX}-${part1}-${part2}`);
+import { failure } from '../../lib/errors';
+import { ok, type Result } from '../../lib/result';
+import { addMonthsClamped, validDate } from './date-math';
+import type {
+  RescheduleVoucherSnapshot,
+  CancellationEligibilityInput,
+  CancellationEligibilityOutput,
+  VoucherPricingCalculation,
+} from './voucher-types';
+export type {
+  RescheduleVoucherSnapshot,
+  CancellationEligibilityInput,
+  CancellationEligibilityOutput,
+  VoucherPricingCalculation,
+} from './voucher-types';
+export function generateFormattedVoucherCode(bytes: Uint8Array): Result<string> {
+  const length = VOUCHER_RULES.CODE_SEGMENT_LENGTH * VOUCHER_CODE.SEGMENTS;
+  const ceiling =
+    Math.floor(ENCODING.BYTE_VALUES / VOUCHER_CODE.ALPHABET.length) * VOUCHER_CODE.ALPHABET.length;
+  const characters = [...bytes]
+    .filter((byte) => byte < ceiling)
+    .slice(0, length)
+    .map((byte) => VOUCHER_CODE.ALPHABET[byte % VOUCHER_CODE.ALPHABET.length])
+    .join('');
+  return characters.length === length
+    ? ok(
+        `${VOUCHER_RULES.CODE_PREFIX}-${characters.slice(0, VOUCHER_RULES.CODE_SEGMENT_LENGTH)}-${characters.slice(VOUCHER_RULES.CODE_SEGMENT_LENGTH)}`,
+      )
+    : failure(ERROR_CODES.VALIDATION_FAILED, 'Voucher', 'generateCode');
 }
 export function computeVoucherExpiryDate(
   issuedAt: Date,
-  validityMonths: number = VOUCHER_RULES.DEFAULT_VALIDITY_MONTHS,
+  months: number = VOUCHER_RULES.DEFAULT_VALIDITY_MONTHS,
 ): Date {
-  const result = new Date(issuedAt.getTime());
-  result.setUTCMonth(result.getUTCMonth() + validityMonths);
-  return result;
+  return addMonthsClamped(issuedAt, months);
 }
 export function evaluateCancellationEligibility(
   input: CancellationEligibilityInput,
-): Result<CancellationEligibilityOutput, AppError> {
-  const diffMs = input.sessionStartsAt.getTime() - input.cancelledAt.getTime();
-  const hoursBeforeSession = diffMs / 3_600_000;
-  if (diffMs <= 0 && !input.adminOverride) {
-    return failAndLog({
-      code: ERROR_CODES.VOUCHER_NOTICE_TOO_SHORT,
-      module: 'VoucherEngine',
-      fn: 'evaluateCancellationEligibility',
-      cause: 'Impossible d’annuler une séance déjà commencée ou passée',
-      received: `${hoursBeforeSession.toFixed(1)}h`,
-      expected: `>= ${input.noticeHoursRequired}h avant la séance`,
-    });
-  }
-  const meetsNotice =
-    Boolean(input.adminOverride) ||
-    hoursBeforeSession >= input.noticeHoursRequired;
-  const eligible = meetsNotice && input.amountPaidCents > 0;
+): Result<CancellationEligibilityOutput> {
+  if (
+    !validDate(input.sessionStartsAt) ||
+    !validDate(input.cancelledAt) ||
+    !Number.isSafeInteger(input.noticeHoursRequired) ||
+    input.noticeHoursRequired < 0 ||
+    !validMoney(input.amountPaidCents)
+  )
+    return failure(ERROR_CODES.VALIDATION_FAILED, 'Voucher', 'eligibility');
+  const hoursBeforeSession =
+    (input.sessionStartsAt.getTime() - input.cancelledAt.getTime()) / TIME.HOUR_MS;
+  if (hoursBeforeSession <= 0 && !input.adminOverride)
+    return failure(ERROR_CODES.VOUCHER_NOTICE_TOO_SHORT, 'Voucher', 'eligibility');
+  const eligibleForVoucher =
+    Boolean(input.adminOverride || hoursBeforeSession >= input.noticeHoursRequired) &&
+    input.amountPaidCents > 0;
   return ok({
-    eligibleForVoucher: eligible,
+    eligibleForVoucher,
     hoursBeforeSession,
-    voucherValueCents: eligible ? input.amountPaidCents : 0,
+    voucherValueCents: eligibleForVoucher ? input.amountPaidCents : 0,
   });
+}
+function validMoney(value: number): boolean {
+  return Number.isSafeInteger(value) && value >= 0 && value <= INPUT_LIMITS.MAX_CENTS;
 }
 export function verifyVoucherIsUsable(
   voucher: RescheduleVoucherSnapshot,
   organizationId: string,
   now: Date,
-): Result<RescheduleVoucherSnapshot, AppError> {
-  if (voucher.organizationId !== organizationId) {
-    return failAndLog({
-      code: ERROR_CODES.VOUCHER_INVALID_OR_EXPIRED,
-      module: 'VoucherEngine',
-      fn: 'verifyVoucherIsUsable',
-      cause: 'Code de report appartenant à une autre organisation',
-      received: voucher.organizationId,
-      expected: organizationId,
-    });
-  }
-  if (now.getTime() >= voucher.expiresAt.getTime()) {
-    return failAndLog({
-      code: ERROR_CODES.VOUCHER_INVALID_OR_EXPIRED,
-      module: 'VoucherEngine',
-      fn: 'verifyVoucherIsUsable',
-      cause: 'Date de validité du code de report dépassée',
-      received: now.toISOString(),
-      expected: `avant ${voucher.expiresAt.toISOString()}`,
-    });
-  }
-  const isExpiredPaymentLock =
+): Result<RescheduleVoucherSnapshot> {
+  const lockExpired =
     voucher.status === VOUCHER_STATUSES.LOCKED_PENDING_PAYMENT &&
     voucher.lockedUntil !== null &&
-    voucher.lockedUntil.getTime() <= now.getTime();
-  const isAvailable =
-    voucher.status === VOUCHER_STATUSES.ACTIVE || isExpiredPaymentLock;
-  if (!isAvailable) {
-    return failAndLog({
-      code: ERROR_CODES.VOUCHER_INVALID_OR_EXPIRED,
-      module: 'VoucherEngine',
-      fn: 'verifyVoucherIsUsable',
-      cause:
-        'Code de report déjà utilisé ou verrouillé par un paiement en cours',
-      received: voucher.status,
-      expected: VOUCHER_STATUSES.ACTIVE,
-    });
-  }
-  return ok(voucher);
+    validDate(voucher.lockedUntil) &&
+    voucher.lockedUntil <= now;
+  if (
+    voucher.organizationId !== organizationId ||
+    !validDate(now) ||
+    !validDate(voucher.expiresAt) ||
+    now >= voucher.expiresAt ||
+    !validMoney(voucher.initialValueCents) ||
+    voucher.initialValueCents <= 0 ||
+    !(voucher.status === VOUCHER_STATUSES.ACTIVE || lockExpired)
+  )
+    return failure(ERROR_CODES.VOUCHER_INVALID_OR_EXPIRED, 'Voucher', 'verify');
+  return ok(
+    lockExpired ? { ...voucher, status: VOUCHER_STATUSES.ACTIVE, lockedUntil: null } : voucher,
+  );
 }
 export function calculateVoucherApplication(
   voucher: RescheduleVoucherSnapshot,
-  targetActivityPriceCents: number,
-): Result<VoucherPricingCalculation, AppError> {
+  price: number,
+): Result<VoucherPricingCalculation> {
   if (
-    !Number.isInteger(targetActivityPriceCents) ||
-    targetActivityPriceCents < 0
-  ) {
-    return failAndLog({
-      code: ERROR_CODES.VALIDATION_FAILED,
-      module: 'VoucherEngine',
-      fn: 'calculateVoucherApplication',
-      cause: 'Prix de l’activité cible invalide',
-      received: String(targetActivityPriceCents),
-      expected: 'entier >= 0',
-    });
-  }
-  const appliedDiscountCents = Math.min(
-    voucher.initialValueCents,
-    targetActivityPriceCents,
-  );
-  const remainingToPayCents = Math.max(
-    0,
-    targetActivityPriceCents - voucher.initialValueCents,
-  );
-  const forfeitedRemainderCents = Math.max(
-    0,
-    voucher.initialValueCents - targetActivityPriceCents,
-  );
+    !validMoney(price) ||
+    !validMoney(voucher.initialValueCents) ||
+    voucher.initialValueCents <= 0
+  )
+    return failure(ERROR_CODES.VALIDATION_FAILED, 'Voucher', 'pricing');
+  const appliedDiscountCents = Math.min(price, voucher.initialValueCents);
+  const remainingToPayCents = price - appliedDiscountCents;
   const requiresOnlinePayment = remainingToPayCents > 0;
   return ok({
-    targetActivityPriceCents,
+    targetActivityPriceCents: price,
     voucherInitialValueCents: voucher.initialValueCents,
     appliedDiscountCents,
     remainingToPayCents,
-    forfeitedRemainderCents,
+    forfeitedRemainderCents: Math.max(0, voucher.initialValueCents - price),
     requiresOnlinePayment,
     nextVoucherStatus: requiresOnlinePayment
       ? VOUCHER_STATUSES.LOCKED_PENDING_PAYMENT

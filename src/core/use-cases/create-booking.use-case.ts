@@ -1,164 +1,121 @@
-// src/core/use-cases/create-booking.use-case.ts
-import {
-  BOOKING_STATUSES,
-  ERROR_CODES,
-  PAYMENT_MODES,
-  PAYMENT_RULES,
-  type BookingStatus,
-} from '../../config/constants';
-import { failAndLog } from '../../lib/logger';
-import { ok, type AppError, type Result } from '../../lib/result';
-import {
-  validateBookingInputWithPolicy,
-  type RawCreateBookingInput,
-} from '../domain/booking-validation';
-import { buildTruthSchedule } from '../domain/session-truth';
-import type { SeatAvailability } from '../domain/session-types';
-import { generateDynamicTerms } from '../domain/terms-generator';
+import { guardUseCase } from '../../lib/guard-use-case';
+import { signSelfCancelToken } from '../domain/self-service-token';
+import { TIME, TOKEN_RULES } from '../../config/constants';
+import { PAYMENT_MODES, BOOKING_STATUSES, ERROR_CODES } from '../../config/constants';
+import { failure } from '../../lib/errors';
+import { ok, type Result } from '../../lib/result';
+import { sha256 } from '../../lib/sha256';
+import { parseBookingInput } from '../domain/booking-validation';
 import type {
-  ActivityRepositoryPort,
-  ActivityWithScheduleConfig,
-  NotificationPort,
-} from '../ports/booking-ports';
-import type { SessionRepositoryPort } from '../ports/session-repository.port';
+  SessionRepositoryPort,
+  AtomicSeatReservationOutput,
+} from '../ports/session-repository.port';
+import type { PaymentGatewayPort } from '../ports/payment-gateway.port';
+export type CreateBookingOutput = Pick<
+  AtomicSeatReservationOutput,
+  | 'bankInstructions'
+  | 'bookingId'
+  | 'sessionId'
+  | 'status'
+  | 'amountToPayCents'
+  | 'lockedUntil'
+  | 'availabilityAfterBooking'
+  | 'checkoutUrl'
+> & { readonly selfServiceToken?: string };
 export interface CreateBookingUseCaseDeps {
-  readonly activityRepo: ActivityRepositoryPort;
   readonly sessionRepo: SessionRepositoryPort;
-  readonly notificationPort: NotificationPort;
-  readonly nowProvider?: () => Date;
+  readonly paymentGateway: PaymentGatewayPort;
+  readonly appUrl: string;
+  readonly secret: string;
 }
-export interface CreateBookingOutput {
-  readonly bookingId: string;
-  readonly sessionId: string;
-  readonly status: BookingStatus;
-  readonly amountToPayCents: number;
-  readonly lockedUntil: Date | null;
-  readonly availabilityAfterBooking: SeatAvailability;
-}
-function resolveInitialBookingState(
-  paymentMode: ActivityWithScheduleConfig['paymentMode'],
-  now: Date,
-): { readonly status: BookingStatus; readonly lockedUntil: Date | null } {
-  if (paymentMode === PAYMENT_MODES.NONE)
-    return { status: BOOKING_STATUSES.CONFIRMED, lockedUntil: null };
-  const holdMs =
-    paymentMode === PAYMENT_MODES.STRIPE
-      ? PAYMENT_RULES.STRIPE_HOLD_MINUTES * 60_000
-      : PAYMENT_RULES.BANK_TRANSFER_HOLD_HOURS * 3_600_000;
+function publicOutput(booking: AtomicSeatReservationOutput): CreateBookingOutput {
+  const {
+    bankInstructions,
+    bookingId,
+    sessionId,
+    status,
+    amountToPayCents,
+    lockedUntil,
+    availabilityAfterBooking,
+    checkoutUrl,
+  } = booking;
   return {
-    status: BOOKING_STATUSES.PENDING_PAYMENT,
-    lockedUntil: new Date(now.getTime() + holdMs),
+    bankInstructions,
+    bookingId,
+    sessionId,
+    status,
+    amountToPayCents,
+    lockedUntil,
+    availabilityAfterBooking,
+    checkoutUrl,
   };
 }
+async function checkout(
+  deps: CreateBookingUseCaseDeps,
+  booking: AtomicSeatReservationOutput,
+): Promise<Result<CreateBookingOutput>> {
+  if (
+    booking.checkoutUrl ||
+    booking.paymentMode !== PAYMENT_MODES.STRIPE ||
+    booking.status !== BOOKING_STATUSES.PENDING_PAYMENT
+  )
+    return ok(publicOutput(booking));
+  if (!booking.lockedUntil) return failure(ERROR_CODES.CONFLICT, 'CreateBooking', 'checkout');
+  const result = await deps.paymentGateway.initiatePayment({
+    organizationId: booking.organizationId,
+    bookingId: booking.bookingId,
+    activityName: booking.activityName,
+    amountCents: booking.amountToPayCents,
+    currency: booking.currency,
+    customerEmail: booking.attendeeEmail,
+    expiresAt: booking.lockedUntil,
+    successUrl: `${deps.appUrl}/booking-result`,
+    cancelUrl: `${deps.appUrl}/booking-result`,
+    merchantAccountId: booking.merchantAccountId,
+  });
+  if (!result.ok) return result;
+  const attached = await deps.sessionRepo.attachCheckout({
+    organizationId: booking.organizationId,
+    bookingId: booking.bookingId,
+    checkoutReference: result.value.paymentReference,
+    checkoutUrl: result.value.checkoutUrl,
+    expiresAt: result.value.expiresAt,
+  });
+  return attached.ok
+    ? ok({
+        ...publicOutput(booking),
+        checkoutUrl: result.value.checkoutUrl,
+        lockedUntil: result.value.expiresAt,
+      })
+    : attached;
+}
 export class CreateBookingUseCase {
-  public constructor(private readonly deps: CreateBookingUseCaseDeps) {}
-  public async execute(
-    rawInput: RawCreateBookingInput,
-  ): Promise<Result<CreateBookingOutput, AppError>> {
-    const now = this.deps.nowProvider ? this.deps.nowProvider() : new Date();
-    const activityRes =
-      await this.deps.activityRepo.getActivityWithScheduleConfig(
-        rawInput.organizationId,
-        rawInput.activityId,
+  constructor(private readonly deps: CreateBookingUseCaseDeps) {}
+  async execute(raw: unknown): Promise<Result<CreateBookingOutput>> {
+    return guardUseCase('create-booking.use-case.ts', 'execute', async () => {
+      const input = parseBookingInput(raw);
+      if (!input.ok) return input;
+      const hash = await sha256(JSON.stringify(input.value));
+      if (!hash.ok) return hash;
+      const booked = await this.deps.sessionRepo.reserveSeatAtomically({
+        input: input.value,
+        requestHash: hash.value,
+      });
+      if (!booked.ok) return booked;
+      const output = await checkout(this.deps, booked.value);
+      if (!output.ok) return output;
+      const token = await signSelfCancelToken(
+        {
+          organizationId: booked.value.organizationId,
+          bookingId: booked.value.bookingId,
+          version: 0,
+          expUnixSeconds: Math.floor(
+            (Date.now() + TOKEN_RULES.DURATION_DAYS * TIME.DAY_MS) / TIME.SECOND_MS,
+          ),
+        },
+        this.deps.secret,
       );
-    if (!activityRes.ok) return activityRes;
-    const activity = activityRes.value;
-    const expectedTerms = generateDynamicTerms({
-      organizationName: activity.organizationName,
-      activityName: activity.name,
-      priceCents: activity.priceCents,
-      currency: activity.currency,
-      audiencePolicy: activity.audiencePolicy,
-      paymentMode: activity.paymentMode,
-      noticeHoursForVoucher: activity.noticeHoursForVoucher,
-      voucherValidityMonths: activity.voucherValidityMonths,
-      allowExternalBenefitExchange: activity.allowExternalBenefitExchange,
-    });
-    const validatedRes = validateBookingInputWithPolicy(rawInput, {
-      audiencePolicy: activity.audiencePolicy,
-      requirePhone: activity.requirePhone,
-      expectedTermsVersionHash: expectedTerms.versionHash,
-    });
-    if (!validatedRes.ok) return validatedRes;
-    const input = validatedRes.value;
-    const requestedStart = new Date(input.startsAtIso);
-    const scheduleRes = buildTruthSchedule({
-      activityId: activity.id,
-      timezone: activity.timezone,
-      bookingWindowWeeks: activity.bookingWindowWeeks,
-      now,
-      rangeStart: new Date(requestedStart.getTime() - 86_400_000),
-      rangeEnd: new Date(requestedStart.getTime() + 86_400_000),
-      weeklySlots: activity.weeklySlots,
-      pausePeriods: activity.pausePeriods,
-      persistedSessions: activity.manualSessions,
-      bookingsBySessionId: {},
-    });
-    if (!scheduleRes.ok) return scheduleRes;
-    const matchedSession = scheduleRes.value.find(
-      (s) => s.startsAt.getTime() === requestedStart.getTime(),
-    );
-    if (!matchedSession) {
-      return failAndLog({
-        code: ERROR_CODES.SESSION_CLOSED_OR_PAUSED,
-        module: 'CreateBookingUseCase',
-        fn: 'execute',
-        cause:
-          'Séance absente de la Règle de vérité (en pause, hors fenêtre ou inexistante)',
-        received: input.startsAtIso,
-        expected: 'créneau ouvert dans buildTruthSchedule',
-      });
-    }
-    const initialState = resolveInitialBookingState(activity.paymentMode, now);
-    const atomicRes = await this.deps.sessionRepo.reserveSeatAtomically({
-      organizationId: activity.organizationId,
-      activityId: activity.id,
-      startsAt: matchedSession.startsAt,
-      endsAt: matchedSession.endsAt,
-      defaultCapacity: matchedSession.availability.capacity,
-      now,
-      booking: {
-        idempotencyKey: input.idempotencyKey,
-        status: initialState.status,
-        firstName: input.firstName,
-        lastName: input.lastName,
-        email: input.email,
-        phone: input.phone,
-        marketingOptIn: input.marketingOptIn,
-        unitPriceCents: activity.priceCents,
-        voucherDiscountCents: 0,
-        amountPaidCents:
-          initialState.status === BOOKING_STATUSES.CONFIRMED
-            ? activity.priceCents
-            : 0,
-        appliedVoucherId: null,
-        lockedUntil: initialState.lockedUntil,
-        termsAcceptedAt: now,
-        termsVersionHash: expectedTerms.versionHash,
-      },
-    });
-    if (!atomicRes.ok) return atomicRes;
-    if (initialState.status === BOOKING_STATUSES.CONFIRMED) {
-      await this.deps.notificationPort.sendBookingConfirmation({
-        bookingId: atomicRes.value.bookingId,
-        organizationName: activity.organizationName,
-        activityName: activity.name,
-        attendeeFirstName: input.firstName,
-        attendeeEmail: input.email,
-        startsAt: matchedSession.startsAt,
-        endsAt: matchedSession.endsAt,
-        timezone: activity.timezone,
-        amountPaidCents: activity.priceCents,
-        currency: activity.currency,
-      });
-    }
-    return ok({
-      bookingId: atomicRes.value.bookingId,
-      sessionId: atomicRes.value.session.id,
-      status: initialState.status,
-      amountToPayCents: activity.priceCents,
-      lockedUntil: initialState.lockedUntil,
-      availabilityAfterBooking: atomicRes.value.availabilityAfterBooking,
+      return token.ok ? ok({ ...output.value, selfServiceToken: token.value }) : token;
     });
   }
 }

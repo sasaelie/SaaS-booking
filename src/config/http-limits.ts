@@ -1,0 +1,1 @@
+export const HTTP_LIMITS = { JSON_BYTES: 16384, MULTIPART_OVERHEAD_BYTES: 8192 } as const;

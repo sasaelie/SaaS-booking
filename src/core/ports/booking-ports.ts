@@ -1,11 +1,7 @@
 // src/core/ports/booking-ports.ts
 import type { AudiencePolicy, PaymentMode } from '../../config/constants';
 import type { AppError, Result } from '../../lib/result';
-import type {
-  PausePeriodRule,
-  PersistedSession,
-  TimeSlotRule,
-} from '../domain/session-types';
+import type { PausePeriodRule, PersistedSession, TimeSlotRule } from '../domain/session-types';
 
 export interface ActivityWithScheduleConfig {
   readonly id: string;
@@ -13,6 +9,11 @@ export interface ActivityWithScheduleConfig {
   readonly organizationName: string;
   readonly timezone: string;
   readonly name: string;
+  readonly isActive: boolean;
+  readonly bankIban: string | null;
+  readonly bankAccountName: string | null;
+  readonly merchantAccountId: string | null;
+  readonly primaryTextColor: string;
   readonly priceCents: number;
   readonly currency: string;
   readonly audiencePolicy: AudiencePolicy;
@@ -22,6 +23,9 @@ export interface ActivityWithScheduleConfig {
   readonly noticeHoursForVoucher: number;
   readonly voucherValidityMonths: number;
   readonly allowExternalBenefitExchange: boolean;
+  readonly bookingsBySessionId: Readonly<
+    Record<string, readonly import('../domain/session-types').SessionBookingSnapshot[]>
+  >;
   readonly weeklySlots: readonly TimeSlotRule[];
   readonly pausePeriods: readonly PausePeriodRule[];
   readonly manualSessions: readonly PersistedSession[];
@@ -48,4 +52,8 @@ export interface NotificationPort {
   sendBookingConfirmation(
     payload: BookingConfirmationNotificationPayload,
   ): Promise<Result<{ readonly messageId: string }, AppError>>;
+}
+
+export interface PublicActivityRepositoryPort extends ActivityRepositoryPort {
+  findPublicActivity(slug: string, activityId: string): Promise<Result<ActivityWithScheduleConfig>>;
 }

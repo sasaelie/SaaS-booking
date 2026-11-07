@@ -1,25 +1,29 @@
-# Vérifications de la livraison
+# Vérification des corrections
 
-## Périmètre
+Version : branche `fix/booking-integrity`, 7 novembre 2026. Base de comparaison : commit `9191857` audité précédemment.
 
-Livraison demandée : structuration et mise en ZIP des sources reçues, sans intégration GitHub.
-Les versions définitives remplacent les variantes initiales ; les variantes restent dans `docs/references/` hors compilation.
-Les sauts de ligne, l’indentation et certains commentaires ont été harmonisés. Aucun adaptateur manquant n’a été inventé et aucune correction métier n’est revendiquée.
+## Résultats mesurés
 
-## Contrôle applicatif tenté
+- Installation `npm ci` dans un dossier vide : réussie, sans contournement des peer dependencies.
+- `npm run verify` : réussi ; TypeScript strict et ESLint sans erreur, 27 tests unitaires réussis dans sept fichiers.
+- `npm run test:integration` : 23 tests réussis dans six fichiers, sur PostgreSQL 17 local isolé, avec plusieurs connexions réelles.
+- `npm run build` : réussi avec Next.js 16.4.5, sans clé de production.
+- `npm run test:e2e` : parcours Chromium réussi (formulaire → Server Action → PostgreSQL → confirmation) avec un client fictif ; une seule réservation confirmée et montant encaissé nul en mode NONE.
+- `npm audit --json` : zéro vulnérabilité signalée dans l’arbre résolu, dépendances de développement incluses, au moment du contrôle.
+- Règles automatiques : zéro `any`/`@ts-ignore`, frontières de couches, 200 lignes maximum par fichier TypeScript et 40 par fonction. Les fichiers générés tels que le lockfile suivent leur format standard.
 
-Commande : `npm run verify`.
-Résultat : arrêt au premier contrôle `tsc --noEmit` avec `sh: 1: tsc: not found` (code 127).
-Les dépendances du projet ne sont pas installées. ESLint et Vitest n’ont donc pas été exécutés par cette commande.
-Aucun succès de compilation, de tests, de construction ou de conformité juridique n’est affirmé.
-Les défauts déjà visibles dans les sources sont conservés et listés dans `POINTS-A-COMPLETER.md`.
+## Scénarios SQL couverts
 
-## Contrôles d’archive
+Dix réservations simultanées pour cinq places ; dix répétitions de la même demande ; changement de contenu sous une même clé ; isolation d’organisation ; CGV obsolètes ; distinction confirmation/encaissement ; événement Stripe répété et identité financière invalide ; remboursement durable après collision ; émission unique d’un report ; réservation moins chère avec report ; rollback si séance pleine ; échange externe ; ancien paiement après réutilisation d’un report ; fermeture avec confirmation ; blocage déjà expiré ; reprise de tâches ; décision bancaire et purge ; revalidation de capacité après expiration ; pause protégée ; effacement réel des coordonnées et protection de la conservation comptable dans la transaction.
 
-La création du ZIP vérifie la liste des fichiers, les imports locaux relatifs, la validité JSON des configurations et l’intégrité CRC du ZIP.
-Un manifeste SHA-256 permet de vérifier chaque fichier après extraction.
-L’archive n’inclut pas `node_modules`, cache, dépôt `.git`, fichier `.env.local` ou secret réel.
+## Conditions des contrôles
 
-Le formateur Prettier 3.6.2 a analysé et mis en forme les 39 fichiers sources et les trois configurations (package.json, tsconfig.json, eslint.config.mjs). Cette analyse syntaxique n’équivaut pas à une compilation TypeScript.
+Les tests utilisent uniquement des données fictives et une base locale jetable `booking_test`. Le décodeur traite de vraies images de test et rejette les fichiers tronqués. Les tests Stripe vérifient une vraie signature HMAC générée par le SDK ; aucun paiement réel n’a été effectué. Les appels de création Checkout sont testés par doubles pour inspecter les paramètres et leur clé d’idempotence.
 
-Contrôles terminés : JSON valides, aucun import relatif local sans cible, huit fichiers de tests présents, contrôle CRC et comparaison SHA-256 de tous les fichiers extraits du ZIP réussis.
+La suite navigateur n’a pas utilisé de compte Stripe, Resend, stockage ou fournisseur OIDC de production. Les preuves de paiement, la configuration de résidence UE, les politiques privées du bucket, les e-mails réels et les jetons émis par votre fournisseur doivent être contrôlés avec vos comptes avant mise en service.
+
+La politique initiale de conservation de sept ans et les clauses contractuelles ne sont pas certifiées juridiquement. Les sources ne prétendent plus que la présence d’un article de loi ou d’un hash suffit à fournir une telle certification.
+
+## Publication
+
+Les corrections sont livrées dans une branche dédiée et une pull request vers `main`. Aucun service n’est déployé et aucune migration n’est appliquée à une base de production.

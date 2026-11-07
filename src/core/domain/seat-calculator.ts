@@ -1,13 +1,10 @@
 // src/core/domain/seat-calculator.ts
-import { BOOKING_STATUSES, ERROR_CODES } from '../../config/constants';
+import { BOOKING_STATUSES, ERROR_CODES, INPUT_LIMITS } from '../../config/constants';
 import { failAndLog } from '../../lib/logger';
 import { ok, type AppError, type Result } from '../../lib/result';
 import type { SeatAvailability, SessionBookingSnapshot } from './session-types';
 
-export function isSeatCurrentlyOccupied(
-  booking: SessionBookingSnapshot,
-  now: Date,
-): boolean {
+export function isSeatCurrentlyOccupied(booking: SessionBookingSnapshot, now: Date): boolean {
   if (booking.status === BOOKING_STATUSES.CONFIRMED) return true;
   const isHoldingSeat =
     booking.status === BOOKING_STATUSES.PENDING_PAYMENT ||
@@ -20,7 +17,12 @@ export function calculateSeatAvailability(
   bookings: readonly SessionBookingSnapshot[],
   now: Date,
 ): Result<SeatAvailability, AppError> {
-  if (!Number.isInteger(capacity) || capacity < 0) {
+  if (
+    !Number.isSafeInteger(capacity) ||
+    capacity < 0 ||
+    capacity > INPUT_LIMITS.MAX_CAPACITY ||
+    !Number.isFinite(now.getTime())
+  ) {
     return failAndLog({
       code: ERROR_CODES.VALIDATION_FAILED,
       module: 'SeatCalculator',
