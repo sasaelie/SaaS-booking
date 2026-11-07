@@ -6,7 +6,7 @@ Version : branche `fix/booking-integrity`, 7 novembre 2026. Base de comparaison 
 
 - Installation `npm ci` dans un dossier vide : réussie, sans contournement des peer dependencies.
 - `npm run verify` : réussi ; TypeScript strict et ESLint sans erreur, 27 tests unitaires réussis dans sept fichiers.
-- `npm run test:integration` : 23 tests réussis dans six fichiers, sur PostgreSQL 17 local isolé, avec plusieurs connexions réelles.
+- `npm run test:integration` : 24 tests réussis dans six fichiers, sur PostgreSQL 17 local isolé, avec plusieurs connexions réelles.
 - `npm run build` : réussi avec Next.js 16.4.5, sans clé de production.
 - `npm run test:e2e` : parcours Chromium réussi (formulaire → Server Action → PostgreSQL → confirmation) avec un client fictif ; une seule réservation confirmée et montant encaissé nul en mode NONE.
 - `npm audit --json` : zéro vulnérabilité signalée dans l’arbre résolu, dépendances de développement incluses, au moment du contrôle.
@@ -14,7 +14,7 @@ Version : branche `fix/booking-integrity`, 7 novembre 2026. Base de comparaison 
 
 ## Scénarios SQL couverts
 
-Dix réservations simultanées pour cinq places ; dix répétitions de la même demande ; changement de contenu sous une même clé ; isolation d’organisation ; CGV obsolètes ; distinction confirmation/encaissement ; événement Stripe répété et identité financière invalide ; remboursement durable après collision ; émission unique d’un report ; réservation moins chère avec report ; rollback si séance pleine ; échange externe ; ancien paiement après réutilisation d’un report ; fermeture avec confirmation ; blocage déjà expiré ; reprise de tâches ; décision bancaire et purge ; revalidation de capacité après expiration ; pause protégée ; effacement réel des coordonnées et protection de la conservation comptable dans la transaction.
+Dix réservations simultanées pour cinq places ; dix répétitions de la même demande ; changement de contenu sous une même clé ; isolation d’organisation ; CGV obsolètes ; distinction confirmation/encaissement ; événement Stripe répété et identité financière invalide ; remboursement durable après collision ; émission unique d’un report ; réservation moins chère avec report ; rollback si séance pleine ; échange externe ; ancien paiement après réutilisation d’un report ; fermeture avec confirmation ; blocage déjà expiré ; reprise de tâches ; décision bancaire et purge ; respect du réglage de conservation des justificatifs ; revalidation de capacité après expiration ; pause protégée ; effacement réel des coordonnées et protection de la conservation comptable dans la transaction.
 
 ## Conditions des contrôles
 

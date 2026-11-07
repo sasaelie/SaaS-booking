@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { bookings } from '../schema';
+import { bookings, organizations } from '../schema';
 import type { Transaction } from '../transaction';
 import type { BookingRow } from '../reservation/context';
 import { lockBookingContext } from '../payment/locks';
@@ -24,6 +24,7 @@ async function decisionEffects(
   tx: Transaction,
   booking: BookingRow,
   approved: boolean,
+  proofStorageKey: string | null,
 ): Promise<void> {
   if (!approved) await releaseVoucher(tx, booking);
   if (approved)
@@ -34,10 +35,10 @@ async function decisionEffects(
       `confirmation:${booking.id}`,
       { bookingId: booking.id },
     );
-  if (booking.proofStorageKey)
-    await enqueue(tx, booking.organizationId, JOB_TYPES.PURGE, `purge:${booking.proofStorageKey}`, {
+  if (proofStorageKey)
+    await enqueue(tx, booking.organizationId, JOB_TYPES.PURGE, `purge:${proofStorageKey}`, {
       bookingId: booking.id,
-      storageKey: booking.proofStorageKey,
+      storageKey: proofStorageKey,
     });
 }
 export async function decideBankTransfer(
@@ -48,12 +49,13 @@ export async function decideBankTransfer(
   if (!context || context.booking.paymentMode !== PAYMENT_MODES.BANK_TRANSFER)
     return failure(ERROR_CODES.NOT_FOUND, 'Bank', 'decide');
   const { booking } = context;
+  const proofStorageKey = await proofToPurge(tx, booking);
   const approved = input.decision === 'APPROVE';
   if (
     booking.status ===
     (approved ? BOOKING_STATUSES.CONFIRMED : BOOKING_STATUSES.CANCELLED_BY_ORGANIZER)
   )
-    return ok({ proofStorageKey: booking.proofStorageKey });
+    return ok({ proofStorageKey });
   if (booking.status !== BOOKING_STATUSES.PROOF_SUBMITTED)
     return failure(ERROR_CODES.CONFLICT, 'Bank', 'decide');
   if (approved && !(await canConfirm(tx, context, input.now)))
@@ -62,6 +64,14 @@ export async function decideBankTransfer(
     .update(bookings)
     .set(decisionValues(booking, approved, input.now))
     .where(eq(bookings.id, booking.id));
-  await decisionEffects(tx, booking, approved);
-  return ok({ proofStorageKey: booking.proofStorageKey });
+  await decisionEffects(tx, booking, approved, proofStorageKey);
+  return ok({ proofStorageKey });
+}
+
+async function proofToPurge(tx: Transaction, booking: BookingRow): Promise<string | null> {
+  const [organization] = await tx
+    .select({ autoDelete: organizations.autoDeleteBankProof })
+    .from(organizations)
+    .where(eq(organizations.id, booking.organizationId));
+  return organization?.autoDelete ? booking.proofStorageKey : null;
 }

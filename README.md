@@ -54,7 +54,7 @@ Les activités Stripe nécessitent les clés Stripe ; les activités par viremen
 
 Les opérations administratives passent par `POST /api/admin` avec un jeton OIDC fourni par votre fournisseur d’identité. `issuer`, `audience`, signature, rôle `admin` et claim `organization_id` sont contrôlés ; sans configuration, l’accès est refusé. Voir `docs/OPERATIONS.md` pour les commandes.
 
-Planifier `POST /api/jobs` régulièrement avec un secret dédié. Les tâches sont réessayées après échec ; un prestataire indisponible laisse une tâche en attente. Les purges sont aussi tentées après décision bancaire, puis réconciliées en base par la file. Surveiller les tâches différées et leur ancienneté.
+Planifier `POST /api/jobs` régulièrement avec un secret dédié. Les tâches sont réessayées après échec ; un prestataire indisponible laisse une tâche en attente. La purge après décision bancaire est activée par défaut et respecte le réglage de l’organisateur ; elle est tentée immédiatement puis réconciliée en base par la file. Surveiller les tâches différées et leur ancienneté.
 
 ## Vérifications
 

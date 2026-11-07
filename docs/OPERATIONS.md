@@ -30,3 +30,5 @@ Surveiller le nombre et l’ancienneté des tâches en attente, les tentatives, 
 ## Exploitation des images
 
 Les en-têtes sont filtrés puis une vraie image doit être décodée et réencodée par Sharp. Un simple en-tête JPEG/PNG ne suffit pas. Le bucket doit refuser tout accès public et se situer dans la région requise. Désactiver les versions conservées ou appliquer une politique de suppression qui purge aussi les versions, selon les garanties de votre stockage.
+
+La suppression après décision bancaire est activée par défaut via `organizations.auto_delete_bank_proof`. Si l’organisateur désactive ce réglage, le justificatif reste privé et sa clé reste en base ; aucune tâche de purge liée à la décision n’est créée. Définir alors une durée de conservation adaptée. Les demandes d’effacement continuent de traiter les justificatifs concernés.

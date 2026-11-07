@@ -2,7 +2,7 @@ import { expect, it } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { db } from './database';
 import { fixture, rawInput, reserve } from './fixtures';
-import { bookings } from '../../src/adapters/db/schema';
+import { bookings, organizations, outboxJobs } from '../../src/adapters/db/schema';
 import { DrizzleBankRepository } from '../../src/adapters/db/drizzle-bank.repository';
 import { DrizzlePauseRepository } from '../../src/adapters/db/drizzle-pause.repository';
 import { DrizzleJobRunner } from '../../src/adapters/db/jobs/runner';
@@ -107,3 +107,33 @@ async function assertApprovedBankBooking() {
   expect(approved?.amountPaidCents).toBe(3000);
   expect(approved?.proofStorageKey).toBe('test/proof.png');
 }
+
+it('respects an organization explicitly disabling automatic proof deletion', async () => {
+  const context = await fixture(PAYMENT_MODES.BANK_TRANSFER);
+  const booked = required(await reserve(rawInput(context)));
+  const repository = new DrizzleBankRepository(db);
+  await db
+    .update(organizations)
+    .set({ autoDeleteBankProof: false })
+    .where(eq(organizations.id, context.organizationId));
+  required(
+    await repository.attachProofToBookingAtomically({
+      organizationId: context.organizationId,
+      bookingId: booked.bookingId,
+      version: 0,
+      proofStorageKey: 'retained.png',
+      now: new Date(),
+    }),
+  );
+  const result = required(
+    await repository.finalizeAdminBankDecisionAtomically({
+      organizationId: context.organizationId,
+      bookingId: booked.bookingId,
+      decision: 'APPROVE',
+      now: new Date(),
+    }),
+  );
+  expect(result.proofStorageKey).toBeNull();
+  const jobs = await db.select().from(outboxJobs);
+  expect(jobs.filter((job) => job.type === JOB_TYPES.PURGE)).toHaveLength(0);
+});
