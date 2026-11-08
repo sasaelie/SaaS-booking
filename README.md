@@ -2,6 +2,10 @@
 
 Moteur de réservation Next.js App Router, TypeScript strict et PostgreSQL, organisé en domaine, ports, cas d’usage et adaptateurs.
 
+## Prochaine intégration
+
+[Plan de bataille : Mollie, choix des paiements, abonnements mensuels/annuels et préparation Supabase/Vercel](docs/PLAN-PAIEMENTS-MOLLIE.md). Ce plan décrit la prochaine livraison ; les fonctions Mollie et annuelles ne sont pas encore activées.
+
 ## Installation
 
 Node.js 22.12 ou plus récent (Node 24 recommandé).
