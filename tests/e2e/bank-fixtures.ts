@@ -57,7 +57,7 @@ async function manageToken(organizationId: string, bookingId: string) {
         version: 0,
         expUnixSeconds: Math.floor(Date.now() / 1000) + 3600,
       },
-      'local_self_test_only_not_for_production_123456',
+      process.env['SELF_CANCEL_HMAC_SECRET'] ?? 'local_self_test_only_not_for_production_123456',
     ),
   );
 }
