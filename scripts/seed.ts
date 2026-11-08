@@ -1,3 +1,4 @@
+import { organizationAccess } from '../src/adapters/db/schema/saas';
 import { eq } from 'drizzle-orm';
 import { createDatabase } from '../src/adapters/db/client';
 import { organizations, activities, timeSlots } from '../src/adapters/db/schema';
@@ -47,6 +48,10 @@ async function seed(): Promise<void> {
   try {
     const organization = await demoOrganization(db);
     const activity = await demoActivity(db, organization.id);
+    await db
+      .insert(organizationAccess)
+      .values({ organizationId: organization.id, complimentary: true })
+      .onConflictDoNothing();
     for (let dayOfWeek = 0; dayOfWeek < TIME.DAYS_PER_WEEK; dayOfWeek++)
       await db
         .insert(timeSlots)

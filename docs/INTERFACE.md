@@ -37,3 +37,7 @@ Captures du build de production local dans Chromium, avec des données fictives.
 ### Mobile — coordonnées
 
 ![Coordonnées sur mobile](previews/mobile-coordonnees.png)
+
+## Espaces organisateur et plateforme
+
+Le widget validé est conservé. Les nouvelles consoles réutilisent sa palette, ses capsules, ses espacements et ses composants accessibles, avec des surfaces lisibles et une navigation mobile repliable. [Captures et parcours vérifiés](SAAS-VERIFICATION.md).

@@ -10,11 +10,14 @@ import {
 } from '../../../config/constants';
 export const organizations = pgTable('organizations', {
   id: uuid('id').defaultRandom().primaryKey(),
+  kind: text('kind').notNull().default('OTHER'),
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
   timezone: text('timezone').notNull().default(DEFAULTS.TIMEZONE),
   primaryTextColor: text('primary_text_color').notNull().default(DEFAULTS.TEXT_COLOR),
   merchantAccountId: text('merchant_account_id'),
+  stripeReady: boolean('stripe_ready').notNull().default(false),
+  usesPlatformPayments: boolean('uses_platform_payments').notNull().default(false),
   bankIban: text('bank_iban'),
   bankAccountName: text('bank_account_name'),
   autoDeleteBankProof: boolean('auto_delete_bank_proof').notNull().default(true),

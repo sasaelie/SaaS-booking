@@ -1,0 +1,16 @@
+.portal-field input[type='file'] {
+  width: 100%;
+  min-width: 0;
+  font-size: 12px;
+}
+.portal-field input[type='file']::file-selector-button {
+  min-height: 44px;
+  padding: 10px 14px;
+  margin: 0 12px 0 0;
+  border-radius: 12px;
+  border: 1px solid var(--ice-line);
+  background: var(--ice-paper);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}

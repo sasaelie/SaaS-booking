@@ -4,6 +4,10 @@ import type { AppError, Result } from '../../lib/result';
 import type { PausePeriodRule, PersistedSession, TimeSlotRule } from '../domain/session-types';
 
 export interface ActivityWithScheduleConfig {
+  readonly commercialAccessAllowed: boolean;
+  readonly brandTheme: string;
+  readonly hasLogo: boolean;
+  readonly hasBackground: boolean;
   readonly id: string;
   readonly organizationId: string;
   readonly organizationName: string;

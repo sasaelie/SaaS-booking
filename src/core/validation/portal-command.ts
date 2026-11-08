@@ -1,0 +1,17 @@
+import { z } from 'zod';
+export const PortalCommandSchema = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('connect-stripe'), input: z.unknown() }),
+  z.object({ action: z.literal('platform-stripe'), input: z.unknown() }),
+  z.object({ action: z.literal('update-activity'), input: z.unknown() }),
+  z.object({ action: z.literal('publish-activity'), input: z.unknown() }),
+  z.object({ action: z.literal('add-session'), input: z.unknown() }),
+  z.object({ action: z.literal('record-bank-refund'), input: z.unknown() }),
+  z.object({ action: z.literal('create-organization'), input: z.unknown() }),
+  z.object({ action: z.literal('create-activity'), input: z.unknown() }),
+  z.object({ action: z.literal('archive-activity'), input: z.unknown() }),
+  z.object({ action: z.literal('settings'), input: z.unknown() }),
+  z.object({ action: z.literal('grant-access'), input: z.unknown() }),
+  z.object({ action: z.literal('suspend'), input: z.unknown() }),
+  z.object({ action: z.literal('subscription'), input: z.unknown() }),
+]);
+export type PortalCommand = z.output<typeof PortalCommandSchema>;

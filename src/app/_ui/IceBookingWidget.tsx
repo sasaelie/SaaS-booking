@@ -1,4 +1,5 @@
 'use client';
+import { BrandBackdrop } from './BrandBackdrop';
 import type { CSSProperties } from 'react';
 import type { BookingPageData } from '../../core/use-cases/get-booking-page.use-case';
 import { DEFAULTS } from '../../config/constants';
@@ -11,8 +12,9 @@ export function IceBookingWidget({ data }: { readonly data: BookingPageData }) {
     : DEFAULTS.TEXT_COLOR;
   const style = { '--ui-text-primary': color } as CSSProperties;
   return (
-    <div className="ice-widget-root ice-booking-page" style={style}>
-      <BookingBrand name={data.organizationName} />
+    <div className="ice-widget-root ice-booking-page ice-branded-page" style={style}>
+      <BrandBackdrop brand={data.brand} />
+      <BookingBrand name={data.organizationName} logoUrl={data.brand.logoUrl} />
       <div className="ice-cube-shell ice-booking-shell">
         <BookingHeader data={data} />
         <BookingFlow data={data} />

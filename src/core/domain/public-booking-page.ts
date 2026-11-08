@@ -23,37 +23,38 @@ export function publicBookingPage(
   terms: GeneratedTermsDocument,
   schedule: readonly ComputedCalendarSession[],
 ) {
-  const {
-    organizationId,
-    id: activityId,
-    organizationName,
-    name: activityName,
-    priceCents,
-    currency,
-    audiencePolicy,
-    requirePhone,
-    primaryTextColor,
-    timezone,
-    paymentMode,
-  } = activity;
   return {
-    organizationId,
-    activityId,
-    organizationName,
-    activityName,
-    priceCents,
-    currency,
-    audiencePolicy,
-    requirePhone,
-    primaryTextColor,
-    timezone,
-    paymentMode,
+    ...publicIdentity(activity),
     terms,
+    brand: {
+      theme: activity.brandTheme,
+      logoUrl: activity.hasLogo ? `/api/branding/${activity.organizationId}/logo` : null,
+      backgroundUrl: activity.hasBackground
+        ? `/api/branding/${activity.organizationId}/background`
+        : null,
+    },
+    reservationsOpen: activity.commercialAccessAllowed,
     slots: schedule.map((session) => ({
       startsAtIso: session.startsAt.toISOString(),
       endsAtIso: session.endsAt.toISOString(),
       availabilityLabel: session.availability.displayLabel,
-      isBookable: session.availability.isBookable,
+      isBookable: session.availability.isBookable && activity.commercialAccessAllowed,
     })),
+  };
+}
+
+function publicIdentity(activity: ActivityWithScheduleConfig) {
+  return {
+    organizationId: activity.organizationId,
+    activityId: activity.id,
+    organizationName: activity.organizationName,
+    activityName: activity.name,
+    priceCents: activity.priceCents,
+    currency: activity.currency,
+    audiencePolicy: activity.audiencePolicy,
+    requirePhone: activity.requirePhone,
+    primaryTextColor: activity.primaryTextColor,
+    timezone: activity.timezone,
+    paymentMode: activity.paymentMode,
   };
 }

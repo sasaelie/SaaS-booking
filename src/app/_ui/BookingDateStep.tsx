@@ -1,4 +1,4 @@
-import { BOOKING_UI } from '../../config/constants';
+import { BOOKING_UI, ACTIVITY_UI } from '../../config/constants';
 import type { BookingFlowState } from './use-booking-flow';
 import { BookingSlots } from './BookingSlots';
 import { BookingSelection } from './BookingSelection';
@@ -17,6 +17,9 @@ export function BookingDateStep({ flow }: { readonly flow: BookingFlowState }) {
         </h2>
         <p>{BOOKING_UI.SESSION_HINT}</p>
       </div>
+      {!flow.data.reservationsOpen ? (
+        <p className="portal-notice">{ACTIVITY_UI.PUBLIC_BOOKING_CLOSED}</p>
+      ) : null}
       <BookingSlots
         slots={flow.data.slots}
         timezone={flow.data.timezone}

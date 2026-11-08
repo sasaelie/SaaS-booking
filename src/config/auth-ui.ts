@@ -1,0 +1,33 @@
+export const AUTH_UI = {
+  SIGN_IN: 'Heureux de vous retrouver.',
+  SIGN_UP: 'Vos événements, simplement.',
+  FORGOT: 'Retrouvons votre accès.',
+  RESET: 'Un nouveau mot de passe.',
+  SIGN_IN_HINT: 'Connectez-vous pour retrouver votre organisation.',
+  SIGN_UP_HINT: 'Créez votre compte, puis préparez votre premier événement.',
+  EMAIL: 'Adresse e-mail',
+  PASSWORD: 'Mot de passe',
+  NAME: 'Votre nom',
+  CONFIRM_PASSWORD: 'Confirmer le mot de passe',
+  PASSWORD_HINT: 'Au moins 12 caractères. Utilisez un mot de passe unique.',
+  LOGIN: 'Se connecter',
+  REGISTER: 'Créer mon compte',
+  SEND_RESET: 'Recevoir le lien',
+  SAVE_PASSWORD: 'Enregistrer le mot de passe',
+  PENDING: 'Un instant…',
+  VERIFY: 'Consultez votre messagerie pour confirmer votre adresse e-mail avant de vous connecter.',
+  FORGOT_SENT:
+    'Si un compte correspond à cette adresse, un lien de récupération vous a été envoyé.',
+  RESET_DONE: 'Votre mot de passe a été modifié. Vous pouvez vous connecter.',
+  ERROR: 'Impossible de terminer cette demande. Vérifiez vos informations ou réessayez.',
+  INVALID_LOGIN:
+    'Connexion impossible. Vérifiez vos identifiants et la confirmation de votre adresse e-mail.',
+  PASSWORD_MISMATCH: 'Les deux mots de passe ne correspondent pas.',
+  EXPIRED_RESET: 'Ce lien est absent ou expiré. Demandez un nouveau lien de récupération.',
+  FORGOT_LINK: 'Mot de passe oublié ?',
+  SIGN_UP_LINK: 'Créer un compte',
+  SIGN_IN_LINK: 'J’ai déjà un compte',
+  BACK_HOME: 'Retour à l’accueil',
+  PRIVACY:
+    'Votre compte reste accessible pour gérer vos inscriptions après la fin de votre abonnement.',
+} as const;

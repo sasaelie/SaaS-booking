@@ -8,7 +8,7 @@ const now = new Date('2026-11-09T10:00:00Z');
 const adapter = new StripePaymentAdapter(stripe, secret, () => now);
 const bookingId = '22222222-2222-4222-8222-222222222222';
 const organizationId = '11111111-1111-4111-8111-111111111111';
-function signed(payment_status = 'paid', currency = 'eur') {
+function signed(payment_status = 'paid', currency = 'eur', mode = 'payment') {
   const payload = JSON.stringify({
     id: 'evt_test',
     type: 'checkout.session.completed',
@@ -17,6 +17,7 @@ function signed(payment_status = 'paid', currency = 'eur') {
         id: 'cs_test',
         payment_intent: 'pi_test',
         payment_status,
+        mode,
         currency,
         amount_total: 3000,
         metadata: { booking_id: bookingId, organization_id: organizationId },
@@ -72,4 +73,12 @@ it('uses stable Checkout idempotency, email and server-calculated expiration', a
     expect.objectContaining({ idempotencyKey: `checkout:${bookingId}` }),
   );
   create.mockRestore();
+});
+
+it('ignores SaaS subscription checkouts on the participant payment webhook', async () => {
+  const event = signed('paid', 'eur', 'subscription');
+  expect(await adapter.verifyWebhookAndParse(event.payload, event.signature)).toEqual({
+    ok: true,
+    value: null,
+  });
 });

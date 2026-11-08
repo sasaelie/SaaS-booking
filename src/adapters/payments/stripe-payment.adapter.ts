@@ -28,7 +28,7 @@ function parseEvent(event: Stripe.Event): Result<ParsedWebhookPaymentEvent | nul
   )
     return ok(null);
   const session = event.data.object;
-  if (session.payment_status !== 'paid') return ok(null);
+  if (session.mode !== 'payment' || session.payment_status !== 'paid') return ok(null);
   const metadata = StripeMetadataSchema.safeParse(session.metadata);
   const amount = StripeAmountSchema.safeParse(session.amount_total);
   const reference = intentId(session.payment_intent);

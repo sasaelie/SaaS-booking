@@ -1,3 +1,4 @@
+import { organizationAccess } from '../../src/adapters/db/schema/saas';
 import { activities, organizations, timeSlots } from '../../src/adapters/db/schema';
 import { DrizzleActivityRepository } from '../../src/adapters/db/drizzle-activity.repository';
 import { DrizzleSessionRepository } from '../../src/adapters/db/drizzle-session.repository';
@@ -21,7 +22,10 @@ export async function fixture(mode: PaymentMode = PAYMENT_MODES.NONE, priceCents
     timezone: 'UTC',
     bankIban: 'BE68539007547034',
     bankAccountName: 'Test organization',
+    stripeReady: mode === PAYMENT_MODES.STRIPE,
+    usesPlatformPayments: mode === PAYMENT_MODES.STRIPE,
   });
+  await grantTestAccess(organizationId);
   await db.insert(activities).values({
     id: activityId,
     organizationId,
@@ -38,13 +42,7 @@ export async function fixture(mode: PaymentMode = PAYMENT_MODES.NONE, priceCents
     endTimeLocal: '16:00',
     capacity: 5,
   });
-  const activity = required(
-    await new DrizzleActivityRepository(db).getActivityWithScheduleConfig(
-      organizationId,
-      activityId,
-    ),
-  );
-  const terms = required(await generateDynamicTerms({ ...activity, activityName: activity.name }));
+  const terms = await fixtureTerms(organizationId, activityId);
   return { organizationId, activityId, startsAt, terms };
 }
 export function rawInput(context: Awaited<ReturnType<typeof fixture>>, key = crypto.randomUUID()) {
@@ -69,4 +67,19 @@ export async function request(raw: unknown) {
 }
 export async function reserve(raw: unknown) {
   return new DrizzleSessionRepository(db).reserveSeatAtomically(await request(raw));
+}
+
+async function grantTestAccess(organizationId: string) {
+  await db.insert(organizationAccess).values({ organizationId, complimentary: true });
+}
+
+async function fixtureTerms(organizationId: string, activityId: string) {
+  const activity = required(
+    await new DrizzleActivityRepository(db).getActivityWithScheduleConfig(
+      organizationId,
+      activityId,
+    ),
+  );
+  const terms = required(await generateDynamicTerms({ ...activity, activityName: activity.name }));
+  return terms;
 }
