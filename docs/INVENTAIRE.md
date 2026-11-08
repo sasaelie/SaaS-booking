@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-450 fichiers versionnés, dont 361 sous `src/`.
+457 fichiers versionnés, dont 363 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 009.
 
@@ -12,7 +12,10 @@ Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src
 AGENTS.md
 MANIFEST.sha256
 README.md
+deploy/supabase-bootstrap.sql
+deploy/supabase-harden.sql
 docs/ARCHITECTURE.md
+docs/HEBERGEMENT-RECETTE.md
 docs/INTERFACE.md
 docs/INVENTAIRE.md
 docs/OPERATIONS.md
@@ -50,6 +53,7 @@ next.config.ts
 package-lock.json
 package.json
 playwright.config.ts
+scripts/export-hosted-migrations.ts
 scripts/grant-platform-admin.ts
 scripts/migrate.ts
 scripts/seed.ts
@@ -86,6 +90,7 @@ src/adapters/db/payment/confirm.ts
 src/adapters/db/payment/locks.ts
 src/adapters/db/payment/refunds.ts
 src/adapters/db/payment/verify.ts
+src/adapters/db/pool-options.ts
 src/adapters/db/portal/access.ts
 src/adapters/db/portal/activities.ts
 src/adapters/db/portal/activity-list.ts
@@ -320,6 +325,7 @@ src/config/auth-labels.ts
 src/config/auth-ui.ts
 src/config/booking-ui.ts
 src/config/constants.ts
+src/config/database.ts
 src/config/env.ts
 src/config/file-signatures.ts
 src/config/http-limits.ts
@@ -442,6 +448,7 @@ tests/integration/subscription-webhook.test.ts
 tests/integration/subscription.test.ts
 tests/integration/vouchers.test.ts
 tests/unit/calendar.test.ts
+tests/unit/database-config.test.ts
 tests/unit/foundations.test.ts
 tests/unit/http-body.test.ts
 tests/unit/iban.test.ts

@@ -2,9 +2,13 @@ import { z } from 'zod';
 import { INPUT_LIMITS, ERROR_CODES } from './constants';
 import { failure } from '../lib/errors';
 import { ok, type Result } from '../lib/result';
+import { DatabaseSchema, supportsSessionLocks } from './database';
 const optionalSecret = z.string().min(INPUT_LIMITS.SECRET_MIN).optional();
 export const EnvironmentSchema = z.object({
-  DATABASE_URL: z.url().refine((value) => value.startsWith('postgres')),
+  DATABASE_URL: z
+    .url()
+    .refine((value) => value.startsWith('postgres') && supportsSessionLocks(value)),
+  DATABASE_SCHEMA: DatabaseSchema.optional(),
   NEXT_PUBLIC_APP_URL: z.url(),
   SELF_CANCEL_HMAC_SECRET: z.string().min(INPUT_LIMITS.SECRET_MIN),
   STRIPE_SECRET_KEY: z.string().startsWith('sk_').optional(),

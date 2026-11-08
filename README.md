@@ -90,7 +90,7 @@ Les tests d’intégration exigent une base locale jetable `booking_test` et ref
 
 ## Limites et configuration de production
 
-Les tests automatisés ne remplacent pas une validation de paiement en environnement Stripe de test avec vos clés, ni le contrôle des permissions de votre bucket, des e-mails et de votre fournisseur d’identité. Aucun compte ou déploiement de production n’est créé par ce dépôt.
+Les tests automatisés ne remplacent pas une validation de paiement en environnement Stripe de test avec vos clés, ni le contrôle des permissions de votre bucket, des e-mails et de votre fournisseur d’identité. La base Supabase de recette et le projet Vercel sont préparés ; aucune application n’est publiée. Voir [l’état et le guide de connexion](docs/HEBERGEMENT-RECETTE.md).
 
 La région UE de la base, du stockage, des sauvegardes et des journaux est à configurer chez les hébergeurs. Utiliser un bucket privé sans conservation de versions incompatibles avec la purge des justificatifs. Configurer HTTPS, la confiance du proxy pour l’adresse client, les sauvegardes et la surveillance de la file.
 

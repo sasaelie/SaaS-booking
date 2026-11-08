@@ -112,7 +112,7 @@ Les domaines et URL de retour seront renseignés quand la recette sera prête. L
 ## Ordre de livraison et contrôle des branches
 
 Plan → fusion de la PR 2 vérifiée → nouvelle branche `feat/payments-mollie-subscriptions` issue du commit fusionné → lots 1 à 4 → recette Supabase/Vercel → validation utilisateur → fusion de cette nouvelle branche après confirmation.
-Ce document prépare l’intégration. Il n’active ni Mollie, ni l’annuel, ni une base ou un hébergement réels. La création de ces services et la mise en production feront l’objet d’étapes séparées.
+Mise à jour du 8 novembre 2026 : le projet Supabase existant a reçu le schéma privé de recette et les neuf migrations ; un projet Vercel vide et ses secrets Preview sont préparés. À la demande de l’utilisateur, aucune application n’est publiée. La connexion SQL applicative reste à renseigner. Voir [le relevé de préparation](HEBERGEMENT-RECETTE.md). Mollie et l’annuel restent à développer ; aucune fusion de la PR 3 n’est autorisée sans confirmation.
 
 ## Références officielles consultées
 
