@@ -33,7 +33,11 @@ async function database(): Promise<boolean> {
     console.info('databaseProbe: BLOCKED (configuration invalide ou incomplète)');
     return false;
   }
-  const { pool } = createDatabase(parsed.data.DATABASE_URL, parsed.data.DATABASE_SCHEMA);
+  const { pool } = createDatabase(
+    parsed.data.DATABASE_URL,
+    parsed.data.DATABASE_SCHEMA,
+    parsed.data.DATABASE_SSL_CA,
+  );
   try {
     const result = await pool.query<{ name: string; hash: string }>(
       'SELECT name, hash FROM schema_migrations',

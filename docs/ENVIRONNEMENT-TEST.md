@@ -16,7 +16,7 @@ Le mode recette ne simule pas un encaissement Stripe/Mollie. La simulation des p
 
 Contrôles locaux réussis : TypeScript et ESLint, 41 tests unitaires, 41 tests PostgreSQL, compilation Next.js en mode staging et dix parcours Chromium. Le dernier contrôle vérifie le bandeau et l’absence de boutons de connexion Stripe et de souscription payante. Les tests unitaires vérifient aussi qu’aucun SDK Stripe ne démarre lorsque les paiements sont désactivés. Ces résultats ne certifient pas les connexions hébergées encore manquantes.
 
-## Connexions manquantes — saisir uniquement dans les paramètres sécurisés
+## Paramètres de connexion — saisir uniquement dans les paramètres sécurisés
 
 [Paramètres Vercel du projet](https://vercel.com/elis-projects-ddf0bd9d/saas-booking/settings/environment-variables). Choisir **Preview**, jamais Production pour cette recette.
 
@@ -28,13 +28,19 @@ Contrôles locaux réussis : TypeScript et ESLint, 41 tests unitaires, 41 tests 
 | `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET` | Supabase Storage → configuration S3, bucket **privé** dédié à la recette. Copier les valeurs du projet. |
 | `STORAGE_ACCESS_KEY_ID`, `STORAGE_SECRET_ACCESS_KEY` | Identifiants S3 serveur dédiés à ce stockage de recette. |
 
-`DATABASE_SCHEMA=booking`, les secrets HMAC, Better Auth et de tâches, et les deux réglages staging/paiements sont déjà préparés en Preview. Ne pas copier les secrets dans Git, les captures ou le chat. Les connecteurs d’administration disponibles n’ont pas fourni les identifiants SQL, S3 ou Resend ; le raccordement applicatif reste donc incomplet.
+`DATABASE_SCHEMA=booking`, les secrets HMAC, Better Auth et de tâches, et les deux réglages staging/paiements sont déjà préparés en Preview. Ne pas copier les secrets dans Git, les captures ou le chat.
+
+Mise à jour : `DATABASE_URL` a été renseignée par le propriétaire comme Secret Preview. Un diagnostic Vercel a réussi une connexion TLS avec vérification du certificat et du nom d’hôte et a lu les neuf migrations de `booking.schema_migrations`. Le déploiement de diagnostic `dpl_CG3V3D67KmrZSDvcSohP9AiTgcSB` est READY en Preview ; il contient uniquement une page de diagnostic, **pas l’application complète**. Aucune écriture SQL n’a été réalisée par ce contrôle.
+
+Le certificat public officiel Supabase Root 2021 CA est configuré via `DATABASE_SSL_CA` en Preview. Source : https://supabase-downloads.s3.amazonaws.com/prod/ssl/prod-ca-2021.crt ; empreinte SHA-256 : `807025AD50D4ED219D2C9C7D299C004F824EB00CF7F65AFEF607D07B72E6CAFA`. L’application et les scripts appliquent désormais TLS strict aux hôtes Supabase ; un `sslmode=disable` présent dans l’URL ne peut pas désactiver cette vérification. Le certificat est public ; il ne contient pas de mot de passe.
+
+Le compte Resend connecté ne comporte encore aucun domaine ni clé applicative au moment du contrôle. Les identifiants S3, l’expéditeur et l’ordonnanceur restent à préparer ; les parcours complets hébergés ne sont pas encore validés.
 
 L’e-mail de vérification reste obligatoire. Aucun lien de validation, mot de passe ou faux compte privilégié n’est exposé pour contourner la messagerie manquante.
 
 ## Hébergement
 
-Le propriétaire demande maintenant une recette accessible pour tester, puis une mise en service payante plus tard. Le projet Vercel séparé existe, mais aucun déploiement n’a été créé : il manque les connexions ci-dessus.
+Le propriétaire demande maintenant une recette accessible pour tester, puis une mise en service payante plus tard. Le projet Vercel séparé existe avec une Preview de diagnostic SQL ; la recette complète de l’application attend les raccordements restants ci-dessus.
 
 La [règle officielle Vercel](https://vercel.com/docs/limits/fair-use-guidelines#commercial-usage) réserve Hobby à l’usage personnel non commercial et définit l’usage commercial par la finalité de gain financier du déploiement. Elle n’accorde pas d’exception explicite au test privé d’un futur SaaS commercial. Confirmer l’éligibilité de cet usage auprès de Vercel ou choisir une offre adaptée avant publication. Aucune souscription payante n’est activée automatiquement.
 

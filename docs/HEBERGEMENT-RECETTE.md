@@ -8,9 +8,9 @@ La PR 3 est fusionnée dans `main` au commit `27d6a187e51f2d973b0094f1fd5a2056e5
 - Le schéma applicatif privé `booking` contient 23 tables, dont le registre `schema_migrations` avec les neuf migrations et leurs empreintes SHA-256 identiques au dépôt.
 - Aucune donnée client ou organisation fictive insérée. Le schéma `public` ne contient aucune table applicative.
 - Accès au schéma retiré à `PUBLIC`, `anon` et `authenticated`. RLS activée sur les 23 tables, sans politique publique : refus par défaut pour les rôles ordinaires. Le backend devra disposer d’un rôle SQL autorisé. Les contrôles de locataire restent appliqués par l’application.
-- Projet Vercel créé : `saas-booking`, ID `prj_In1LrV1sbG1zr414U32NVkhreOU5`, espace `elis-projects-ddf0bd9d`. Next.js, Node 24 et région de fonctions demandée `arn1`. Aucun dépôt Git connecté, aucun déploiement.
+- Projet Vercel créé : `saas-booking`, ID `prj_In1LrV1sbG1zr414U32NVkhreOU5`, espace `elis-projects-ddf0bd9d`. Next.js, Node 24 et région de fonctions demandée `arn1`. Aucun dépôt Git connecté ; seule une Preview technique de diagnostic SQL est disponible, pas l’application complète.
 - Paramètres Preview préparés : `DATABASE_SCHEMA=booking` et trois secrets indépendants pour HMAC, Better Auth et les tâches planifiées. Aucune valeur secrète dans Git ou dans ce document. Rien configuré en Production.
-- **La connexion applicative Supabase n’est pas encore établie** : `DATABASE_URL` et l’URL HTTPS de recette restent à fournir dans Vercel au moment du déploiement. Le connecteur d’administration permet les migrations, mais ne fournit pas le mot de passe SQL de l’application.
+- **La connexion SQL Supabase a été validée depuis Vercel** après saisie de `DATABASE_URL` par le propriétaire et configuration du certificat officiel `DATABASE_SSL_CA`. Le diagnostic a lu les neuf migrations avec TLS strict. Il reste à héberger et vérifier l’application complète, avec e-mails, stockage et ordonnanceur. Voir le relevé actualisé dans `ENVIRONNEMENT-TEST.md`.
 
 ## Connexion lors de la future mise en ligne
 

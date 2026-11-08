@@ -13,6 +13,7 @@ export const EnvironmentSchema = z
       .url()
       .refine((value) => value.startsWith('postgres') && supportsSessionLocks(value)),
     DATABASE_SCHEMA: DatabaseSchema.optional(),
+    DATABASE_SSL_CA: z.string().includes('-----BEGIN CERTIFICATE-----').optional(),
     NEXT_PUBLIC_APP_URL: z.url(),
     SELF_CANCEL_HMAC_SECRET: z.string().min(INPUT_LIMITS.SECRET_MIN),
     STRIPE_SECRET_KEY: z.string().startsWith('sk_').optional(),
