@@ -1,3 +1,4 @@
+import { organizationBranding } from './schema/saas';
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import type { SelfBookingRepositoryPort } from '../../core/ports/self-booking.port';
 import type { SelfCancelTokenPayload } from '../../core/validation/self-service';
@@ -8,6 +9,7 @@ import { failure } from '../../lib/errors';
 import { ok } from '../../lib/result';
 import { ERROR_CODES } from '../../config/constants';
 const columns = {
+  participantHue: organizationBranding.participantHue,
   organizationSlug: organizations.slug,
   organizationName: organizations.name,
   activityId: bookings.activityId,
@@ -27,6 +29,10 @@ export class DrizzleSelfBookingRepository implements SelfBookingRepositoryPort {
         .select(columns)
         .from(bookings)
         .innerJoin(organizations, eq(organizations.id, bookings.organizationId))
+        .leftJoin(
+          organizationBranding,
+          eq(organizationBranding.organizationId, bookings.organizationId),
+        )
         .innerJoin(
           sessions,
           and(

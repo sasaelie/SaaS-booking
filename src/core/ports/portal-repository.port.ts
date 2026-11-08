@@ -1,3 +1,4 @@
+import type { AppearanceInput } from '../validation/appearance';
 import type { UpdateActivityInput, AddManualSessionInput } from './portal-inputs';
 import type { Result } from '../../lib/result';
 import type {
@@ -36,6 +37,7 @@ export interface PortalRepositoryPort {
     organizationId: string,
     activityId: string,
   ): Promise<Result<void>>;
+  updateAppearance(actor: PortalActor, input: AppearanceInput): Promise<Result<void>>;
   updateSettings(actor: PortalActor, input: OrganizationSettingsInput): Promise<Result<void>>;
   isPlatformOperator(actor: PortalActor): Promise<Result<boolean>>;
   platform(actor: PortalActor, filter: PlatformFilter): Promise<Result<PlatformOverview>>;

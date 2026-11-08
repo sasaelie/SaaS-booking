@@ -1,5 +1,6 @@
 import { z } from 'zod';
 export const PortalCommandSchema = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('appearance'), input: z.unknown() }),
   z.object({ action: z.literal('connect-stripe'), input: z.unknown() }),
   z.object({ action: z.literal('platform-stripe'), input: z.unknown() }),
   z.object({ action: z.literal('update-activity'), input: z.unknown() }),

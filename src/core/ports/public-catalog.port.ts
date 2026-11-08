@@ -5,6 +5,7 @@ export interface PublicCatalog {
   readonly name: string;
   readonly slug: string;
   readonly theme: string;
+  readonly participantHue?: number | null;
   readonly hasLogo: boolean;
   readonly activities: readonly {
     readonly id: string;

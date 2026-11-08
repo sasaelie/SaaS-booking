@@ -1,3 +1,4 @@
+import type { AppearanceInput } from '../../../core/validation/appearance';
 import { eq } from 'drizzle-orm';
 import { organizations } from '../schema';
 import { organizationBranding } from '../schema/saas';
@@ -27,6 +28,22 @@ export async function updateSettings(
     .onConflictDoUpdate({
       target: organizationBranding.organizationId,
       set: { theme: input.theme },
+    });
+  return ok(undefined);
+}
+
+export async function updateAppearance(
+  tx: Transaction,
+  actor: PortalActor,
+  input: AppearanceInput,
+) {
+  await requireMembership(tx, actor, input.organizationId, true);
+  await tx
+    .insert(organizationBranding)
+    .values(input)
+    .onConflictDoUpdate({
+      target: organizationBranding.organizationId,
+      set: { organizerHue: input.organizerHue, participantHue: input.participantHue },
     });
   return ok(undefined);
 }

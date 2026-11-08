@@ -1,4 +1,5 @@
 'use client';
+import { ColorScene } from '../_ui/ColorScene';
 import Link from 'next/link';
 import { FORM_LABELS, BOOKING_STATUS_LABELS } from '../../config/constants';
 import { useManagement } from './use-management';
@@ -10,6 +11,7 @@ export function ManageBooking() {
   const back = booking ? `/${booking.organizationSlug}/${booking.activityId}` : '/';
   return (
     <div className="ice-widget-root manage-container">
+      {booking?.participantHue != null ? <ColorScene hue={booking.participantHue} /> : null}
       <Link className="manage-back" href={back}>
         {booking ? FORM_LABELS.BACK_ACTIVITY : FORM_LABELS.BACK_HOME}
       </Link>

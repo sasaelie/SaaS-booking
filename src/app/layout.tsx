@@ -1,3 +1,4 @@
+import './_ui/appearance.css';
 import type { ReactNode } from 'react';
 import { StagingNotice } from './_ui/StagingNotice';
 import './_ui/staging.css';
@@ -22,6 +23,7 @@ import './_portal/portal-details.css';
 import './_portal/portal-forms.css';
 import './_portal/portal-media.css';
 import './_portal/portal-responsive.css';
+import './_portal/navigation.css';
 export const metadata = {
   title: 'Studio Créatif 360 — Réservations',
   description: 'Réservez votre place à une activité.',

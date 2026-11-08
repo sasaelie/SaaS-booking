@@ -31,6 +31,7 @@ export async function readActivity(
   const schedule = await readActivitySchedule(db, organizationId, activityId);
   return ok({
     ...row.activity,
+    participantHue: row.branding?.participantHue ?? null,
     brandTheme: row.branding?.theme ?? 'SAGE',
     hasLogo: Boolean(row.branding?.logoStorageKey),
     hasBackground: Boolean(row.branding?.backgroundStorageKey),

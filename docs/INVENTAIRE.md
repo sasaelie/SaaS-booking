@@ -1,8 +1,8 @@
 # Inventaire de la plateforme
 
-495 fichiers versionnés, dont 388 sous `src/`.
+507 fichiers versionnés, dont 397 sous `src/`.
 
-Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 010.
+Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 011.
 
 ```text
 .env.example
@@ -52,6 +52,7 @@ migrations/007_saas_spaces.sql
 migrations/008_brand_jobs.sql
 migrations/009_stripe_connect.sql
 migrations/010_private_files.sql
+migrations/011_appearance.sql
 next-env.d.ts
 next.config.ts
 package-lock.json
@@ -167,6 +168,7 @@ src/app/(portal)/app/[organizationId]/layout.tsx
 src/app/(portal)/app/[organizationId]/page.tsx
 src/app/(portal)/app/[organizationId]/parametres/page.tsx
 src/app/(portal)/app/[organizationId]/partager/page.tsx
+src/app/(portal)/app/[organizationId]/reglages/page.tsx
 src/app/(portal)/app/[organizationId]/reservations/page.tsx
 src/app/(portal)/app/nouveau/page.tsx
 src/app/(portal)/app/page.tsx
@@ -181,6 +183,7 @@ src/app/_auth/use-auth-form.ts
 src/app/_portal/AccessNotice.tsx
 src/app/_portal/ActivityCards.tsx
 src/app/_portal/AdminOperation.tsx
+src/app/_portal/AppearanceEditor.tsx
 src/app/_portal/BookingCards.tsx
 src/app/_portal/BookingFilters.tsx
 src/app/_portal/BookingManagement.tsx
@@ -202,6 +205,7 @@ src/app/_portal/PortalForm.tsx
 src/app/_portal/PortalHeading.tsx
 src/app/_portal/PortalMetric.tsx
 src/app/_portal/PortalNav.tsx
+src/app/_portal/PortalScene.tsx
 src/app/_portal/PortalSelect.tsx
 src/app/_portal/PortalShell.tsx
 src/app/_portal/RecordBankRefund.tsx
@@ -228,6 +232,7 @@ src/app/_portal/admin-response.ts
 src/app/_portal/date-label.ts
 src/app/_portal/form-command.ts
 src/app/_portal/load-workspace.ts
+src/app/_portal/navigation.css
 src/app/_portal/organization-link.css
 src/app/_portal/portal-components.css
 src/app/_portal/portal-details.css
@@ -238,6 +243,7 @@ src/app/_portal/portal-request.ts
 src/app/_portal/portal-response.ts
 src/app/_portal/portal-responsive.css
 src/app/_portal/use-admin-operation.ts
+src/app/_portal/use-appearance.ts
 src/app/_portal/use-media-upload.ts
 src/app/_portal/use-mutation.ts
 src/app/_portal/use-organization-slug.ts
@@ -261,6 +267,7 @@ src/app/_ui/BrandBackdrop.tsx
 src/app/_ui/BrandLogo.tsx
 src/app/_ui/CalendarDays.tsx
 src/app/_ui/CalendarNavigation.tsx
+src/app/_ui/ColorScene.tsx
 src/app/_ui/ContactField.tsx
 src/app/_ui/EmbedHeightReporter.tsx
 src/app/_ui/IceBookingWidget.tsx
@@ -268,6 +275,7 @@ src/app/_ui/IceIcon.tsx
 src/app/_ui/StagingNotice.tsx
 src/app/_ui/VoucherField.tsx
 src/app/_ui/VoucherInput.tsx
+src/app/_ui/appearance.css
 src/app/_ui/booking-calendar.css
 src/app/_ui/booking-checkout.css
 src/app/_ui/booking-fields.css
@@ -343,6 +351,7 @@ src/composition/self-booking.ts
 src/composition/subscriptions.ts
 src/composition/unavailable.ts
 src/composition/widget.ts
+src/config/appearance.ts
 src/config/auth-labels.ts
 src/config/auth-ui.ts
 src/config/booking-ui.ts
@@ -433,6 +442,7 @@ src/core/use-cases/read-private-file.use-case.ts
 src/core/use-cases/read-self-booking.use-case.ts
 src/core/use-cases/voucher-lifecycle.use-case.ts
 src/core/validation/admin-command.ts
+src/core/validation/appearance.ts
 src/core/validation/local-pause.ts
 src/core/validation/portal-activity.ts
 src/core/validation/portal-command.ts
@@ -451,6 +461,7 @@ src/lib/sha256.ts
 src/lib/suggest-organization-slug.ts
 src/lib/trusted-origin.ts
 src/proxy.ts
+tests/e2e/appearance.spec.ts
 tests/e2e/bank-fixtures.ts
 tests/e2e/bank-proof.spec.ts
 tests/e2e/booking.spec.ts
@@ -463,6 +474,7 @@ tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
 tests/e2e/staging.spec.ts
+tests/integration/appearance.test.ts
 tests/integration/authentication.test.ts
 tests/integration/bank-and-pause.test.ts
 tests/integration/billing-fixtures.ts

@@ -1,6 +1,8 @@
+import { HueSchema } from './appearance';
 import { z } from 'zod';
 import { BOOKING_STATUSES } from '../../config/constants';
 export const SelfBookingContextSchema = z.object({
+  participantHue: HueSchema.nullable().optional(),
   organizationSlug: z.string(),
   organizationName: z.string(),
   activityId: z.uuid(),

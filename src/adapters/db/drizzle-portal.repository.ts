@@ -1,3 +1,4 @@
+import type { AppearanceInput } from '../../core/validation/appearance';
 import {
   updateActivity,
   addSession,
@@ -21,7 +22,7 @@ import { listOrganizations, getOrganization, createOrganization } from './portal
 import { portalOverview } from './portal/overview';
 import { portalBookings } from './portal/bookings';
 import { createActivity, archiveActivity } from './portal/activities';
-import { updateSettings } from './portal/settings';
+import { updateSettings, updateAppearance } from './portal/settings';
 import { isPlatformOperator } from './portal/authorization';
 import { platformOverview, setPlatformAccess } from './portal/platform';
 export class DrizzlePortalRepository implements PortalRepositoryPort {
@@ -46,6 +47,9 @@ export class DrizzlePortalRepository implements PortalRepositoryPort {
   }
   archiveActivity(actor: PortalActor, id: string, activityId: string) {
     return atomic(this.db, 'Activity', (tx) => archiveActivity(tx, actor, id, activityId));
+  }
+  updateAppearance(actor: PortalActor, input: AppearanceInput) {
+    return atomic(this.db, 'Appearance', (tx) => updateAppearance(tx, actor, input));
   }
   updateSettings(actor: PortalActor, input: OrganizationSettingsInput) {
     return atomic(this.db, 'Settings', (tx) => updateSettings(tx, actor, input));

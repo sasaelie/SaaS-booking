@@ -39,6 +39,7 @@ test('renders all organizer screens coherently on desktop and mobile and downloa
       '/reservations',
       '/abonnement',
       '/parametres',
+      '/reglages',
       '/partager',
     ]) {
       await page.goto(`/app/${space.organizationId}${suffix}`);

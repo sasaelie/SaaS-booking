@@ -2,7 +2,6 @@ import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { PORTAL, SETTINGS_UI, INPUT_LIMITS, MEMBER_ROLES } from '../../config/constants';
 import { PortalForm } from './PortalForm';
 import { PortalField } from './PortalField';
-import { PortalSelect } from './PortalSelect';
 export function OrganizationSettings({
   organization,
 }: {
@@ -23,11 +22,7 @@ export function OrganizationSettings({
           maxLength={INPUT_LIMITS.NAME_MAX}
           defaultValue={organization.name}
         />
-        <PortalSelect label={SETTINGS_UI.THEME} name="theme" defaultValue={organization.theme}>
-          <option value="SAGE">{SETTINGS_UI.SAGE}</option>
-          <option value="CHALK">{SETTINGS_UI.CHALK}</option>
-          <option value="IVORY">{SETTINGS_UI.IVORY}</option>
-        </PortalSelect>
+        <input type="hidden" name="theme" value={organization.theme} />
         <BankSettings organization={organization} />
         <p className="portal-muted">{SETTINGS_UI.BANK_HINT}</p>
         <label className="portal-check">

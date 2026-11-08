@@ -1,3 +1,4 @@
+import { AppearanceSchema } from '../../validation/appearance';
 import { z } from 'zod';
 import { ERROR_CODES } from '../../../config/constants';
 import { failure } from '../../../lib/errors';
@@ -29,6 +30,14 @@ export class OrganizationsUseCase {
       return parsed.success
         ? this.repository.createOrganization(actor, parsed.data)
         : failure(ERROR_CODES.VALIDATION_FAILED, 'Organization', 'create');
+    });
+  }
+  appearance(raw: unknown) {
+    return withPortalActor(this.identity, 'Appearance', async (actor) => {
+      const parsed = AppearanceSchema.safeParse(raw);
+      return parsed.success
+        ? this.repository.updateAppearance(actor, parsed.data)
+        : failure(ERROR_CODES.VALIDATION_FAILED, 'Appearance', 'save');
     });
   }
   settings(raw: unknown) {

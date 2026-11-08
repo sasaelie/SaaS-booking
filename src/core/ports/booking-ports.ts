@@ -6,6 +6,7 @@ import type { PausePeriodRule, PersistedSession, TimeSlotRule } from '../domain/
 export interface ActivityWithScheduleConfig {
   readonly commercialAccessAllowed: boolean;
   readonly brandTheme: string;
+  readonly participantHue?: number | null;
   readonly hasLogo: boolean;
   readonly hasBackground: boolean;
   readonly id: string;

@@ -20,6 +20,7 @@ export class ReadSelfBookingUseCase {
         booking.status === BOOKING_STATUSES.PENDING_PAYMENT ||
         booking.status === BOOKING_STATUSES.PROOF_SUBMITTED;
       return ok({
+        participantHue: booking.participantHue ?? null,
         organizationSlug: booking.organizationSlug,
         organizationName: booking.organizationName,
         activityId: booking.activityId,

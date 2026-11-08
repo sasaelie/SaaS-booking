@@ -66,3 +66,11 @@ Les pages participant ont un fond mauve clair distinct du vert sauge de gestion,
 Le nom court demandé à la création d’un espace compose l’adresse publique de l’organisation (`/coucouture` par exemple). Il ne s’agit pas d’une adresse postale ni d’un achat de domaine.
 
 Sécurité Supabase après migration 010 : RLS activée sur `private_files`, aucun droit pour `PUBLIC`, `anon` ou `authenticated`. Le diagnostic Supabase signale uniquement l’information « RLS Enabled No Policy », attendue pour un schéma privé réservé au serveur (accès client refusé par défaut) : https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy.
+
+## Apparence indépendante et navigation
+
+La migration 011 ajoute deux teintes optionnelles par organisation. Les réglages préexistants restent applicables tant qu’aucune teinte personnalisée n’est enregistrée. Seul le propriétaire peut enregistrer les couleurs ; les bornes 0–359 sont vérifiées par Zod et PostgreSQL.
+
+**Apparence** (`/parametres`) contient le sélecteur Organisateur/Participants, le curseur accessible au clavier, un aperçu immédiat, l’enregistrement explicite et le retour aux couleurs par défaut. La base ivoire et la couleur du texte restent imposées. Le logo et la photo sont dans une section repliable. Les teintes sont appliquées à la console, au catalogue, aux pages d’activité et à la gestion de réservation.
+
+**Réglages** (`/reglages`) regroupe l’identité, l’IBAN, les règles de suppression et les connexions de paiement. Le menu mobile affiche Retour, un titre non interactif et Menu. Les liens de navigation partagent un traitement uniforme et la page active possède un repère distinct ; les actions conservent les boutons de verre.

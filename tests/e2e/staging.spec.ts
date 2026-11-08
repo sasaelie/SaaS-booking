@@ -10,7 +10,7 @@ test('labels staging and hides payment connections and paid subscriptions', asyn
   const space = await browserSpace();
   await login(page, space);
   await expect(page.getByRole('note')).toContainText('aucun paiement réel');
-  await page.goto(`/app/${space.organizationId}/parametres`);
+  await page.goto(`/app/${space.organizationId}/reglages`);
   await expect(
     page.getByText(/Les connexions Stripe et Mollie seront configurées plus tard/),
   ).toBeVisible();

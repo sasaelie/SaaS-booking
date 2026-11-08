@@ -7,6 +7,7 @@ export interface SelfBookingSnapshot {
   readonly activityId: string;
   readonly activityName: string;
   readonly startsAt: Date;
+  readonly participantHue?: number | null;
   readonly timezone: string;
   readonly status: BookingStatus;
   readonly paymentMode: PaymentMode;
