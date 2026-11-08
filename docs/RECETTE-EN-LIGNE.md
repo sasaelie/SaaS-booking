@@ -4,8 +4,8 @@
 
 - Adresse stable : https://saas-booking-recette-elis-projects-ddf0bd9d.vercel.app
 - Inscription : https://saas-booking-recette-elis-projects-ddf0bd9d.vercel.app/inscription
-- Déploiement Vercel Preview actuel : `dpl_2AwWxUpMgrN3WabUsTwz5Lwx6VRt`, état READY, avec la correction du lien de réservation.
-- Commit applicatif : `6b470fbe506170d81530cefb7b09cfe9de6063ec`, branche `feat/staging-environment`.
+- Déploiement Vercel Preview actuel : `dpl_6yvyqj76yT973ih9F3Ja9oT4L3je`, état READY, avec les corrections du lien de réservation et des écrans vides.
+- Commit applicatif : `9a82847f0368965afbc2ec6526f455944b5bae09`, branche `feat/staging-environment`.
 - L’alias stable pointe sur ce déploiement ; `NEXT_PUBLIC_APP_URL` est configuré pour cette adresse dans Preview.
 - Protection Vercel Authentication conservée. Se connecter avec le compte Vercel autorisé pour accéder à la recette. Aucun domaine acheté, aucune promotion en production et aucune fusion de la PR 4.
 
