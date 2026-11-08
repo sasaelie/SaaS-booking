@@ -20,6 +20,10 @@
 
 ## Première utilisation
 
+Le formulaire de création d’espace distingue maintenant le **nom du lien de réservation** d’une adresse postale. Il suggère un lien à partir du nom de l’organisation, en retire accents et espaces, affiche un aperçu et conserve les personnalisations. Les valeurs incorrectes ou réservées sont expliquées en français sous le champ. Le serveur conserve sa validation et le contrôle d’unicité ; la suggestion ne garantit pas qu’un lien soit disponible.
+
+Cette correction est vérifiée par un parcours mobile couvrant la suggestion, la saisie incorrecte, les noms réservés et la création effective d’un espace. Les dix autres parcours navigateur, les 42 tests unitaires, les 41 tests PostgreSQL et la compilation ont également été vérifiés pendant cette modification.
+
 1. Ouvrir l’adresse d’inscription et passer la protection Vercel si elle apparaît.
 2. S’inscrire avec **l’adresse du compte Resend**, seul destinataire réel autorisé par l’expéditeur `resend.dev` sans domaine vérifié.
 3. Choisir soi-même un mot de passe, non communiqué dans le chat.

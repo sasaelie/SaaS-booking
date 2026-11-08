@@ -32,9 +32,14 @@ export const PORTAL = {
   NO_ORGANIZATIONS: 'Bienvenue. Créons votre espace.',
   WELCOME_HINT: 'Votre organisation, vos activités et vos réservations au même endroit.',
   NAME: 'Nom de l’organisation',
-  SLUG: 'Adresse de votre page',
+  SLUG: 'Nom du lien de réservation',
   SLUG_HINT:
-    'Lettres minuscules, chiffres et tirets. Cette adresse sera partagée avec vos participants.',
+    'Ce nom apparaît à la fin de votre lien sur Internet, pas votre adresse postale. Minuscules, chiffres et tirets, sans espaces.',
+  SLUG_PLACEHOLDER: 'mon-atelier',
+  SLUG_PREVIEW: 'Aperçu de votre lien',
+  SLUG_FORMAT:
+    'Utilisez entre 3 et 60 caractères : lettres minuscules, chiffres et tirets, sans espace. Exemple : mon-atelier.',
+  SLUG_RESERVED: 'Ce nom est réservé à l’application. Choisissez un autre nom de lien.',
   KIND: 'Type d’organisation',
   TIMEZONE: 'Heure locale de vos activités',
   CREATE: 'Créer mon espace',

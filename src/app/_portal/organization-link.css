@@ -1,0 +1,8 @@
+.portal-url-preview {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--ice-quiet);
+  font-size: 12px;
+  line-height: 1.6;
+}

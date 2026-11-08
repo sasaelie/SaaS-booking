@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <>
       <PortalHeading title={PORTAL.CREATE_ORGANIZATION} description={PORTAL.WELCOME_HINT} />
-      <CreateOrganizationForm />
+      <CreateOrganizationForm appUrl={process.env['NEXT_PUBLIC_APP_URL'] ?? ''} />
     </>
   );
 }

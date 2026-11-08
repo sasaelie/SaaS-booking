@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-467 fichiers versionnés, dont 366 sous `src/`.
+472 fichiers versionnés, dont 370 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 009.
 
@@ -185,6 +185,7 @@ src/app/_portal/CopyCode.tsx
 src/app/_portal/CreateOrganizationForm.tsx
 src/app/_portal/MediaUpload.tsx
 src/app/_portal/OrganizationCards.tsx
+src/app/_portal/OrganizationIdentityFields.tsx
 src/app/_portal/OrganizationSettings.tsx
 src/app/_portal/Pagination.tsx
 src/app/_portal/PlatformAccessForms.tsx
@@ -222,6 +223,7 @@ src/app/_portal/admin-response.ts
 src/app/_portal/date-label.ts
 src/app/_portal/form-command.ts
 src/app/_portal/load-workspace.ts
+src/app/_portal/organization-link.css
 src/app/_portal/portal-components.css
 src/app/_portal/portal-details.css
 src/app/_portal/portal-forms.css
@@ -233,6 +235,7 @@ src/app/_portal/portal-responsive.css
 src/app/_portal/use-admin-operation.ts
 src/app/_portal/use-media-upload.ts
 src/app/_portal/use-mutation.ts
+src/app/_portal/use-organization-slug.ts
 src/app/_portal/use-portal-form.ts
 src/app/_ui/BookingBankInstructions.tsx
 src/app/_ui/BookingBrand.tsx
@@ -426,12 +429,14 @@ src/lib/logger.ts
 src/lib/modulo97.ts
 src/lib/result.ts
 src/lib/sha256.ts
+src/lib/suggest-organization-slug.ts
 src/lib/trusted-origin.ts
 src/proxy.ts
 tests/e2e/booking.spec.ts
 tests/e2e/embed-fixtures.ts
 tests/e2e/embed.spec.ts
 tests/e2e/interface.spec.ts
+tests/e2e/organization-link.spec.ts
 tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
