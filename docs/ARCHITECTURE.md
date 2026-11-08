@@ -1,25 +1,15 @@
-# Architecture et jalons
+# Architecture
 
-## Sens des dépendances attendu
+`src/core/domain/` contient les règles de calcul et de décision. Les contrats de persistance et de services sont dans `src/core/ports/`. Les cas d’usage valident les entrées et orchestrent les ports, avec des retours `Result`. Les adaptateurs implémentent les frontières PostgreSQL, Stripe, stockage, authentification et e-mails.
 
-```text
-Interface Next.js → Cas d’usage → Domaine et contrats
-Adaptateurs → Contrats et domaine
-Configuration et utilitaires → Fonctions partagées
-```
+`src/composition/` est le point de composition serveur : il instancie les adaptateurs et les injecte dans les cas d’usage. L’interface importe ce point d’entrée typé pour appeler les cas d’usage et n’importe aucun SDK ou adaptateur directement. Le cœur n’importe jamais la composition.
 
-Les dépendances concrètes doivent être assemblées côté serveur dans un point de composition. Les interfaces ne doivent pas initialiser Stripe ou Drizzle directement. Les exemples transmis ne respectent pas encore entièrement cette séparation.
+## Transactions
 
-## Répartition des sources
+Les écritures de réservation sont sérialisées par activité pour coordonner modèle, pauses, prix et fermeture. Une clé d’idempotence est verrouillée avant la lecture du dossier existant. Les ressources sont prises dans un ordre stable : activité, voucher, séance, réservation. L’état est recontrôlé après les verrous.
 
-| Jalon | Sources principales |
-| --- | --- |
-| 0 | constantes, Result, logger, Modulo 97, schéma SQL, CSS |
-| 1 | types de séance, disponibilité, fuseaux, calendrier, port et adaptateur atomique |
-| 2 | génération des CGV, validation, ports activité/notification, création de réservation |
-| 3 | port et adaptateur de paiement, traitement webhook |
-| 4 | moteur, port et cycle de vie des codes de report |
-| 5 | validation binaire, ports et parcours virement/fermeture |
-| 6 | jetons HMAC, rétention et widget React |
+Retourner un `Result` en erreur ne suffit pas à annuler une transaction Drizzle. La frontière SQL convertit les échecs en signal de rollback interne, puis les restitue comme `Result` normalisé et journalisé.
 
-Chaque jalon dispose de son fichier Vitest reçu ; le jalon 1 comprend également un test de concurrence simulée. La description initiale annonçait parfois davantage de scénarios que les tests effectivement fournis.
+La file `outbox_jobs` est écrite dans la même transaction que l’état métier. Les effets externes sont exécutés ensuite avec une clé stable et des reprises. Les accusés externes ne peuvent pas être inclus dans une transaction PostgreSQL ; les reprises doivent rester idempotentes. La rétention des clés chez les prestataires et les longues indisponibilités doivent être supervisées.
+
+Les migrations SQL contiennent les contraintes d’intégrité, les références composites par organisation et les restrictions de suppression. Le schéma Drizzle est découpé par responsabilité ; les migrations versionnées constituent la définition SQL appliquée.

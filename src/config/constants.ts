@@ -41,8 +41,7 @@ export const AUDIENCE_POLICIES = {
   ALL_PUBLIC: 'ALL_PUBLIC',
   MINORS_ONLY: 'MINORS_ONLY',
 } as const;
-export type AudiencePolicy =
-  (typeof AUDIENCE_POLICIES)[keyof typeof AUDIENCE_POLICIES];
+export type AudiencePolicy = (typeof AUDIENCE_POLICIES)[keyof typeof AUDIENCE_POLICIES];
 
 export const BOOKING_STATUSES = {
   PENDING_PAYMENT: 'PENDING_PAYMENT',
@@ -52,8 +51,7 @@ export const BOOKING_STATUSES = {
   CANCELLED_BY_ORGANIZER: 'CANCELLED_BY_ORGANIZER',
   EXPIRED: 'EXPIRED',
 } as const;
-export type BookingStatus =
-  (typeof BOOKING_STATUSES)[keyof typeof BOOKING_STATUSES];
+export type BookingStatus = (typeof BOOKING_STATUSES)[keyof typeof BOOKING_STATUSES];
 
 export const VOUCHER_STATUSES = {
   ACTIVE: 'ACTIVE',
@@ -62,8 +60,7 @@ export const VOUCHER_STATUSES = {
   USED_FOR_EXTERNAL_BENEFIT: 'USED_FOR_EXTERNAL_BENEFIT',
   EXPIRED: 'EXPIRED',
 } as const;
-export type VoucherStatus =
-  (typeof VOUCHER_STATUSES)[keyof typeof VOUCHER_STATUSES];
+export type VoucherStatus = (typeof VOUCHER_STATUSES)[keyof typeof VOUCHER_STATUSES];
 
 export const ERROR_CODES = {
   VALIDATION_FAILED: 'VALIDATION_FAILED',
@@ -78,5 +75,125 @@ export const ERROR_CODES = {
   INVALID_PROOF_FILE: 'INVALID_PROOF_FILE',
   UNAUTHORIZED: 'UNAUTHORIZED',
   INTERNAL_ERROR: 'INTERNAL_ERROR',
+  NOT_FOUND: 'NOT_FOUND',
+  CONFLICT: 'CONFLICT',
+  CONFIGURATION_ERROR: 'CONFIGURATION_ERROR',
+  RATE_LIMITED: 'RATE_LIMITED',
 } as const;
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];
+
+export const TIME = {
+  SECOND_MS: 1000,
+  MINUTE_MS: 60000,
+  HOUR_MS: 3600000,
+  DAY_MS: 86400000,
+  DAYS_PER_WEEK: 7,
+} as const;
+export const INPUT_LIMITS = {
+  NAME_MIN: 2,
+  NAME_MAX: 80,
+  EMAIL_MAX: 160,
+  KEY_MIN: 8,
+  KEY_MAX: 128,
+  PHONE_MIN_DIGITS: 8,
+  PHONE_MAX_DIGITS: 15,
+  HASH_LENGTH: 64,
+  TOKEN_MAX: 2048,
+  SECRET_MIN: 32,
+  MAX_CENTS: 100000000,
+  MAX_CAPACITY: 10000,
+  MIN_YEAR: 2000,
+  MAX_YEAR: 2200,
+  MAX_RANGE_DAYS: 370,
+} as const;
+export const DEFAULTS = {
+  TIMEZONE: 'Europe/Brussels',
+  CURRENCY: 'EUR',
+  TEXT_COLOR: '#143D2B',
+  LOCALE: 'fr-BE',
+} as const;
+export const BANK_REFERENCE = {
+  MAX_SEQUENCE: 9999999999,
+  BASE_LENGTH: 10,
+  CHECK_LENGTH: 2,
+  MODULUS: 97,
+  PREFIX: '+++',
+  PART_ONE_END: 3,
+  PART_TWO_END: 7,
+  TOTAL_LENGTH: 12,
+} as const;
+export const VOUCHER_CODE = {
+  ALPHABET: '23456789ABCDEFGHJKLMNPQRSTUVWXYZ',
+  SEGMENTS: 2,
+} as const;
+export const JOB_RULES = {
+  BATCH_SIZE: 20,
+  RETRY_MINUTES: 5,
+  LOCK_TIMEOUT_SECONDS: 10,
+  MAX_IMAGE_PIXELS: 20000000,
+  MAX_WEBHOOK_BYTES: 262144,
+  RATE_WINDOW_SECONDS: 60,
+  RATE_MAX_REQUESTS: 20,
+} as const;
+export const TOKEN_RULES = {
+  PURPOSE: 'booking-self-service',
+  DURATION_DAYS: 90,
+} as const;
+export const JOB_TYPES = {
+  CONFIRMATION: 'CONFIRMATION',
+  VOUCHER: 'VOUCHER',
+  CANCELLATION: 'CANCELLATION',
+  REFUND: 'REFUND',
+  PURGE: 'PURGE',
+} as const;
+export const UI_MESSAGES = {
+  UNAVAILABLE: 'La réservation est temporairement indisponible.',
+  FAILURE: 'Impossible de terminer cette opération. Réessayez avec la même demande.',
+  SUCCESS: 'Votre place est réservée.',
+  FULL: 'Cette séance ne peut plus être réservée.',
+  TERMS_CHANGED: 'Les conditions ont changé. Consultez la nouvelle version avant de confirmer.',
+  CANCEL_SUCCESS: 'Votre réservation a été annulée.',
+  PHONE: 'Téléphone d’urgence du représentant légal',
+  NO_PAYMENT: 'Aucun paiement en ligne ; cette confirmation ne vaut pas reçu de paiement.',
+} as const;
+
+export const FORM_LABELS = {
+  FIRST_NAME: 'Prénom',
+  LAST_NAME: 'Nom',
+  EMAIL: 'Adresse e-mail',
+  PHONE: 'Téléphone',
+  VOUCHER: 'Code de report',
+  MARKETING: 'Je souhaite recevoir les actualités (facultatif).',
+  TERMS: 'J’ai lu et j’accepte les conditions ci-dessus.',
+  BOOK: 'Réserver une place',
+  SUBMITTING: 'Réservation en cours…',
+  SLOTS: 'Séances disponibles',
+  NO_SLOTS: 'Aucune séance disponible pour le moment.',
+  SELECT: 'Choisissez une séance',
+  MANAGE: 'Gérer ma réservation',
+  CANCEL: 'Annuler ma réservation',
+  UPLOAD: 'Envoyer le justificatif',
+  PROOF: 'Justificatif de virement',
+  DONE: 'Votre demande a été enregistrée.',
+  CONFIRM_CANCEL: 'Confirmer l’annulation de cette réservation',
+  TERMS_TITLE: 'Conditions de réservation',
+} as const;
+export const MONEY = { CENTS_PER_UNIT: 100, DECIMAL_PLACES: 2 } as const;
+
+export { FILE_SIGNATURES } from './file-signatures';
+export const ENCODING = { HEX_RADIX: 16, BYTE_HEX_WIDTH: 2, BYTE_VALUES: 256 } as const;
+export const HTTP_STATUS = {
+  OK: 200,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  TOO_LARGE: 413,
+  RATE_LIMITED: 429,
+  INTERNAL: 500,
+  UNAVAILABLE: 503,
+} as const;
+
+export { HTTP_LIMITS } from './http-limits';
+export { BOOKING_UI, CALENDAR_UI } from './booking-ui';

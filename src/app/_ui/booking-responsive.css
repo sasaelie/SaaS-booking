@@ -1,0 +1,103 @@
+.ice-form {
+  max-width: 640px;
+  margin: auto;
+  display: grid;
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  main {
+    padding: 0 18px;
+    margin-top: 24px;
+  }
+  .ice-booking-shell {
+    grid-template-columns: 0.8fr 1.5fr;
+  }
+  .ice-story {
+    padding: 28px 22px;
+  }
+  .ice-booking-flow {
+    padding: 24px 20px 18px;
+  }
+}
+@media (max-width: 760px) {
+  main {
+    max-width: 620px;
+    margin-top: 20px;
+    padding: 0 12px;
+  }
+  .ice-brand {
+    margin: 0 6px 20px;
+  }
+  .ice-brand-name {
+    font-size: 13px;
+    gap: 10px;
+  }
+  .ice-brand-note {
+    display: none;
+  }
+  .ice-booking-shell {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    border-radius: 28px;
+  }
+  .ice-story {
+    min-height: 0;
+    padding: 24px;
+  }
+  .ice-story h1 {
+    font-size: 31px;
+    margin: 10px 0;
+    max-width: 90%;
+  }
+  .ice-story-top > p {
+    display: none;
+  }
+  .ice-sculpture {
+    display: none;
+  }
+  .ice-story-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 4px 18px;
+    margin-top: 18px;
+  }
+  .ice-audience {
+    font-size: 11px;
+    max-width: none;
+    grid-column: 1;
+    margin: 0;
+  }
+  .ice-audience-hint {
+    width: auto;
+    grid-column: 1;
+    font-size: 10px;
+  }
+  .ice-price {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: 0;
+    flex-direction: column;
+    gap: 0;
+  }
+  .ice-price strong {
+    font-size: 27px;
+  }
+  .ice-price span {
+    font-size: 10px;
+  }
+  .ice-booking-flow {
+    padding: 26px 16px 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

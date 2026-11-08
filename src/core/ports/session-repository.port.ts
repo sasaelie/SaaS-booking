@@ -1,43 +1,40 @@
-// src/core/ports/session-repository.port.ts
-import type { BookingStatus } from '../../config/constants';
-import type { AppError, Result } from '../../lib/result';
-import type {
-  PersistedSession,
-  SeatAvailability,
-} from '../domain/session-types';
-
+import type { Result } from '../../lib/result';
+import type { BookingStatus, PaymentMode } from '../../config/constants';
+import type { ValidatedCreateBookingInput } from '../domain/booking-validation';
+import type { SeatAvailability } from '../domain/session-types';
 export interface AtomicSeatReservationInput {
-  readonly organizationId: string;
-  readonly activityId: string;
-  readonly startsAt: Date;
-  readonly endsAt: Date;
-  readonly defaultCapacity: number;
-  readonly now: Date;
-  readonly booking: {
-    readonly idempotencyKey: string;
-    readonly status: BookingStatus;
-    readonly firstName: string;
-    readonly lastName: string;
-    readonly email: string;
-    readonly phone: string | null;
-    readonly marketingOptIn: boolean;
-    readonly unitPriceCents: number;
-    readonly voucherDiscountCents: number;
-    readonly amountPaidCents: number;
-    readonly appliedVoucherId: string | null;
-    readonly lockedUntil: Date | null;
-    readonly termsAcceptedAt: Date;
-    readonly termsVersionHash: string;
-  };
+  readonly input: ValidatedCreateBookingInput;
+  readonly requestHash: string;
 }
 export interface AtomicSeatReservationOutput {
+  readonly bankInstructions: {
+    readonly iban: string;
+    readonly accountName: string;
+    readonly reference: string;
+  } | null;
   readonly bookingId: string;
-  readonly session: PersistedSession;
+  readonly sessionId: string;
+  readonly organizationId: string;
+  readonly status: BookingStatus;
+  readonly paymentMode: PaymentMode;
+  readonly amountToPayCents: number;
+  readonly lockedUntil: Date | null;
   readonly availabilityAfterBooking: SeatAvailability;
+  readonly checkoutUrl: string | null;
+  readonly activityName: string;
+  readonly currency: string;
+  readonly attendeeEmail: string;
+  readonly merchantAccountId: string | null;
 }
 export interface SessionRepositoryPort {
-  /** Une transaction : Upsert, SELECT FOR UPDATE, calcul des places, insertion ou SESSION_FULL. */
   reserveSeatAtomically(
     input: AtomicSeatReservationInput,
-  ): Promise<Result<AtomicSeatReservationOutput, AppError>>;
+  ): Promise<Result<AtomicSeatReservationOutput>>;
+  attachCheckout(params: {
+    readonly organizationId: string;
+    readonly bookingId: string;
+    readonly checkoutReference: string;
+    readonly checkoutUrl: string;
+    readonly expiresAt: Date;
+  }): Promise<Result<void>>;
 }

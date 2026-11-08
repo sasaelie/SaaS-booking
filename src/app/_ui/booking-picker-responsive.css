@@ -1,0 +1,92 @@
+@media (min-width: 761px) and (max-width: 1040px) {
+  .ice-session-picker {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .ice-times {
+    padding: 14px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--ice-line);
+  }
+  .ice-times h3 {
+    margin-bottom: 12px;
+  }
+  .ice-timezone {
+    margin-top: 12px;
+  }
+  .ice-timezone br {
+    display: none;
+  }
+  .ice-timezone strong {
+    margin-left: 8px;
+  }
+}
+@media (max-width: 520px) {
+  .ice-progress {
+    margin-bottom: 24px;
+    gap: 10px;
+    font-size: 10px;
+  }
+  .ice-step-heading h2 {
+    font-size: 26px;
+  }
+  .ice-session-picker {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .ice-calendar-nav h3 {
+    font-size: 15px;
+  }
+  .ice-calendar-day {
+    min-height: 42px;
+    font-size: 13px;
+  }
+  .ice-times {
+    padding: 16px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--ice-line);
+  }
+  .ice-times h3 {
+    margin-bottom: 14px;
+  }
+  .ice-time-list {
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  }
+  .ice-time-slot strong {
+    font-size: 13px;
+  }
+  .ice-time-slot small {
+    font-size: 11px;
+  }
+  .ice-timezone {
+    margin-top: 12px;
+    font-size: 10px;
+  }
+  .ice-timezone br {
+    display: none;
+  }
+  .ice-timezone strong {
+    margin-left: 8px;
+  }
+  .ice-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: 20px;
+  }
+  .ice-action-bar .liquid-ice-button {
+    width: 100%;
+  }
+  .ice-selection-card {
+    align-items: flex-start;
+  }
+  .ice-selection strong {
+    font-size: 11px;
+  }
+  .ice-selection small {
+    font-size: 10px;
+  }
+  .ice-text-button {
+    max-width: 72px;
+    padding: 0;
+  }
+}

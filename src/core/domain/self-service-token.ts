@@ -1,124 +1,84 @@
-// src/core/domain/self-service-token.ts
-import { ERROR_CODES } from '../../config/constants';
-import { failAndLog } from '../../lib/logger';
-import { ok, type AppError, type Result } from '../../lib/result';
-export interface SelfCancelTokenPayload {
-  readonly organizationId: string;
-  readonly bookingId: string;
-  readonly attendeeEmail: string;
-  readonly expUnixSeconds: number;
-}
-function toBase64Url(bytes: Uint8Array): string {
-  let binary = '';
-  for (let i = 0; i < bytes.length; i += 1)
-    binary += String.fromCharCode(bytes[i] ?? 0);
-  return btoa(binary)
+import { ERROR_CODES, INPUT_LIMITS, TIME, TOKEN_RULES } from '../../config/constants';
+import { failure } from '../../lib/errors';
+import { ok, type Result } from '../../lib/result';
+import {
+  SelfCancelPayloadSchema,
+  SelfCancelTokenSchema,
+  type SelfCancelTokenPayload,
+} from '../validation/self-service';
+export type { SelfCancelTokenPayload } from '../validation/self-service';
+function encode(bytes: Uint8Array): string {
+  return btoa(String.fromCharCode(...bytes))
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=+$/, '');
 }
-function fromBase64Url(base64Url: string): Uint8Array {
-  const padded = base64Url
-    .replace(/-/g, '+')
-    .replace(/_/g, '/')
-    .padEnd(Math.ceil(base64Url.length / 4) * 4, '=');
-  const binary = atob(padded);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
-  return bytes;
+function decode(value: string): Uint8Array {
+  return Uint8Array.from(atob(value.replace(/-/g, '+').replace(/_/g, '/')), (character) =>
+    character.charCodeAt(0),
+  );
 }
-async function computeHmacSha256(
-  data: string,
-  secret: string,
-): Promise<Uint8Array> {
-  const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
+function hmacKey(secret: string, usage: KeyUsage): Promise<CryptoKey> {
+  return crypto.subtle.importKey(
     'raw',
-    encoder.encode(secret),
+    new TextEncoder().encode(secret),
     { name: 'HMAC', hash: 'SHA-256' },
     false,
-    ['sign'],
+    [usage],
   );
-  const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(data));
-  return new Uint8Array(signature);
-}
-function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i += 1) diff |= (a[i] ?? 0) ^ (b[i] ?? 0);
-  return diff === 0;
 }
 export async function signSelfCancelToken(
   payload: SelfCancelTokenPayload,
   secret: string,
-): Promise<Result<string, AppError>> {
-  if (secret.length < 16) {
-    return failAndLog({
-      code: ERROR_CODES.VALIDATION_FAILED,
-      module: 'SelfServiceToken',
-      fn: 'signSelfCancelToken',
-      cause: 'Clé secrète HMAC trop courte',
-      received: `${secret.length} caractères`,
-      expected: 'au moins 16 caractères',
-    });
+): Promise<Result<string>> {
+  if (
+    secret.length < INPUT_LIMITS.SECRET_MIN ||
+    !SelfCancelPayloadSchema.safeParse(payload).success
+  )
+    return failure(ERROR_CODES.VALIDATION_FAILED, 'SelfServiceToken', 'sign');
+  try {
+    const body = encode(new TextEncoder().encode(JSON.stringify(payload)));
+    const key = await hmacKey(secret, 'sign');
+    const signature = await crypto.subtle.sign(
+      'HMAC',
+      key,
+      new TextEncoder().encode(`${TOKEN_RULES.PURPOSE}.${body}`),
+    );
+    return ok(`${body}.${encode(new Uint8Array(signature))}`);
+  } catch {
+    return failure(ERROR_CODES.INTERNAL_ERROR, 'SelfServiceToken', 'sign');
   }
-  const encodedPayload = toBase64Url(
-    new TextEncoder().encode(JSON.stringify(payload)),
-  );
-  const sigBytes = await computeHmacSha256(encodedPayload, secret);
-  return ok(`${encodedPayload}.${toBase64Url(sigBytes)}`);
 }
 export async function verifySelfCancelToken(
   token: string,
   secret: string,
   now: Date,
-): Promise<Result<SelfCancelTokenPayload, AppError>> {
-  const parts = token.split('.');
-  if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    return failAndLog({
-      code: ERROR_CODES.UNAUTHORIZED,
-      module: 'SelfServiceToken',
-      fn: 'verifySelfCancelToken',
-      cause: 'Format de jeton d’annulation invalide',
-      received: token,
-      expected: 'payloadBase64Url.signatureBase64Url',
-    });
-  }
+): Promise<Result<SelfCancelTokenPayload>> {
+  if (
+    secret.length < INPUT_LIMITS.SECRET_MIN ||
+    !SelfCancelTokenSchema.safeParse(token).success ||
+    !Number.isFinite(now.getTime())
+  )
+    return failure(ERROR_CODES.UNAUTHORIZED, 'SelfServiceToken', 'verify');
   try {
-    const expectedSig = await computeHmacSha256(parts[0], secret);
-    const actualSig = fromBase64Url(parts[1]);
-    if (!constantTimeEqual(expectedSig, actualSig)) {
-      return failAndLog({
-        code: ERROR_CODES.UNAUTHORIZED,
-        module: 'SelfServiceToken',
-        fn: 'verifySelfCancelToken',
-        cause: 'Signature cryptographique HMAC invalide ou altérée',
-        received: 'signature non concordante',
-        expected: 'signature HMAC-SHA256 valide',
-      });
-    }
-    const decodedJson = new TextDecoder().decode(fromBase64Url(parts[0]));
-    const parsed = JSON.parse(decodedJson) as SelfCancelTokenPayload;
-    const nowUnixSeconds = Math.floor(now.getTime() / 1000);
-    if (nowUnixSeconds >= parsed.expUnixSeconds) {
-      return failAndLog({
-        code: ERROR_CODES.UNAUTHORIZED,
-        module: 'SelfServiceToken',
-        fn: 'verifySelfCancelToken',
-        cause: 'Jeton d’annulation expiré',
-        received: String(nowUnixSeconds),
-        expected: `< ${parsed.expUnixSeconds}`,
-      });
-    }
-    return ok(parsed);
-  } catch (rawError: unknown) {
-    return failAndLog({
-      code: ERROR_CODES.UNAUTHORIZED,
-      module: 'SelfServiceToken',
-      fn: 'verifySelfCancelToken',
-      cause: 'Décodage du jeton impossible',
-      received: rawError instanceof Error ? rawError.message : String(rawError),
-      expected: 'JSON Base64Url valide',
-    });
+    const [body, signature, extra] = token.split('.');
+    if (!body || !signature || extra !== undefined)
+      return failure(ERROR_CODES.UNAUTHORIZED, 'SelfServiceToken', 'verify');
+    const key = await hmacKey(secret, 'verify');
+    const valid = await crypto.subtle.verify(
+      'HMAC',
+      key,
+      new Uint8Array(decode(signature)),
+      new TextEncoder().encode(`${TOKEN_RULES.PURPOSE}.${body}`),
+    );
+    if (!valid) return failure(ERROR_CODES.UNAUTHORIZED, 'SelfServiceToken', 'verify');
+    const parsed = SelfCancelPayloadSchema.safeParse(
+      JSON.parse(new TextDecoder().decode(decode(body))),
+    );
+    return parsed.success && now.getTime() < parsed.data.expUnixSeconds * TIME.SECOND_MS
+      ? ok(parsed.data)
+      : failure(ERROR_CODES.UNAUTHORIZED, 'SelfServiceToken', 'verify');
+  } catch {
+    return failure(ERROR_CODES.UNAUTHORIZED, 'SelfServiceToken', 'verify');
   }
 }

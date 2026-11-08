@@ -1,70 +1,46 @@
-// src/core/domain/timezone.ts
-import { ERROR_CODES } from '../../config/constants';
-import { failAndLog } from '../../lib/logger';
-import { ok, type AppError, type Result } from '../../lib/result';
-
+import { ERROR_CODES, INPUT_LIMITS } from '../../config/constants';
+import { failure } from '../../lib/errors';
+import { ok, type Result } from '../../lib/result';
+import { possibleInstants } from './timezone-parts';
 const TIME_PATTERN = /^([01]\d|2[0-3]):([0-5]\d)$/;
 export function parseLocalTime(
-  timeStr: string,
-): Result<{ readonly hours: number; readonly minutes: number }, AppError> {
-  const match = TIME_PATTERN.exec(timeStr);
-  if (!match || match[1] === undefined || match[2] === undefined) {
-    return failAndLog({
-      code: ERROR_CODES.VALIDATION_FAILED,
-      module: 'Timezone',
-      fn: 'parseLocalTime',
-      cause: 'Format horaire local invalide',
-      received: timeStr,
-      expected: 'HH:mm (00:00 à 23:59)',
-    });
-  }
+  value: string,
+): Result<{ readonly hours: number; readonly minutes: number }> {
+  const match = TIME_PATTERN.exec(value);
+  if (!match?.[1] || !match[2])
+    return failure(ERROR_CODES.VALIDATION_FAILED, 'Timezone', 'parseLocalTime');
   return ok({ hours: Number(match[1]), minutes: Number(match[2]) });
 }
-function getTimezoneOffsetMs(utcDate: Date, timeZone: string): number {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hourCycle: 'h23',
-  }).formatToParts(utcDate);
-  const map: Record<string, number> = {};
-  for (const part of parts) {
-    if (part.type !== 'literal') map[part.type] = Number(part.value);
-  }
-  const asUtc = Date.UTC(
-    map['year'] ?? 1970,
-    (map['month'] ?? 1) - 1,
-    map['day'] ?? 1,
-    map['hour'] ?? 0,
-    map['minute'] ?? 0,
-    map['second'] ?? 0,
+function validLocalDay(year: number, month: number, day: number): boolean {
+  if (
+    ![year, month, day].every(Number.isInteger) ||
+    year < INPUT_LIMITS.MIN_YEAR ||
+    year > INPUT_LIMITS.MAX_YEAR
+  )
+    return false;
+  const date = new Date(Date.UTC(year, month, day));
+  return (
+    date.getUTCFullYear() === year && date.getUTCMonth() === month && date.getUTCDate() === day
   );
-  return asUtc - utcDate.getTime();
 }
 export function localDayAndTimeToUtc(
   year: number,
-  monthZeroIndexed: number,
+  month: number,
   day: number,
-  timeLocal: string,
+  value: string,
   timeZone: string,
-): Result<Date, AppError> {
-  const parsed = parseLocalTime(timeLocal);
+): Result<Date> {
+  const parsed = parseLocalTime(value);
   if (!parsed.ok) return parsed;
-  const naiveUtcMs = Date.UTC(
-    year,
-    monthZeroIndexed,
-    day,
-    parsed.value.hours,
-    parsed.value.minutes,
-    0,
-    0,
-  );
-  const initialOffset = getTimezoneOffsetMs(new Date(naiveUtcMs), timeZone);
-  const firstPassUtc = new Date(naiveUtcMs - initialOffset);
-  const refinedOffset = getTimezoneOffsetMs(firstPassUtc, timeZone);
-  return ok(new Date(naiveUtcMs - refinedOffset));
+  if (!validLocalDay(year, month, day))
+    return failure(ERROR_CODES.VALIDATION_FAILED, 'Timezone', 'localDayAndTimeToUtc');
+  try {
+    const naive = Date.UTC(year, month, day, parsed.value.hours, parsed.value.minutes);
+    const candidates = possibleInstants(naive, timeZone);
+    return candidates.length === 1 && candidates[0] !== undefined
+      ? ok(new Date(candidates[0]))
+      : failure(ERROR_CODES.VALIDATION_FAILED, 'Timezone', 'localDayAndTimeToUtc');
+  } catch {
+    return failure(ERROR_CODES.VALIDATION_FAILED, 'Timezone', 'localDayAndTimeToUtc');
+  }
 }

@@ -1,6 +1,4 @@
-// src/lib/logger.ts
 import { createAppError, err, type AppError, type Result } from './result';
-
 export interface LogEntryInput {
   readonly module: string;
   readonly fn: string;
@@ -8,45 +6,24 @@ export interface LogEntryInput {
   readonly received: unknown;
   readonly expected: string;
 }
-function serializeValue(val: unknown): string {
-  if (val === undefined) return 'undefined';
-  if (val === null) return 'null';
-  if (typeof val === 'string') return val;
-  if (typeof val === 'number' || typeof val === 'boolean') return String(val);
-  try {
-    return JSON.stringify(val);
-  } catch {
-    return '[Unserializable Object]';
-  }
+function singleLine(value: string): string {
+  return value.replace(/[\r\n\u2028\u2029|]/g, ' ');
 }
 export function formatStructuredLog(input: LogEntryInput): string {
-  const receivedStr = serializeValue(input.received);
-  return `[${input.module} :: ${input.fn}] ${input.cause} | reçu: ${receivedStr} | attendu: ${input.expected}`;
+  return `[${singleLine(input.module)} :: ${singleLine(input.fn)}] ${singleLine(input.cause)} | reçu: [redacted] | attendu: ${singleLine(input.expected)}`;
+}
+function write(level: 'error' | 'warn' | 'info', input: LogEntryInput): string {
+  const message = formatStructuredLog(input);
+  console[level](message);
+  return message;
 }
 export const logger = {
-  error(input: LogEntryInput): string {
-    const message = formatStructuredLog(input);
-    console.error(message);
-    return message;
-  },
-  warn(input: LogEntryInput): string {
-    const message = formatStructuredLog(input);
-    console.warn(message);
-    return message;
-  },
-  info(input: LogEntryInput): string {
-    const message = formatStructuredLog(input);
-    console.info(message);
-    return message;
-  },
-} as const;
-export function failAndLog(params: AppError): Result<never, AppError> {
-  logger.error({
-    module: params.module,
-    fn: params.fn,
-    cause: params.cause,
-    received: params.received,
-    expected: params.expected,
-  });
-  return err(createAppError(params));
+  error: (input: LogEntryInput) => write('error', input),
+  warn: (input: LogEntryInput) => write('warn', input),
+  info: (input: LogEntryInput) => write('info', input),
+};
+export function failAndLog(params: AppError): Result<never> {
+  const safe = createAppError({ ...params, received: '[redacted]' });
+  logger.error(safe);
+  return err(safe);
 }

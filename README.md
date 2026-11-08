@@ -1,47 +1,81 @@
-# Studio Créatif 360 — Moteur de réservation
+# SaaS booking — Studio Créatif 360
 
-Sources de travail des jalons 0 à 6, organisées pour le dépôt SaaS-booking.
-Architecture visée : Next.js App Router, TypeScript strict, domaine métier, ports et adaptateurs PostgreSQL/Drizzle et Stripe.
+Moteur de réservation Next.js App Router, TypeScript strict et PostgreSQL, organisé en domaine, ports, cas d’usage et adaptateurs.
 
-## Contenu et statut
+## Installation
 
-Les blocs de code ont été rangés sous leurs chemins de destination et leur présentation a été harmonisée. La logique et les valeurs fournies ont été conservées, y compris les parties provisoires et les défauts connus. Cette première version organise le projet ; elle ne constitue pas une correction fonctionnelle ni une validation de production.
-
-- `src/config/` : constantes métier.
-- `src/lib/` : Result, journalisation et communication structurée belge.
-- `src/core/domain/` : séances, disponibilité, horaires, CGV, validation, codes de report, fichiers et jetons.
-- `src/core/ports/` : contrats de persistance, paiement, notifications et stockage.
-- `src/core/use-cases/` : orchestration réservation, webhook, reports, virement, fermeture et rétention.
-- `src/adapters/` : schéma PostgreSQL, réservation transactionnelle et adaptateur Stripe.
-- `src/app/` : widget React, CSS, exemple de Server Action et route webhook.
-- `docs/` : architecture, inventaire, limites connues et éléments initiaux de design.
-- `AGENTS.md` : règles d’ingénierie transmises.
-
-La dernière version de `session-repository.port.ts` remplace le premier contrat `ensureAndLockSessionForBooking`. La version complète de `ice-tokens.css` sert de feuille de style principale. Les premières références de design et le premier contrat sont conservés comme documents dans `docs/references/`, hors compilation.
-
-Le projet est organisé à la racine du dépôt SaaS-booking. Les secrets, dépendances locales et fichiers générés sont exclus par `.gitignore`. Aucun déploiement n’est inclus.
-
-## Installation locale ultérieure
-
-Les versions de dépendances et les scripts du `package.json` reçu ont été conservés. Avant installation, lire `docs/POINTS-A-COMPLETER.md` : la configuration reçue comporte des incompatibilités.
-
-Après correction de ces points :
+Node.js 22.12 ou plus récent (Node 24 recommandé).
 
 ```bash
-npm install
+npm ci
 cp .env.example .env.local
+```
+
+Configurer PostgreSQL, l’URL de l’application et le secret de signature dans `.env.local`. Les scripts de base utilisent les variables du processus ; les commandes suivantes chargent explicitement ce fichier :
+
+```bash
+node --env-file=.env.local --import tsx scripts/migrate.ts
 npm run verify
+npm run build
 npm run dev
 ```
 
-Renseigner les secrets localement. `.env.example` contient uniquement les exemples reçus. Ne pas utiliser ces valeurs comme secrets réels.
+Les migrations sont versionnées et protégées par checksum et verrou. Le schéma fourni auparavant n’avait ni connexion ni migration exécutable : ces migrations constituent le schéma initial de cette version. Pour une base déjà créée manuellement avec l’ancien schéma, préparer une migration de reprise dédiée sur sauvegarde ; ne pas appliquer les migrations initiales sur cette base.
 
-## À savoir avant de lancer l’application
+## Démonstration locale
 
-Les adaptateurs de production d’activité, paiement en base, notifications, stockage, reports, virement, fermeture et RGPD n’ont pas été fournis. Les injections `{} as any` restent présentes dans les exemples et ne peuvent pas fonctionner à l’exécution.
+Sur une base de développement uniquement :
 
-Les fichiers App Router `layout.tsx` et `page.tsx`, le branchement CSS/Tailwind, la connexion PostgreSQL, les migrations et la composition des dépendances sont à réaliser. Aucun écran fonctionnel complet n’est ajouté artificiellement.
+```bash
+ALLOW_DEMO_SEED=true node --env-file=.env.local --import tsx scripts/seed.ts
+```
 
-Les tests reçus reposent sur des doubles en mémoire ; ils ne constituent pas un test d’intégration PostgreSQL ou Stripe. Les affirmations de conformité juridique et de durée de conservation présentes dans les sources n’ont pas été vérifiées dans cette mise en archive.
+Le script affiche le chemin de l’activité de démonstration. Cette activité confirme les réservations sans paiement en ligne et ne les marque pas comme encaissées. Un utilisateur choisit une séance, fournit ses coordonnées et accepte les conditions. Le lien de gestion permet l’annulation et le dépôt d’un justificatif selon le mode de paiement du dossier.
 
-Voir `docs/VERIFICATION.md` pour les contrôles réellement exécutés et `docs/INVENTAIRE.md` pour tous les fichiers.
+## Interface de réservation
+
+Le widget Liquid Ice présente un calendrier compact dans le fuseau de l’organisateur, les horaires et les places disponibles. Le parcours comporte deux étapes ; le retour au calendrier conserve les coordonnées saisies. Le récapitulatif suit le devis de report serveur et distingue les confirmations sans paiement en ligne des encaissements.
+
+[Voir la refonte et les captures ordinateur/mobile](docs/INTERFACE.md).
+
+## Fonctions et garanties techniques
+
+- Réservation sous transaction et verrou SQL, contrôle de capacité, d’organisation, de créneau et de conditions côté serveur.
+- Idempotence liée à l’organisation et au contenu normalisé de la demande.
+- Conditions archivées avec empreinte SHA-256 ; numéros d’urgence contenant réellement des chiffres.
+- Dates locales invalides, inexistantes ou ambiguës refusées ; dates de fin de mois bornées.
+- Report appliqué et place réservée ensemble ; consommation unique, complément Stripe et protection contre un ancien paiement après réutilisation du code.
+- Checkout Stripe avec e-mail prérempli et clé d’idempotence stable ; signature réelle, montant, devise, compte et références vérifiés sur webhook.
+- Confirmation sans paiement en ligne distincte d’un encaissement ; références Checkout/PaymentIntent et coordonnées de virement conservées en instantané.
+- Fermeture et ajout de pause nécessitant une confirmation à jour ; annulations et obligations de remboursement persistées avant les effets externes.
+- E-mails, remboursements et purges en file durable PostgreSQL avec reprises ; clés d’idempotence transmises aux prestataires.
+- Justificatifs décodés/réencodés, limites de poids et de dimensions, bucket privé et URL temporaire pour administrateur.
+- Liens de gestion HMAC à durée limitée, payload validé et version révocable. Le jeton est placé dans le fragment du lien pour éviter sa transmission dans l’URL HTTP.
+
+Les règles automatiques imposent 200 lignes par fichier TypeScript, 40 lignes par fonction, l’absence de `any` et les frontières entre cœur et adaptateurs. La composition serveur se trouve dans `src/composition/` ; les points d’entrée App Router y obtiennent leurs cas d’usage sans importer les adaptateurs ou SDK directement.
+
+## Paiements, administration et tâches
+
+Les activités Stripe nécessitent les clés Stripe ; les activités par virement nécessitent les coordonnées bancaires de l’organisation et le stockage privé. Les services absents échouent explicitement, sans faux succès. Les e-mails requièrent Resend et un expéditeur validé.
+
+Les opérations administratives passent par `POST /api/admin` avec un jeton OIDC fourni par votre fournisseur d’identité. `issuer`, `audience`, signature, rôle `admin` et claim `organization_id` sont contrôlés ; sans configuration, l’accès est refusé. Voir `docs/OPERATIONS.md` pour les commandes.
+
+Planifier `POST /api/jobs` régulièrement avec un secret dédié. Les tâches sont réessayées après échec ; un prestataire indisponible laisse une tâche en attente. La purge après décision bancaire est activée par défaut et respecte le réglage de l’organisateur ; elle est tentée immédiatement puis réconciliée en base par la file. Surveiller les tâches différées et leur ancienneté.
+
+## Vérifications
+
+```bash
+npm run verify
+npm run build
+TEST_DATABASE_URL=postgresql://postgres:booking_test_only@127.0.0.1:55432/booking_test npm run test:integration
+```
+
+Les tests d’intégration exigent une base locale jetable `booking_test` et refusent toute autre URL. Appliquer d’abord les migrations avec `DATABASE_URL` pointant vers cette base. Ils effacent ses données entre les scénarios. Les tests navigateur utilisent aussi uniquement des données de démonstration locales.
+
+## Limites et configuration de production
+
+Les tests automatisés ne remplacent pas une validation de paiement en environnement Stripe de test avec vos clés, ni le contrôle des permissions de votre bucket, des e-mails et de votre fournisseur d’identité. Aucun compte ou déploiement de production n’est créé par ce dépôt.
+
+La région UE de la base, du stockage, des sauvegardes et des journaux est à configurer chez les hébergeurs. Utiliser un bucket privé sans conservation de versions incompatibles avec la purge des justificatifs. Configurer HTTPS, la confiance du proxy pour l’adresse client, les sauvegardes et la surveillance de la file.
+
+Les clauses contractuelles et la politique de conservation constituent des paramètres métier à faire valider pour l’organisation. La conservation comptable de sept ans reste la valeur initialement demandée, calculée à partir de la fin de l’année du paiement ; elle ne représente pas une certification juridique de la durée applicable en Belgique. Vérifier les obligations actuelles avant traitement de données ou paiements réels.

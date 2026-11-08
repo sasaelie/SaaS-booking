@@ -1,0 +1,118 @@
+.ice-story {
+  border-radius: var(--ice-pebble-radius);
+  padding: 34px 30px 28px;
+  color: var(--ice-on-dark);
+  min-width: 0;
+  min-height: 570px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 0 0, rgba(202, 231, 191, 0.2), transparent 60%),
+    linear-gradient(155deg, var(--ice-evergreen), var(--ice-evergreen-deep));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.12);
+}
+.ice-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.ice-story h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(30px, 3vw, 42px);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.13;
+  margin: 18px 0;
+  text-wrap: balance;
+}
+.ice-story-top > p {
+  font-size: 13px;
+  opacity: 0.85;
+}
+.ice-story-bottom {
+  position: relative;
+  z-index: 1;
+}
+.ice-audience {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  margin: 0 0 6px;
+}
+.ice-audience .ice-icon {
+  width: 16px;
+  height: 16px;
+}
+.ice-audience-hint {
+  font-size: 11px;
+  margin: 0;
+  opacity: 0.85;
+}
+.ice-price {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ice-price strong {
+  font-size: 34px;
+  font-weight: 450;
+  letter-spacing: -0.04em;
+}
+.ice-price span {
+  font-size: 12px;
+  opacity: 0.85;
+}
+.ice-sculpture {
+  position: relative;
+  height: 205px;
+  flex: 1;
+  min-height: 160px;
+  margin: 4px 0 18px;
+}
+.ice-sculpture span {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  left: 22%;
+  top: 25%;
+  border-radius: 36px;
+  transform: rotate(-19deg);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  background: radial-gradient(
+    at 20% 0%,
+    rgba(255, 255, 255, 0.6),
+    rgba(225, 255, 247, 0.12) 52%,
+    rgba(237, 255, 244, 0.32)
+  );
+  box-shadow:
+    inset 0 4px 8px rgba(255, 255, 255, 0.95),
+    inset 0 -12px 20px rgba(230, 255, 241, 0.38),
+    inset 6px 0 8px rgba(255, 255, 255, 0.24),
+    12px 28px 25px -14px rgba(0, 0, 0, 0.3);
+}
+.ice-sculpture span:nth-child(2) {
+  width: 64px;
+  height: 64px;
+  border-radius: 22px;
+  left: 7%;
+  top: 62%;
+  transform: rotate(17deg);
+}
+.ice-sculpture span:nth-child(3) {
+  width: 27px;
+  height: 27px;
+  left: 78%;
+  top: 12%;
+  border-radius: 50%;
+}

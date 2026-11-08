@@ -1,0 +1,77 @@
+import {
+  boolean,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  unique,
+  foreignKey,
+  index,
+} from 'drizzle-orm/pg-core';
+import { BOOKING_STATUSES, type BookingStatus, type PaymentMode } from '../../../config/constants';
+import { sessions } from './schedule';
+import { rescheduleVouchers } from './voucher';
+export const bookings = pgTable(
+  'bookings',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    activityName: text('activity_name').notNull(),
+    merchantAccountId: text('merchant_account_id'),
+    bankIban: text('bank_iban'),
+    bankAccountName: text('bank_account_name'),
+    organizationId: uuid('organization_id').notNull(),
+    activityId: uuid('activity_id').notNull(),
+    sessionId: uuid('session_id').notNull(),
+    idempotencyKey: text('idempotency_key').notNull(),
+    requestHash: text('request_hash').notNull(),
+    status: text('status')
+      .$type<BookingStatus>()
+      .notNull()
+      .default(BOOKING_STATUSES.PENDING_PAYMENT),
+    firstName: text('first_name').notNull(),
+    lastName: text('last_name').notNull(),
+    email: text('email').notNull(),
+    phone: text('phone'),
+    marketingOptIn: boolean('marketing_opt_in').notNull().default(false),
+    unitPriceCents: integer('unit_price_cents').notNull(),
+    voucherDiscountCents: integer('voucher_discount_cents').notNull().default(0),
+    amountPaidCents: integer('amount_paid_cents').notNull().default(0),
+    currency: text('currency').notNull(),
+    paymentMode: text('payment_mode').$type<PaymentMode>().notNull(),
+    appliedVoucherId: uuid('applied_voucher_id'),
+    paymentReference: text('payment_reference').unique(),
+    checkoutReference: text('checkout_reference').unique(),
+    checkoutUrl: text('checkout_url'),
+    proofStorageKey: text('proof_storage_key'),
+    lockedUntil: timestamp('locked_until', { withTimezone: true }),
+    termsAcceptedAt: timestamp('terms_accepted_at', {
+      withTimezone: true,
+    }).notNull(),
+    termsVersionHash: text('terms_version_hash').notNull(),
+    termsText: text('terms_text').notNull(),
+    ageAttestationLabel: text('age_attestation_label').notNull(),
+    selfServiceVersion: integer('self_service_version').notNull().default(0),
+    confirmedAt: timestamp('confirmed_at', { withTimezone: true }),
+    paidAt: timestamp('paid_at', { withTimezone: true }),
+    cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
+    refundStatus: text('refund_status'),
+    refundId: text('refund_id'),
+    refundDeadline: timestamp('refund_deadline', { withTimezone: true }),
+    anonymizedAt: timestamp('anonymized_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    unique('booking_tenant').on(table.id, table.organizationId),
+    unique('booking_idempotency').on(table.organizationId, table.idempotencyKey),
+    index('idx_booking_session_status').on(table.sessionId, table.status),
+    foreignKey({
+      columns: [table.sessionId, table.activityId, table.organizationId],
+      foreignColumns: [sessions.id, sessions.activityId, sessions.organizationId],
+    }),
+    foreignKey({
+      columns: [table.appliedVoucherId, table.organizationId],
+      foreignColumns: [rescheduleVouchers.id, rescheduleVouchers.organizationId],
+    }),
+  ],
+);

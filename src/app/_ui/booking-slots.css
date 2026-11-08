@@ -1,0 +1,128 @@
+.ice-times {
+  padding: 15px 0 0 20px;
+  border-left: 1px solid var(--ice-line);
+  min-width: 0;
+}
+.ice-times h3 {
+  margin-bottom: 20px;
+}
+.ice-time-list {
+  display: grid;
+  gap: 10px;
+}
+.ice-time-slot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  padding: 14px 11px;
+  border-radius: 16px;
+  min-width: 0;
+}
+.ice-time-slot input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--ice-quiet);
+  border-radius: 50%;
+  flex: none;
+  margin: 0;
+}
+.ice-time-slot input:checked {
+  background: radial-gradient(var(--ui-text-primary) 0 35%, transparent 40%);
+  border-color: var(--ui-text-primary);
+}
+.ice-time-slot > span {
+  display: grid;
+  gap: 3px;
+}
+.ice-time-slot strong {
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.ice-time-slot small {
+  font-size: 9px;
+  color: var(--ice-quiet);
+}
+.ice-time-slot:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.ice-timezone {
+  font-size: 9px;
+  color: var(--ice-quiet);
+  margin: 24px 0 0;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.ice-timezone strong {
+  font-weight: 500;
+}
+.ice-action-bar {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.ice-selection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.ice-selection > .ice-icon {
+  width: 18px;
+  height: 18px;
+}
+.ice-selection > span {
+  display: grid;
+  gap: 3px;
+}
+.ice-selection strong {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: none;
+}
+.ice-selection strong::first-letter {
+  text-transform: uppercase;
+}
+.ice-selection small {
+  color: var(--ice-quiet);
+  font-size: 11px;
+}
+.ice-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 0 24px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.ice-primary:disabled {
+  opacity: 0.55;
+}
+.ice-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.ice-selection-card {
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.ice-text-button {
+  padding: 7px 0;
+  font-size: 10px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+}

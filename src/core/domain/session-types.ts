@@ -2,6 +2,7 @@
 import type { BookingStatus } from '../../config/constants';
 
 export interface TimeSlotRule {
+  readonly organizationId: string;
   readonly id: string;
   readonly activityId: string;
   readonly dayOfWeek: number;
@@ -10,12 +11,14 @@ export interface TimeSlotRule {
   readonly capacity: number;
 }
 export interface PausePeriodRule {
+  readonly organizationId: string;
   readonly id: string;
   readonly activityId: string;
   readonly startsAt: Date;
   readonly endsAt: Date;
 }
 export interface PersistedSession {
+  readonly organizationId: string;
   readonly id: string;
   readonly activityId: string;
   readonly startsAt: Date;
@@ -46,6 +49,7 @@ export interface ComputedCalendarSession {
   readonly availability: SeatAvailability;
 }
 export interface BuildScheduleInput {
+  readonly organizationId: string;
   readonly activityId: string;
   readonly timezone: string;
   readonly bookingWindowWeeks: number;
@@ -55,7 +59,5 @@ export interface BuildScheduleInput {
   readonly weeklySlots: readonly TimeSlotRule[];
   readonly pausePeriods: readonly PausePeriodRule[];
   readonly persistedSessions: readonly PersistedSession[];
-  readonly bookingsBySessionId: Readonly<
-    Record<string, readonly SessionBookingSnapshot[]>
-  >;
+  readonly bookingsBySessionId: Readonly<Record<string, readonly SessionBookingSnapshot[]>>;
 }

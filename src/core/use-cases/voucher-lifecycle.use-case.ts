@@ -1,139 +1,76 @@
-// src/core/use-cases/voucher-lifecycle.use-case.ts
-import { PAYMENT_RULES } from '../../config/constants';
-import { ok, type AppError, type Result } from '../../lib/result';
+import { guardUseCase } from '../../lib/guard-use-case';
+import { INPUT_LIMITS } from '../../config/constants';
+
+import type { Result } from '../../lib/result';
 import {
-  computeVoucherExpiryDate,
-  evaluateCancellationEligibility,
   generateFormattedVoucherCode,
   type RescheduleVoucherSnapshot,
-  type VoucherPricingCalculation,
 } from '../domain/voucher-engine';
-import type {
-  VoucherNotificationPayload,
-  VoucherRepositoryPort,
-} from '../ports/voucher.port';
-export interface CancelByAttendeeInput {
-  readonly organizationId: string;
-  readonly bookingId: string;
-  readonly baseBookingUrl: string;
-  readonly adminOverride?: boolean;
-}
-export interface CancelByAttendeeOutput {
-  readonly bookingCancelled: true;
-  readonly voucherIssued: boolean;
-  readonly voucher: RescheduleVoucherSnapshot | null;
-  readonly qrBookingUrl: string | null;
-}
+import { verifySelfCancelToken } from '../domain/self-service-token';
+import type { VoucherRepositoryPort, CancelByAttendeeOutput } from '../ports/voucher.port';
+import type { AuthorizationPort } from '../ports/authorization.port';
 export interface VoucherLifecycleDeps {
   readonly voucherRepo: VoucherRepositoryPort;
-  readonly sendVoucherEmail: (
-    payload: VoucherNotificationPayload,
-  ) => Promise<Result<void, AppError>>;
-  readonly randomBytesProvider?: (length: number) => Uint8Array;
+  readonly authorization: AuthorizationPort;
+  readonly secret: string;
   readonly nowProvider?: () => Date;
-}
-function defaultRandomBytes(length: number): Uint8Array {
-  const bytes = new Uint8Array(length);
-  crypto.getRandomValues(bytes);
-  return bytes;
+  readonly randomBytesProvider?: (length: number) => Uint8Array;
 }
 export class VoucherLifecycleUseCase {
-  public constructor(private readonly deps: VoucherLifecycleDeps) {}
-  public async cancelByAttendee(
-    input: CancelByAttendeeInput,
-  ): Promise<Result<CancelByAttendeeOutput, AppError>> {
-    const now = this.deps.nowProvider ? this.deps.nowProvider() : new Date();
-    const ctxRes =
-      await this.deps.voucherRepo.getBookingContextForAttendeeCancellation(
-        input.organizationId,
-        input.bookingId,
-      );
-    if (!ctxRes.ok) return ctxRes;
-    const ctx = ctxRes.value;
-    const eligibilityRes = evaluateCancellationEligibility({
-      sessionStartsAt: ctx.sessionStartsAt,
-      cancelledAt: now,
-      noticeHoursRequired: ctx.noticeHoursForVoucher,
-      amountPaidCents: ctx.amountPaidCents,
-      adminOverride: input.adminOverride,
-    });
-    if (!eligibilityRes.ok) return eligibilityRes;
-    if (!eligibilityRes.value.eligibleForVoucher) {
-      const cancelOnlyRes =
-        await this.deps.voucherRepo.cancelBookingWithoutVoucherAtomically(
-          input.organizationId,
-          input.bookingId,
-        );
-      if (!cancelOnlyRes.ok) return cancelOnlyRes;
-      return ok({
-        bookingCancelled: true,
-        voucherIssued: false,
-        voucher: null,
-        qrBookingUrl: null,
-      });
-    }
-    const getBytes = this.deps.randomBytesProvider ?? defaultRandomBytes;
-    const codeRes = generateFormattedVoucherCode(getBytes(8));
-    if (!codeRes.ok) return codeRes;
-    const expiresAt = computeVoucherExpiryDate(now, ctx.voucherValidityMonths);
-    const issuedRes =
-      await this.deps.voucherRepo.cancelBookingAndCreateVoucherAtomically({
-        bookingId: ctx.bookingId,
-        organizationId: ctx.organizationId,
-        originActivityId: ctx.activityId,
-        code: codeRes.value,
-        initialValueCents: eligibilityRes.value.voucherValueCents,
-        expiresAt,
-      });
-    if (!issuedRes.ok) return issuedRes;
-    const qrBookingUrl = `${input.baseBookingUrl}?voucher=${encodeURIComponent(issuedRes.value.code)}`;
-    await this.deps.sendVoucherEmail({
-      attendeeEmail: ctx.attendeeEmail,
-      attendeeFirstName: ctx.attendeeFirstName,
-      voucherCode: issuedRes.value.code,
-      initialValueCents: issuedRes.value.initialValueCents,
-      expiresAt,
-      qrBookingUrl,
-    });
-    return ok({
-      bookingCancelled: true,
-      voucherIssued: true,
-      voucher: issuedRes.value,
-      qrBookingUrl,
+  constructor(private readonly deps: VoucherLifecycleDeps) {}
+  async cancelByAttendee(input: {
+    readonly token: string;
+  }): Promise<Result<CancelByAttendeeOutput>> {
+    return guardUseCase('voucher-lifecycle.use-case.ts', 'cancelByAttendee', async () => {
+      const now = this.deps.nowProvider?.() ?? new Date();
+      const payload = await verifySelfCancelToken(input.token, this.deps.secret, now);
+      if (!payload.ok) return payload;
+      return this.cancel({ ...payload.value, adminOverride: false }, now);
     });
   }
-  public async applyVoucherToBooking(params: {
+  async cancelByAdministrator(input: {
     readonly organizationId: string;
-    readonly code: string;
-    readonly targetActivityPriceCents: number;
-  }): Promise<
-    Result<
-      {
-        readonly voucher: RescheduleVoucherSnapshot;
-        readonly pricing: VoucherPricingCalculation;
-      },
-      AppError
-    >
-  > {
-    const now = this.deps.nowProvider ? this.deps.nowProvider() : new Date();
-    const lockDurationMs = PAYMENT_RULES.STRIPE_HOLD_MINUTES * 60_000;
-    return this.deps.voucherRepo.lockAndApplyVoucherForBookingAtomically({
-      organizationId: params.organizationId,
-      code: params.code.trim().toUpperCase(),
-      targetActivityPriceCents: params.targetActivityPriceCents,
-      lockDurationMs,
+    readonly bookingId: string;
+    readonly adminOverride: boolean;
+  }): Promise<Result<CancelByAttendeeOutput>> {
+    return guardUseCase('voucher-lifecycle.use-case.ts', 'cancelByAdministrator', async () => {
+      const auth = await this.deps.authorization.authorizeOrganizationAdmin(input.organizationId);
+      if (!auth.ok) return auth;
+      return this.cancel({ ...input, version: null }, this.deps.nowProvider?.() ?? new Date());
+    });
+  }
+  private async cancel(
+    input: {
+      readonly organizationId: string;
+      readonly bookingId: string;
+      readonly version: number | null;
+      readonly adminOverride: boolean;
+    },
+    now: Date,
+  ): Promise<Result<CancelByAttendeeOutput>> {
+    const bytes =
+      this.deps.randomBytesProvider?.(INPUT_LIMITS.HASH_LENGTH) ??
+      crypto.getRandomValues(new Uint8Array(INPUT_LIMITS.HASH_LENGTH));
+    const code = generateFormattedVoucherCode(bytes);
+    if (!code.ok) return code;
+    return this.deps.voucherRepo.cancelBookingAtomically({
+      ...input,
+      code: code.value,
       now,
     });
   }
-  public async redeemForOnlineCourse(params: {
+  async redeemForOnlineCourse(input: {
     readonly organizationId: string;
     readonly code: string;
-  }): Promise<Result<RescheduleVoucherSnapshot, AppError>> {
-    const now = this.deps.nowProvider ? this.deps.nowProvider() : new Date();
-    return this.deps.voucherRepo.redeemVoucherForExternalBenefitAtomically({
-      organizationId: params.organizationId,
-      code: params.code.trim().toUpperCase(),
-      now,
+  }): Promise<Result<RescheduleVoucherSnapshot>> {
+    return guardUseCase('voucher-lifecycle.use-case.ts', 'redeemForOnlineCourse', async () => {
+      const auth = await this.deps.authorization.authorizeOrganizationAdmin(input.organizationId);
+      if (!auth.ok) return auth;
+      return this.deps.voucherRepo.redeemVoucherForExternalBenefitAtomically({
+        ...input,
+        code: input.code.trim().toUpperCase(),
+        now: this.deps.nowProvider?.() ?? new Date(),
+      });
     });
   }
 }

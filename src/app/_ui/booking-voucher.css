@@ -1,0 +1,47 @@
+.ice-voucher {
+  border-top: 1px solid var(--ice-line);
+  border-bottom: 1px solid var(--ice-line);
+  padding: 14px 0;
+}
+.ice-voucher > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+.ice-voucher > summary::-webkit-details-marker {
+  display: none;
+}
+.ice-voucher > summary > .ice-icon {
+  width: 16px;
+  height: 16px;
+}
+.ice-voucher > summary > span {
+  margin-left: auto;
+  font-size: 18px;
+  font-weight: 300;
+}
+.ice-voucher[open] > summary > span {
+  transform: rotate(45deg);
+}
+.ice-voucher-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+.ice-voucher-input > input {
+  font-family: ui-monospace, monospace;
+}
+.ice-voucher-input > button {
+  min-height: 46px;
+  padding: 0 20px;
+  font-size: 11px;
+}
+.ice-voucher .ice-hint {
+  margin: 8px 0 0;
+  font-size: 11px;
+}
+.ice-voucher .ice-hint:empty {
+  display: none;
+}
