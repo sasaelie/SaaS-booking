@@ -1,0 +1,93 @@
+:root {
+  --participant-scene: #f1e8f0;
+  --participant-mauve: #dac8de;
+  --participant-light: #fff5ef;
+}
+body:has(.participant-page) {
+  background: var(--participant-scene);
+}
+body:has(.participant-page)::before {
+  background:
+    radial-gradient(ellipse at 8% 80%, var(--participant-mauve), transparent 60%),
+    radial-gradient(ellipse at 90% 10%, var(--participant-light), transparent 60%);
+}
+.manage-container {
+  max-width: 640px;
+  margin: auto;
+}
+.manage-back {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.manage-shell {
+  padding: 28px;
+  display: grid;
+  gap: 24px;
+}
+.manage-shell h1 {
+  font-size: clamp(24px, 5vw, 32px);
+  line-height: 1.2;
+  margin: 0;
+}
+.manage-shell h2 {
+  font-size: 18px;
+  margin: 0;
+}
+.manage-shell p {
+  margin: 0;
+}
+.manage-summary,
+.manage-upload,
+.manage-cancel form {
+  display: grid;
+  gap: 14px;
+}
+.manage-summary {
+  gap: 6px;
+}
+.manage-upload p,
+.manage-note {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.manage-shell button {
+  padding: 12px 20px;
+  min-height: 48px;
+}
+.manage-file {
+  position: relative;
+  padding: 12px 16px;
+  border: 1px solid var(--ice-line);
+  border-radius: 14px;
+  cursor: pointer;
+  background: var(--ice-soft-fill);
+}
+.manage-file input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.manage-file:focus-within {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.manage-file-name {
+  overflow-wrap: anywhere;
+}
+.manage-cancel {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 18px;
+}
+.manage-cancel summary {
+  font-weight: 600;
+}
+.manage-cancel form {
+  margin-top: 16px;
+}
+@media (max-width: 480px) {
+  .manage-shell {
+    padding: 22px;
+  }
+}

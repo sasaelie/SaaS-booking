@@ -54,3 +54,15 @@ La [règle officielle Vercel](https://vercel.com/docs/limits/fair-use-guidelines
 6. Vérifier logo, arrière-plan et justificatif bancaire avec la vraie purge ; contrôle de l’iframe et du QR depuis un autre site.
 
 Les tests destructifs restent réservés à la base locale `booking_test`, jamais à Supabase. Les preuves de recette hébergée seront consignées une fois ces parcours exécutés ; elles ne sont pas remplacées par les résultats locaux.
+
+## Justificatifs et personnalisation — novembre 2026
+
+La recette utilise maintenant `STORAGE_BACKEND=postgres` : vrais fichiers privés dans le schéma `booking`, migration 010, limite de 5 MiB par image et quota global de 50 MiB. Ce backend est refusé hors staging. La production conserve l’adaptateur S3 ; `check:storage` reste le diagnostic S3. Le parcours PostgreSQL est vérifié par les tests d’intégration et navigateur.
+
+Un participant utilise « Gérer ma réservation », choisit une image puis l’envoie. L’organisateur ouvre **Activités → Voir les inscrits → nom du participant → Consulter le justificatif**. La fiche contient les coordonnées, la séance, le statut et les actions de gestion. Le filtre par activité reste actif pendant la pagination. Le fichier est accessible par un lien signé de cinq minutes ; lorsque la suppression automatique est activée (valeur par défaut), confirmer ou refuser le virement supprime le fichier. Une capture seule ne constitue pas une confirmation bancaire : l’organisateur vérifie son compte avant de confirmer.
+
+Les pages participant ont un fond mauve clair distinct du vert sauge de gestion, en conservant le verre et les textes foncés. La page de gestion comporte un retour à l’activité. **Apparence et réglages** regroupe les thèmes existants, le logo et l’image d’ambiance ; les images utilisent aussi le stockage privé de recette. Les couleurs d’organisation personnalisées restent prioritaires sur les pages publiques.
+
+Le nom court demandé à la création d’un espace compose l’adresse publique de l’organisation (`/coucouture` par exemple). Il ne s’agit pas d’une adresse postale ni d’un achat de domaine.
+
+Sécurité Supabase après migration 010 : RLS activée sur `private_files`, aucun droit pour `PUBLIC`, `anon` ou `authenticated`. Le diagnostic Supabase signale uniquement l’information « RLS Enabled No Policy », attendue pour un schéma privé réservé au serveur (accès client refusé par défaut) : https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy.

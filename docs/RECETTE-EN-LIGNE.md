@@ -37,9 +37,15 @@ Validation de cette correction : 42 tests unitaires, 41 tests PostgreSQL, compil
 
 ## Ce qui reste à raccorder
 
-- Stockage S3 privé : identifiants, bucket, lecture temporaire et suppression à vérifier avec `npm run check:storage`. Les logos, fonds et preuves de virement ne sont pas encore validés sur un stockage réel.
+- Production : le stockage S3 reste à raccorder et vérifier avec `npm run check:storage`. La recette utilise le stockage privé PostgreSQL décrit ci-dessous.
 - Ordonnanceur : `POST /api/jobs` doit être exécuté avec authentification pour délivrer les confirmations en file, codes de report et reprises. La clé est préparée, mais aucun ordonnanceur actif n’est attesté. Ne pas confondre l’e-mail d’authentification, envoyé directement, avec les notifications différées de réservation.
 - Inscription, vérification de l’e-mail, création d’activité, réservation et annulation : recette complète hébergée encore à réaliser avec le propriétaire.
 - Domaine d’envoi vérifié nécessaire avant d’accueillir plusieurs destinataires. Les paiements Stripe/Mollie et abonnements facturés restent désactivés.
 
 Cette adresse est un environnement privé de recette, pas une mise en service commerciale. Les règles et limites de la formule Vercel devront être revues avant l’ouverture commerciale. Aucun abonnement payant n’a été activé.
+
+### Correctif justificatifs et navigation
+
+Le stockage privé de recette est raccordé à PostgreSQL (50 MiB au total, 5 MiB par image). Les justificatifs et images de personnalisation peuvent être testés sans bucket S3. Le stockage reste interdit en production. La migration 010 est appliquée dans le schéma privé `booking`, avec RLS et sans droits pour les rôles clients.
+
+Accès aux inscrits : **Activités → Voir les inscrits → fiche du participant**. Accès aux options visuelles : **Apparence et réglages**. La page participant affiche l’activité, la date, le statut, un retour et des erreurs compréhensibles ; son fond mauve clair distingue les deux espaces.

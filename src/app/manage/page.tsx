@@ -1,7 +1,7 @@
 import { ManageBooking } from './ManageBooking';
 export default function ManagePage() {
   return (
-    <main>
+    <main className="participant-page">
       <ManageBooking />
     </main>
   );

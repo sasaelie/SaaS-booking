@@ -30,12 +30,19 @@ export const EnvironmentSchema = z
     AUTH_AUDIENCE: z.string().optional(),
     AUTH_JWKS_URL: z.url().optional(),
     STORAGE_ENDPOINT: z.url().optional(),
+    STORAGE_BACKEND: z.enum(['s3', 'postgres']).optional(),
     STORAGE_REGION: z.string().optional(),
     STORAGE_BUCKET: z.string().optional(),
     STORAGE_ACCESS_KEY_ID: z.string().optional(),
     STORAGE_SECRET_ACCESS_KEY: z.string().optional(),
   })
   .superRefine((environment, context) => {
+    if (environment.STORAGE_BACKEND === 'postgres' && environment.APP_ENVIRONMENT !== STAGING.MODE)
+      context.addIssue({
+        code: 'custom',
+        path: ['STORAGE_BACKEND'],
+        message: 'Database file storage is restricted to staging',
+      });
     if (
       environment.APP_ENVIRONMENT === STAGING.MODE &&
       environment.PAYMENTS_ENABLED !== STAGING.DISABLED

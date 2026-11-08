@@ -20,10 +20,6 @@ export default async function Page({ params }: WorkspacePageProps) {
       <PortalHeading title={SETTINGS_UI.TITLE} description={SETTINGS_UI.INTRO} />
       <div className="portal-section-stack">
         <OrganizationSettings organization={organization} />
-        <ConnectSettings
-          organization={organization}
-          operator={Boolean(permission?.ok && permission.value)}
-        />
       </div>
       <div className="portal-section-heading">
         <h2>{SETTINGS_UI.VISUAL_IDENTITY}</h2>
@@ -42,6 +38,10 @@ export default async function Page({ params }: WorkspacePageProps) {
           disabled={disabled}
         />
       </div>
+      <ConnectSettings
+        organization={organization}
+        operator={Boolean(permission?.ok && permission.value)}
+      />
     </>
   );
 }

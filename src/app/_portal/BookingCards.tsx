@@ -37,13 +37,13 @@ function BookingCard({ booking, organizationId, timezone }: BookingCardProps) {
       <BookingSummary booking={booking} timezone={timezone} />
       <div className="portal-booking-detail">
         <dl>
-          <dt>{PORTAL.CONTACT}</dt>
+          <dt>{PORTAL.EMAIL}</dt>
           <dd>
             <a href={`mailto:${booking.email}`}>{booking.email}</a>
           </dd>
           {booking.phone ? (
             <>
-              <dt>{PORTAL.CONTACT}</dt>
+              <dt>{PORTAL.PHONE}</dt>
               <dd>{booking.phone}</dd>
             </>
           ) : null}
@@ -62,6 +62,7 @@ function BookingSummary({ booking, timezone }: Pick<BookingCardProps, 'booking' 
           {booking.firstName} {booking.lastName}
         </strong>
         <small>{booking.activityName}</small>
+        <small>{PORTAL.VIEW_DETAILS}</small>
       </div>
       <div>
         <strong>{portalDate(booking.startsAt, timezone)}</strong>

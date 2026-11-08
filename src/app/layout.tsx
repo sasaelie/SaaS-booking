@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { StagingNotice } from './_ui/StagingNotice';
 import './_ui/staging.css';
+import './_ui/participant.css';
 import './_ui/ice-tokens.css';
 import './_ui/brand.css';
 import './_ui/widget-layout.css';

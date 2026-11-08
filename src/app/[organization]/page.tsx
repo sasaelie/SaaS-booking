@@ -30,7 +30,7 @@ export default async function Page({
     );
   const data = result.value;
   return (
-    <main>
+    <main className="participant-page">
       <BookingBrand
         name={data.name}
         logoUrl={data.hasLogo ? `/api/branding/${data.organizationId}/logo` : null}

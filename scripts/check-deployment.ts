@@ -19,6 +19,10 @@ const groups = {
 function configuration(): boolean {
   let complete = true;
   for (const [group, keys] of Object.entries(groups)) {
+    if (group === 'privateStorage' && process.env['STORAGE_BACKEND'] === 'postgres') {
+      console.info('privateStorage: DATABASE STAGING (quota 50 MiB)');
+      continue;
+    }
     const missing = keys.filter((key) => !process.env[key]?.trim());
     if (missing.length) complete = false;
     console.info(`${group}: ${missing.length ? `MISSING (${missing.join(', ')})` : 'CONFIGURED'}`);

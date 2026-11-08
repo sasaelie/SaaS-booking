@@ -14,9 +14,11 @@ import { CreateBookingUseCase } from '../core/use-cases/create-booking.use-case'
 import { GetBookingPageUseCase } from '../core/use-cases/get-booking-page.use-case';
 import { HandlePaymentWebhookUseCase } from '../core/use-cases/handle-stripe-webhook.use-case';
 import { providers } from './providers';
+import { PostgresProofStorageAdapter } from '../adapters/storage/postgres-proof.adapter';
+import { PrivateFileTokenAdapter } from '../adapters/storage/private-file-token.adapter';
 function assemble(env: Extract<ReturnType<typeof readEnvironment>, { ok: true }>['value']) {
   const { db, pool } = createDatabase(env.DATABASE_URL, env.DATABASE_SCHEMA, env.DATABASE_SSL_CA);
-  const services = providers(env);
+  const services = applicationProviders(env, db);
   const handler = new ProductionJobHandler({
     db,
     gateway: services.gateway,
@@ -46,6 +48,22 @@ function assemble(env: Extract<ReturnType<typeof readEnvironment>, { ok: true }>
       paymentRepo: new DrizzlePaymentRepository(db),
     }),
   };
+}
+function applicationProviders(
+  env: Extract<ReturnType<typeof readEnvironment>, { ok: true }>['value'],
+  db: ReturnType<typeof createDatabase>['db'],
+) {
+  const services = providers(env);
+  return env.STORAGE_BACKEND === 'postgres'
+    ? {
+        ...services,
+        storage: new PostgresProofStorageAdapter(
+          db,
+          new PrivateFileTokenAdapter(env.SELF_CANCEL_HMAC_SECRET),
+          env.NEXT_PUBLIC_APP_URL,
+        ),
+      }
+    : services;
 }
 export type Runtime = ReturnType<typeof assemble>;
 let instance: Runtime | undefined;

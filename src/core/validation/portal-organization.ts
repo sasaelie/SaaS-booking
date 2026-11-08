@@ -51,8 +51,12 @@ export const SettingsSchema = z
   })
   .refine((value) => Boolean(value.bankIban) === Boolean(value.bankAccountName));
 export const BookingFilterSchema = z.object({
+  activityId: z
+    .union([z.uuid(), z.literal('')])
+    .optional()
+    .default(''),
   page: z.coerce.number().int().min(1).default(1),
   search: z.string().trim().max(SAAS.SEARCH_MAX).default(''),
   status: z.string().max(INPUT_LIMITS.KEY_MAX).default(''),
 });
-export const PlatformFilterSchema = BookingFilterSchema.omit({ status: true });
+export const PlatformFilterSchema = BookingFilterSchema.omit({ status: true, activityId: true });

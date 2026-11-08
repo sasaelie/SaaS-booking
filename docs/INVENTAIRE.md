@@ -1,8 +1,8 @@
 # Inventaire de la plateforme
 
-474 fichiers versionnés, dont 371 sous `src/`.
+495 fichiers versionnés, dont 388 sous `src/`.
 
-Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 009.
+Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 010.
 
 ```text
 .env.example
@@ -51,6 +51,7 @@ migrations/006_identity.sql
 migrations/007_saas_spaces.sql
 migrations/008_brand_jobs.sql
 migrations/009_stripe_connect.sql
+migrations/010_private_files.sql
 next-env.d.ts
 next.config.ts
 package-lock.json
@@ -85,6 +86,7 @@ src/adapters/db/drizzle-payment.repository.ts
 src/adapters/db/drizzle-portal.repository.ts
 src/adapters/db/drizzle-public-catalog.repository.ts
 src/adapters/db/drizzle-rate-limit.ts
+src/adapters/db/drizzle-self-booking.repository.ts
 src/adapters/db/drizzle-session.repository.ts
 src/adapters/db/drizzle-voucher-quote.repository.ts
 src/adapters/db/drizzle-voucher.repository.ts
@@ -153,6 +155,8 @@ src/adapters/payments/stripe-validation.ts
 src/adapters/share/qr-code.adapter.ts
 src/adapters/share/widget-source.ts
 src/adapters/storage/brand-reader.adapter.ts
+src/adapters/storage/postgres-proof.adapter.ts
+src/adapters/storage/private-file-token.adapter.ts
 src/adapters/storage/proof-image.adapter.ts
 src/adapters/storage/s3-proof.adapter.ts
 src/app/(portal)/app/[organizationId]/abonnement/page.tsx
@@ -284,6 +288,7 @@ src/app/_ui/calendar-slots.ts
 src/app/_ui/contact-fields.ts
 src/app/_ui/format-money.ts
 src/app/_ui/ice-tokens.css
+src/app/_ui/participant.css
 src/app/_ui/staging.css
 src/app/_ui/use-booking-calendar.ts
 src/app/_ui/use-booking-flow.ts
@@ -301,6 +306,8 @@ src/app/api/portal/manage/route.ts
 src/app/api/portal/media/route.ts
 src/app/api/portal/qr/route.ts
 src/app/api/portal/stripe/callback/route.ts
+src/app/api/private-file/route.ts
+src/app/api/self-service/context/route.ts
 src/app/api/self-service/route.ts
 src/app/api/voucher-quote/route.ts
 src/app/api/webhooks/billing/route.ts
@@ -312,7 +319,9 @@ src/app/embed/[organization]/[activityId]/page.tsx
 src/app/inscription/page.tsx
 src/app/layout.tsx
 src/app/manage/ManageBooking.tsx
+src/app/manage/ProofUpload.tsx
 src/app/manage/page.tsx
+src/app/manage/use-booking-context.ts
 src/app/manage/use-management.ts
 src/app/mot-de-passe-oublie/page.tsx
 src/app/nouveau-mot-de-passe/page.tsx
@@ -326,9 +335,11 @@ src/composition/connect.ts
 src/composition/portal-command.ts
 src/composition/portal-mutation.ts
 src/composition/portal.ts
+src/composition/private-files.ts
 src/composition/providers.ts
 src/composition/public-catalog.ts
 src/composition/runtime.ts
+src/composition/self-booking.ts
 src/composition/subscriptions.ts
 src/composition/unavailable.ts
 src/composition/widget.ts
@@ -344,6 +355,7 @@ src/config/portal-activity-labels.ts
 src/config/portal-billing-labels.ts
 src/config/portal-labels.ts
 src/config/presentation.ts
+src/config/private-files.ts
 src/config/saas.ts
 src/config/share-labels.ts
 src/config/staging.ts
@@ -383,8 +395,10 @@ src/core/ports/portal-identity.port.ts
 src/core/ports/portal-inputs.ts
 src/core/ports/portal-models.ts
 src/core/ports/portal-repository.port.ts
+src/core/ports/private-file.port.ts
 src/core/ports/public-catalog.port.ts
 src/core/ports/rate-limit.port.ts
+src/core/ports/self-booking.port.ts
 src/core/ports/session-repository.port.ts
 src/core/ports/subscription-gateway.port.ts
 src/core/ports/subscription-webhook.port.ts
@@ -415,12 +429,16 @@ src/core/use-cases/portal/share.use-case.ts
 src/core/use-cases/portal/subscription-webhook.use-case.ts
 src/core/use-cases/portal/subscription.use-case.ts
 src/core/use-cases/quote-voucher.use-case.ts
+src/core/use-cases/read-private-file.use-case.ts
+src/core/use-cases/read-self-booking.use-case.ts
 src/core/use-cases/voucher-lifecycle.use-case.ts
 src/core/validation/admin-command.ts
 src/core/validation/local-pause.ts
 src/core/validation/portal-activity.ts
 src/core/validation/portal-command.ts
 src/core/validation/portal-organization.ts
+src/core/validation/private-file.ts
+src/core/validation/self-booking.ts
 src/core/validation/self-service.ts
 src/lib/errors.ts
 src/lib/format-money.ts
@@ -433,6 +451,8 @@ src/lib/sha256.ts
 src/lib/suggest-organization-slug.ts
 src/lib/trusted-origin.ts
 src/proxy.ts
+tests/e2e/bank-fixtures.ts
+tests/e2e/bank-proof.spec.ts
 tests/e2e/booking.spec.ts
 tests/e2e/embed-fixtures.ts
 tests/e2e/embed.spec.ts
@@ -459,6 +479,7 @@ tests/integration/portal-fixtures.ts
 tests/integration/portal-management.test.ts
 tests/integration/portal.test.ts
 tests/integration/privacy.test.ts
+tests/integration/private-files.test.ts
 tests/integration/reservation.test.ts
 tests/integration/subscription-webhook.test.ts
 tests/integration/subscription.test.ts
