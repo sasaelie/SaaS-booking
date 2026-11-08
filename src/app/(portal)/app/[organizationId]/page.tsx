@@ -5,36 +5,26 @@ import { loadWorkspace, type WorkspacePageProps } from '../../../_portal/load-wo
 import { PortalHeading } from '../../../_portal/PortalHeading';
 import { PortalError } from '../../../_portal/PortalError';
 import { PortalMetric } from '../../../_portal/PortalMetric';
-import { PortalEmpty } from '../../../_portal/PortalEmpty';
+import { ActivityCreationAction, FirstActivityState } from '../../../_portal/FirstActivityState';
 import { SessionList } from '../../../_portal/SessionList';
-import { hasCommercialAccess } from '../../../../core/domain/subscription-access';
 export default async function Page({ params }: WorkspacePageProps) {
   const { organizationId } = await params;
   const result = await loadWorkspace(organizationId);
   if (!result.ok) return <PortalError />;
   const data = result.value;
-  const active = hasCommercialAccess(data.organization.access, new Date());
-  const action = active ? (
-    <Link
-      className="liquid-ice-button portal-button"
-      href={`/app/${organizationId}/activites/nouvelle`}
-    >
-      {PORTAL.NEW_ACTIVITY}
-    </Link>
-  ) : undefined;
   return (
     <>
       <PortalHeading
         title={data.organization.name}
         description={PORTAL.WELCOME_HINT}
-        action={action}
+        action={
+          data.activities.length ? (
+            <ActivityCreationAction organization={data.organization} />
+          ) : undefined
+        }
       />
-      <OverviewMetrics data={data} />
-      {!data.activities.length ? (
-        <PortalEmpty title={PORTAL.EMPTY_ACTIVITIES} description={PORTAL.EMPTY_ACTIVITIES_HINT}>
-          {action}
-        </PortalEmpty>
-      ) : null}
+      {data.activities.length ? <OverviewMetrics data={data} /> : null}
+      {!data.activities.length ? <FirstActivityState organization={data.organization} /> : null}
       <div className="portal-section-heading">
         <h2>{PORTAL.NEXT_SESSIONS}</h2>
         <Link href={`/app/${organizationId}/activites`}>{PORTAL.VIEW_ACTIVITIES}</Link>

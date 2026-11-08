@@ -24,6 +24,10 @@ Le formulaire de création d’espace distingue maintenant le **nom du lien de r
 
 Cette correction est vérifiée par un parcours mobile couvrant la suggestion, la saisie incorrecte, les noms réservés et la création effective d’un espace. Les dix autres parcours navigateur, les 42 tests unitaires, les 41 tests PostgreSQL et la compilation ont également été vérifiés pendant cette modification.
 
+Les écrans vides affichent désormais une seule action principale : le bouton supérieur « Créer un espace » est retiré quand aucune organisation n’existe. La première activité se crée depuis un bouton dans sa carte ; les compteurs à zéro sont masqués avant cette première activité. Sans accès actif, la carte explique le blocage et dirige vers la gestion de l’accès, avec un message de recette distinct d’une demande d’abonnement payant. Les contrôles métier restent inchangés. Un accès offert de recette a été accordé à l’unique espace concerné du propriétaire après vérification de son identité de propriétaire et de son compte validé ; l’opération est journalisée et n’active aucune facturation.
+
+Validation de cette correction : 42 tests unitaires, 41 tests PostgreSQL, compilation et 12 parcours navigateur réussis, dont le nouveau parcours mobile des écrans vides et la vérification que l’expiration continue de bloquer les nouvelles activités côté serveur.
+
 1. Ouvrir l’adresse d’inscription et passer la protection Vercel si elle apparaît.
 2. S’inscrire avec **l’adresse du compte Resend**, seul destinataire réel autorisé par l’expéditeur `resend.dev` sans domaine vérifié.
 3. Choisir soi-même un mot de passe, non communiqué dans le chat.

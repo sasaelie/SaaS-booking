@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-472 fichiers versionnés, dont 370 sous `src/`.
+474 fichiers versionnés, dont 371 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 009.
 
@@ -183,6 +183,7 @@ src/app/_portal/BookingManagement.tsx
 src/app/_portal/ConnectSettings.tsx
 src/app/_portal/CopyCode.tsx
 src/app/_portal/CreateOrganizationForm.tsx
+src/app/_portal/FirstActivityState.tsx
 src/app/_portal/MediaUpload.tsx
 src/app/_portal/OrganizationCards.tsx
 src/app/_portal/OrganizationIdentityFields.tsx
@@ -435,6 +436,7 @@ src/proxy.ts
 tests/e2e/booking.spec.ts
 tests/e2e/embed-fixtures.ts
 tests/e2e/embed.spec.ts
+tests/e2e/empty-states.spec.ts
 tests/e2e/interface.spec.ts
 tests/e2e/organization-link.spec.ts
 tests/e2e/portal-fixtures.ts

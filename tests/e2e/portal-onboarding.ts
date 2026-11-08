@@ -1,14 +1,20 @@
 import { expect, type Page } from '@playwright/test';
 export async function createSpaceInBrowser(page: Page) {
   const slug = `evenement-${crypto.randomUUID()}`;
-  await page.locator('header').getByRole('link', { name: 'Créer un espace', exact: true }).click();
+  const create = page.locator('main').getByRole('link', { name: 'Créer un espace', exact: true });
+  await expect(create).toHaveCount(1);
+  await create.click();
   await page.getByLabel('Nom de l’organisation', { exact: true }).fill('Les rencontres du samedi');
   await page.getByLabel('Nom du lien de réservation', { exact: true }).fill(slug);
   await page.getByRole('button', { name: 'Créer mon espace', exact: true }).click();
   await expect(page).toHaveURL(/\/app\/[a-f0-9-]+$/);
   const id = page.url().split('/').pop();
   expect(id).toBeTruthy();
-  await expect(page.getByText('Votre abonnement n’est pas actif.', { exact: true })).toBeVisible();
+  const accessTitle =
+    process.env['STAGING_BROWSER_TEST'] === 'true'
+      ? 'Votre accès de test est à activer.'
+      : 'Votre abonnement n’est pas actif.';
+  await expect(page.getByText(accessTitle, { exact: true })).toBeVisible();
   return { id, slug };
 }
 export async function grantInBrowser(page: Page, slug: string) {

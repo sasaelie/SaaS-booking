@@ -20,8 +20,8 @@ export default async function Page() {
     <>
       <PortalHeading
         title={PORTAL.ORGANIZATIONS}
-        description={PORTAL.WELCOME_HINT}
-        action={action}
+        description={organizations.value.length ? PORTAL.WELCOME_HINT : undefined}
+        action={organizations.value.length ? action : undefined}
       />
       {organizations.value.length ? (
         <OrganizationCards organizations={organizations.value} />

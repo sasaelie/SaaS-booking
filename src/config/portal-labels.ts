@@ -46,6 +46,8 @@ export const PORTAL = {
   EMPTY_ACTIVITIES: 'Votre première activité commence ici.',
   EMPTY_ACTIVITIES_HINT:
     'Créez une date ponctuelle ou des séances régulières, puis partagez votre lien.',
+  FIRST_ACTIVITY_ACCESS_HINT:
+    'Activez votre abonnement pour créer votre première activité. Vous pouvez consulter les conditions depuis votre espace abonnement.',
   NEW_ACTIVITY: 'Créer une activité',
   VIEW_ACTIVITIES: 'Voir les activités',
   NO_SESSIONS: 'Aucune séance à venir pour le moment.',
