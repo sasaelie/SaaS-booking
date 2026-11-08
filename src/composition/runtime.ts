@@ -15,7 +15,7 @@ import { GetBookingPageUseCase } from '../core/use-cases/get-booking-page.use-ca
 import { HandlePaymentWebhookUseCase } from '../core/use-cases/handle-stripe-webhook.use-case';
 import { providers } from './providers';
 function assemble(env: Extract<ReturnType<typeof readEnvironment>, { ok: true }>['value']) {
-  const { db, pool } = createDatabase(env.DATABASE_URL);
+  const { db, pool } = createDatabase(env.DATABASE_URL, env.DATABASE_SCHEMA);
   const services = providers(env);
   const handler = new ProductionJobHandler({
     db,

@@ -36,7 +36,7 @@ async function migrateFile(
 async function main(): Promise<void> {
   const url = process.env['DATABASE_URL'];
   if (!url) throw Error('DATABASE_URL required');
-  const { db, pool } = createDatabase(url);
+  const { db, pool } = createDatabase(url, process.env['DATABASE_SCHEMA']);
   try {
     await db.execute(
       sql`CREATE TABLE IF NOT EXISTS schema_migrations (name text PRIMARY KEY, hash text NOT NULL)`,

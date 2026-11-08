@@ -19,3 +19,6 @@ Thumbs.db
 # Browser test artifacts
 test-results/
 playwright-report/
+
+# Liaison Vercel locale (jamais de configuration ou jeton local dans Git)
+.vercel/

@@ -2,6 +2,10 @@
 
 Moteur de réservation Next.js App Router, TypeScript strict et PostgreSQL, organisé en domaine, ports, cas d’usage et adaptateurs.
 
+## Prochaine intégration
+
+[Plan de bataille : Mollie, choix des paiements, abonnements mensuels/annuels et préparation Supabase/Vercel](docs/PLAN-PAIEMENTS-MOLLIE.md). Ce plan décrit la prochaine livraison ; les fonctions Mollie et annuelles ne sont pas encore activées.
+
 ## Installation
 
 Node.js 22.12 ou plus récent (Node 24 recommandé).
@@ -76,6 +80,8 @@ Planifier `POST /api/jobs` régulièrement avec un secret dédié. Les tâches s
 
 ## Vérifications
 
+[État des interfaces et préparation au déploiement](docs/ETAT-FONCTIONNEL.md). Diagnostic sans paiement : `npm run check:deployment` (nécessite les variables d’environnement privées ; n’effectue aucune écriture).
+
 ```bash
 npm run verify
 npm run build
@@ -86,7 +92,7 @@ Les tests d’intégration exigent une base locale jetable `booking_test` et ref
 
 ## Limites et configuration de production
 
-Les tests automatisés ne remplacent pas une validation de paiement en environnement Stripe de test avec vos clés, ni le contrôle des permissions de votre bucket, des e-mails et de votre fournisseur d’identité. Aucun compte ou déploiement de production n’est créé par ce dépôt.
+Les tests automatisés ne remplacent pas une validation de paiement en environnement Stripe de test avec vos clés, ni le contrôle des permissions de votre bucket, des e-mails et de votre fournisseur d’identité. La base Supabase de recette et le projet Vercel sont préparés ; aucune application n’est publiée. Voir [l’état et le guide de connexion](docs/HEBERGEMENT-RECETTE.md).
 
 La région UE de la base, du stockage, des sauvegardes et des journaux est à configurer chez les hébergeurs. Utiliser un bucket privé sans conservation de versions incompatibles avec la purge des justificatifs. Configurer HTTPS, la confiance du proxy pour l’adresse client, les sauvegardes et la surveillance de la file.
 
