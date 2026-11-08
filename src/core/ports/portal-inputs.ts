@@ -40,6 +40,7 @@ export interface OrganizationSettingsInput {
   readonly autoDeleteBankProof: boolean;
 }
 export interface BookingFilter {
+  readonly activityId?: string;
   readonly page: number;
   readonly search: string;
   readonly status: string;

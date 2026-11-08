@@ -54,6 +54,7 @@ function ActivityDetail({
         }
       />
       <ActivityMeta activity={activity} />
+      <AttendeesLink organizationId={organizationId} activityId={activity.id} />
       <div className="portal-section-heading">
         <h2>{PORTAL.NEXT_SESSIONS}</h2>
       </div>
@@ -144,5 +145,22 @@ function ActivityMeta({ activity }: { readonly activity: PortalOverview['activit
         <span>{activity.isActive ? PORTAL.ACTIVE : PORTAL.ARCHIVED}</span>
       </div>
     </section>
+  );
+}
+
+function AttendeesLink({
+  organizationId,
+  activityId,
+}: {
+  readonly organizationId: string;
+  readonly activityId: string;
+}) {
+  return (
+    <Link
+      className="liquid-ice-button portal-button"
+      href={`/app/${organizationId}/reservations?activityId=${activityId}`}
+    >
+      {PORTAL.VIEW_ATTENDEES}
+    </Link>
   );
 }

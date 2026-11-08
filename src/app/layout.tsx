@@ -1,4 +1,8 @@
+import './_ui/appearance.css';
 import type { ReactNode } from 'react';
+import { StagingNotice } from './_ui/StagingNotice';
+import './_ui/staging.css';
+import './_ui/participant.css';
 import './_ui/ice-tokens.css';
 import './_ui/brand.css';
 import './_ui/widget-layout.css';
@@ -19,6 +23,7 @@ import './_portal/portal-details.css';
 import './_portal/portal-forms.css';
 import './_portal/portal-media.css';
 import './_portal/portal-responsive.css';
+import './_portal/navigation.css';
 export const metadata = {
   title: 'Studio Créatif 360 — Réservations',
   description: 'Réservez votre place à une activité.',
@@ -26,7 +31,10 @@ export const metadata = {
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body>
+        <StagingNotice />
+        {children}
+      </body>
     </html>
   );
 }

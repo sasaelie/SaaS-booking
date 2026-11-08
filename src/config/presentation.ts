@@ -28,5 +28,19 @@ export const FORM_LABELS = {
   PROOF: 'Justificatif de virement',
   DONE: 'Votre demande a été enregistrée.',
   CONFIRM_CANCEL: 'Confirmer l’annulation de cette réservation',
+  BACK_ACTIVITY: 'Retour à l’activité',
+  BACK_HOME: 'Retour à l’accueil',
+  PROOF_HINT:
+    'Image PNG, JPEG ou WebP, 5 Mo maximum. Visible uniquement par l’organisateur autorisé.',
+  PROOF_RECEIVED:
+    'Votre justificatif a été reçu. L’organisateur peut le consulter dans votre fiche et vérifier le virement.',
+  PROOF_INVALID: 'Choisissez une image PNG, JPEG ou WebP valide, de 5 Mo maximum.',
+  LINK_INVALID:
+    'Ce lien de réservation est invalide ou expiré. Utilisez le lien le plus récent de votre réservation.',
+  STORAGE_UNAVAILABLE:
+    'Le dépôt du justificatif est momentanément indisponible. Votre réservation reste enregistrée.',
+  CHOOSE_IMAGE: 'Choisir une image',
+  NO_IMAGE: 'Aucune image sélectionnée',
+  CANCEL_HEADING: 'Annuler cette réservation',
   TERMS_TITLE: 'Conditions de réservation',
 } as const;

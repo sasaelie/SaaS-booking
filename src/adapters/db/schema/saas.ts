@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp, uuid, primaryKey } from 'drizzle-orm/pg-core';
+import { integer, boolean, pgTable, text, timestamp, uuid, primaryKey } from 'drizzle-orm/pg-core';
 import { organizations } from './organization';
 import { ACCESS_STATUSES, BRAND_THEMES } from '../../../config/constants';
 export const organizationAccess = pgTable('organization_access', {
@@ -30,6 +30,8 @@ export const organizationBranding = pgTable('organization_branding', {
   organizationId: uuid('organization_id')
     .primaryKey()
     .references(() => organizations.id),
+  organizerHue: integer('organizer_hue'),
+  participantHue: integer('participant_hue'),
   theme: text('theme').notNull().default(BRAND_THEMES[0]),
   logoStorageKey: text('logo_storage_key'),
   backgroundStorageKey: text('background_storage_key'),

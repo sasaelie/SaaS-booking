@@ -44,7 +44,11 @@ async function seed(): Promise<void> {
   if (process.env['ALLOW_DEMO_SEED'] !== 'true') throw Error('Set ALLOW_DEMO_SEED=true explicitly');
   const url = process.env['DATABASE_URL'];
   if (!url) throw Error('DATABASE_URL required');
-  const { db, pool } = createDatabase(url, process.env['DATABASE_SCHEMA']);
+  const { db, pool } = createDatabase(
+    url,
+    process.env['DATABASE_SCHEMA'],
+    process.env['DATABASE_SSL_CA'],
+  );
   try {
     const organization = await demoOrganization(db);
     const activity = await demoActivity(db, organization.id);

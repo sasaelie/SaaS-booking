@@ -181,3 +181,18 @@ textarea.portal-input {
 .portal-menu-toggle {
   display: none;
 }
+
+.portal-landing-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+.portal-landing-actions > a {
+  width: 100%;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .portal-landing-actions {
+    grid-template-columns: 1fr;
+  }
+}

@@ -20,6 +20,8 @@ export interface OrganizationSummary {
   readonly usesPlatformPayments: boolean;
   readonly primaryTextColor: string;
   readonly autoDeleteBankProof: boolean;
+  readonly organizerHue: number | null;
+  readonly participantHue: number | null;
   readonly theme: string;
   readonly hasLogo: boolean;
   readonly hasBackground: boolean;

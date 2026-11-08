@@ -6,6 +6,7 @@ import { ok } from '../../lib/result';
 export class BrandReaderAdapter implements BrandMediaReaderPort {
   constructor(private readonly storage: PrivateProofStoragePort) {}
   async read(key: string) {
+    if (this.storage.read) return this.storage.read(key);
     try {
       const link = await this.storage.getTemporaryAdminViewUrl({
         storageKey: key,

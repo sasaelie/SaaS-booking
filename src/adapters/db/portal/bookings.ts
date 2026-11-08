@@ -59,6 +59,7 @@ export async function portalBookings(
 function bookingFilter(id: string, filter: BookingFilter) {
   return and(
     eq(bookings.organizationId, id),
+    filter.activityId ? eq(bookings.activityId, filter.activityId) : undefined,
     filter.status
       ? eq(bookings.status, filter.status as typeof bookings.$inferSelect.status)
       : undefined,

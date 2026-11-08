@@ -1,3 +1,4 @@
+import { ColorScene } from '../_ui/ColorScene';
 import type { PublicCatalog } from '../../core/ports/public-catalog.port';
 import Link from 'next/link';
 import { publicCatalog } from '../../composition/public-catalog';
@@ -30,7 +31,8 @@ export default async function Page({
     );
   const data = result.value;
   return (
-    <main>
+    <main className="participant-page ice-branded-page">
+      {data.participantHue != null ? <ColorScene hue={data.participantHue} /> : null}
       <BookingBrand
         name={data.name}
         logoUrl={data.hasLogo ? `/api/branding/${data.organizationId}/logo` : null}

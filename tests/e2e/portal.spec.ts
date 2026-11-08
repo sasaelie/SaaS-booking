@@ -39,6 +39,7 @@ test('renders all organizer screens coherently on desktop and mobile and downloa
       '/reservations',
       '/abonnement',
       '/parametres',
+      '/reglages',
       '/partager',
     ]) {
       await page.goto(`/app/${space.organizationId}${suffix}`);
@@ -96,7 +97,11 @@ test('keeps paid-period access after cancellation, blocks new bookings after exp
     [space.organizationId],
   );
   await page.goto(`/app/${space.organizationId}`);
-  await expect(page.getByText('Votre abonnement n’est pas actif.', { exact: true })).toBeVisible();
+  const accessTitle =
+    process.env['STAGING_BROWSER_TEST'] === 'true'
+      ? 'Votre accès de test est à activer.'
+      : 'Votre abonnement n’est pas actif.';
+  await expect(page.getByText(accessTitle, { exact: true })).toBeVisible();
   await page.goto(`/app/${space.organizationId}/activites/nouvelle`);
   await expect(page.getByRole('button', { name: 'Créer et publier', exact: true })).toBeDisabled();
   await page.goto(`/${space.slug}/${space.activityId}`);

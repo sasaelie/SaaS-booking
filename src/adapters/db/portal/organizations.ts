@@ -33,6 +33,8 @@ function toOrganization(
     ...row.organization,
     role: row.role,
     access: row.access,
+    organizerHue: row.branding?.organizerHue ?? null,
+    participantHue: row.branding?.participantHue ?? null,
     theme: row.branding?.theme ?? 'SAGE',
     hasLogo: Boolean(row.branding?.logoStorageKey),
     hasBackground: Boolean(row.branding?.backgroundStorageKey),

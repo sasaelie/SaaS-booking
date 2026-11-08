@@ -1,3 +1,4 @@
+import { PortalScene } from './PortalScene';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import type { PortalActor, OrganizationSummary } from '../../core/ports/portal-models';
@@ -17,6 +18,7 @@ export function PortalShell({
 }) {
   return (
     <div className="portal-root">
+      <PortalScene organizations={organizations} />
       <aside className="portal-sidebar">
         <Link href="/app" className="portal-brand">
           <span className="ice-brand-mark" aria-hidden="true" />

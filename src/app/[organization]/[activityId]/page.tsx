@@ -20,7 +20,7 @@ export default async function ActivityPage({
     activityId: route.activityId,
   });
   return (
-    <main>
+    <main className="participant-page">
       {result.ok ? (
         <IceBookingWidget key={result.value.activityId} data={result.value} />
       ) : (

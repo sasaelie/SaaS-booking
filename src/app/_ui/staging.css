@@ -1,0 +1,11 @@
+.staging-notice {
+  margin: 0;
+  padding: 0.65rem 1rem;
+  color: var(--ui-text-primary);
+  background: var(--ice-paper);
+  border-bottom: 1px solid currentColor;
+  font:
+    600 0.8rem/1.5 system-ui,
+    sans-serif;
+  text-align: center;
+}

@@ -16,7 +16,7 @@ Relevé du 8 novembre 2026. Aucun déploiement autorisé à ce stade ; Stripe et
 | Paiements et abonnement actuel | Parcours Stripe et webhooks implémentés | Tests automatisés uniquement ; aucun compte prestataire connecté. |
 | Mollie et abonnement annuel | Plan d’intégration | Développement restant, aucune activation. |
 
-Les interfaces partagent le même serveur et la même base **lorsque l’environnement est configuré**. La base Supabase de recette est initialisée, mais la connexion de l’application à celle-ci n’est pas encore renseignée. Aucun parcours complet hébergé n’a donc été validé.
+Les interfaces partagent le même serveur et la même base **lorsque l’environnement est configuré**. La base Supabase de recette est initialisée et sa connexion SQL depuis Vercel est maintenant validée avec TLS strict. Aucun parcours complet de l’application hébergée n’a encore été validé ; voir `ENVIRONNEMENT-TEST.md` pour l’état des raccordements.
 
 ## Ordre de grandeur
 

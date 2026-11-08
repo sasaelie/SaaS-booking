@@ -1,6 +1,7 @@
 import type { Result } from '../../lib/result';
 import type { AllowedProofMimeType } from '../domain/proof-validator';
 export interface PrivateProofStoragePort {
+  read?(storageKey: string): Promise<Result<Uint8Array>>;
   uploadPrivateProof(input: {
     readonly storageKey: string;
     readonly bytes: Uint8Array;

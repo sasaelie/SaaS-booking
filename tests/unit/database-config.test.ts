@@ -3,6 +3,15 @@ import { databasePoolOptions } from '../../src/adapters/db/pool-options';
 import { EnvironmentSchema } from '../../src/config/env';
 
 describe('Hosted database connection safety', () => {
+  it('enforces certificate verification for Supabase even if the URL disables TLS', () => {
+    const options = databasePoolOptions(
+      'postgresql://app:test@aws-0-eu-north-1.pooler.supabase.com:5432/postgres?sslmode=disable',
+      'booking',
+      'public-ca',
+    );
+    expect(options.ssl).toEqual({ rejectUnauthorized: true, ca: 'public-ca' });
+    expect(options.connectionString).not.toContain('sslmode=disable');
+  });
   it('preserves session locks and bounds connection usage', () => {
     const options = databasePoolOptions('postgresql://app:test@localhost/booking', 'booking');
     expect(options.options).toBe('-c search_path=booking,public');

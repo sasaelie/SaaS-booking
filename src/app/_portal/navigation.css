@@ -1,0 +1,97 @@
+.portal-nav {
+  display: block;
+}
+.portal-nav-links,
+.portal-nav-sections,
+.portal-nav-utilities {
+  display: grid;
+  gap: 6px;
+}
+.portal-nav .portal-nav-links a {
+  display: flex;
+  min-height: 46px;
+  border: 1px solid var(--ice-line);
+  border-radius: 12px;
+  background: var(--ice-soft-fill);
+  box-shadow: none;
+  font-weight: 500;
+}
+.portal-nav .portal-nav-links a[aria-current='page'] {
+  background: var(--ice-paper);
+  border-color: var(--ui-text-primary);
+  box-shadow: inset 3px 0 var(--ui-text-primary);
+  font-weight: 650;
+}
+.portal-nav .portal-nav-links a:hover {
+  background: var(--ice-paper);
+}
+.portal-nav-utilities {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 16px;
+  margin-top: 18px;
+}
+.portal-nav-organization {
+  margin-top: 0;
+}
+.portal-mobile-bar {
+  display: none;
+}
+.portal-nav a:focus-visible,
+.portal-menu-toggle:focus-visible {
+  outline: 2px solid var(--ui-text-primary);
+  outline-offset: 3px;
+}
+@media (max-width: 760px) {
+  .portal-nav {
+    margin-top: 18px;
+    width: 100%;
+  }
+  .portal-mobile-bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .portal-mobile-bar .portal-back {
+    display: inline-flex;
+    padding: 8px 0;
+    font-size: 12px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .portal-current-title {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 650;
+    overflow-wrap: anywhere;
+  }
+  .portal-mobile-bar .portal-menu-toggle {
+    display: block;
+    width: auto;
+    padding: 10px 12px;
+    min-height: 44px;
+    border-radius: 12px;
+  }
+  .portal-nav .portal-nav-links {
+    display: none;
+    width: 100%;
+    margin-top: 20px;
+  }
+  .portal-nav[data-expanded='true'] .portal-nav-links {
+    display: grid;
+  }
+  .portal-nav .portal-nav-links a {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+  .portal-nav-sections,
+  .portal-nav-utilities {
+    width: 100%;
+  }
+  .portal-nav-organization {
+    margin: 0 0 8px;
+    padding: 0;
+  }
+}

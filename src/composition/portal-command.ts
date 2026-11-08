@@ -6,6 +6,8 @@ export function dispatchPortal(
   command: PortalCommand,
 ): Promise<Result<unknown>> {
   switch (command.action) {
+    case 'appearance':
+      return services.organizations.appearance(command.input);
     case 'connect-stripe':
       return services.connect.authorize(command.input);
     case 'platform-stripe':

@@ -5,10 +5,11 @@ import { StripeSubscriptionAdapter } from '../adapters/payments/stripe-subscript
 import { StripeSubscriptionWebhook } from '../adapters/payments/saas/webhook';
 import { HandleSubscriptionWebhookUseCase } from '../core/use-cases/portal/subscription-webhook.use-case';
 import { SAAS } from '../config/constants';
+import { paymentsEnabled } from '../config/staging';
 export function subscriptions(app: Runtime) {
   const env = app.env;
   const settings =
-    env.STRIPE_SECRET_KEY && env.STRIPE_SAAS_PRICE_ID
+    paymentsEnabled(env) && env.STRIPE_SECRET_KEY && env.STRIPE_SAAS_PRICE_ID
       ? {
           stripe: new Stripe(env.STRIPE_SECRET_KEY, {
             timeout: SAAS.PROVIDER_TIMEOUT_MS,

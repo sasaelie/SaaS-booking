@@ -1,6 +1,7 @@
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { SETTINGS_UI, PORTAL, MEMBER_ROLES } from '../../config/constants';
 import { PortalForm } from './PortalForm';
+import { STAGING, paymentsEnabled } from '../../config/staging';
 export function ConnectSettings({
   organization,
   operator,
@@ -9,6 +10,13 @@ export function ConnectSettings({
   readonly operator: boolean;
 }) {
   const owner = organization.role === MEMBER_ROLES.OWNER;
+  if (!paymentsEnabled({ PAYMENTS_ENABLED: process.env['PAYMENTS_ENABLED'] }))
+    return (
+      <section className="portal-panel">
+        <h2>{SETTINGS_UI.STRIPE}</h2>
+        <p className="portal-notice">{STAGING.PAYMENT_NOTE}</p>
+      </section>
+    );
   return (
     <section className="portal-panel">
       <h2>{SETTINGS_UI.STRIPE}</h2>
