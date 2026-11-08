@@ -13,7 +13,7 @@ test('suggests a reservation link and explains invalid input in French on mobile
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/app/nouveau');
   const name = page.getByLabel('Nom de l’organisation', { exact: true });
-  const slug = page.getByLabel('Nom du lien de réservation', { exact: true });
+  const slug = page.getByLabel('Personnalisez votre lien de réservation', { exact: true });
   const form = page.locator('form').filter({ has: slug });
   await name.fill('L’Atelier Créatif');
   await expect(slug).toHaveValue('l-atelier-creatif');

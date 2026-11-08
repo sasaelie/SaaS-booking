@@ -13,13 +13,15 @@ export default function Home() {
           <small>{BILLING_UI.PER_MONTH}</small>
         </p>
         <p className="portal-muted">{BILLING_UI.NO_COMMISSION}</p>
-        <div className="portal-share-buttons">
+        <div className="portal-share-buttons portal-landing-actions">
           <Link className="liquid-ice-button portal-button" href="/inscription">
             {SHARE_UI.START}
           </Link>
-          <Link href="/connexion">{SHARE_UI.LOGIN}</Link>
+          <Link className="liquid-ice-button portal-button" href="/connexion">
+            {SHARE_UI.LOGIN}
+          </Link>
         </div>
-        <p className="portal-muted">{BILLING_UI.CANCEL_NOTE}</p>
+        <p className="portal-muted">{SHARE_UI.LANDING_CANCEL_NOTE}</p>
       </section>
     </main>
   );

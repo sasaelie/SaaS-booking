@@ -27,8 +27,10 @@ export const SHARE_UI = {
   LANDING_TITLE: 'Vos événements, simplement.',
   LANDING_HINT:
     'Créez vos activités, partagez votre page et retrouvez vos inscriptions au même endroit.',
-  START: 'Créer mon espace',
+  START: 'Créer un compte organisateur',
   LOGIN: 'Se connecter',
+  LANDING_CANCEL_NOTE:
+    'Sans engagement. Résiliez à tout moment et conservez votre accès jusqu’à la fin de la période payée.',
   CATALOG_OPEN: 'Choisir une séance',
 } as const;
 export const EMBED = {

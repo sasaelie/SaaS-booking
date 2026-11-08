@@ -25,16 +25,16 @@ export const PORTAL = {
   ACCESS_ERROR:
     'Votre abonnement doit être actif pour créer de nouvelles activités ou recevoir de nouvelles réservations.',
   OWNER_ERROR: 'Vous n’avez pas les droits nécessaires pour cette opération.',
-  SLUG_UNAVAILABLE: 'Cette adresse est déjà utilisée. Choisissez une autre adresse de page.',
+  SLUG_UNAVAILABLE: 'Ce nom de lien est déjà utilisé. Choisissez un autre nom.',
   RATE_LIMITED: 'Trop de demandes rapprochées. Patientez un moment avant de réessayer.',
   VALIDATION_ERROR: 'Vérifiez les informations saisies.',
   CONFLICT_ERROR: 'L’état a changé ou une opération est déjà en cours. Actualisez puis réessayez.',
   NO_ORGANIZATIONS: 'Bienvenue. Créons votre espace.',
   WELCOME_HINT: 'Votre organisation, vos activités et vos réservations au même endroit.',
   NAME: 'Nom de l’organisation',
-  SLUG: 'Nom du lien de réservation',
+  SLUG: 'Personnalisez votre lien de réservation',
   SLUG_HINT:
-    'Ce nom apparaît à la fin de votre lien sur Internet, pas votre adresse postale. Minuscules, chiffres et tirets, sans espaces.',
+    'Choisissez le nom qui apparaîtra dans le lien partagé avec vos participants. Exemple : mon-atelier. Utilisez des minuscules, chiffres et tirets, sans espaces.',
   SLUG_PLACEHOLDER: 'mon-atelier',
   SLUG_PREVIEW: 'Aperçu de votre lien',
   SLUG_FORMAT:

@@ -5,7 +5,7 @@ export async function createSpaceInBrowser(page: Page) {
   await expect(create).toHaveCount(1);
   await create.click();
   await page.getByLabel('Nom de l’organisation', { exact: true }).fill('Les rencontres du samedi');
-  await page.getByLabel('Nom du lien de réservation', { exact: true }).fill(slug);
+  await page.getByLabel('Personnalisez votre lien de réservation', { exact: true }).fill(slug);
   await page.getByRole('button', { name: 'Créer mon espace', exact: true }).click();
   await expect(page).toHaveURL(/\/app\/[a-f0-9-]+$/);
   const id = page.url().split('/').pop();
