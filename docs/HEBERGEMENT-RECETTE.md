@@ -2,7 +2,7 @@
 
 ## État réel
 
-À la demande du propriétaire : préparation uniquement, **aucune publication** et aucun abonnement d’hébergement payant activé. Le visuel validé est conservé. La branche `feat/payments-mollie-subscriptions` reste à valider ; la PR 3 n’est pas fusionnée.
+La PR 3 est fusionnée dans `main` au commit `27d6a187e51f2d973b0094f1fd5a2056e5024f80`. Le propriétaire demande désormais un environnement de test accessible, sans paiements réels, avant la mise en service commerciale. Le visuel validé est conservé ; aucun abonnement d’hébergement payant n’est activé. La nouvelle préparation est documentée dans [ENVIRONNEMENT-TEST.md](ENVIRONNEMENT-TEST.md).
 
 - Supabase existant : `sasaelie's Project`, référence `itkvrcxpaxygsluqymwk`, région `eu-north-1` (Stockholm), PostgreSQL 17.
 - Le schéma applicatif privé `booking` contient 23 tables, dont le registre `schema_migrations` avec les neuf migrations et leurs empreintes SHA-256 identiques au dépôt.

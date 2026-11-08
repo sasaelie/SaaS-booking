@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import { StagingNotice } from './_ui/StagingNotice';
+import './_ui/staging.css';
 import './_ui/ice-tokens.css';
 import './_ui/brand.css';
 import './_ui/widget-layout.css';
@@ -26,7 +28,10 @@ export const metadata = {
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body>
+        <StagingNotice />
+        {children}
+      </body>
     </html>
   );
 }

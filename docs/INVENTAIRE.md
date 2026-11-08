@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-459 fichiers versionnés, dont 363 sous `src/`.
+466 fichiers versionnés, dont 366 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 009.
 
@@ -15,6 +15,7 @@ README.md
 deploy/supabase-bootstrap.sql
 deploy/supabase-harden.sql
 docs/ARCHITECTURE.md
+docs/ENVIRONNEMENT-TEST.md
 docs/ETAT-FONCTIONNEL.md
 docs/HEBERGEMENT-RECETTE.md
 docs/INTERFACE.md
@@ -55,6 +56,7 @@ package-lock.json
 package.json
 playwright.config.ts
 scripts/check-deployment.ts
+scripts/check-storage.ts
 scripts/export-hosted-migrations.ts
 scripts/grant-platform-admin.ts
 scripts/migrate.ts
@@ -254,6 +256,7 @@ src/app/_ui/ContactField.tsx
 src/app/_ui/EmbedHeightReporter.tsx
 src/app/_ui/IceBookingWidget.tsx
 src/app/_ui/IceIcon.tsx
+src/app/_ui/StagingNotice.tsx
 src/app/_ui/VoucherField.tsx
 src/app/_ui/VoucherInput.tsx
 src/app/_ui/booking-calendar.css
@@ -276,6 +279,7 @@ src/app/_ui/calendar-slots.ts
 src/app/_ui/contact-fields.ts
 src/app/_ui/format-money.ts
 src/app/_ui/ice-tokens.css
+src/app/_ui/staging.css
 src/app/_ui/use-booking-calendar.ts
 src/app/_ui/use-booking-flow.ts
 src/app/_ui/use-booking-form.ts
@@ -337,6 +341,7 @@ src/config/portal-labels.ts
 src/config/presentation.ts
 src/config/saas.ts
 src/config/share-labels.ts
+src/config/staging.ts
 src/core/domain/accounting-retention.ts
 src/core/domain/booking-request.ts
 src/core/domain/booking-validation.ts
@@ -429,6 +434,7 @@ tests/e2e/interface.spec.ts
 tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
+tests/e2e/staging.spec.ts
 tests/integration/authentication.test.ts
 tests/integration/bank-and-pause.test.ts
 tests/integration/billing-fixtures.ts
@@ -457,6 +463,7 @@ tests/unit/iban.test.ts
 tests/unit/portal-inputs.test.ts
 tests/unit/proof-and-auth.test.ts
 tests/unit/schedule.test.ts
+tests/unit/staging.test.ts
 tests/unit/stripe.test.ts
 tests/unit/subscription-access.test.ts
 tests/unit/tokens.test.ts

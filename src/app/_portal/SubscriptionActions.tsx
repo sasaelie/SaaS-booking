@@ -2,6 +2,7 @@ import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { BILLING_UI, MEMBER_ROLES } from '../../config/constants';
 import { hasCommercialAccess } from '../../core/domain/subscription-access';
 import { PortalForm } from './PortalForm';
+import { STAGING, paymentsEnabled } from '../../config/staging';
 export function SubscriptionActions({
   organization,
 }: {
@@ -9,6 +10,8 @@ export function SubscriptionActions({
 }) {
   const access = organization.access;
   const active = hasCommercialAccess(access, new Date());
+  if (!paymentsEnabled({ PAYMENTS_ENABLED: process.env['PAYMENTS_ENABLED'] }))
+    return <p className="portal-notice">{STAGING.SUBSCRIPTION_NOTE}</p>;
   if (access.complimentary) return null;
   return (
     <div className="portal-list">

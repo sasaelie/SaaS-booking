@@ -8,29 +8,32 @@ import type { Runtime } from './runtime';
 import Stripe from 'stripe';
 import { StripeConnectAdapter } from '../adapters/payments/stripe-connect.adapter';
 import { SAAS } from '../config/constants';
+import { paymentsEnabled } from '../config/staging';
 export function connectGateway(app: Runtime) {
   const env = app.env;
-  const settings = env.STRIPE_SECRET_KEY
-    ? {
-        stripe: new Stripe(env.STRIPE_SECRET_KEY, {
-          timeout: SAAS.PROVIDER_TIMEOUT_MS,
-          maxNetworkRetries: 1,
-        }),
-        clientId: env.STRIPE_CONNECT_CLIENT_ID,
-        appUrl: env.NEXT_PUBLIC_APP_URL,
-      }
-    : null;
+  const settings =
+    paymentsEnabled(env) && env.STRIPE_SECRET_KEY
+      ? {
+          stripe: new Stripe(env.STRIPE_SECRET_KEY, {
+            timeout: SAAS.PROVIDER_TIMEOUT_MS,
+            maxNetworkRetries: 1,
+          }),
+          clientId: env.STRIPE_CONNECT_CLIENT_ID,
+          appUrl: env.NEXT_PUBLIC_APP_URL,
+        }
+      : null;
   return new StripeConnectAdapter(app.db, settings);
 }
 
 export function connectedWebhook(app: Runtime) {
   const secret = app.env.STRIPE_CONNECT_WEBHOOK_SECRET;
-  const stripe = app.env.STRIPE_SECRET_KEY
-    ? new Stripe(app.env.STRIPE_SECRET_KEY, {
-        timeout: SAAS.PROVIDER_TIMEOUT_MS,
-        maxNetworkRetries: 1,
-      })
-    : null;
+  const stripe =
+    paymentsEnabled(app.env) && app.env.STRIPE_SECRET_KEY
+      ? new Stripe(app.env.STRIPE_SECRET_KEY, {
+          timeout: SAAS.PROVIDER_TIMEOUT_MS,
+          maxNetworkRetries: 1,
+        })
+      : null;
   return new ConnectedAccountWebhookUseCase(
     new StripeConnectWebhookAdapter(app.db, stripe, secret),
     new HandlePaymentWebhookUseCase({
