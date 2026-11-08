@@ -79,6 +79,11 @@ export const ERROR_CODES = {
   CONFLICT: 'CONFLICT',
   CONFIGURATION_ERROR: 'CONFIGURATION_ERROR',
   RATE_LIMITED: 'RATE_LIMITED',
+  SUBSCRIPTION_REQUIRED: 'SUBSCRIPTION_REQUIRED',
+  EMAIL_NOT_VERIFIED: 'EMAIL_NOT_VERIFIED',
+  SLUG_UNAVAILABLE: 'SLUG_UNAVAILABLE',
+  STRIPE_ACCOUNT_REQUIRED: 'STRIPE_ACCOUNT_REQUIRED',
+  BANK_DETAILS_REQUIRED: 'BANK_DETAILS_REQUIRED',
 } as const;
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];
 
@@ -145,39 +150,9 @@ export const JOB_TYPES = {
   CANCELLATION: 'CANCELLATION',
   REFUND: 'REFUND',
   PURGE: 'PURGE',
+  MEDIA_PURGE: 'MEDIA_PURGE',
 } as const;
-export const UI_MESSAGES = {
-  UNAVAILABLE: 'La réservation est temporairement indisponible.',
-  FAILURE: 'Impossible de terminer cette opération. Réessayez avec la même demande.',
-  SUCCESS: 'Votre place est réservée.',
-  FULL: 'Cette séance ne peut plus être réservée.',
-  TERMS_CHANGED: 'Les conditions ont changé. Consultez la nouvelle version avant de confirmer.',
-  CANCEL_SUCCESS: 'Votre réservation a été annulée.',
-  PHONE: 'Téléphone d’urgence du représentant légal',
-  NO_PAYMENT: 'Aucun paiement en ligne ; cette confirmation ne vaut pas reçu de paiement.',
-} as const;
-
-export const FORM_LABELS = {
-  FIRST_NAME: 'Prénom',
-  LAST_NAME: 'Nom',
-  EMAIL: 'Adresse e-mail',
-  PHONE: 'Téléphone',
-  VOUCHER: 'Code de report',
-  MARKETING: 'Je souhaite recevoir les actualités (facultatif).',
-  TERMS: 'J’ai lu et j’accepte les conditions ci-dessus.',
-  BOOK: 'Réserver une place',
-  SUBMITTING: 'Réservation en cours…',
-  SLOTS: 'Séances disponibles',
-  NO_SLOTS: 'Aucune séance disponible pour le moment.',
-  SELECT: 'Choisissez une séance',
-  MANAGE: 'Gérer ma réservation',
-  CANCEL: 'Annuler ma réservation',
-  UPLOAD: 'Envoyer le justificatif',
-  PROOF: 'Justificatif de virement',
-  DONE: 'Votre demande a été enregistrée.',
-  CONFIRM_CANCEL: 'Confirmer l’annulation de cette réservation',
-  TERMS_TITLE: 'Conditions de réservation',
-} as const;
+export { UI_MESSAGES, FORM_LABELS } from './presentation';
 export const MONEY = { CENTS_PER_UNIT: 100, DECIMAL_PLACES: 2 } as const;
 
 export { FILE_SIGNATURES } from './file-signatures';
@@ -185,6 +160,7 @@ export const ENCODING = { HEX_RADIX: 16, BYTE_HEX_WIDTH: 2, BYTE_VALUES: 256 } a
 export const HTTP_STATUS = {
   OK: 200,
   BAD_REQUEST: 400,
+  SEE_OTHER: 303,
   UNAUTHORIZED: 401,
   FORBIDDEN: 403,
   NOT_FOUND: 404,
@@ -197,3 +173,25 @@ export const HTTP_STATUS = {
 
 export { HTTP_LIMITS } from './http-limits';
 export { BOOKING_UI, CALENDAR_UI } from './booking-ui';
+
+export { SAAS, ACCESS_STATUSES, MEMBER_ROLES, ORGANIZATION_KINDS, BRAND_THEMES } from './saas';
+
+export { AUTH_MAIL } from './auth-labels';
+
+export {
+  PORTAL,
+  ORGANIZATION_KIND_LABELS,
+  PORTAL_TIMEZONES,
+  BOOKING_STATUS_LABELS,
+} from './portal-labels';
+export {
+  ACTIVITY_UI,
+  AUDIENCE_LABELS,
+  PAYMENT_LABELS,
+  WEEKDAY_LABELS,
+  ACTIVITY_DEFAULTS,
+} from './portal-activity-labels';
+export { BILLING_UI, PLATFORM_UI, SETTINGS_UI } from './portal-billing-labels';
+export { AUTH_UI } from './auth-ui';
+
+export { SHARE_UI, EMBED, EMBED_COLORS } from './share-labels';

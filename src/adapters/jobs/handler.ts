@@ -1,3 +1,4 @@
+import { purgeBrand } from './purge-brand';
 import { purgeProof } from './purge';
 import { Resend } from 'resend';
 import type { JobHandlerPort, JobEffect } from '../../core/ports/jobs.port';
@@ -27,6 +28,8 @@ export class ProductionJobHandler implements JobHandlerPort {
           ...RefundJobSchema.parse(payload),
           reason: 'Booking refund',
         });
+      if (type === JOB_TYPES.MEDIA_PURGE)
+        return purgeBrand(this.deps.db, this.deps.storage, payload);
       if (type === JOB_TYPES.PURGE) return purgeProof(this.deps.db, this.deps.storage, payload);
       const content = await mailContent(
         this.deps.db,

@@ -32,7 +32,8 @@ export async function submitBooking(event: FormEvent<HTMLFormElement>, state: Su
       (result.code === ERROR_CODES.SESSION_FULL || result.code === ERROR_CODES.TERMS_NOT_ACCEPTED)
     )
       state.refresh();
-    if (result.booking?.checkoutUrl) window.location.assign(result.booking.checkoutUrl);
+    if (result.booking?.checkoutUrl && window.parent === window)
+      window.location.assign(result.booking.checkoutUrl);
   } catch {
     state.setState({ success: false, message: UI_MESSAGES.FAILURE });
   } finally {

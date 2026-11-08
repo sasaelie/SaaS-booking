@@ -1,3 +1,6 @@
+import { hasPaymentConfiguration } from '../../core/domain/payment-configuration';
+import { organizationAccess, organizationBranding } from './schema/saas';
+import { hasCommercialAccess } from '../../core/domain/subscription-access';
 import { and, eq, sql } from 'drizzle-orm';
 import { activities, organizations } from './schema';
 import type { Executor } from './transaction';
@@ -13,21 +16,36 @@ export async function readActivity(
   activityId: string,
 ): Promise<Result<ActivityWithScheduleConfig>> {
   const [row] = await db
-    .select()
+    .select({
+      activity: activities,
+      organization: organizations,
+      access: organizationAccess,
+      branding: organizationBranding,
+    })
     .from(activities)
     .innerJoin(organizations, eq(activities.organizationId, organizations.id))
+    .leftJoin(organizationAccess, eq(organizationAccess.organizationId, organizations.id))
+    .leftJoin(organizationBranding, eq(organizationBranding.organizationId, organizations.id))
     .where(and(eq(activities.id, activityId), eq(activities.organizationId, organizationId)));
   if (!row) return failure(ERROR_CODES.NOT_FOUND, 'Activity', 'readActivity');
   const schedule = await readActivitySchedule(db, organizationId, activityId);
   return ok({
-    ...row.activities,
+    ...row.activity,
+    brandTheme: row.branding?.theme ?? 'SAGE',
+    hasLogo: Boolean(row.branding?.logoStorageKey),
+    hasBackground: Boolean(row.branding?.backgroundStorageKey),
+    commercialAccessAllowed: Boolean(
+      row.access &&
+      hasCommercialAccess(row.access, new Date()) &&
+      hasPaymentConfiguration(row.activity.paymentMode, row.organization),
+    ),
     ...schedule,
-    organizationName: row.organizations.name,
-    timezone: row.organizations.timezone,
-    primaryTextColor: row.organizations.primaryTextColor,
-    merchantAccountId: row.organizations.merchantAccountId,
-    bankIban: row.organizations.bankIban,
-    bankAccountName: row.organizations.bankAccountName,
+    organizationName: row.organization.name,
+    timezone: row.organization.timezone,
+    primaryTextColor: row.organization.primaryTextColor,
+    merchantAccountId: row.organization.merchantAccountId,
+    bankIban: row.organization.bankIban,
+    bankAccountName: row.organization.bankAccountName,
   });
 }
 export async function lockActivity(

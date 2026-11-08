@@ -6,8 +6,9 @@ export async function enqueue(
   type: string,
   key: string,
   payload: unknown,
+  availableAt?: Date,
 ): Promise<void> {
   await db.execute(
-    sql`INSERT INTO outbox_jobs(organization_id,type,deduplication_key,payload) VALUES(${organizationId},${type},${key},${JSON.stringify(payload)}::jsonb) ON CONFLICT(deduplication_key) DO NOTHING`,
+    sql`INSERT INTO outbox_jobs(organization_id,type,deduplication_key,payload,available_at) VALUES(${organizationId},${type},${key},${JSON.stringify(payload)}::jsonb,COALESCE(${availableAt?.toISOString() ?? null}::timestamptz,now())) ON CONFLICT(deduplication_key) DO NOTHING`,
   );
 }

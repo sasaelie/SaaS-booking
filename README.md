@@ -32,6 +32,18 @@ ALLOW_DEMO_SEED=true node --env-file=.env.local --import tsx scripts/seed.ts
 
 Le script affiche le chemin de l’activité de démonstration. Cette activité confirme les réservations sans paiement en ligne et ne les marque pas comme encaissées. Un utilisateur choisit une séance, fournit ses coordonnées et accepte les conditions. Le lien de gestion permet l’annulation et le dépôt d’un justificatif selon le mode de paiement du dossier.
 
+## Espaces SaaS
+
+L’application comprend une console organisateur et une console du propriétaire de la plateforme. Le tarif initial est de **19,99 EUR par mois**, sans commission de plateforme sur les billets. Une résiliation arrête le renouvellement ; les fonctionnalités restent disponibles jusqu’à l’échéance payée. Ensuite, la gestion des inscriptions existantes reste accessible, les nouvelles activités, séances et réservations sont bloquées côté serveur.
+
+- `/inscription`, `/connexion` : compte avec vérification e-mail et récupération du mot de passe.
+- `/app` : organisations, événements ponctuels ou récurrents, inscriptions, virements, remboursements, paramètres et abonnement.
+- `/plateforme` : annuaire des organisations, responsables, compteurs réels, accès offerts et suspensions journalisées.
+- `/<organisation>` : catalogue public. `/<organisation>/<activité>` : réservation.
+- Partage : lien, QR PNG haute définition, intégration sur un site et bouton flottant.
+
+Configurer `BETTER_AUTH_SECRET` et la messagerie avant d’inscrire de vrais organisateurs. L’abonnement Stripe est indépendant de l’encaissement des participants. [Guide des espaces et de leur activation](docs/SAAS-IMPLEMENTATION.md).
+
 ## Interface de réservation
 
 Le widget Liquid Ice présente un calendrier compact dans le fuseau de l’organisateur, les horaires et les places disponibles. Le parcours comporte deux étapes ; le retour au calendrier conserve les coordonnées saisies. Le récapitulatif suit le devis de report serveur et distingue les confirmations sans paiement en ligne des encaissements.
@@ -58,7 +70,7 @@ Les règles automatiques imposent 200 lignes par fichier TypeScript, 40 lignes p
 
 Les activités Stripe nécessitent les clés Stripe ; les activités par virement nécessitent les coordonnées bancaires de l’organisation et le stockage privé. Les services absents échouent explicitement, sans faux succès. Les e-mails requièrent Resend et un expéditeur validé.
 
-Les opérations administratives passent par `POST /api/admin` avec un jeton OIDC fourni par votre fournisseur d’identité. `issuer`, `audience`, signature, rôle `admin` et claim `organization_id` sont contrôlés ; sans configuration, l’accès est refusé. Voir `docs/OPERATIONS.md` pour les commandes.
+La console web authentifiée utilise les rôles de chaque organisation. Pour une intégration externe optionnelle, les opérations administratives passent par `POST /api/admin` avec un jeton OIDC fourni par votre fournisseur d’identité. `issuer`, `audience`, signature, rôle `admin` et claim `organization_id` sont contrôlés ; sans configuration, l’accès est refusé. Voir `docs/OPERATIONS.md` pour les commandes.
 
 Planifier `POST /api/jobs` régulièrement avec un secret dédié. Les tâches sont réessayées après échec ; un prestataire indisponible laisse une tâche en attente. La purge après décision bancaire est activée par défaut et respecte le réglage de l’organisateur ; elle est tentée immédiatement puis réconciliée en base par la file. Surveiller les tâches différées et leur ancienneté.
 

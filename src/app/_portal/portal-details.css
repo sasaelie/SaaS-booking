@@ -1,0 +1,173 @@
+.portal-text-button {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  color: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.portal-muted {
+  font-size: 12px;
+  color: var(--ice-quiet);
+  line-height: 1.7;
+}
+.portal-list {
+  display: grid;
+  gap: 12px;
+}
+.portal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+}
+.portal-row h3 {
+  font-size: 15px;
+  margin: 0 0 5px;
+  font-weight: 600;
+}
+.portal-row p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ice-quiet);
+}
+.portal-row-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.portal-row-actions a {
+  font-size: 12px;
+}
+.portal-pagination {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  font-size: 13px;
+}
+.portal-filters {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.portal-filters .portal-field {
+  flex: 1;
+  min-width: 160px;
+}
+.portal-price {
+  font-size: 44px;
+  font-weight: 450;
+  letter-spacing: -0.05em;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.portal-price small {
+  display: block;
+  font-size: 12px;
+  color: var(--ice-quiet);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.portal-feature-list {
+  padding-left: 18px;
+  margin: 24px 0;
+  font-size: 13px;
+  line-height: 2;
+}
+.portal-details {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 18px;
+}
+.portal-details > summary {
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.portal-details > div {
+  margin-top: 18px;
+}
+.portal-state-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  font-size: 13px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--ice-line);
+}
+.portal-booking-card > summary {
+  list-style: none;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1.3fr 1.2fr 1fr auto;
+  gap: 18px;
+  align-items: center;
+}
+.portal-booking-card > summary::-webkit-details-marker {
+  display: none;
+}
+.portal-booking-card summary strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+}
+.portal-booking-card summary small {
+  display: block;
+  font-size: 11px;
+  color: var(--ice-quiet);
+  margin-top: 5px;
+}
+.portal-booking-detail {
+  border-top: 1px solid var(--ice-line);
+  margin-top: 20px;
+  padding-top: 20px;
+  display: grid;
+  gap: 20px;
+}
+.portal-booking-detail dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 20px;
+  font-size: 12px;
+}
+.portal-booking-detail dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.portal-table-wrap {
+  overflow-x: auto;
+}
+.portal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+
+.portal-table th {
+  padding: 0 12px 16px;
+  color: var(--ice-quiet);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.portal-table td {
+  padding: 18px 12px;
+  border-top: 1px solid var(--ice-line);
+  vertical-align: top;
+}
+.portal-table td strong,
+.portal-table td small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.portal-table td small {
+  margin-top: 5px;
+  color: var(--ice-quiet);
+}

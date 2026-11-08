@@ -1,0 +1,68 @@
+export const ACTIVITY_UI = {
+  PAUSE: 'Ajouter une période de pause',
+  PAUSE_HINT:
+    'Dates incluses, dans le fuseau de votre organisation. Les séances manuelles restent prioritaires. Les inscriptions concernées demanderont votre confirmation.',
+  PAUSE_FROM: 'Premier jour de pause',
+  PAUSE_TO: 'Dernier jour de pause',
+  EDIT: 'Modifier les informations',
+  ADD_SESSION: 'Ajouter une séance à date précise',
+  PUBLISH: 'Publier cette activité',
+  REFUND_REFERENCE: 'Référence du remboursement bancaire effectué',
+  REFUND_RECORD: 'Enregistrer le remboursement effectué',
+  REFUND_CONFIRM: 'Je confirme avoir effectué ce remboursement sur le compte bancaire.',
+  TITLE: 'Une nouvelle activité',
+  INTRO: 'Définissez l’essentiel. Votre page sera prête à être partagée.',
+  NAME: 'Titre de l’activité',
+  DESCRIPTION: 'Description',
+  PRICE: 'Tarif par personne (€)',
+  CAPACITY: 'Places par séance',
+  AUDIENCE: 'Public',
+  PAYMENT: 'Règlement des participants',
+  PHONE: 'Demander un téléphone de contact',
+  MODE: 'Organisation des séances',
+  MANUAL: 'Une date précise',
+  WEEKLY: 'Des séances récurrentes',
+  DATE: 'Date de début',
+  END_DATE: 'Date de fin',
+  START: 'Début',
+  END: 'Fin',
+  DAY: 'Jour',
+  ADD_SLOT: 'Ajouter un créneau',
+  REMOVE_SLOT: 'Retirer ce créneau',
+  WINDOW: 'Ouverture des réservations (semaines)',
+  NOTICE: 'Délai pour obtenir un report (heures)',
+  VALIDITY: 'Validité du report (mois)',
+  ADVANCED: 'Règles de réservation et de report',
+  CREATE: 'Créer et publier',
+  ARCHIVE: 'Archiver cette activité',
+  ARCHIVE_NOTE:
+    'L’archivage ferme les nouvelles réservations. Les inscriptions existantes restent à gérer.',
+  CONTACT_NOTE: 'Les activités pour mineurs exigent toujours un téléphone d’urgence.',
+  BANK_SETUP: 'Renseignez votre IBAN dans les paramètres pour proposer le virement.',
+  STRIPE_SETUP: 'Connectez votre compte Stripe dans les paramètres pour accepter les cartes.',
+  DETAILS: 'Détails de l’activité',
+  SCHEDULE: 'Organisation des séances',
+  RULES: 'Règles de réservation',
+  PUBLIC_BOOKING_CLOSED:
+    'Les réservations sont actuellement fermées. Contactez l’organisateur pour toute question.',
+} as const;
+export const AUDIENCE_LABELS = {
+  ADULTS_ONLY: 'Adultes uniquement',
+  ALL_PUBLIC: 'Tout public',
+  MINORS_ONLY: 'Mineurs uniquement',
+} as const;
+export const PAYMENT_LABELS = {
+  NONE: 'Sans paiement en ligne',
+  BANK_TRANSFER: 'Virement bancaire',
+  STRIPE: 'Carte via Stripe',
+} as const;
+export const WEEKDAY_LABELS = [
+  'Dimanche',
+  'Lundi',
+  'Mardi',
+  'Mercredi',
+  'Jeudi',
+  'Vendredi',
+  'Samedi',
+] as const;
+export const ACTIVITY_DEFAULTS = { START: '14:00', END: '16:00', CAPACITY: 5, DAY: 3 } as const;

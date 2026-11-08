@@ -1,3 +1,5 @@
+> Pour les espaces SaaS ajoutés ensuite, voir [SAAS-VERIFICATION.md](SAAS-VERIFICATION.md). Le rapport ci-dessous conserve la trace de la première correction.
+
 # Vérification des corrections
 
 Version : branche `fix/booking-integrity`, 7 novembre 2026. Base de comparaison : commit `9191857` audité précédemment.

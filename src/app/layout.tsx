@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import './_ui/ice-tokens.css';
+import './_ui/brand.css';
 import './_ui/widget-layout.css';
 import './_ui/booking-shell.css';
 import './_ui/booking-story.css';
@@ -12,6 +13,12 @@ import './_ui/booking-checkout.css';
 import './_ui/booking-result.css';
 import './_ui/booking-responsive.css';
 import './_ui/booking-picker-responsive.css';
+import './_portal/portal-layout.css';
+import './_portal/portal-components.css';
+import './_portal/portal-details.css';
+import './_portal/portal-forms.css';
+import './_portal/portal-media.css';
+import './_portal/portal-responsive.css';
 export const metadata = {
   title: 'Studio Créatif 360 — Réservations',
   description: 'Réservez votre place à une activité.',

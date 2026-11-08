@@ -1,0 +1,32 @@
+export const UI_MESSAGES = {
+  UNAVAILABLE: 'La réservation est temporairement indisponible.',
+  FAILURE: 'Impossible de terminer cette opération. Réessayez avec la même demande.',
+  SUCCESS: 'Votre place est réservée.',
+  FULL: 'Cette séance ne peut plus être réservée.',
+  TERMS_CHANGED: 'Les conditions ont changé. Consultez la nouvelle version avant de confirmer.',
+  CANCEL_SUCCESS: 'Votre réservation a été annulée.',
+  PHONE: 'Téléphone d’urgence du représentant légal',
+  NO_PAYMENT: 'Aucun paiement en ligne ; cette confirmation ne vaut pas reçu de paiement.',
+} as const;
+
+export const FORM_LABELS = {
+  FIRST_NAME: 'Prénom',
+  LAST_NAME: 'Nom',
+  EMAIL: 'Adresse e-mail',
+  PHONE: 'Téléphone',
+  VOUCHER: 'Code de report',
+  MARKETING: 'Je souhaite recevoir les actualités (facultatif).',
+  TERMS: 'J’ai lu et j’accepte les conditions ci-dessus.',
+  BOOK: 'Réserver une place',
+  SUBMITTING: 'Réservation en cours…',
+  SLOTS: 'Séances disponibles',
+  NO_SLOTS: 'Aucune séance disponible pour le moment.',
+  SELECT: 'Choisissez une séance',
+  MANAGE: 'Gérer ma réservation',
+  CANCEL: 'Annuler ma réservation',
+  UPLOAD: 'Envoyer le justificatif',
+  PROOF: 'Justificatif de virement',
+  DONE: 'Votre demande a été enregistrée.',
+  CONFIRM_CANCEL: 'Confirmer l’annulation de cette réservation',
+  TERMS_TITLE: 'Conditions de réservation',
+} as const;

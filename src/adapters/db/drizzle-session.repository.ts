@@ -1,3 +1,5 @@
+import { paymentConfiguration } from './portal/payment-configuration';
+import { requireCommercialAccess } from './portal/access';
 import { replayReservation } from './reservation/replay';
 import { lockBookingContext } from './payment/locks';
 import { and, eq } from 'drizzle-orm';
@@ -25,9 +27,11 @@ async function reserve(
   const existing = await existingBooking(tx, input);
   if (existing) return replayReservation(tx, input, existing.id, now);
   await lockActivity(tx, input.input.organizationId, input.input.activityId);
+  await requireCommercialAccess(tx, input.input.organizationId, new Date());
   const activity = required(
     await readActivity(tx, input.input.organizationId, input.input.activityId),
   );
+  required(await paymentConfiguration(tx, input.input.organizationId, activity.paymentMode));
   return ok(
     await reservationOutput(tx, await insertReservation(tx, { activity, input, now }), now),
   );
