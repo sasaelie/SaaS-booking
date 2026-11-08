@@ -80,6 +80,8 @@ Planifier `POST /api/jobs` régulièrement avec un secret dédié. Les tâches s
 
 ## Vérifications
 
+[État des interfaces et préparation au déploiement](docs/ETAT-FONCTIONNEL.md). Diagnostic sans paiement : `npm run check:deployment` (nécessite les variables d’environnement privées ; n’effectue aucune écriture).
+
 ```bash
 npm run verify
 npm run build

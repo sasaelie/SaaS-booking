@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-457 fichiers versionnés, dont 363 sous `src/`.
+459 fichiers versionnés, dont 363 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 009.
 
@@ -15,6 +15,7 @@ README.md
 deploy/supabase-bootstrap.sql
 deploy/supabase-harden.sql
 docs/ARCHITECTURE.md
+docs/ETAT-FONCTIONNEL.md
 docs/HEBERGEMENT-RECETTE.md
 docs/INTERFACE.md
 docs/INVENTAIRE.md
@@ -53,6 +54,7 @@ next.config.ts
 package-lock.json
 package.json
 playwright.config.ts
+scripts/check-deployment.ts
 scripts/export-hosted-migrations.ts
 scripts/grant-platform-admin.ts
 scripts/migrate.ts

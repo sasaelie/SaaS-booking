@@ -4,7 +4,7 @@ Les défauts de compilation, les injections fictives et les principaux défauts 
 
 Restent à réaliser avec les comptes et paramètres réels de l’organisation :
 
-1. Provisionner PostgreSQL et un bucket privé dans la région UE voulue ; appliquer les migrations sur une base neuve et préparer une reprise spécifique si une ancienne base existe.
+1. Relier l’application à PostgreSQL Supabase : la base européenne et ses neuf migrations sont préparées, mais la connexion SQL applicative reste à renseigner. Configurer aussi le bucket privé. Voir `HEBERGEMENT-RECETTE.md` et `ETAT-FONCTIONNEL.md`.
 2. Configurer les clés Stripe de test, les webhooks et, le cas échéant, les comptes Stripe Connect ; vérifier un paiement, une expiration et un remboursement avec ces comptes.
 3. Valider le domaine Resend, configurer Better Auth pour les comptes web et l’ordonnanceur de tâches (OIDC est optionnel pour l’API externe) ; vérifier l’envoi réel et les droits d’accès.
 4. Configurer sauvegardes, restauration, supervision et politiques de purge du stockage (versions et sauvegardes incluses).

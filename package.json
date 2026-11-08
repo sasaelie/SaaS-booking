@@ -12,6 +12,7 @@
     "verify": "npm run typecheck && npm run lint && npm run test",
     "format": "prettier --write src scripts tests",
     "db:migrate": "node --import tsx scripts/migrate.ts",
+    "check:deployment": "node --import tsx scripts/check-deployment.ts",
     "db:seed": "node --import tsx scripts/seed.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test"
