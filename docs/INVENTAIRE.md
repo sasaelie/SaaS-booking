@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-466 fichiers versionnés, dont 366 sous `src/`.
+467 fichiers versionnés, dont 366 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 009.
 
@@ -23,6 +23,7 @@ docs/INVENTAIRE.md
 docs/OPERATIONS.md
 docs/PLAN-PAIEMENTS-MOLLIE.md
 docs/POINTS-A-COMPLETER.md
+docs/RECETTE-EN-LIGNE.md
 docs/SAAS-IMPLEMENTATION.md
 docs/SAAS-VERIFICATION.md
 docs/VERIFICATION.md

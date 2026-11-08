@@ -84,6 +84,8 @@ Planifier `POST /api/jobs` régulièrement avec un secret dédié. Les tâches s
 
 [Recette avec paiements désactivés](docs/ENVIRONNEMENT-TEST.md) : configuration, branchements manquants et contrôle du stockage privé `npm run check:storage`.
 
+[Recette privée désormais en ligne](docs/RECETTE-EN-LIGNE.md) : adresse d’accès, inscription et raccordements restant à valider.
+
 ```bash
 npm run verify
 npm run build

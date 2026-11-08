@@ -1,6 +1,6 @@
 # Environnement de test sans paiement réel
 
-Branche `feat/staging-environment`, issue de `main` après fusion de la PR 3. L’objectif est de tester le vrai moteur, les comptes, les activités et la gestion des inscriptions sans attendre les prestataires de paiement.
+Branche `feat/staging-environment`, issue de `main` après fusion de la PR 3. L’objectif est de tester le vrai moteur, les comptes, les activités et la gestion des inscriptions sans attendre les prestataires de paiement. **L’application est maintenant déployée en Preview protégée** : voir [RECETTE-EN-LIGNE.md](RECETTE-EN-LIGNE.md) pour l’adresse, les vérifications et les limites restantes.
 
 ## Réalisé
 
