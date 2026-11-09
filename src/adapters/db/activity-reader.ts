@@ -32,6 +32,7 @@ export async function readActivity(
   return ok({
     ...row.activity,
     participantHue: row.branding?.participantHue ?? null,
+    storyTextTone: row.branding?.storyTextTone ?? 'WHITE',
     brandTheme: row.branding?.theme ?? 'SAGE',
     hasLogo: Boolean(row.branding?.logoStorageKey),
     hasBackground: Boolean(row.branding?.backgroundStorageKey),

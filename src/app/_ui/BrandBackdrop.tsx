@@ -4,7 +4,6 @@ export function BrandBackdrop({ brand }: { readonly brand: BookingPageData['bran
   return (
     <div className="ice-brand-scene" data-theme={brand.theme} aria-hidden="true">
       {brand.hue != null ? <ColorScene hue={brand.hue} /> : null}
-      {brand.backgroundUrl ? <img src={brand.backgroundUrl} alt="" /> : null}
     </div>
   );
 }

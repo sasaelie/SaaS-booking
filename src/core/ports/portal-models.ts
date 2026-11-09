@@ -1,3 +1,4 @@
+import type { StoryTextTone } from '../../config/story';
 import type { AudiencePolicy, PaymentMode, BookingStatus } from '../../config/constants';
 import type { OrganizationAccess } from '../domain/subscription-access';
 export interface PortalActor {
@@ -22,6 +23,7 @@ export interface OrganizationSummary {
   readonly autoDeleteBankProof: boolean;
   readonly organizerHue: number | null;
   readonly participantHue: number | null;
+  readonly storyTextTone: StoryTextTone;
   readonly theme: string;
   readonly hasLogo: boolean;
   readonly hasBackground: boolean;

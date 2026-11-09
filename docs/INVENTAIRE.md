@@ -1,8 +1,8 @@
 # Inventaire de la plateforme
 
-510 fichiers versionnés, dont 399 sous `src/`.
+516 fichiers versionnés, dont 403 sous `src/`.
 
-Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 011.
+Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 012.
 
 ```text
 .env.example
@@ -53,6 +53,7 @@ migrations/008_brand_jobs.sql
 migrations/009_stripe_connect.sql
 migrations/010_private_files.sql
 migrations/011_appearance.sql
+migrations/012_story_text_tone.sql
 next-env.d.ts
 next.config.ts
 package-lock.json
@@ -213,6 +214,7 @@ src/app/_portal/RefreshButton.tsx
 src/app/_portal/SessionList.tsx
 src/app/_portal/SharePanel.tsx
 src/app/_portal/SignOutButton.tsx
+src/app/_portal/StoryTextChoices.tsx
 src/app/_portal/SubscriptionActions.tsx
 src/app/_portal/SubscriptionPanel.tsx
 src/app/_portal/access-label.ts
@@ -274,6 +276,7 @@ src/app/_ui/IceBookingWidget.tsx
 src/app/_ui/IceIcon.tsx
 src/app/_ui/ParticipantNavigation.tsx
 src/app/_ui/StagingNotice.tsx
+src/app/_ui/StoryPanel.tsx
 src/app/_ui/VoucherField.tsx
 src/app/_ui/VoucherInput.tsx
 src/app/_ui/appearance.css
@@ -299,6 +302,7 @@ src/app/_ui/format-money.ts
 src/app/_ui/ice-tokens.css
 src/app/_ui/participant.css
 src/app/_ui/staging.css
+src/app/_ui/story-photo.css
 src/app/_ui/use-booking-calendar.ts
 src/app/_ui/use-booking-flow.ts
 src/app/_ui/use-booking-form.ts
@@ -370,6 +374,7 @@ src/config/private-files.ts
 src/config/saas.ts
 src/config/share-labels.ts
 src/config/staging.ts
+src/config/story.ts
 src/core/domain/accounting-retention.ts
 src/core/domain/booking-request.ts
 src/core/domain/booking-validation.ts
@@ -477,6 +482,7 @@ tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
 tests/e2e/staging.spec.ts
+tests/e2e/story-photo.spec.ts
 tests/integration/appearance.test.ts
 tests/integration/authentication.test.ts
 tests/integration/bank-and-pause.test.ts

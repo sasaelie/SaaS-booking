@@ -1,4 +1,5 @@
 'use client';
+import { STORY_UI } from '../../config/story';
 import { useId } from 'react';
 import { PORTAL, SETTINGS_UI, PAYMENT_RULES } from '../../config/constants';
 import { useMediaUpload } from './use-media-upload';
@@ -14,6 +15,7 @@ export function MediaUpload(props: Props) {
   return (
     <div className="portal-panel">
       <h3>{props.kind === 'logo' ? SETTINGS_UI.LOGO : SETTINGS_UI.BACKGROUND}</h3>
+      {props.kind === 'background' ? <p className="portal-muted">{STORY_UI.PHOTO_HINT}</p> : null}
       {props.existing ? (
         <img
           className="portal-image-preview"

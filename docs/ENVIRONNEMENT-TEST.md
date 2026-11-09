@@ -80,3 +80,11 @@ La migration 011 ajoute deux teintes optionnelles par organisation. Les réglage
 Les pages publiques du catalogue et d’activité affichent un retour explicite. Lorsqu’un membre de l’organisation ouvre le catalogue depuis Apparence (`?from=appearance`), ce contexte est conservé jusqu’à l’activité et le retour mène aux réglages d’apparence. Les visiteurs non membres ne voient pas de lien vers la console ; leur retour mène au catalogue, puis à l’accueil. L’autorisation est vérifiée côté serveur, sans utiliser le paramètre de provenance comme preuve d’accès.
 
 La confirmation de réservation n’affiche plus le grand pictogramme de validation ni les étapes du formulaire terminé. Pour une activité payante en mode NONE, le résultat indique explicitement que le paiement n’a pas été encaissé en ligne et affiche le montant à régler auprès de l’organisateur. Une séance gratuite ou intégralement couverte par un code ne montre pas ce montant. Les instructions de virement et le paiement Stripe restent conditionnés à leur mode de paiement respectif ; aucune simulation d’encaissement n’est ajoutée.
+
+## Photo et texte de l’encart de présentation
+
+La photo importée via Apparence remplit désormais uniquement l’encart de présentation de l’activité, sur ordinateur comme sur téléphone. L’image est centrée et recadrée avec `object-fit: cover` ; le fond général de la page conserve son dégradé. Les fichiers déjà importés sont réutilisés via le contrat de stockage existant, sans nouvelle importation ni suppression.
+
+Trois choix exclusifs (Blanc, Noir, Vert sapin) apparaissent sous « Texte de l’encart de présentation » dans la vue Participants de l’éditeur. Le même composant rend l’aperçu et l’encart réel. Le voile de contraste s’adapte au texte clair ou foncé. La couleur ne s’applique ni aux champs de réservation ni à la console. Les formes décoratives restent le rendu de repli lorsqu’aucune photo n’est définie.
+
+Migration 012 additive : `story_text_tone`, enum validée par Zod et CHECK PostgreSQL, blanc par défaut. Les mises à jour qui omettent cette propriété conservent le choix existant ; seuls les propriétaires peuvent le modifier. Aucun privilège client ajouté au schéma privé.

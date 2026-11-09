@@ -1,3 +1,4 @@
+import type { StoryTextTone } from '../../../config/story';
 import { integer, boolean, pgTable, text, timestamp, uuid, primaryKey } from 'drizzle-orm/pg-core';
 import { organizations } from './organization';
 import { ACCESS_STATUSES, BRAND_THEMES } from '../../../config/constants';
@@ -32,6 +33,7 @@ export const organizationBranding = pgTable('organization_branding', {
     .references(() => organizations.id),
   organizerHue: integer('organizer_hue'),
   participantHue: integer('participant_hue'),
+  storyTextTone: text('story_text_tone').$type<StoryTextTone>().notNull().default('WHITE'),
   theme: text('theme').notNull().default(BRAND_THEMES[0]),
   logoStorageKey: text('logo_storage_key'),
   backgroundStorageKey: text('background_storage_key'),

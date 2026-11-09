@@ -14,7 +14,7 @@ export const APPEARANCE = {
   DIRTY: 'Modifications non enregistrées',
   SAVED: 'Apparence enregistrée.',
   OPEN: 'Ouvrir ma page participant',
-  MEDIA: 'Logo et photo d’ambiance',
+  MEDIA: 'Logo et photo de présentation',
   BACK: 'Retour',
   SETTINGS: 'Réglages',
   NOTE: 'La base ivoire reste fixe. Faites glisser le curseur pour changer le dégradé.',

@@ -43,7 +43,11 @@ export async function updateAppearance(
     .values(input)
     .onConflictDoUpdate({
       target: organizationBranding.organizationId,
-      set: { organizerHue: input.organizerHue, participantHue: input.participantHue },
+      set: {
+        organizerHue: input.organizerHue,
+        participantHue: input.participantHue,
+        ...(input.storyTextTone ? { storyTextTone: input.storyTextTone } : {}),
+      },
     });
   return ok(undefined);
 }

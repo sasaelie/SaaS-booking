@@ -1,3 +1,4 @@
+import type { StoryTextTone } from '../../config/story';
 // src/core/ports/booking-ports.ts
 import type { AudiencePolicy, PaymentMode } from '../../config/constants';
 import type { AppError, Result } from '../../lib/result';
@@ -5,6 +6,7 @@ import type { PausePeriodRule, PersistedSession, TimeSlotRule } from '../domain/
 
 export interface ActivityWithScheduleConfig {
   readonly commercialAccessAllowed: boolean;
+  readonly storyTextTone?: StoryTextTone;
   readonly brandTheme: string;
   readonly participantHue?: number | null;
   readonly hasLogo: boolean;

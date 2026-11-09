@@ -1,14 +1,20 @@
 'use client';
+import type { StoryTextTone } from '../../config/story';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { APPEARANCE as UI } from '../../config/appearance';
 import { PORTAL } from '../../config/constants';
 import { portalRequest } from './portal-request';
-type Colors = { organizerHue: number | null; participantHue: number | null };
+type Colors = {
+  storyTextTone: StoryTextTone;
+  organizerHue: number | null;
+  participantHue: number | null;
+};
 export function useAppearance(organization: OrganizationSummary) {
   const [target, setTarget] = useState<'organizer' | 'participant'>('participant');
   const [colors, setColors] = useState<Colors>({
+    storyTextTone: organization.storyTextTone,
     organizerHue: organization.organizerHue,
     participantHue: organization.participantHue,
   });
@@ -17,11 +23,18 @@ export function useAppearance(organization: OrganizationSummary) {
   const key = target === 'organizer' ? 'organizerHue' : 'participantHue';
   const hue = colors[key] ?? (target === 'organizer' ? UI.ORGANIZER : UI.PARTICIPANT);
   const dirty =
-    colors.organizerHue !== saved.organizerHue || colors.participantHue !== saved.participantHue;
+    colors.storyTextTone !== saved.storyTextTone ||
+    colors.organizerHue !== saved.organizerHue ||
+    colors.participantHue !== saved.participantHue;
   return {
     target,
     setTarget,
     hue,
+    storyTextTone: colors.storyTextTone,
+    changeTone: (storyTextTone: StoryTextTone) => {
+      setColors({ ...colors, storyTextTone });
+      operation.clear();
+    },
     dirty,
     ...operation,
     change: (value: number) => {
@@ -29,7 +42,11 @@ export function useAppearance(organization: OrganizationSummary) {
       operation.clear();
     },
     reset: () => {
-      setColors({ organizerHue: UI.ORGANIZER, participantHue: UI.PARTICIPANT });
+      setColors({
+        storyTextTone: 'WHITE',
+        organizerHue: UI.ORGANIZER,
+        participantHue: UI.PARTICIPANT,
+      });
       operation.clear();
     },
   };

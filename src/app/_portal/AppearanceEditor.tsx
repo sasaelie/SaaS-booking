@@ -1,4 +1,7 @@
 'use client';
+import { StoryPanel } from '../_ui/StoryPanel';
+import { StoryTextChoices } from './StoryTextChoices';
+import { STORY_UI, type StoryTextTone } from '../../config/story';
 import Link from 'next/link';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { APPEARANCE as UI } from '../../config/appearance';
@@ -52,10 +55,14 @@ function AppearancePreview({
   hue,
   target,
   name,
+  tone,
+  photoUrl,
 }: {
   readonly hue: number;
   readonly target: string;
   readonly name: string;
+  readonly tone: StoryTextTone;
+  readonly photoUrl: string | null;
 }) {
   return (
     <div className="appearance-preview" aria-label={UI.PREVIEW}>
@@ -63,11 +70,21 @@ function AppearancePreview({
       <span className="appearance-preview-label">
         {target === 'organizer' ? UI.ORGANIZER_LABEL : UI.PARTICIPANT_LABEL}
       </span>
-      <div className="ice-cube-shell appearance-sample">
-        <strong>{name}</strong>
-        <p>{target === 'organizer' ? PORTAL.ACTIVITIES : PORTAL.BOOKINGS}</p>
-        <span className="appearance-sample-line" />
-      </div>
+      {target === 'participant' ? (
+        <div className="appearance-story-preview">
+          <StoryPanel tone={tone} photoUrl={photoUrl}>
+            <span>{name}</span>
+            <h2>{STORY_UI.SAMPLE}</h2>
+            <p>{STORY_UI.PRICE}</p>
+          </StoryPanel>
+        </div>
+      ) : (
+        <div className="ice-cube-shell appearance-sample">
+          <strong>{name}</strong>
+          <p>{target === 'organizer' ? PORTAL.ACTIVITIES : PORTAL.BOOKINGS}</p>
+          <span className="appearance-sample-line" />
+        </div>
+      )}
     </div>
   );
 }
@@ -83,17 +100,17 @@ function AppearanceControls({
     <fieldset disabled={state.pending || organization.role !== MEMBER_ROLES.OWNER}>
       <TargetSwitch value={state.target} change={state.setTarget} />
       <p className="portal-muted">{UI.NOTE}</p>
-      <label className="appearance-label">
-        {UI.COLOR}
-        <input
-          type="range"
-          min={UI.MIN}
-          max={UI.MAX}
-          value={state.hue}
-          onChange={(e) => state.change(Number(e.target.value))}
-        />
-      </label>
-      <AppearancePreview hue={state.hue} target={state.target} name={organization.name} />
+      <ColorRange state={state} />
+      {state.target === 'participant' ? (
+        <StoryTextChoices value={state.storyTextTone} change={state.changeTone} />
+      ) : null}
+      <AppearancePreview
+        hue={state.hue}
+        target={state.target}
+        name={organization.name}
+        tone={state.storyTextTone}
+        photoUrl={organization.hasBackground ? `/api/branding/${organization.id}/background` : null}
+      />
       <button
         type="button"
         className="liquid-ice-button portal-button"
@@ -106,5 +123,20 @@ function AppearanceControls({
         {UI.RESET}
       </button>
     </fieldset>
+  );
+}
+
+function ColorRange({ state }: { readonly state: ReturnType<typeof useAppearance> }) {
+  return (
+    <label className="appearance-label">
+      {UI.COLOR}
+      <input
+        type="range"
+        min={UI.MIN}
+        max={UI.MAX}
+        value={state.hue}
+        onChange={(e) => state.change(Number(e.target.value))}
+      />
+    </label>
   );
 }
