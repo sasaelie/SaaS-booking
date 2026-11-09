@@ -69,7 +69,7 @@ export const SETTINGS_UI = {
   BACKGROUND: 'Photo de l’encart de présentation',
   UPLOAD: 'Importer l’image',
   REMOVE: 'Retirer',
-  MEDIA_HINT: 'Image PNG, JPEG ou WebP, jusqu’à 5 Mo. Elle sera optimisée pour l’affichage.',
+  MEDIA_HINT: 'Image PNG, JPEG ou WebP, jusqu’à 4 Mo. Elle sera optimisée pour l’affichage.',
   THEME: 'Ambiance de l’interface',
   SAGE: 'Sauge',
   CHALK: 'Craie',

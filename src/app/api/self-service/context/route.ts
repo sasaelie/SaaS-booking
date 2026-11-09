@@ -1,7 +1,7 @@
 import { selfBooking } from '../../../../composition/self-booking';
 import { boundedJson } from '../../../../lib/http-body';
 import { SelfCancelTokenSchema } from '../../../../core/validation/self-service';
-import { HTTP_STATUS } from '../../../../config/constants';
+import { HTTP_STATUS, ERROR_CODES } from '../../../../config/constants';
 export async function POST(request: Request): Promise<Response> {
   const body = await boundedJson(request);
   const token =
@@ -9,11 +9,16 @@ export async function POST(request: Request): Promise<Response> {
       ? SelfCancelTokenSchema.safeParse(body.value.token)
       : null;
   const service = selfBooking();
-  if (!token?.success || !service.ok)
+  if (!service.ok) return Response.json({ success: false }, { status: HTTP_STATUS.UNAVAILABLE });
+  if (!token?.success)
     return Response.json({ success: false }, { status: HTTP_STATUS.BAD_REQUEST });
   const result = await service.value.execute(token.data);
   return Response.json(result.ok ? { success: true, data: result.value } : { success: false }, {
-    status: result.ok ? HTTP_STATUS.OK : HTTP_STATUS.UNAUTHORIZED,
+    status: result.ok
+      ? HTTP_STATUS.OK
+      : result.error.code === ERROR_CODES.UNAUTHORIZED
+        ? HTTP_STATUS.UNAUTHORIZED
+        : HTTP_STATUS.UNAVAILABLE,
     headers: { 'Cache-Control': 'private, no-store' },
   });
 }

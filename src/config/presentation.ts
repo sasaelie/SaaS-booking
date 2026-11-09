@@ -31,10 +31,13 @@ export const FORM_LABELS = {
   BACK_ACTIVITY: 'Retour à l’activité',
   BACK_HOME: 'Retour à l’accueil',
   PROOF_HINT:
-    'Image PNG, JPEG ou WebP, 5 Mo maximum. Visible uniquement par l’organisateur autorisé.',
+    'Image PNG, JPEG ou WebP, 4 Mo maximum. Visible uniquement par l’organisateur autorisé.',
   PROOF_RECEIVED:
     'Votre justificatif a été reçu. L’organisateur peut le consulter dans votre fiche et vérifier le virement.',
-  PROOF_INVALID: 'Choisissez une image PNG, JPEG ou WebP valide, de 5 Mo maximum.',
+  PROOF_INVALID: 'Choisissez une image PNG, JPEG ou WebP valide, de 4 Mo maximum.',
+  CONTEXT_UNAVAILABLE:
+    'Impossible de charger votre réservation pour le moment. Vérifiez votre connexion puis réessayez.',
+  RETRY: 'Réessayer',
   LINK_INVALID:
     'Ce lien de réservation est invalide ou expiré. Utilisez le lien le plus récent de votre réservation.',
   STORAGE_UNAVAILABLE:

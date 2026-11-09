@@ -57,7 +57,7 @@ Les tests destructifs restent réservés à la base locale `booking_test`, jamai
 
 ## Justificatifs et personnalisation — novembre 2026
 
-La recette utilise maintenant `STORAGE_BACKEND=postgres` : vrais fichiers privés dans le schéma `booking`, migration 010, limite de 5 MiB par image et quota global de 50 MiB. Ce backend est refusé hors staging. La production conserve l’adaptateur S3 ; `check:storage` reste le diagnostic S3. Le parcours PostgreSQL est vérifié par les tests d’intégration et navigateur.
+La recette utilise maintenant `STORAGE_BACKEND=postgres` : vrais fichiers privés dans le schéma `booking`, migration 010, limite d’import de 4 MiB par image (depuis l’audit du 9 novembre) et quota global de 50 MiB. Ce backend est refusé hors staging. La production conserve l’adaptateur S3 ; `check:storage` reste le diagnostic S3. Le parcours PostgreSQL est vérifié par les tests d’intégration et navigateur.
 
 Un participant utilise « Gérer ma réservation », choisit une image puis l’envoie. L’organisateur ouvre **Activités → Voir les inscrits → nom du participant → Consulter le justificatif**. La fiche contient les coordonnées, la séance, le statut et les actions de gestion. Le filtre par activité reste actif pendant la pagination. Le fichier est accessible par un lien signé de cinq minutes ; lorsque la suppression automatique est activée (valeur par défaut), confirmer ou refuser le virement supprime le fichier. Une capture seule ne constitue pas une confirmation bancaire : l’organisateur vérifie son compte avant de confirmer.
 

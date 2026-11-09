@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-516 fichiers versionnés, dont 403 sous `src/`.
+525 fichiers versionnés, dont 405 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 012.
 
@@ -22,7 +22,9 @@ docs/INTERFACE.md
 docs/INVENTAIRE.md
 docs/OPERATIONS.md
 docs/PLAN-PAIEMENTS-MOLLIE.md
+docs/PLAN-TESTS-SERVICE.md
 docs/POINTS-A-COMPLETER.md
+docs/RAPPORT-TESTS-SERVICE.md
 docs/RECETTE-EN-LIGNE.md
 docs/SAAS-IMPLEMENTATION.md
 docs/SAAS-VERIFICATION.md
@@ -65,6 +67,7 @@ scripts/export-hosted-migrations.ts
 scripts/grant-platform-admin.ts
 scripts/migrate.ts
 scripts/seed.ts
+scripts/test-summary.ts
 src/adapters/auth/application-auth.ts
 src/adapters/auth/auth-email.ts
 src/adapters/auth/membership-authorization.adapter.ts
@@ -131,6 +134,7 @@ src/adapters/db/schema/schedule.ts
 src/adapters/db/schema/voucher.ts
 src/adapters/db/tenant-filter.ts
 src/adapters/db/transaction.ts
+src/adapters/db/vouchers/attendee-effects.ts
 src/adapters/db/vouchers/issue.ts
 src/adapters/db/vouchers/release.ts
 src/adapters/db/vouchers/restore.ts
@@ -333,6 +337,7 @@ src/app/inscription/page.tsx
 src/app/layout.tsx
 src/app/manage/ManageBooking.tsx
 src/app/manage/ProofUpload.tsx
+src/app/manage/management-response.ts
 src/app/manage/page.tsx
 src/app/manage/use-booking-context.ts
 src/app/manage/use-management.ts
@@ -481,6 +486,7 @@ tests/e2e/participant-return.spec.ts
 tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
+tests/e2e/service-recovery.spec.ts
 tests/e2e/staging.spec.ts
 tests/e2e/story-photo.spec.ts
 tests/integration/appearance.test.ts
@@ -502,6 +508,8 @@ tests/integration/portal.test.ts
 tests/integration/privacy.test.ts
 tests/integration/private-files.test.ts
 tests/integration/reservation.test.ts
+tests/integration/service-concurrency.test.ts
+tests/integration/service-failures.test.ts
 tests/integration/subscription-webhook.test.ts
 tests/integration/subscription.test.ts
 tests/integration/vouchers.test.ts
@@ -513,6 +521,7 @@ tests/unit/iban.test.ts
 tests/unit/portal-inputs.test.ts
 tests/unit/proof-and-auth.test.ts
 tests/unit/schedule.test.ts
+tests/unit/service-boundaries.test.ts
 tests/unit/staging.test.ts
 tests/unit/stripe.test.ts
 tests/unit/subscription-access.test.ts
