@@ -7,8 +7,8 @@ import type { AuthMode } from './auth-request';
 const descriptions = {
   SIGN_IN: AUTH_UI.SIGN_IN_HINT,
   SIGN_UP: AUTH_UI.SIGN_UP_HINT,
-  FORGOT: AUTH_UI.FORGOT,
-  RESET: AUTH_UI.RESET,
+  FORGOT: AUTH_UI.FORGOT_HINT,
+  RESET: AUTH_UI.PASSWORD_HINT,
 } as const;
 const buttons = {
   SIGN_IN: AUTH_UI.LOGIN,
@@ -42,7 +42,6 @@ export function AuthForm({ mode }: { readonly mode: AuthMode }) {
           {mode === 'SIGN_IN' ? (
             <>
               <Link href="/inscription">{AUTH_UI.SIGN_UP_LINK}</Link>
-              <Link href="/mot-de-passe-oublie">{AUTH_UI.FORGOT_LINK}</Link>
             </>
           ) : (
             <Link href="/connexion">{AUTH_UI.SIGN_IN_LINK}</Link>

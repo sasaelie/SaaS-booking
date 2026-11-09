@@ -7,6 +7,10 @@ export const AUTH_UI = {
   SIGN_UP_HINT: 'Créez votre compte, puis préparez votre premier événement.',
   EMAIL: 'Adresse e-mail',
   PASSWORD: 'Mot de passe',
+  SHOW_PASSWORD: 'Afficher le mot de passe',
+  HIDE_PASSWORD: 'Masquer le mot de passe',
+  FORGOT_HINT:
+    'Indiquez l’adresse e-mail de votre compte pour recevoir un lien et choisir un nouveau mot de passe.',
   NAME: 'Votre nom',
   CONFIRM_PASSWORD: 'Confirmer le mot de passe',
   PASSWORD_HINT: 'Au moins 12 caractères. Utilisez un mot de passe unique.',
