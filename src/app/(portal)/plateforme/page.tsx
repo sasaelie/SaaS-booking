@@ -1,11 +1,12 @@
+import { ADMIN } from '../../../config/administration';
 import type { PlatformOverview } from '../../../core/ports/portal-models';
 import { headers } from 'next/headers';
 import { portal } from '../../../composition/portal';
-import { PLATFORM_UI, PORTAL } from '../../../config/constants';
+import { PLATFORM_UI } from '../../../config/constants';
 import { PortalHeading } from '../../_portal/PortalHeading';
 import { PortalError } from '../../_portal/PortalError';
 import { PortalMetric } from '../../_portal/PortalMetric';
-import { PortalField } from '../../_portal/PortalField';
+import { AdministrationSearch } from '../../_portal/AdministrationSearch';
 import { PlatformOrganizations } from '../../_portal/PlatformOrganizations';
 import { PortalEmpty } from '../../_portal/PortalEmpty';
 import { Pagination } from '../../_portal/Pagination';
@@ -22,17 +23,14 @@ export default async function Page({
   const data = result.value;
   return (
     <>
-      <PortalHeading title={PLATFORM_UI.TITLE} description={PLATFORM_UI.INTRO} />
+      <PortalHeading title={ADMIN.OVERVIEW_TITLE} description={PLATFORM_UI.INTRO} />
       <PlatformMetrics data={data} />
       {data.deferredJobs ? (
         <p className="portal-notice">
           {PLATFORM_UI.JOBS} : {data.deferredJobs}
         </p>
       ) : null}
-      <form className="portal-filters" method="get">
-        <PortalField label={PLATFORM_UI.SEARCH} name="search" defaultValue={filter.search ?? ''} />
-        <button className="liquid-ice-button portal-button">{PORTAL.SEARCH}</button>
-      </form>
+      <AdministrationSearch search={filter.search} />
       {data.organizations.length ? (
         <PlatformOrganizations organizations={data.organizations} />
       ) : (

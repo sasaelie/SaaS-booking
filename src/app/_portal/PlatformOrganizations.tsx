@@ -9,42 +9,32 @@ export function PlatformOrganizations({
   readonly organizations: readonly PlatformOrganization[];
 }) {
   return (
-    <section className="portal-panel portal-table-wrap">
-      <table className="portal-table">
-        <thead>
-          <tr>
-            <th>{PLATFORM_UI.ORGANIZATIONS}</th>
-            <th>{PLATFORM_UI.OWNER}</th>
-            <th>{PLATFORM_UI.ACCESS}</th>
-            <th>{PLATFORM_UI.ACTIVITIES}</th>
-            <th>{PLATFORM_UI.BOOKINGS}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {organizations.map((organization) => (
-            <PlatformRow key={organization.id} organization={organization} />
-          ))}
-        </tbody>
-      </table>
-    </section>
+    <div className="administration-organizations">
+      {organizations.map((organization) => (
+        <OrganizationCard key={organization.id} organization={organization} />
+      ))}
+    </div>
   );
 }
-
-function PlatformRow({ organization }: { readonly organization: PlatformOrganization }) {
+function OrganizationCard({ organization }: { readonly organization: PlatformOrganization }) {
   return (
-    <tr key={organization.id}>
-      <td>
-        <strong>{organization.name}</strong>
-        <small>/{organization.slug}</small>
-        <small>{portalDate(organization.createdAt)}</small>
-      </td>
-      <td>{organization.ownerEmail ?? '—'}</td>
-      <td>
+    <article className="portal-panel administration-entry">
+      <div className="administration-entry-heading">
+        <h2>{organization.name}</h2>
         <span className="portal-badge">{accessLabel(organization.access)}</span>
-        <PlatformAccessForms organization={organization} />
-      </td>
-      <td>{organization.activityCount}</td>
-      <td>{organization.bookingCount}</td>
-    </tr>
+      </div>
+      <p className="portal-muted">/{organization.slug}</p>
+      <dl>
+        <dt>{PLATFORM_UI.OWNER}</dt>
+        <dd>{organization.ownerEmail ?? '—'}</dd>
+        <dt>{PLATFORM_UI.CREATED}</dt>
+        <dd>{portalDate(organization.createdAt)}</dd>
+        <dt>{PLATFORM_UI.ACTIVITIES}</dt>
+        <dd>{organization.activityCount}</dd>
+        <dt>{PLATFORM_UI.BOOKINGS}</dt>
+        <dd>{organization.bookingCount}</dd>
+      </dl>
+      <PlatformAccessForms organization={organization} />
+    </article>
   );
 }

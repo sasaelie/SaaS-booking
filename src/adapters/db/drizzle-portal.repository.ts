@@ -1,3 +1,4 @@
+import { platformHistory, platformOperations } from './portal/platform-monitoring';
 import type { AppearanceInput } from '../../core/validation/appearance';
 import {
   updateActivity,
@@ -53,6 +54,12 @@ export class DrizzlePortalRepository implements PortalRepositoryPort {
   }
   updateSettings(actor: PortalActor, input: OrganizationSettingsInput) {
     return atomic(this.db, 'Settings', (tx) => updateSettings(tx, actor, input));
+  }
+  platformOperations(actor: PortalActor, filter: PlatformFilter) {
+    return atomic(this.db, 'Platform', (tx) => platformOperations(tx, actor, filter));
+  }
+  platformHistory(actor: PortalActor, filter: PlatformFilter) {
+    return atomic(this.db, 'Platform', (tx) => platformHistory(tx, actor, filter));
   }
   isPlatformOperator(actor: PortalActor) {
     return atomic(this.db, 'Operator', async (tx) => ok(await isPlatformOperator(tx, actor)));

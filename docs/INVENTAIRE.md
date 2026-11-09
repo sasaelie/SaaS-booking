@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-525 fichiers versionnés, dont 405 sous `src/`.
+541 fichiers versionnés, dont 416 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 012.
 
@@ -14,6 +14,7 @@ MANIFEST.sha256
 README.md
 deploy/supabase-bootstrap.sql
 deploy/supabase-harden.sql
+docs/ADMINISTRATION.md
 docs/ARCHITECTURE.md
 docs/ENVIRONNEMENT-TEST.md
 docs/ETAT-FONCTIONNEL.md
@@ -34,7 +35,9 @@ docs/previews/desktop-seance.png
 docs/previews/mobile-coordonnees.png
 docs/previews/mobile-seance.png
 docs/previews/saas/abonnement-ordinateur.png
+docs/previews/saas/administration-historique.png
 docs/previews/saas/administration-mobile.png
+docs/previews/saas/administration-operations.png
 docs/previews/saas/integration-mobile.png
 docs/previews/saas/organisateur-mobile.png
 docs/previews/saas/organisateur-ordinateur.png
@@ -113,6 +116,7 @@ src/adapters/db/portal/organizations.ts
 src/adapters/db/portal/overview.ts
 src/adapters/db/portal/payment-configuration.ts
 src/adapters/db/portal/platform-data.ts
+src/adapters/db/portal/platform-monitoring.ts
 src/adapters/db/portal/platform.ts
 src/adapters/db/portal/schedule.ts
 src/adapters/db/portal/settings.ts
@@ -178,6 +182,9 @@ src/app/(portal)/app/[organizationId]/reservations/page.tsx
 src/app/(portal)/app/nouveau/page.tsx
 src/app/(portal)/app/page.tsx
 src/app/(portal)/layout.tsx
+src/app/(portal)/plateforme/historique/page.tsx
+src/app/(portal)/plateforme/layout.tsx
+src/app/(portal)/plateforme/operations/page.tsx
 src/app/(portal)/plateforme/page.tsx
 src/app/[organization]/[activityId]/page.tsx
 src/app/[organization]/page.tsx
@@ -188,6 +195,8 @@ src/app/_auth/use-auth-form.ts
 src/app/_portal/AccessNotice.tsx
 src/app/_portal/ActivityCards.tsx
 src/app/_portal/AdminOperation.tsx
+src/app/_portal/AdministrationNav.tsx
+src/app/_portal/AdministrationSearch.tsx
 src/app/_portal/AppearanceEditor.tsx
 src/app/_portal/BookingCards.tsx
 src/app/_portal/BookingFilters.tsx
@@ -202,6 +211,8 @@ src/app/_portal/OrganizationIdentityFields.tsx
 src/app/_portal/OrganizationSettings.tsx
 src/app/_portal/Pagination.tsx
 src/app/_portal/PlatformAccessForms.tsx
+src/app/_portal/PlatformHistoryCards.tsx
+src/app/_portal/PlatformOperationCards.tsx
 src/app/_portal/PlatformOrganizations.tsx
 src/app/_portal/PortalEmpty.tsx
 src/app/_portal/PortalError.tsx
@@ -235,6 +246,7 @@ src/app/_portal/activity/PauseForm.tsx
 src/app/_portal/activity/WeeklySlotRow.tsx
 src/app/_portal/activity/WeeklySlots.tsx
 src/app/_portal/admin-response.ts
+src/app/_portal/administration.css
 src/app/_portal/date-label.ts
 src/app/_portal/form-command.ts
 src/app/_portal/load-workspace.ts
@@ -361,6 +373,7 @@ src/composition/self-booking.ts
 src/composition/subscriptions.ts
 src/composition/unavailable.ts
 src/composition/widget.ts
+src/config/administration.ts
 src/config/appearance.ts
 src/config/auth-labels.ts
 src/config/auth-ui.ts
@@ -412,6 +425,7 @@ src/core/ports/gdpr.port.ts
 src/core/ports/jobs.port.ts
 src/core/ports/pause.port.ts
 src/core/ports/payment-gateway.port.ts
+src/core/ports/platform-monitoring.ts
 src/core/ports/portal-identity.port.ts
 src/core/ports/portal-inputs.ts
 src/core/ports/portal-models.ts
@@ -473,6 +487,7 @@ src/lib/sha256.ts
 src/lib/suggest-organization-slug.ts
 src/lib/trusted-origin.ts
 src/proxy.ts
+tests/e2e/administration.spec.ts
 tests/e2e/appearance.spec.ts
 tests/e2e/bank-fixtures.ts
 tests/e2e/bank-proof.spec.ts
@@ -502,6 +517,7 @@ tests/integration/database.ts
 tests/integration/fixtures.ts
 tests/integration/lifecycle-fixtures.ts
 tests/integration/payment.test.ts
+tests/integration/platform-monitoring.test.ts
 tests/integration/portal-fixtures.ts
 tests/integration/portal-management.test.ts
 tests/integration/portal.test.ts

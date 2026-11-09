@@ -25,6 +25,22 @@ export class PlatformUseCase {
         : failure(ERROR_CODES.VALIDATION_FAILED, 'Platform', 'list');
     });
   }
+  operations(raw: unknown) {
+    return withPortalActor(this.identity, 'Platform', async (actor) => {
+      const parsed = PlatformFilterSchema.safeParse(raw);
+      return parsed.success
+        ? this.repository.platformOperations(actor, parsed.data)
+        : failure(ERROR_CODES.VALIDATION_FAILED, 'Platform', 'operations');
+    });
+  }
+  history(raw: unknown) {
+    return withPortalActor(this.identity, 'Platform', async (actor) => {
+      const parsed = PlatformFilterSchema.safeParse(raw);
+      return parsed.success
+        ? this.repository.platformHistory(actor, parsed.data)
+        : failure(ERROR_CODES.VALIDATION_FAILED, 'Platform', 'history');
+    });
+  }
   grant(raw: unknown) {
     return withPortalActor(this.identity, 'Platform', async (actor) => {
       const parsed = GrantSchema.safeParse(raw);

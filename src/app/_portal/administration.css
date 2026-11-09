@@ -1,0 +1,78 @@
+.administration-navigation {
+  margin-bottom: 28px;
+}
+.administration-back {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  text-underline-offset: 4px;
+  font-size: 13px;
+}
+.administration-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.administration-tabs a {
+  padding: 12px 14px;
+  min-height: 44px;
+  border: 1px solid var(--ice-line);
+  border-radius: 12px;
+  background: var(--ice-soft-fill);
+  text-decoration: none;
+  font-size: 13px;
+}
+.administration-tabs a[aria-current='page'] {
+  background: var(--ice-paper);
+  border-color: var(--ui-text-primary);
+  font-weight: 650;
+}
+.administration-organizations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 20px;
+}
+.administration-entry {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.administration-entry h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.administration-entry p {
+  margin: 0;
+}
+.administration-entry-heading {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.administration-entry dl {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 8px 16px;
+  margin: 0;
+  font-size: 13px;
+}
+.administration-entry dt {
+  color: var(--ice-quiet);
+}
+.administration-entry dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.administration-entry > .portal-details {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 12px;
+}
+.administration-tabs a:focus-visible {
+  outline: 2px solid var(--ui-text-primary);
+  outline-offset: 3px;
+}

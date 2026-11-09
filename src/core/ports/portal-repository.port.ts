@@ -1,3 +1,4 @@
+import type { PlatformOperationsPage, PlatformHistoryPage } from './platform-monitoring';
 import type { AppearanceInput } from '../validation/appearance';
 import type { UpdateActivityInput, AddManualSessionInput } from './portal-inputs';
 import type { Result } from '../../lib/result';
@@ -39,6 +40,11 @@ export interface PortalRepositoryPort {
   ): Promise<Result<void>>;
   updateAppearance(actor: PortalActor, input: AppearanceInput): Promise<Result<void>>;
   updateSettings(actor: PortalActor, input: OrganizationSettingsInput): Promise<Result<void>>;
+  platformOperations(
+    actor: PortalActor,
+    filter: PlatformFilter,
+  ): Promise<Result<PlatformOperationsPage>>;
+  platformHistory(actor: PortalActor, filter: PlatformFilter): Promise<Result<PlatformHistoryPage>>;
   isPlatformOperator(actor: PortalActor): Promise<Result<boolean>>;
   platform(actor: PortalActor, filter: PlatformFilter): Promise<Result<PlatformOverview>>;
   grantAccess(
