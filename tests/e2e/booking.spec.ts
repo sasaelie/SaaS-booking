@@ -29,6 +29,9 @@ test('books through the browser and persists exactly one unpaid confirmation', a
   await expect(
     page.getByRole('status').filter({ hasText: 'Votre place est réservée.' }),
   ).toContainText('Votre place est réservée.');
+  await expect(page.locator('.ice-result-icon')).toHaveCount(0);
+  await expect(page.locator('.ice-progress')).toHaveCount(0);
+  await expect(page.getByText('À régler auprès de l’organisateur : 20,00 €')).toBeVisible();
   const result = await pool.query<{ status: string; amount_paid_cents: number }>(
     'SELECT status,amount_paid_cents FROM bookings WHERE email=$1',
     [email],

@@ -74,3 +74,9 @@ La migration 011 ajoute deux teintes optionnelles par organisation. Les réglage
 **Apparence** (`/parametres`) contient le sélecteur Organisateur/Participants, le curseur accessible au clavier, un aperçu immédiat, l’enregistrement explicite et le retour aux couleurs par défaut. La base ivoire et la couleur du texte restent imposées. Le logo et la photo sont dans une section repliable. Les teintes sont appliquées à la console, au catalogue, aux pages d’activité et à la gestion de réservation.
 
 **Réglages** (`/reglages`) regroupe l’identité, l’IBAN, les règles de suppression et les connexions de paiement. Le menu mobile affiche Retour, un titre non interactif et Menu. Les liens de navigation partagent un traitement uniforme et la page active possède un repère distinct ; les actions conservent les boutons de verre.
+
+## Retour participant et distinction réservation / paiement
+
+Les pages publiques du catalogue et d’activité affichent un retour explicite. Lorsqu’un membre de l’organisation ouvre le catalogue depuis Apparence (`?from=appearance`), ce contexte est conservé jusqu’à l’activité et le retour mène aux réglages d’apparence. Les visiteurs non membres ne voient pas de lien vers la console ; leur retour mène au catalogue, puis à l’accueil. L’autorisation est vérifiée côté serveur, sans utiliser le paramètre de provenance comme preuve d’accès.
+
+La confirmation de réservation n’affiche plus le grand pictogramme de validation ni les étapes du formulaire terminé. Pour une activité payante en mode NONE, le résultat indique explicitement que le paiement n’a pas été encaissé en ligne et affiche le montant à régler auprès de l’organisateur. Une séance gratuite ou intégralement couverte par un code ne montre pas ce montant. Les instructions de virement et le paiement Stripe restent conditionnés à leur mode de paiement respectif ; aucune simulation d’encaissement n’est ajoutée.

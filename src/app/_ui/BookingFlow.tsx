@@ -9,10 +9,10 @@ export function BookingFlow({ data }: { readonly data: BookingPageData }) {
   return (
     <form className="ice-booking-flow" onSubmit={flow.submit} aria-busy={flow.form.pending}>
       <input type="hidden" name="startsAtIso" value={flow.form.selectedIso} />
-      <BookingProgress flow={flow} />
+      {!flow.form.state?.success ? <BookingProgress flow={flow} /> : null}
       <BookingDateStep flow={flow} />
       <BookingDetails flow={flow} />
-      <BookingResult state={flow.form.state} />
+      <BookingResult state={flow.form.state} flow={flow} />
     </form>
   );
 }

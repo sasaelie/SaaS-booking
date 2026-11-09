@@ -52,7 +52,7 @@ export const AUDIENCE_LABELS = {
   MINORS_ONLY: 'Mineurs uniquement',
 } as const;
 export const PAYMENT_LABELS = {
-  NONE: 'Sans paiement en ligne',
+  NONE: 'Règlement auprès de l’organisateur',
   BANK_TRANSFER: 'Virement bancaire',
   STRIPE: 'Carte via Stripe',
 } as const;

@@ -91,3 +91,16 @@ body:has(.participant-page)::before {
     padding: 22px;
   }
 }
+
+.participant-navigation {
+  max-width: 1180px;
+  margin: 0 auto 20px;
+}
+.participant-navigation a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 0;
+  font-weight: 600;
+  text-underline-offset: 4px;
+}
