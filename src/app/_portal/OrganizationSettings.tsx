@@ -1,5 +1,6 @@
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { PORTAL, SETTINGS_UI, INPUT_LIMITS, MEMBER_ROLES } from '../../config/constants';
+import { SocialSettings } from './SocialSettings';
 import { PortalForm } from './PortalForm';
 import { PortalField } from './PortalField';
 export function OrganizationSettings({
@@ -23,6 +24,7 @@ export function OrganizationSettings({
           defaultValue={organization.name}
         />
         <input type="hidden" name="theme" value={organization.theme} />
+        <SocialSettings links={organization.socialLinks} />
         <BankSettings organization={organization} />
         <p className="portal-muted">{SETTINGS_UI.BANK_HINT}</p>
         <label className="portal-check">

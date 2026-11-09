@@ -14,6 +14,7 @@ export class DrizzlePublicCatalogRepository implements PublicCatalogPort {
       const [organization] = await tx
         .select({
           id: organizations.id,
+          socialLinks: organizations.socialLinks,
           name: organizations.name,
           slug: organizations.slug,
           branding: organizationBranding,
@@ -37,6 +38,7 @@ export class DrizzlePublicCatalogRepository implements PublicCatalogPort {
       return ok({
         organizationId: organization.id,
         name: organization.name,
+        socialLinks: organization.socialLinks,
         slug: organization.slug,
         participantHue: organization.branding?.participantHue ?? null,
         theme: organization.branding?.theme ?? 'SAGE',

@@ -3,10 +3,15 @@ import type { BookingPageData } from '../../core/use-cases/get-booking-page.use-
 export function BookingTerms({ terms }: { readonly terms: BookingPageData['terms'] }) {
   return (
     <section className="ice-terms" aria-label={FORM_LABELS.TERMS_TITLE}>
-      <details>
-        <summary>{FORM_LABELS.TERMS_TITLE}</summary>
-        <div className="ice-terms-text">{terms.fullText}</div>
-      </details>
+      <a
+        href="#participant-terms"
+        onClick={() => {
+          const details = document.getElementById('participant-terms');
+          if (details instanceof HTMLDetailsElement) details.open = true;
+        }}
+      >
+        {FORM_LABELS.TERMS_TITLE}
+      </a>
       <label className="ice-check">
         <input name="acceptedAgeAttestation" type="checkbox" required />
         <span>{terms.ageAttestationLabel}</span>

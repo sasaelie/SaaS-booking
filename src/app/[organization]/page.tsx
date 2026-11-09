@@ -1,3 +1,4 @@
+import { SocialLinks } from '../_ui/SocialLinks';
 import { StoryPanel } from '../_ui/StoryPanel';
 import { ParticipantNavigation } from '../_ui/ParticipantNavigation';
 import { PARTICIPANT_NAV } from '../../config/participant-navigation';
@@ -39,6 +40,7 @@ export default async function Page({
         name={data.name}
         logoUrl={data.hasLogo ? `/api/branding/${data.organizationId}/logo` : null}
       />
+      <SocialLinks links={data.socialLinks} />
       <PortalHeading title={SHARE_UI.CATALOG_TITLE} />
       {!data.activities.length ? <PortalEmpty title={SHARE_UI.CATALOG_EMPTY} /> : null}
       <CatalogActivities data={data} from={from} />

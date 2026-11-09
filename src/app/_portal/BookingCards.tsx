@@ -1,3 +1,5 @@
+import { paymentIndicator } from '../../core/domain/status-indicator';
+import { StatusBadge } from './StatusBadge';
 import type { PortalBooking } from '../../core/ports/portal-models';
 import { PORTAL, BOOKING_STATUS_LABELS } from '../../config/constants';
 import { formatMoney } from '../_ui/format-money';
@@ -68,7 +70,10 @@ function BookingSummary({ booking, timezone }: Pick<BookingCardProps, 'booking' 
         <strong>{portalDate(booking.startsAt, timezone)}</strong>
         <small>{PORTAL.SESSION}</small>
       </div>
-      <span className="portal-badge">{BOOKING_STATUS_LABELS[booking.status]}</span>
+      <div>
+        <span className="portal-badge">{BOOKING_STATUS_LABELS[booking.status]}</span>
+        <StatusBadge status={paymentIndicator(booking)} />
+      </div>
       <div>
         <strong>{formatMoney(booking.amountPaidCents, booking.currency)}</strong>
         <small>{PORTAL.AMOUNT_PAID}</small>

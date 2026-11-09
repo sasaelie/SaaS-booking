@@ -57,6 +57,10 @@ function publicIdentity(activity: ActivityWithScheduleConfig) {
     requirePhone: activity.requirePhone,
     primaryTextColor: activity.primaryTextColor,
     timezone: activity.timezone,
+    socialLinks: activity.socialLinks ?? {},
+    address: activity.addressVisibility === 'REMINDER' ? '' : (activity.address ?? ''),
+    addressDelayed: activity.addressVisibility === 'REMINDER',
+    practicalInfo: activity.practicalInfo ?? '',
     paymentMode: activity.paymentMode,
   };
 }

@@ -1,8 +1,8 @@
 # Inventaire de la plateforme
 
-545 fichiers versionnés, dont 418 sous `src/`.
+581 fichiers versionnés, dont 440 sous `src/`.
 
-Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 012.
+Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 014.
 
 ```text
 .env.example
@@ -24,8 +24,10 @@ docs/INTERFACE.md
 docs/INVENTAIRE.md
 docs/OPERATIONS.md
 docs/PLAN-PAIEMENTS-MOLLIE.md
+docs/PLAN-SERVICE-ORGANISATEUR.md
 docs/PLAN-TESTS-SERVICE.md
 docs/POINTS-A-COMPLETER.md
+docs/RAPPORT-SERVICE-ORGANISATEUR.md
 docs/RAPPORT-TESTS-SERVICE.md
 docs/RECETTE-EN-LIGNE.md
 docs/SAAS-IMPLEMENTATION.md
@@ -44,6 +46,8 @@ docs/previews/saas/organisateur-mobile.png
 docs/previews/saas/organisateur-ordinateur.png
 docs/previews/saas/partage-ordinateur.png
 docs/previews/saas/personnalisation-mobile.png
+docs/previews/saas/service-code-mobile.png
+docs/previews/saas/service-participant-mobile.png
 docs/references/design-system.json
 docs/references/ice-initial.css.txt
 docs/references/session-repository-initial.ts.txt
@@ -60,6 +64,8 @@ migrations/009_stripe_connect.sql
 migrations/010_private_files.sql
 migrations/011_appearance.sql
 migrations/012_story_text_tone.sql
+migrations/013_organizer_service.sql
+migrations/014_default_voucher_validity.sql
 next-env.d.ts
 next.config.ts
 package-lock.json
@@ -100,6 +106,8 @@ src/adapters/db/drizzle-session.repository.ts
 src/adapters/db/drizzle-voucher-quote.repository.ts
 src/adapters/db/drizzle-voucher.repository.ts
 src/adapters/db/jobs/enqueue.ts
+src/adapters/db/jobs/event-updates.ts
+src/adapters/db/jobs/reminders.ts
 src/adapters/db/jobs/runner.ts
 src/adapters/db/payment/collision.ts
 src/adapters/db/payment/confirm.ts
@@ -112,7 +120,9 @@ src/adapters/db/portal/activities.ts
 src/adapters/db/portal/activity-list.ts
 src/adapters/db/portal/activity-management.ts
 src/adapters/db/portal/authorization.ts
+src/adapters/db/portal/booking-status-filter.ts
 src/adapters/db/portal/bookings.ts
+src/adapters/db/portal/manual-voucher.ts
 src/adapters/db/portal/organizations.ts
 src/adapters/db/portal/overview.ts
 src/adapters/db/portal/payment-configuration.ts
@@ -140,9 +150,12 @@ src/adapters/db/schema/voucher.ts
 src/adapters/db/tenant-filter.ts
 src/adapters/db/transaction.ts
 src/adapters/db/vouchers/attendee-effects.ts
+src/adapters/db/vouchers/code.ts
 src/adapters/db/vouchers/issue.ts
 src/adapters/db/vouchers/release.ts
+src/adapters/db/vouchers/remainder.ts
 src/adapters/db/vouchers/restore.ts
+src/adapters/jobs/event-mail.ts
 src/adapters/jobs/handler.ts
 src/adapters/jobs/job-validation.ts
 src/adapters/jobs/mail-content.ts
@@ -208,6 +221,7 @@ src/app/_portal/ConnectSettings.tsx
 src/app/_portal/CopyCode.tsx
 src/app/_portal/CreateOrganizationForm.tsx
 src/app/_portal/FirstActivityState.tsx
+src/app/_portal/ManualVoucherForm.tsx
 src/app/_portal/MediaUpload.tsx
 src/app/_portal/OrganizationCards.tsx
 src/app/_portal/OrganizationIdentityFields.tsx
@@ -232,6 +246,8 @@ src/app/_portal/RefreshButton.tsx
 src/app/_portal/SessionList.tsx
 src/app/_portal/SharePanel.tsx
 src/app/_portal/SignOutButton.tsx
+src/app/_portal/SocialSettings.tsx
+src/app/_portal/StatusBadge.tsx
 src/app/_portal/StoryTextChoices.tsx
 src/app/_portal/SubscriptionActions.tsx
 src/app/_portal/SubscriptionPanel.tsx
@@ -244,6 +260,7 @@ src/app/_portal/activity/ActivitySchedule.tsx
 src/app/_portal/activity/AddSessionForm.tsx
 src/app/_portal/activity/CreateActivityForm.tsx
 src/app/_portal/activity/EditActivityForm.tsx
+src/app/_portal/activity/EventDetailsFields.tsx
 src/app/_portal/activity/ManualDateFields.tsx
 src/app/_portal/activity/PauseForm.tsx
 src/app/_portal/activity/WeeklySlotRow.tsx
@@ -291,9 +308,12 @@ src/app/_ui/CalendarNavigation.tsx
 src/app/_ui/ColorScene.tsx
 src/app/_ui/ContactField.tsx
 src/app/_ui/EmbedHeightReporter.tsx
+src/app/_ui/EventInformation.tsx
 src/app/_ui/IceBookingWidget.tsx
 src/app/_ui/IceIcon.tsx
 src/app/_ui/ParticipantNavigation.tsx
+src/app/_ui/ParticipationTerms.tsx
+src/app/_ui/SocialLinks.tsx
 src/app/_ui/StagingNotice.tsx
 src/app/_ui/StoryPanel.tsx
 src/app/_ui/VoucherField.tsx
@@ -320,6 +340,7 @@ src/app/_ui/contact-fields.ts
 src/app/_ui/format-money.ts
 src/app/_ui/ice-tokens.css
 src/app/_ui/participant.css
+src/app/_ui/service.css
 src/app/_ui/staging.css
 src/app/_ui/story-photo.css
 src/app/_ui/use-booking-calendar.ts
@@ -393,6 +414,8 @@ src/config/portal-labels.ts
 src/config/presentation.ts
 src/config/private-files.ts
 src/config/saas.ts
+src/config/service-mail.ts
+src/config/service.ts
 src/config/share-labels.ts
 src/config/staging.ts
 src/config/story.ts
@@ -411,6 +434,7 @@ src/core/domain/seat-calculator.ts
 src/core/domain/self-service-token.ts
 src/core/domain/session-truth.ts
 src/core/domain/session-types.ts
+src/core/domain/status-indicator.ts
 src/core/domain/subscription-access.ts
 src/core/domain/terms-generator.ts
 src/core/domain/timezone-parts.ts
@@ -424,6 +448,7 @@ src/core/ports/booking-ports.ts
 src/core/ports/brand-media.port.ts
 src/core/ports/closure.port.ts
 src/core/ports/connect-gateway.port.ts
+src/core/ports/event-details.ts
 src/core/ports/gdpr.port.ts
 src/core/ports/jobs.port.ts
 src/core/ports/pause.port.ts
@@ -457,6 +482,7 @@ src/core/use-cases/portal/connect.use-case.ts
 src/core/use-cases/portal/connected-account-webhook.use-case.ts
 src/core/use-cases/portal/local-pause.use-case.ts
 src/core/use-cases/portal/manage-activity.use-case.ts
+src/core/use-cases/portal/manual-voucher.use-case.ts
 src/core/use-cases/portal/mutation-access.use-case.ts
 src/core/use-cases/portal/organizations.use-case.ts
 src/core/use-cases/portal/platform.use-case.ts
@@ -472,7 +498,9 @@ src/core/use-cases/read-self-booking.use-case.ts
 src/core/use-cases/voucher-lifecycle.use-case.ts
 src/core/validation/admin-command.ts
 src/core/validation/appearance.ts
+src/core/validation/event-details.ts
 src/core/validation/local-pause.ts
+src/core/validation/manual-voucher.ts
 src/core/validation/portal-activity.ts
 src/core/validation/portal-command.ts
 src/core/validation/portal-organization.ts
@@ -500,6 +528,7 @@ tests/e2e/embed.spec.ts
 tests/e2e/empty-states.spec.ts
 tests/e2e/interface.spec.ts
 tests/e2e/organization-link.spec.ts
+tests/e2e/organizer-service.spec.ts
 tests/e2e/participant-return.spec.ts
 tests/e2e/password.spec.ts
 tests/e2e/portal-fixtures.ts
@@ -530,11 +559,17 @@ tests/integration/private-files.test.ts
 tests/integration/reservation.test.ts
 tests/integration/service-concurrency.test.ts
 tests/integration/service-failures.test.ts
+tests/integration/service-mails.test.ts
+tests/integration/service-preferences.test.ts
+tests/integration/service-voucher-fixtures.ts
+tests/integration/service-voucher-recovery.test.ts
+tests/integration/service-vouchers.test.ts
 tests/integration/subscription-webhook.test.ts
 tests/integration/subscription.test.ts
 tests/integration/vouchers.test.ts
 tests/unit/calendar.test.ts
 tests/unit/database-config.test.ts
+tests/unit/event-details.test.ts
 tests/unit/foundations.test.ts
 tests/unit/http-body.test.ts
 tests/unit/iban.test.ts
@@ -543,6 +578,7 @@ tests/unit/proof-and-auth.test.ts
 tests/unit/schedule.test.ts
 tests/unit/service-boundaries.test.ts
 tests/unit/staging.test.ts
+tests/unit/status-indicator.test.ts
 tests/unit/stripe.test.ts
 tests/unit/subscription-access.test.ts
 tests/unit/tokens.test.ts

@@ -17,6 +17,7 @@ export async function updateSettings(
     .update(organizations)
     .set({
       name: input.name,
+      ...(input.socialLinks ? { socialLinks: input.socialLinks } : {}),
       bankIban: input.bankIban,
       bankAccountName: input.bankAccountName,
       autoDeleteBankProof: input.autoDeleteBankProof,

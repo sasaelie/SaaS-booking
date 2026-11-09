@@ -1,3 +1,4 @@
+import type { ManualVoucherInput } from '../validation/manual-voucher';
 import type { PlatformOperationsPage, PlatformHistoryPage } from './platform-monitoring';
 import type { AppearanceInput } from '../validation/appearance';
 import type { UpdateActivityInput, AddManualSessionInput } from './portal-inputs';
@@ -17,6 +18,7 @@ import type {
   PlatformFilter,
 } from './portal-inputs';
 export interface PortalRepositoryPort {
+  issueManualVoucher(actor: PortalActor, input: ManualVoucherInput): Promise<Result<void>>;
   listOrganizations(actor: PortalActor): Promise<Result<readonly OrganizationSummary[]>>;
   createOrganization(
     actor: PortalActor,

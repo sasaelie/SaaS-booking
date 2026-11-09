@@ -26,6 +26,8 @@ export function reservationValues(
     id,
     paymentReference,
     activityName: activity.name,
+    noticeHoursForVoucher: activity.noticeHoursForVoucher,
+    voucherValidityMonths: activity.voucherValidityMonths,
     merchantAccountId: activity.merchantAccountId,
     bankIban: activity.bankIban,
     bankAccountName: activity.bankAccountName,

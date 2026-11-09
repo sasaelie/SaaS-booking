@@ -45,5 +45,5 @@ export const FORM_LABELS = {
   CHOOSE_IMAGE: 'Choisir une image',
   NO_IMAGE: 'Aucune image sélectionnée',
   CANCEL_HEADING: 'Annuler cette réservation',
-  TERMS_TITLE: 'Conditions de réservation',
+  TERMS_TITLE: 'Consignes de participation et droit au remboursement',
 } as const;

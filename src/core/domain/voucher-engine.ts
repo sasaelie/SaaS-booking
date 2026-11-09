@@ -112,7 +112,8 @@ export function calculateVoucherApplication(
     voucherInitialValueCents: voucher.initialValueCents,
     appliedDiscountCents,
     remainingToPayCents,
-    forfeitedRemainderCents: Math.max(0, voucher.initialValueCents - price),
+    forfeitedRemainderCents: 0,
+    remainderValueCents: Math.max(0, voucher.initialValueCents - price),
     requiresOnlinePayment,
     nextVoucherStatus: requiresOnlinePayment
       ? VOUCHER_STATUSES.LOCKED_PENDING_PAYMENT

@@ -1,4 +1,14 @@
-import { boolean, integer, pgTable, text, timestamp, uuid, unique } from 'drizzle-orm/pg-core';
+import {
+  jsonb,
+  boolean,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  unique,
+} from 'drizzle-orm/pg-core';
+import type { SocialLinks } from '../../../core/ports/event-details';
 import {
   AUDIENCE_POLICIES,
   BOOKING_LIMITS,
@@ -10,6 +20,7 @@ import {
 } from '../../../config/constants';
 export const organizations = pgTable('organizations', {
   id: uuid('id').defaultRandom().primaryKey(),
+  socialLinks: jsonb('social_links').$type<SocialLinks>().notNull().default({}),
   kind: text('kind').notNull().default('OTHER'),
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
@@ -32,6 +43,13 @@ export const activities = pgTable(
       .references(() => organizations.id, { onDelete: 'restrict' }),
     name: text('name').notNull(),
     description: text('description'),
+    address: text('address').notNull().default(''),
+    addressVisibility: text('address_visibility')
+      .$type<'PUBLIC' | 'REMINDER'>()
+      .notNull()
+      .default('PUBLIC'),
+    practicalInfo: text('practical_info').notNull().default(''),
+    participationTerms: text('participation_terms').notNull().default(''),
     priceCents: integer('price_cents').notNull(),
     currency: text('currency').notNull().default(DEFAULTS.CURRENCY),
     audiencePolicy: text('audience_policy')

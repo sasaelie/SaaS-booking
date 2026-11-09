@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { INPUT_LIMITS } from '../../config/constants';
 export const BookingJobSchema = z.object({ bookingId: z.uuid() });
+export const ReminderJobSchema = BookingJobSchema.extend({ startsAt: z.iso.datetime() });
 export const VoucherJobSchema = z.object({ voucherId: z.uuid() });
 export const PurgeJobSchema = z.object({
   bookingId: z.uuid(),

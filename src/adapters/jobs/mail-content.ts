@@ -1,11 +1,13 @@
+import { readBookingMail, eventMailDetails } from './event-mail';
+import { SERVICE_MAIL } from '../../config/service-mail';
 import { formatMoney } from '../../lib/format-money';
 import { eq } from 'drizzle-orm';
 import type { DrizzlePgDb } from '../db/client';
-import { bookings, sessions, activities, organizations, rescheduleVouchers } from '../db/schema';
+import { bookings, organizations, rescheduleVouchers } from '../db/schema';
 import { signSelfCancelToken } from '../../core/domain/self-service-token';
 import { required } from '../db/transaction';
 import { TIME, TOKEN_RULES, JOB_TYPES, DEFAULTS } from '../../config/constants';
-import { BookingJobSchema, VoucherJobSchema } from './job-validation';
+import { BookingJobSchema, VoucherJobSchema, ReminderJobSchema } from './job-validation';
 export interface MailContent {
   readonly to: string;
   readonly subject: string;
@@ -45,14 +47,30 @@ async function bookingContent(
   if (!row || row.bookings.anonymizedAt || row.bookings.email === 'anonymous@invalid.local')
     return null;
   const booking = row.bookings;
-  if (type === JOB_TYPES.CONFIRMATION && booking.status !== 'CONFIRMED') return null;
+  if (
+    type === JOB_TYPES.REMINDER &&
+    ReminderJobSchema.parse(payload).startsAt !== row.sessions.startsAt.toISOString()
+  )
+    return null;
+  if (
+    type !== JOB_TYPES.CANCELLATION &&
+    (booking.status !== 'CONFIRMED' || row.sessions.isCancelled)
+  )
+    return null;
+  if (
+    type === JOB_TYPES.REMINDER &&
+    (row.sessions.startsAt <= new Date() ||
+      row.sessions.startsAt.getTime() > Date.now() + TIME.DAY_MS)
+  )
+    return null;
   if (type === JOB_TYPES.CANCELLATION)
     return {
       to: booking.email,
       subject: 'Annulation de votre séance',
       text: `La séance ${booking.activityName} a été annulée. Les remboursements éventuels sont en cours de traitement.`,
     };
-  return confirmationContent(row, appUrl, secret);
+  const content = await confirmationContent(row, appUrl, secret);
+  return enrichedMail(content, row, type);
 }
 
 export function mailContent(
@@ -65,17 +83,6 @@ export function mailContent(
   return type === JOB_TYPES.VOUCHER
     ? voucherContent(db, payload, appUrl)
     : bookingContent(db, type, payload, appUrl, secret);
-}
-
-async function readBookingMail(db: DrizzlePgDb, bookingId: string) {
-  const [row] = await db
-    .select()
-    .from(bookings)
-    .innerJoin(sessions, eq(sessions.id, bookings.sessionId))
-    .innerJoin(activities, eq(activities.id, bookings.activityId))
-    .innerJoin(organizations, eq(organizations.id, bookings.organizationId))
-    .where(eq(bookings.id, bookingId));
-  return row;
 }
 
 async function confirmationContent(
@@ -107,5 +114,22 @@ async function confirmationContent(
     to: booking.email,
     subject: 'Confirmation de votre réservation',
     text: `Votre place pour ${booking.activityName} est confirmée : ${time}. Montant encaissé : ${formatMoney(booking.amountPaidCents, booking.currency)}. Gérer la réservation : ${appUrl}/manage#token=${encodeURIComponent(token)}`,
+  };
+}
+
+function enrichedMail(
+  content: MailContent,
+  row: NonNullable<Awaited<ReturnType<typeof readBookingMail>>>,
+  type: string,
+) {
+  return {
+    ...content,
+    subject:
+      type === JOB_TYPES.REMINDER
+        ? SERVICE_MAIL.REMINDER
+        : type === JOB_TYPES.EVENT_UPDATE
+          ? SERVICE_MAIL.UPDATE
+          : content.subject,
+    text: `${content.text}\n\n${eventMailDetails(row, type === JOB_TYPES.REMINDER)}`,
   };
 }

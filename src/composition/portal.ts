@@ -1,3 +1,4 @@
+import { ManualVoucherUseCase } from '../core/use-cases/portal/manual-voucher.use-case';
 import { LocalPauseUseCase } from '../core/use-cases/portal/local-pause.use-case';
 import { ConnectUseCase } from '../core/use-cases/portal/connect.use-case';
 import { connectGateway } from './connect';
@@ -29,6 +30,7 @@ export function portal(headers: Headers) {
   const authorization = new MembershipAuthorizationAdapter(identity, repository);
   const admin = administration(app.value, '', authorization);
   return ok({
+    manualVoucher: new ManualVoucherUseCase(identity, repository),
     pause: new LocalPauseUseCase(identity, repository, admin.pause),
     session: new PortalSessionUseCase(identity),
     connect: new ConnectUseCase(identity, connectGateway(app.value)),

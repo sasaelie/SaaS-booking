@@ -31,6 +31,7 @@ export async function readActivity(
   const schedule = await readActivitySchedule(db, organizationId, activityId);
   return ok({
     ...row.activity,
+    socialLinks: row.organization.socialLinks,
     participantHue: row.branding?.participantHue ?? null,
     storyTextTone: row.branding?.storyTextTone ?? 'WHITE',
     brandTheme: row.branding?.theme ?? 'SAGE',
@@ -42,12 +43,7 @@ export async function readActivity(
       hasPaymentConfiguration(row.activity.paymentMode, row.organization),
     ),
     ...schedule,
-    organizationName: row.organization.name,
-    timezone: row.organization.timezone,
-    primaryTextColor: row.organization.primaryTextColor,
-    merchantAccountId: row.organization.merchantAccountId,
-    bankIban: row.organization.bankIban,
-    bankAccountName: row.organization.bankAccountName,
+    ...organizationIdentity(row.organization),
   });
 }
 export async function lockActivity(
@@ -59,4 +55,15 @@ export async function lockActivity(
     db,
     sql`SELECT id FROM activities WHERE id=${activityId} AND organization_id=${organizationId} FOR UPDATE`,
   );
+}
+
+function organizationIdentity(org: typeof organizations.$inferSelect) {
+  return {
+    organizationName: org.name,
+    timezone: org.timezone,
+    primaryTextColor: org.primaryTextColor,
+    merchantAccountId: org.merchantAccountId,
+    bankIban: org.bankIban,
+    bankAccountName: org.bankAccountName,
+  };
 }

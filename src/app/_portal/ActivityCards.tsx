@@ -1,3 +1,5 @@
+import { SERVICE } from '../../config/service';
+import { StatusBadge } from './StatusBadge';
 import Link from 'next/link';
 import type { PortalActivity } from '../../core/ports/portal-models';
 import { PORTAL, AUDIENCE_LABELS, PAYMENT_LABELS } from '../../config/constants';
@@ -16,6 +18,9 @@ export function ActivityCards({
           <span className="portal-badge" data-muted={!activity.isActive}>
             {activity.isActive ? PORTAL.ACTIVE : PORTAL.ARCHIVED}
           </span>
+          {activity.addressVisibility === 'REMINDER' && !activity.address ? (
+            <StatusBadge status={{ tone: 'orange', label: SERVICE.MISSING_ADDRESS }} />
+          ) : null}
           <h2>{activity.name}</h2>
           <strong>{formatMoney(activity.priceCents, activity.currency)}</strong>
           <div className="portal-activity-meta">

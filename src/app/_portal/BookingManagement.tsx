@@ -1,20 +1,19 @@
+import { ManualVoucherForm } from './ManualVoucherForm';
 import { RecordBankRefund } from './RecordBankRefund';
 import type { PortalBooking } from '../../core/ports/portal-models';
 import { PORTAL, BOOKING_STATUSES, PAYMENT_MODES } from '../../config/constants';
 import { AdminOperation } from './AdminOperation';
 import { portalDate } from './date-label';
-export function BookingManagement({
-  booking,
-  organizationId,
-  timezone,
-}: {
+interface Props {
   readonly booking: PortalBooking;
   readonly organizationId: string;
   readonly timezone: string;
-}) {
+}
+export function BookingManagement({ booking, organizationId, timezone }: Props) {
   const base = { organizationId, bookingId: booking.id };
   return (
     <div className="portal-action-grid">
+      <ManualVoucherForm booking={booking} organizationId={organizationId} timezone={timezone} />
       {booking.paymentMode === PAYMENT_MODES.BANK_TRANSFER &&
       booking.status === BOOKING_STATUSES.PROOF_SUBMITTED ? (
         <BankReview base={base} hasProof={booking.hasProof} />

@@ -1,11 +1,13 @@
 import type { PortalActivity } from '../../../core/ports/portal-models';
 import { ACTIVITY_UI } from '../../../config/constants';
+import { EventDetailsFields } from './EventDetailsFields';
 import { ActivityDetailsFields } from './ActivityDetailsFields';
 import { ActivityPricingFields } from './ActivityPricingFields';
 export function ActivityBasics({ initial }: { readonly initial?: PortalActivity }) {
   return (
     <>
       <ActivityDetailsFields initial={initial} />
+      <EventDetailsFields initial={initial} />
       <ActivityPricingFields initial={initial} />
       <label className="portal-check">
         <input name="requirePhone" type="checkbox" defaultChecked={initial?.requirePhone} />

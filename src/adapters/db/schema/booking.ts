@@ -50,6 +50,8 @@ export const bookings = pgTable(
     }).notNull(),
     termsVersionHash: text('terms_version_hash').notNull(),
     termsText: text('terms_text').notNull(),
+    noticeHoursForVoucher: integer('notice_hours_for_voucher'),
+    voucherValidityMonths: integer('voucher_validity_months'),
     ageAttestationLabel: text('age_attestation_label').notNull(),
     selfServiceVersion: integer('self_service_version').notNull().default(0),
     confirmedAt: timestamp('confirmed_at', { withTimezone: true }),
