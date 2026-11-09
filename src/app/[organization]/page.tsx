@@ -1,3 +1,4 @@
+import { StoryPanel } from '../_ui/StoryPanel';
 import { ParticipantNavigation } from '../_ui/ParticipantNavigation';
 import { PARTICIPANT_NAV } from '../../config/participant-navigation';
 import { ColorScene } from '../_ui/ColorScene';
@@ -55,20 +56,45 @@ function CatalogActivities({
   return (
     <div className="portal-cards">
       {data.activities.map((activity) => (
-        <article key={activity.id} className="portal-panel portal-organization-card">
-          <span className="portal-badge">{AUDIENCE_LABELS[activity.audiencePolicy]}</span>
-          <h2>{activity.name}</h2>
-          {activity.description ? <p className="portal-muted">{activity.description}</p> : null}
-          <strong>{formatMoney(activity.priceCents, activity.currency)}</strong>
-          <Link
-            className="liquid-ice-button portal-button"
-            href={`/${data.slug}/${activity.id}${from === PARTICIPANT_NAV.SOURCE ? '?from=appearance' : ''}`}
-          >
-            {SHARE_UI.CATALOG_OPEN}
-          </Link>
-        </article>
+        <CatalogCard key={activity.id} data={data} activity={activity} from={from} />
       ))}
     </div>
+  );
+}
+function CatalogCard({
+  data,
+  activity,
+  from,
+}: {
+  readonly data: PublicCatalog;
+  readonly activity: PublicCatalog['activities'][number];
+  readonly from?: string;
+}) {
+  const content = (
+    <>
+      <span className="portal-badge">{AUDIENCE_LABELS[activity.audiencePolicy]}</span>
+      <h2>{activity.name}</h2>
+      {activity.description ? <p className="portal-muted">{activity.description}</p> : null}
+      <strong>{formatMoney(activity.priceCents, activity.currency)}</strong>
+      <Link
+        className="liquid-ice-button portal-button"
+        href={`/${data.slug}/${activity.id}${from === PARTICIPANT_NAV.SOURCE ? '?from=appearance' : ''}`}
+      >
+        {SHARE_UI.CATALOG_OPEN}
+      </Link>
+    </>
+  );
+  return data.hasBackground ? (
+    <StoryPanel
+      as="article"
+      className="portal-organization-card ice-catalog-card"
+      tone={data.storyTextTone ?? 'WHITE'}
+      photoUrl={`/api/branding/${data.organizationId}/background`}
+    >
+      {content}
+    </StoryPanel>
+  ) : (
+    <article className="portal-panel portal-organization-card">{content}</article>
   );
 }
 

@@ -27,6 +27,7 @@ export function publicBookingPage(
     ...publicIdentity(activity),
     terms,
     brand: {
+      storyTextTone: activity.storyTextTone ?? 'WHITE',
       hue: activity.participantHue ?? null,
       theme: activity.brandTheme,
       logoUrl: activity.hasLogo ? `/api/branding/${activity.organizationId}/logo` : null,

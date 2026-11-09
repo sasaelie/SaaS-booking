@@ -1,3 +1,4 @@
+import { StoryPanel } from './StoryPanel';
 import type { BookingPageData } from '../../core/use-cases/get-booking-page.use-case';
 import { AUDIENCE_POLICIES, BOOKING_UI } from '../../config/constants';
 import { formatMoney } from './format-money';
@@ -10,13 +11,13 @@ export function BookingHeader({ data }: { readonly data: BookingPageData }) {
         ? BOOKING_UI.AUDIENCE_ADULT
         : BOOKING_UI.AUDIENCE_ALL;
   return (
-    <aside className="ice-story">
+    <StoryPanel tone={data.brand.storyTextTone} photoUrl={data.brand.backgroundUrl}>
       <div className="ice-story-top">
         <span className="ice-eyebrow">{BOOKING_UI.EYEBROW}</span>
         <h1>{data.activityName}</h1>
         <p>{BOOKING_UI.INDIVIDUAL}</p>
       </div>
-      <div className="ice-sculpture" aria-hidden="true">
+      <div hidden={Boolean(data.brand.backgroundUrl)} className="ice-sculpture" aria-hidden="true">
         <span />
         <span />
         <span />
@@ -34,6 +35,6 @@ export function BookingHeader({ data }: { readonly data: BookingPageData }) {
           <span>{BOOKING_UI.PRICE_UNIT}</span>
         </div>
       </div>
-    </aside>
+    </StoryPanel>
   );
 }
