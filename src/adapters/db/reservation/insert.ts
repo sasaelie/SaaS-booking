@@ -1,3 +1,4 @@
+import { issueRemainder } from '../vouchers/remainder';
 import { bookings } from '../schema';
 import type { Transaction } from '../transaction';
 import { prepareReservation, type InsertContext } from './prepare';
@@ -19,6 +20,7 @@ export async function insertReservation(tx: Transaction, context: InsertContext)
     .values(reservationValues(context, prepared, id, state, reference))
     .returning();
   if (!inserted) throw Error('Insertion missing');
+  await issueRemainder(tx, id, inserted.organizationId);
   if (inserted.status === BOOKING_STATUSES.CONFIRMED)
     await enqueue(tx, inserted.organizationId, JOB_TYPES.CONFIRMATION, `confirmation:${id}`, {
       bookingId: id,

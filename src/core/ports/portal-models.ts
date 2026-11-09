@@ -1,3 +1,4 @@
+import type { EventDetails, SocialLinks } from './event-details';
 import type { StoryTextTone } from '../../config/story';
 import type { AudiencePolicy, PaymentMode, BookingStatus } from '../../config/constants';
 import type { OrganizationAccess } from '../domain/subscription-access';
@@ -7,6 +8,7 @@ export interface PortalActor {
   readonly email: string;
 }
 export interface OrganizationSummary {
+  readonly socialLinks?: SocialLinks;
   readonly id: string;
   readonly name: string;
   readonly slug: string;
@@ -28,7 +30,7 @@ export interface OrganizationSummary {
   readonly hasLogo: boolean;
   readonly hasBackground: boolean;
 }
-export interface PortalActivity {
+export interface PortalActivity extends EventDetails {
   readonly id: string;
   readonly name: string;
   readonly description: string | null;
@@ -60,6 +62,14 @@ export interface PortalSession {
   readonly isCancelled: boolean;
 }
 export interface PortalBooking {
+  readonly vouchers?: readonly {
+    readonly kind: string;
+    readonly code: string;
+    readonly initialValueCents: number;
+    readonly currency: string;
+    readonly status: string;
+    readonly expiresAt: string;
+  }[];
   readonly id: string;
   readonly activityName: string;
   readonly sessionId: string;
@@ -70,6 +80,7 @@ export interface PortalBooking {
   readonly status: BookingStatus;
   readonly startsAt: Date;
   readonly endsAt: Date;
+  readonly voucherDiscountCents?: number;
   readonly amountPaidCents: number;
   readonly unitPriceCents: number;
   readonly currency: string;

@@ -1,4 +1,5 @@
-import { accessLabel } from './access-label';
+import { accessIndicator } from '../../core/domain/status-indicator';
+import { StatusBadge } from './StatusBadge';
 import type { PlatformOrganization } from '../../core/ports/portal-models';
 import { PLATFORM_UI } from '../../config/constants';
 import { PlatformAccessForms } from './PlatformAccessForms';
@@ -21,7 +22,7 @@ function OrganizationCard({ organization }: { readonly organization: PlatformOrg
     <article className="portal-panel administration-entry">
       <div className="administration-entry-heading">
         <h2>{organization.name}</h2>
-        <span className="portal-badge">{accessLabel(organization.access)}</span>
+        <StatusBadge status={accessIndicator(organization.access)} />
       </div>
       <p className="portal-muted">/{organization.slug}</p>
       <dl>

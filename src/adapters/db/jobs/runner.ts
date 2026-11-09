@@ -1,3 +1,4 @@
+import { scheduleReminders } from './reminders';
 import { sql, eq } from 'drizzle-orm';
 import { outboxJobs } from '../schema';
 import { rows, atomic, type Transaction } from '../transaction';
@@ -65,6 +66,8 @@ export class DrizzleJobRunner implements JobRunnerPort {
     private readonly handler: JobHandlerPort,
   ) {}
   async runBatch(): Promise<Result<{ readonly completed: number; readonly deferred: number }>> {
+    const scheduled = await scheduleReminders(this.db);
+    if (!scheduled.ok) return scheduled;
     let completed = 0;
     let deferred = 0;
     for (let count = 0; count < JOB_RULES.BATCH_SIZE; count++) {

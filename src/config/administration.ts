@@ -40,10 +40,13 @@ export const ADMIN_ACTIONS: Readonly<Record<string, string>> = {
   PLATFORM_ADMIN_GRANTED: 'Accès administrateur accordé',
   PLATFORM_PAYMENTS_ENABLED: 'Encaissement sur le compte de la plateforme activé',
   STRIPE_CONNECTED: 'Compte Stripe de l’organisation connecté',
+  MANUAL_VOUCHER_GRANTED: 'Code de report accordé par l’organisateur',
   MANUAL_REFUND_RECORDED: 'Remboursement bancaire enregistré par l’organisateur',
 };
 export const ADMIN_JOBS: Readonly<Record<string, string>> = {
   CONFIRMATION: 'Confirmation de réservation',
+  REMINDER: 'Rappel de séance',
+  EVENT_UPDATE: 'Mise à jour des informations pratiques',
   VOUCHER: 'Envoi d’un code de report',
   CANCELLATION: 'Notification d’annulation',
   REFUND: 'Remboursement par carte',

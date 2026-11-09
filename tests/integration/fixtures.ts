@@ -33,6 +33,7 @@ export async function fixture(mode: PaymentMode = PAYMENT_MODES.NONE, priceCents
     priceCents,
     paymentMode: mode,
     allowExternalBenefitExchange: true,
+    voucherValidityMonths: 3, // Existing activities retain their originally agreed duration.
   });
   await db.insert(timeSlots).values({
     organizationId,

@@ -28,6 +28,7 @@ export interface VoucherPricingCalculation {
   readonly appliedDiscountCents: number;
   readonly remainingToPayCents: number;
   readonly forfeitedRemainderCents: number;
+  readonly remainderValueCents: number;
   readonly requiresOnlinePayment: boolean;
   readonly nextVoucherStatus: VoucherStatus;
 }

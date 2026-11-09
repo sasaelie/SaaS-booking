@@ -1,3 +1,4 @@
+import { bookingStatusFilter } from './booking-status-filter';
 import { and, desc, eq, ilike, or, sql } from 'drizzle-orm';
 import { bookings, sessions } from '../schema';
 import type { Executor } from '../transaction';
@@ -8,6 +9,9 @@ import { SAAS } from '../../../config/constants';
 import { ok } from '../../../lib/result';
 const bookingColumns = {
   id: bookings.id,
+  vouchers: sql<
+    NonNullable<import('../../../core/ports/portal-models').PortalBooking['vouchers']>
+  >`COALESCE((SELECT jsonb_agg(jsonb_build_object('kind',v.kind,'code',v.code,'initialValueCents',v.initial_value_cents,'currency',v.currency,'status',v.status,'expiresAt',v.expires_at)) FROM reschedule_vouchers v WHERE v.origin_booking_id=${bookings.id} AND v.organization_id=${bookings.organizationId}),'[]'::jsonb)`,
   activityName: bookings.activityName,
   sessionId: bookings.sessionId,
   firstName: bookings.firstName,
@@ -18,6 +22,7 @@ const bookingColumns = {
   startsAt: sessions.startsAt,
   endsAt: sessions.endsAt,
   amountPaidCents: bookings.amountPaidCents,
+  voucherDiscountCents: bookings.voucherDiscountCents,
   unitPriceCents: bookings.unitPriceCents,
   currency: bookings.currency,
   paymentMode: bookings.paymentMode,
@@ -60,9 +65,7 @@ function bookingFilter(id: string, filter: BookingFilter) {
   return and(
     eq(bookings.organizationId, id),
     filter.activityId ? eq(bookings.activityId, filter.activityId) : undefined,
-    filter.status
-      ? eq(bookings.status, filter.status as typeof bookings.$inferSelect.status)
-      : undefined,
+    bookingStatusFilter(filter.status),
     filter.search
       ? or(
           ilike(bookings.email, `%${filter.search}%`),

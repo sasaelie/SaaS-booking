@@ -1,5 +1,6 @@
 import { isValidIban } from '../domain/iban';
 import { z } from 'zod';
+import { SocialLinksSchema } from './event-details';
 import {
   ORGANIZATION_KINDS,
   BRAND_THEMES,
@@ -48,6 +49,7 @@ export const SettingsSchema = z
     bankAccountName: z.string().trim().max(INPUT_LIMITS.NAME_MAX).nullable(),
     theme: z.enum(BRAND_THEMES),
     autoDeleteBankProof: z.boolean(),
+    socialLinks: SocialLinksSchema.optional(),
   })
   .refine((value) => Boolean(value.bankIban) === Boolean(value.bankAccountName));
 export const BookingFilterSchema = z.object({

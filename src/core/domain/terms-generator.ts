@@ -1,3 +1,4 @@
+import { SERVICE } from '../../config/service';
 import { sha256 } from '../../lib/sha256';
 import { ok, type Result } from '../../lib/result';
 // src/core/domain/terms-generator.ts
@@ -9,6 +10,7 @@ import {
   type PaymentMode,
 } from '../../config/constants';
 export interface TermsGenerationContext {
+  readonly participationTerms?: string;
   readonly organizationName: string;
   readonly activityName: string;
   readonly priceCents: number;
@@ -76,6 +78,8 @@ export async function generateDynamicTerms(
   clauses.push(
     `6. PAIEMENT : Mode ${ctx.paymentMode}. Une confirmation sans paiement en ligne ne constitue pas une preuve d’encaissement. Seules les sommes effectivement versées sont remboursables en argent ; la valeur d’un report est traitée séparément.`,
   );
+  clauses.push(SERVICE.REMAINDER_TERMS);
+  if (ctx.participationTerms?.trim()) clauses.push(ctx.participationTerms.trim());
   const fullText = clauses.join('\n\n');
   const hash = await sha256(fullText);
   if (!hash.ok) return hash;

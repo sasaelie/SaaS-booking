@@ -1,10 +1,12 @@
+import type { EventDetails, SocialLinks } from './event-details';
 import type { StoryTextTone } from '../../config/story';
 // src/core/ports/booking-ports.ts
 import type { AudiencePolicy, PaymentMode } from '../../config/constants';
 import type { AppError, Result } from '../../lib/result';
 import type { PausePeriodRule, PersistedSession, TimeSlotRule } from '../domain/session-types';
 
-export interface ActivityWithScheduleConfig {
+export interface ActivityWithScheduleConfig extends EventDetails {
+  readonly socialLinks?: SocialLinks;
   readonly commercialAccessAllowed: boolean;
   readonly storyTextTone?: StoryTextTone;
   readonly brandTheme: string;

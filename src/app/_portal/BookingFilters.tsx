@@ -1,3 +1,4 @@
+import { PAYMENT_FILTERS } from '../../config/service';
 import { PORTAL, BOOKING_STATUS_LABELS } from '../../config/constants';
 import { PortalField } from './PortalField';
 import { PortalSelect } from './PortalSelect';
@@ -25,7 +26,7 @@ export function BookingFilters({
       <PortalField label={PORTAL.SEARCH} name="search" defaultValue={search} />
       <PortalSelect label={PORTAL.STATUS} name="status" defaultValue={status}>
         <option value="">{PORTAL.ALL_STATUSES}</option>
-        {Object.entries(BOOKING_STATUS_LABELS).map(([value, label]) => (
+        {Object.entries({ ...BOOKING_STATUS_LABELS, ...PAYMENT_FILTERS }).map(([value, label]) => (
           <option value={value} key={value}>
             {label}
           </option>

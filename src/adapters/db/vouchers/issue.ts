@@ -18,6 +18,7 @@ export async function existingVoucher(tx: Transaction, organizationId: string, b
       and(
         eq(rescheduleVouchers.organizationId, organizationId),
         eq(rescheduleVouchers.originBookingId, bookingId),
+        eq(rescheduleVouchers.kind, 'CANCELLATION'),
       ),
     );
   return voucher;
@@ -34,7 +35,7 @@ export async function issueCancellationVoucher(
     evaluateCancellationEligibility({
       sessionStartsAt: session.startsAt,
       cancelledAt: input.now,
-      noticeHoursRequired: activity.noticeHoursForVoucher,
+      noticeHoursRequired: booking.noticeHoursForVoucher ?? activity.noticeHoursForVoucher,
       amountPaidCents: value,
       adminOverride: input.adminOverride,
     }),
@@ -49,7 +50,10 @@ export async function issueCancellationVoucher(
       code: input.code,
       initialValueCents: eligibility.voucherValueCents,
       currency: booking.currency,
-      expiresAt: computeVoucherExpiryDate(input.now, activity.voucherValidityMonths),
+      expiresAt: computeVoucherExpiryDate(
+        input.now,
+        booking.voucherValidityMonths ?? activity.voucherValidityMonths,
+      ),
     })
     .returning();
   if (!voucher) throw Error('Voucher insertion failed');

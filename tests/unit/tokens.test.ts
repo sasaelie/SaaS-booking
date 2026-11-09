@@ -31,6 +31,9 @@ it('rejects tampering, expiration and invalid schema', async () => {
   expect((await signSelfCancelToken({ ...payload, expUnixSeconds: NaN }, secret)).ok).toBe(false);
 });
 it('clamps month expiry to the last real day', () => {
+  expect(computeVoucherExpiryDate(new Date('2026-01-31T10:00:00Z')).toISOString()).toBe(
+    '2026-03-31T10:00:00.000Z',
+  );
   expect(computeVoucherExpiryDate(new Date('2026-01-31T10:00:00Z'), 3).toISOString()).toBe(
     '2026-04-30T10:00:00.000Z',
   );

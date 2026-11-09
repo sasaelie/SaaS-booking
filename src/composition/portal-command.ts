@@ -6,6 +6,8 @@ export function dispatchPortal(
   command: PortalCommand,
 ): Promise<Result<unknown>> {
   switch (command.action) {
+    case 'manual-voucher':
+      return services.manualVoucher.issue(command.input);
     case 'appearance':
       return services.organizations.appearance(command.input);
     case 'connect-stripe':

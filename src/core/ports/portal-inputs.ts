@@ -1,3 +1,4 @@
+import type { EventDetails, SocialLinks } from './event-details';
 import type { AudiencePolicy, PaymentMode } from '../../config/constants';
 export interface CreateOrganizationInput {
   readonly name: string;
@@ -11,7 +12,7 @@ export interface WeeklySlotInput {
   readonly endTimeLocal: string;
   readonly capacity: number;
 }
-export interface CreateActivityInput {
+export interface CreateActivityInput extends EventDetails {
   readonly organizationId: string;
   readonly name: string;
   readonly description: string;
@@ -32,6 +33,7 @@ export interface CreateActivityInput {
       };
 }
 export interface OrganizationSettingsInput {
+  readonly socialLinks?: SocialLinks;
   readonly organizationId: string;
   readonly name: string;
   readonly bankIban: string | null;

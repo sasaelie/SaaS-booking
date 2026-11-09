@@ -1,3 +1,4 @@
+import { issueRemainder } from '../vouchers/remainder';
 import { and, eq } from 'drizzle-orm';
 import { bookings, rescheduleVouchers } from '../schema';
 import type { Transaction } from '../transaction';
@@ -74,6 +75,7 @@ export async function confirmBooking(
         usedAt: now,
       })
       .where(eq(rescheduleVouchers.id, voucher.id));
+  await issueRemainder(tx, booking.id, booking.organizationId);
   await enqueue(tx, booking.organizationId, JOB_TYPES.CONFIRMATION, `confirmation:${booking.id}`, {
     bookingId: booking.id,
   });

@@ -17,6 +17,7 @@ export async function POST(request: Request): Promise<Response> {
           success: true,
           remainingToPayCents: result.value.remainingToPayCents,
           forfeitedRemainderCents: result.value.forfeitedRemainderCents,
+          remainderValueCents: result.value.remainderValueCents,
         }
       : { success: false },
     {

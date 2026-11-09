@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { EventDetailsSchema } from './event-details';
 import {
   AUDIENCE_POLICIES,
   PAYMENT_MODES,
@@ -30,7 +31,7 @@ export const ManualScheduleSchema = z.object({
   end: time,
   capacity,
 });
-export const CreateActivitySchema = z.object({
+export const CreateActivitySchema = EventDetailsSchema.extend({
   organizationId: z.uuid(),
   name: z.string().trim().min(INPUT_LIMITS.NAME_MIN).max(INPUT_LIMITS.NAME_MAX),
   description: z.string().trim().max(SAAS.MAX_DESCRIPTION).default(''),

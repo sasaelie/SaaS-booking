@@ -1,0 +1,13 @@
+ALTER TABLE organizations ADD COLUMN social_links jsonb NOT NULL DEFAULT '{}'::jsonb CHECK (jsonb_typeof(social_links)='object');
+ALTER TABLE activities ADD COLUMN address text NOT NULL DEFAULT '', ADD COLUMN address_visibility text NOT NULL DEFAULT 'PUBLIC' CHECK(address_visibility IN ('PUBLIC','REMINDER')), ADD COLUMN practical_info text NOT NULL DEFAULT '', ADD COLUMN participation_terms text NOT NULL DEFAULT '';
+ALTER TABLE bookings ADD COLUMN notice_hours_for_voucher integer, ADD COLUMN voucher_validity_months integer;
+UPDATE bookings b SET notice_hours_for_voucher=COALESCE(substring(b.terms_text from 'au moins ([0-9]+) heures')::integer,a.notice_hours_for_voucher), voucher_validity_months=COALESCE(substring(b.terms_text from 'valable ([0-9]+) mois')::integer,a.voucher_validity_months) FROM activities a WHERE a.id=b.activity_id AND a.organization_id=b.organization_id;
+ALTER TABLE bookings ADD CONSTRAINT booking_voucher_notice CHECK(notice_hours_for_voucher>=0), ADD CONSTRAINT booking_voucher_validity CHECK(voucher_validity_months>0);
+ALTER TABLE reschedule_vouchers DROP CONSTRAINT reschedule_vouchers_origin_booking_id_key;
+ALTER TABLE reschedule_vouchers ADD COLUMN kind text NOT NULL DEFAULT 'CANCELLATION' CHECK(kind IN ('CANCELLATION','REMAINDER')), ADD COLUMN source_voucher_id uuid;
+ALTER TABLE reschedule_vouchers ADD CONSTRAINT voucher_source_tenant FOREIGN KEY(source_voucher_id,organization_id) REFERENCES reschedule_vouchers(id,organization_id), ADD CONSTRAINT voucher_remainder_source CHECK((kind='REMAINDER')=(source_voucher_id IS NOT NULL));
+CREATE UNIQUE INDEX voucher_cancellation_origin ON reschedule_vouchers(origin_booking_id) WHERE kind='CANCELLATION';
+CREATE UNIQUE INDEX voucher_single_remainder ON reschedule_vouchers(source_voucher_id) WHERE kind='REMAINDER';
+ALTER TABLE outbox_jobs DROP CONSTRAINT outbox_jobs_type_check;
+ALTER TABLE outbox_jobs ADD CONSTRAINT outbox_jobs_type_check CHECK(type IN ('CONFIRMATION','REMINDER','EVENT_UPDATE','VOUCHER','CANCELLATION','REFUND','PURGE','MEDIA_PURGE'));
+CREATE INDEX booking_confirmed_reminders ON bookings(session_id,confirmed_at) WHERE status='CONFIRMED' AND anonymized_at IS NULL;

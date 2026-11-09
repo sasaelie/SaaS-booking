@@ -1,5 +1,8 @@
+import { localDayAndTimeToUtc } from '../../core/domain/timezone';
+import { SOCIAL_NETWORKS } from '../../config/service';
 import { MONEY } from '../../config/constants';
 export type PortalAction =
+  | 'manual-voucher'
   | 'update-activity'
   | 'publish-activity'
   | 'add-session'
@@ -50,6 +53,7 @@ function activityInput(form: FormData, organizationId: string) {
     organizationId,
     name: text(form, 'name'),
     description: text(form, 'description'),
+    ...eventInput(form),
     priceCents: cents(text(form, 'price')),
     audiencePolicy: text(form, 'audiencePolicy'),
     paymentMode: text(form, 'paymentMode'),
@@ -69,10 +73,15 @@ function settingsInput(form: FormData, organizationId: string) {
     bankAccountName: text(form, 'bankAccountName') || null,
     theme: text(form, 'theme'),
     autoDeleteBankProof: form.has('autoDeleteBankProof'),
+    socialLinks: Object.fromEntries(
+      Object.keys(SOCIAL_NETWORKS).map((key) => [key, text(form, `social-${key}`)]),
+    ),
   };
 }
 function managementInput(action: PortalAction, form: FormData, organizationId: string) {
   switch (action) {
+    case 'manual-voucher':
+      return manualVoucherInput(form, organizationId);
     case 'connect-stripe':
     case 'platform-stripe':
       return organizationId;
@@ -130,4 +139,24 @@ export function formCommand(action: PortalAction, form: FormData, organizationId
       break;
   }
   return { action, input };
+}
+
+function eventInput(form: FormData) {
+  return {
+    address: text(form, 'address'),
+    addressVisibility: text(form, 'addressVisibility') || 'PUBLIC',
+    practicalInfo: text(form, 'practicalInfo'),
+    participationTerms: text(form, 'participationTerms'),
+  };
+}
+
+function manualVoucherInput(form: FormData, organizationId: string) {
+  const [year = 0, month = 0, day = 0] = text(form, 'expiresOn').split('-').map(Number);
+  const expiry = localDayAndTimeToUtc(year, month - 1, day, '23:59', text(form, 'timezone'));
+  return {
+    organizationId,
+    bookingId: text(form, 'bookingId'),
+    confirmed: form.has('confirmed'),
+    expiresAt: expiry.ok ? expiry.value.toISOString() : '',
+  };
 }

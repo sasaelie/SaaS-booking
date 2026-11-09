@@ -1,7 +1,9 @@
+import type { SocialLinks } from './event-details';
 import type { StoryTextTone } from '../../config/story';
 import type { Result } from '../../lib/result';
 import type { AudiencePolicy } from '../../config/constants';
 export interface PublicCatalog {
+  readonly socialLinks?: SocialLinks;
   readonly organizationId: string;
   readonly name: string;
   readonly slug: string;

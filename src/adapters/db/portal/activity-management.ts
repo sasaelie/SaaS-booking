@@ -1,3 +1,4 @@
+import { enqueueEventUpdates } from '../jobs/event-updates';
 import { paymentConfiguration } from './payment-configuration';
 import { and, eq, sql } from 'drizzle-orm';
 import { activities, sessions, bookings } from '../schema';
@@ -35,10 +36,26 @@ export async function updateActivity(
     return failure(ERROR_CODES.NOT_FOUND, 'Activity', 'update');
   const payment = await paymentConfiguration(tx, organizationId, input.paymentMode);
   if (!payment.ok) return payment;
+  const [previous] = await tx
+    .select()
+    .from(activities)
+    .where(and(eq(activities.id, activityId), eq(activities.organizationId, organizationId)));
   await tx
     .update(activities)
     .set(values)
     .where(and(eq(activities.id, activityId), eq(activities.organizationId, organizationId)));
+  if (
+    previous &&
+    (previous.address !== input.address ||
+      previous.addressVisibility !== input.addressVisibility ||
+      previous.practicalInfo !== input.practicalInfo)
+  )
+    await enqueueEventUpdates(
+      tx,
+      organizationId,
+      activityId,
+      JSON.stringify([input.address, input.addressVisibility, input.practicalInfo]),
+    );
   return ok({ activityId });
 }
 export async function publishActivity(

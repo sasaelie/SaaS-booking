@@ -27,7 +27,10 @@ export async function restoreVoucherValue(
       code,
       initialValueCents: booking.voucherDiscountCents,
       currency: booking.currency,
-      expiresAt: computeVoucherExpiryDate(now, activity.voucherValidityMonths),
+      expiresAt: computeVoucherExpiryDate(
+        now,
+        booking.voucherValidityMonths ?? activity.voucherValidityMonths,
+      ),
     })
     .returning();
   if (!voucher) throw Error('Voucher restoration failed');
