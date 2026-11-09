@@ -36,6 +36,7 @@ export class DrizzleGdprRepository implements GdprRepositoryPort {
               BOOKING_STATUSES.CANCELLED_BY_ATTENDEE,
               BOOKING_STATUSES.CANCELLED_BY_ORGANIZER,
               BOOKING_STATUSES.PENDING_PAYMENT,
+              BOOKING_STATUSES.PROOF_SUBMITTED,
             ]),
           ),
         )

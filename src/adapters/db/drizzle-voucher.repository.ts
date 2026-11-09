@@ -3,7 +3,8 @@ import { bookings, rescheduleVouchers, activities } from './schema';
 import { atomic, required, type Transaction } from './transaction';
 import type { DrizzlePgDb } from './client';
 import { lockBookingContext } from './payment/locks';
-import { existingVoucher, issueCancellationVoucher } from './vouchers/issue';
+import { existingVoucher } from './vouchers/issue';
+import { attendeeCancellationEffects, canCancelAttendee } from './vouchers/attendee-effects';
 import { verifyVoucherIsUsable } from '../../core/domain/voucher-engine';
 import type {
   VoucherRepositoryPort,
@@ -30,9 +31,8 @@ async function cancel(
       voucher: voucher ?? null,
     });
   }
-  if (booking.status !== BOOKING_STATUSES.CONFIRMED)
-    return failure(ERROR_CODES.CONFLICT, 'Voucher', 'cancel');
-  const voucher = await issueCancellationVoucher(tx, context, input);
+  if (!canCancelAttendee(context, input)) return failure(ERROR_CODES.CONFLICT, 'Voucher', 'cancel');
+  const voucher = await attendeeCancellationEffects(tx, context, input);
   await tx
     .update(bookings)
     .set({

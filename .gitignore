@@ -22,3 +22,5 @@ playwright-report/
 
 # Liaison Vercel locale (jamais de configuration ou jeton local dans Git)
 .vercel/
+
+qa-results/

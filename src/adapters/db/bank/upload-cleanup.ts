@@ -21,6 +21,8 @@ export async function scheduleUploadCleanup(
   const booking = context?.booking;
   if (
     !booking ||
+    !context ||
+    context.session.startsAt <= input.now ||
     booking.selfServiceVersion !== input.version ||
     booking.paymentMode !== PAYMENT_MODES.BANK_TRANSFER ||
     ![BOOKING_STATUSES.PENDING_PAYMENT, BOOKING_STATUSES.PROOF_SUBMITTED].some(

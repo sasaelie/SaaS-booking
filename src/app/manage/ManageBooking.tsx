@@ -18,7 +18,7 @@ export function ManageBooking() {
       <section className="ice-cube-shell manage-shell">
         <h1>{FORM_LABELS.MANAGE}</h1>
         {booking ? <BookingSummary booking={booking} /> : null}
-        {state.invalid ? <p role="alert">{FORM_LABELS.LINK_INVALID}</p> : null}
+        <ContextFeedback state={state} />
         {booking?.hasProof && booking.status === 'PROOF_SUBMITTED' && !state.message ? (
           <p className="manage-note">{FORM_LABELS.PROOF_RECEIVED}</p>
         ) : null}
@@ -59,5 +59,18 @@ function CancelBooking({ state }: { readonly state: ReturnType<typeof useManagem
         </button>
       </form>
     </details>
+  );
+}
+
+function ContextFeedback({ state }: { readonly state: ReturnType<typeof useManagement> }) {
+  if (state.invalid) return <p role="alert">{FORM_LABELS.LINK_INVALID}</p>;
+  if (!state.unavailable) return null;
+  return (
+    <div>
+      <p role="alert">{FORM_LABELS.CONTEXT_UNAVAILABLE}</p>
+      <button type="button" className="liquid-ice-button" onClick={state.refresh}>
+        {FORM_LABELS.RETRY}
+      </button>
+    </div>
   );
 }

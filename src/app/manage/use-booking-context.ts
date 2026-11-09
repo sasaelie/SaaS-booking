@@ -4,33 +4,50 @@ import {
   SelfBookingContextSchema,
   type SelfBookingContext,
 } from '../../core/validation/self-booking';
-export function useBookingContext(token: string) {
-  const [context, setContext] = useState<SelfBookingContext | null>(null);
-  const [invalid, setInvalid] = useState(false);
+import { HTTP_STATUS } from '../../config/constants';
+type ContextState = { context: SelfBookingContext | null; error: 'invalid' | 'unavailable' | null };
+const empty: ContextState = { context: null, error: null };
+export function useBookingContext(token: string | null) {
+  const [state, setState] = useState<ContextState>(empty);
   const [version, setVersion] = useState(0);
   useEffect(() => {
-    if (!token) return;
+    if (token === null) return;
+    setState(empty);
+    if (!token) {
+      setState({ context: null, error: 'invalid' });
+      return;
+    }
     const controller = new AbortController();
-    void fetch('/api/self-service/context', {
-      method: 'POST',
-      signal: controller.signal,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token }),
-    })
-      .then(async (response) => {
-        const result: unknown = await response.json();
-        const parsed = SelfBookingContextSchema.safeParse(
-          result && typeof result === 'object' && 'data' in result ? result.data : null,
-        );
-        if (!controller.signal.aborted) {
-          setContext(parsed.success ? parsed.data : null);
-          setInvalid(!parsed.success);
-        }
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setInvalid(true);
-      });
+    void readContext(token, controller.signal).then((result) => {
+      if (!controller.signal.aborted) setState(result);
+    });
     return () => controller.abort();
   }, [token, version]);
-  return { context, invalid, refresh: () => setVersion((value) => value + 1) };
+  return {
+    context: state.context,
+    invalid: state.error === 'invalid',
+    unavailable: state.error === 'unavailable',
+    refresh: () => setVersion((value) => value + 1),
+  };
+}
+async function readContext(token: string, signal: AbortSignal): Promise<ContextState> {
+  try {
+    const response = await fetch('/api/self-service/context', {
+      method: 'POST',
+      signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+    if (response.status === HTTP_STATUS.BAD_REQUEST || response.status === HTTP_STATUS.UNAUTHORIZED)
+      return { context: null, error: 'invalid' };
+    const raw: unknown = await response.json();
+    const parsed = SelfBookingContextSchema.safeParse(
+      raw && typeof raw === 'object' && 'data' in raw ? raw.data : null,
+    );
+    return response.ok && parsed.success
+      ? { context: parsed.data, error: null }
+      : { context: null, error: 'unavailable' };
+  } catch {
+    return { context: null, error: 'unavailable' };
+  }
 }
