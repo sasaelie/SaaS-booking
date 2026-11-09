@@ -34,7 +34,7 @@ Les comptes et tables d’identité globaux sont distincts des tables métier, q
 | Abonnement | Tarif, état, échéance, arrêt/reprise du renouvellement, accès aux factures Stripe. |
 | Mon organisation | Logo, image d’ambiance, trois thèmes lisibles, coordonnées de virement et connexion Stripe. |
 | Partager | Lien de catalogue, QR code par organisation ou activité, code d’intégration et bouton flottant. |
-| Administration plateforme | Annuaire des organisations avec e-mail du responsable, compteurs, suspensions et accès offerts. |
+| Administration plateforme | Annuaire des organisations avec e-mail du responsable, compteurs, suspensions et accès offerts ; opérations en attente et historique. Voir [ADMINISTRATION.md](ADMINISTRATION.md). |
 
 Les réservations existantes restent gérables après expiration. L’archivage ferme une activité aux nouvelles inscriptions et préserve son historique. Les modèles hebdomadaires existants restent affichés dans les détails ; les modifications d’information ne déplacent pas les séances déjà réservées.
 

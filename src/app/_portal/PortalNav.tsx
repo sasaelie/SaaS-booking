@@ -1,4 +1,5 @@
 'use client';
+import { ADMIN } from '../../config/administration';
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -43,15 +44,30 @@ export function PortalNav({
         }}
       >
         {selected ? <OrganizationNav selected={selected} path={path} /> : null}
-        <div className="portal-nav-utilities">
-          <Link href="/app" aria-current={path === '/app' ? 'page' : undefined}>
-            {PORTAL.ORGANIZATIONS}
-          </Link>
-          <Link href="/app/nouveau">{PORTAL.CREATE_ORGANIZATION}</Link>
-          {operator ? <Link href="/plateforme">{PORTAL.PLATFORM}</Link> : null}
-        </div>
+        <PortalUtilities operator={operator} path={path} />
       </div>
     </nav>
+  );
+}
+function PortalUtilities({
+  operator,
+  path,
+}: {
+  readonly operator: boolean;
+  readonly path: string;
+}) {
+  return (
+    <div className="portal-nav-utilities">
+      <Link href="/app" aria-current={path === '/app' ? 'page' : undefined}>
+        {PORTAL.ORGANIZATIONS}
+      </Link>
+      <Link href="/app/nouveau">{PORTAL.CREATE_ORGANIZATION}</Link>
+      {operator ? (
+        <Link href="/plateforme" aria-current={path.startsWith('/plateforme') ? 'page' : undefined}>
+          {ADMIN.TITLE}
+        </Link>
+      ) : null}
+    </div>
   );
 }
 function OrganizationNav({
@@ -114,6 +130,7 @@ function MobileBar({
 }
 
 function navigationTitle(selected: OrganizationSummary | undefined, path: string) {
+  if (path.startsWith('/plateforme')) return ADMIN.TITLE;
   const section = selected
     ? sections.find(([suffix]) =>
         suffix ? path.startsWith(`/app/${selected.id}${suffix}`) : path === `/app/${selected.id}`,

@@ -19,7 +19,7 @@ export async function createSpaceInBrowser(page: Page) {
 }
 export async function grantInBrowser(page: Page, slug: string) {
   await page.goto(`/plateforme?search=${slug}`);
-  const row = page.getByRole('row').filter({ hasText: slug });
+  const row = page.getByRole('article').filter({ hasText: slug });
   await row.locator('summary').click();
   const form = row
     .locator('form')
