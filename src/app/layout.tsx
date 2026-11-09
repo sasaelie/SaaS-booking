@@ -25,6 +25,7 @@ import './_portal/portal-media.css';
 import './_portal/portal-responsive.css';
 import './_portal/navigation.css';
 import './_portal/administration.css';
+import './_auth/auth.css';
 import './_ui/story-photo.css';
 export const metadata = {
   title: 'Studio Créatif 360 — Réservations',

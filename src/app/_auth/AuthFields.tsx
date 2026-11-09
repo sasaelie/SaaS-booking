@@ -1,4 +1,6 @@
-import { AUTH_UI, SAAS, INPUT_LIMITS } from '../../config/constants';
+import Link from 'next/link';
+import { AUTH_UI, INPUT_LIMITS } from '../../config/constants';
+import { PasswordField } from './PasswordField';
 import { PortalField } from '../_portal/PortalField';
 import type { AuthMode } from './auth-request';
 export function AuthFields({ mode }: { readonly mode: AuthMode }) {
@@ -25,6 +27,11 @@ export function AuthFields({ mode }: { readonly mode: AuthMode }) {
         />
       ) : null}
       <AuthPasswordFields mode={mode} />
+      {mode === 'SIGN_IN' ? (
+        <Link className="auth-forgot-link" href="/mot-de-passe-oublie">
+          {AUTH_UI.FORGOT_LINK}
+        </Link>
+      ) : null}
     </>
   );
 }
@@ -33,27 +40,15 @@ function AuthPasswordFields({ mode }: { readonly mode: AuthMode }) {
   return (
     <>
       {mode !== 'FORGOT' ? (
-        <PortalField
+        <PasswordField
           label={AUTH_UI.PASSWORD}
           name="password"
-          type="password"
-          autoComplete={mode === 'SIGN_IN' ? 'current-password' : 'new-password'}
-          required
-          minLength={SAAS.AUTH_MIN_PASSWORD}
-          maxLength={SAAS.AUTH_MAX_PASSWORD}
+          current={mode === 'SIGN_IN'}
           hint={mode !== 'SIGN_IN' ? AUTH_UI.PASSWORD_HINT : undefined}
         />
       ) : null}
       {mode === 'SIGN_UP' || mode === 'RESET' ? (
-        <PortalField
-          label={AUTH_UI.CONFIRM_PASSWORD}
-          name="confirm"
-          type="password"
-          autoComplete="new-password"
-          required
-          minLength={SAAS.AUTH_MIN_PASSWORD}
-          maxLength={SAAS.AUTH_MAX_PASSWORD}
-        />
+        <PasswordField label={AUTH_UI.CONFIRM_PASSWORD} name="confirm" />
       ) : null}
     </>
   );

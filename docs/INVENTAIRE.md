@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-541 fichiers versionnés, dont 416 sous `src/`.
+545 fichiers versionnés, dont 418 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 012.
 
@@ -16,6 +16,7 @@ deploy/supabase-bootstrap.sql
 deploy/supabase-harden.sql
 docs/ADMINISTRATION.md
 docs/ARCHITECTURE.md
+docs/CONNEXION.md
 docs/ENVIRONNEMENT-TEST.md
 docs/ETAT-FONCTIONNEL.md
 docs/HEBERGEMENT-RECETTE.md
@@ -190,7 +191,9 @@ src/app/[organization]/[activityId]/page.tsx
 src/app/[organization]/page.tsx
 src/app/_auth/AuthFields.tsx
 src/app/_auth/AuthForm.tsx
+src/app/_auth/PasswordField.tsx
 src/app/_auth/auth-request.ts
+src/app/_auth/auth.css
 src/app/_auth/use-auth-form.ts
 src/app/_portal/AccessNotice.tsx
 src/app/_portal/ActivityCards.tsx
@@ -498,6 +501,7 @@ tests/e2e/empty-states.spec.ts
 tests/e2e/interface.spec.ts
 tests/e2e/organization-link.spec.ts
 tests/e2e/participant-return.spec.ts
+tests/e2e/password.spec.ts
 tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
