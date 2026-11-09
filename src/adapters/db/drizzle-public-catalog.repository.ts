@@ -40,6 +40,8 @@ export class DrizzlePublicCatalogRepository implements PublicCatalogPort {
         slug: organization.slug,
         participantHue: organization.branding?.participantHue ?? null,
         theme: organization.branding?.theme ?? 'SAGE',
+        hasBackground: Boolean(organization.branding?.backgroundStorageKey),
+        storyTextTone: organization.branding?.storyTextTone ?? 'WHITE',
         hasLogo: Boolean(organization.branding?.logoStorageKey),
         activities: list,
       });

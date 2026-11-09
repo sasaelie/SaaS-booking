@@ -137,3 +137,24 @@
     min-height: 360px;
   }
 }
+
+.ice-story.ice-catalog-card {
+  min-height: 0;
+  display: grid;
+  gap: 20px;
+  padding: 26px;
+  border-radius: 22px;
+}
+.ice-catalog-card .portal-muted {
+  color: inherit;
+}
+.ice-catalog-card .portal-button {
+  background: var(--ice-paper);
+  color: var(--story-forest);
+}
+@media (max-width: 760px) {
+  .ice-story.ice-catalog-card {
+    padding: 20px;
+    border-radius: 18px;
+  }
+}

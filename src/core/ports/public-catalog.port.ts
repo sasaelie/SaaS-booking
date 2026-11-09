@@ -1,3 +1,4 @@
+import type { StoryTextTone } from '../../config/story';
 import type { Result } from '../../lib/result';
 import type { AudiencePolicy } from '../../config/constants';
 export interface PublicCatalog {
@@ -7,6 +8,8 @@ export interface PublicCatalog {
   readonly theme: string;
   readonly participantHue?: number | null;
   readonly hasLogo: boolean;
+  readonly hasBackground?: boolean;
+  readonly storyTextTone?: StoryTextTone;
   readonly activities: readonly {
     readonly id: string;
     readonly name: string;

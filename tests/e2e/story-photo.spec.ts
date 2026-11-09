@@ -14,6 +14,7 @@ test('confines the uploaded photo and each text color to the activity presentati
     ['WHITE', 'rgb(255, 255, 255)'],
   ] as const) {
     await saveTone(page, tone);
+    await checkCatalog(page, space.slug, color);
     await page.goto(`/${space.slug}/${space.activityId}`);
     await expect(page.locator('.ice-story')).toHaveCSS('color', color);
     await expect(page.locator('.ice-brand-scene img')).toHaveCount(0);
@@ -67,4 +68,26 @@ async function uploadPhoto(page: Page, organizationId: string) {
     .setInputFiles({ name: 'atelier.png', mimeType: 'image/png', buffer: bytes });
   await media.getByRole('button', { name: 'Importer l’image' }).click();
   await expect(page.locator('.appearance-story-preview img')).toBeVisible();
+}
+
+async function checkCatalog(page: Page, slug: string, color: string) {
+  await page.goto(`/${slug}`);
+  const card = page.locator('article.ice-catalog-card');
+  await expect(card).toHaveCSS('color', color);
+  await expect(card.locator('.portal-muted')).toHaveCSS('color', color);
+  await expect
+    .poll(() =>
+      card
+        .locator('img')
+        .evaluate((img) => img instanceof HTMLImageElement && img.complete && img.naturalWidth > 0),
+    )
+    .toBe(true);
+  for (const width of [390, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await noHorizontalOverflow(page);
+    await expect(card.getByRole('link', { name: 'Choisir une séance' })).toHaveCSS(
+      'color',
+      'rgb(20, 61, 43)',
+    );
+  }
 }

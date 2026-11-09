@@ -88,3 +88,5 @@ La photo importée via Apparence remplit désormais uniquement l’encart de pr�
 Trois choix exclusifs (Blanc, Noir, Vert sapin) apparaissent sous « Texte de l’encart de présentation » dans la vue Participants de l’éditeur. Le même composant rend l’aperçu et l’encart réel. Le voile de contraste s’adapte au texte clair ou foncé. La couleur ne s’applique ni aux champs de réservation ni à la console. Les formes décoratives restent le rendu de repli lorsqu’aucune photo n’est définie.
 
 Migration 012 additive : `story_text_tone`, enum validée par Zod et CHECK PostgreSQL, blanc par défaut. Les mises à jour qui omettent cette propriété conservent le choix existant ; seuls les propriétaires peuvent le modifier. Aucun privilège client ajouté au schéma privé.
+
+La même photo et le même choix de texte s’appliquent aussi aux cartes du catalogue public. Le titre, la description et le tarif partagent le rendu de l’encart ; le bouton de réservation conserve un fond clair et son texte vert sapin. Sans photo, les cartes gardent leur présentation habituelle. Aucun nouveau réglage ni import supplémentaire n’est nécessaire.
