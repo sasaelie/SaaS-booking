@@ -13,7 +13,7 @@ export function AppearanceEditor({ organization }: { readonly organization: Orga
       <p role="status">{state.message || (state.dirty ? UI.DIRTY : '')}</p>
       <Link
         className="appearance-public-link"
-        href={`/${organization.slug}`}
+        href={`/${organization.slug}?from=appearance`}
         target="_blank"
         rel="noopener noreferrer"
       >

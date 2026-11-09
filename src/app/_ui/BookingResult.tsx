@@ -1,32 +1,30 @@
+import type { BookingFlowState } from './use-booking-flow';
+import { PAYMENT_MODES, BOOKING_STATUSES } from '../../config/constants';
+import { PARTICIPANT_NAV } from '../../config/participant-navigation';
+import { formatMoney } from './format-money';
+import { bookingPricing } from './booking-pricing';
 import { useEffect, useRef } from 'react';
 import { BOOKING_UI, FORM_LABELS } from '../../config/constants';
 import type { BookingActionState } from '../actions/booking.actions';
 import { IceIcon } from './IceIcon';
 import { BookingBankInstructions } from './BookingBankInstructions';
-export function BookingResult({ state }: { readonly state: BookingActionState | null }) {
+export function BookingResult({
+  state,
+  flow,
+}: {
+  readonly state: BookingActionState | null;
+  readonly flow: BookingFlowState;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (state) ref.current?.focus();
   }, [state]);
   if (!state) return null;
-  const bank = state.booking?.bankInstructions;
   return (
     <div ref={ref} tabIndex={-1} className="ice-result" data-success={state.success}>
-      {state.success ? (
-        <span className="ice-result-icon">
-          <IceIcon name="check" />
-        </span>
-      ) : null}
-      <h2>
-        {state.success
-          ? state.booking?.checkoutUrl
-            ? BOOKING_UI.CHECKOUT_TITLE
-            : bank
-              ? BOOKING_UI.BANK_TITLE
-              : BOOKING_UI.SUCCESS_TITLE
-          : BOOKING_UI.ERROR_TITLE}
-      </h2>
+      <h2>{resultTitle(state)}</h2>
       <p role={state.success ? 'status' : 'alert'}>{state.message}</p>
+      <OfflinePayment state={state} flow={flow} />
       <PaymentInstructions state={state} />
       {state.booking?.selfServiceToken ? (
         <a
@@ -61,4 +59,35 @@ function PaymentInstructions({ state }: { readonly state: BookingActionState }) 
       {bank ? <BookingBankInstructions bank={bank} /> : null}
     </>
   );
+}
+
+function OfflinePayment({
+  state,
+  flow,
+}: {
+  readonly state: BookingActionState;
+  readonly flow: BookingFlowState;
+}) {
+  const amount = bookingPricing(flow).amount;
+  if (
+    !state.success ||
+    state.booking?.status !== BOOKING_STATUSES.CONFIRMED ||
+    flow.data.paymentMode !== PAYMENT_MODES.NONE ||
+    amount === 0
+  )
+    return null;
+  return (
+    <aside className="ice-bank-instructions">
+      <p>{PARTICIPANT_NAV.NOT_PAID}</p>
+      <strong>
+        {PARTICIPANT_NAV.OFFLINE_DUE} : {formatMoney(amount, flow.data.currency)}
+      </strong>
+    </aside>
+  );
+}
+
+function resultTitle(state: BookingActionState) {
+  if (!state.success) return BOOKING_UI.ERROR_TITLE;
+  if (state.booking?.checkoutUrl) return BOOKING_UI.CHECKOUT_TITLE;
+  return state.booking?.bankInstructions ? BOOKING_UI.BANK_TITLE : BOOKING_UI.SUCCESS_TITLE;
 }
