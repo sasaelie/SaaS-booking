@@ -15,11 +15,7 @@ export function ManualVoucherForm({ booking, organizationId, timezone }: Props) 
   const date = computeVoucherExpiryDate(new Date(), SERVICE.DEFAULT_MONTHS)
     .toISOString()
     .slice(0, SERVICE.ISO_DATE_LENGTH);
-  const eligible =
-    booking.status === 'CANCELLED_BY_ATTENDEE' &&
-    !booking.refundStatus &&
-    booking.amountPaidCents + (booking.voucherDiscountCents ?? 0) > 0 &&
-    !booking.vouchers?.some((v) => v.kind === 'CANCELLATION');
+  const eligible = booking.canIssueVoucher === true;
   if (!eligible && !booking.vouchers?.length) return null;
   return (
     <section className="portal-panel">

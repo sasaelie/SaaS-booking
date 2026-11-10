@@ -4,12 +4,14 @@ import { BookingProgress } from './BookingProgress';
 import { BookingDateStep } from './BookingDateStep';
 import { BookingDetails } from './BookingDetails';
 import { BookingResult } from './BookingResult';
+import { EventInformation } from './EventInformation';
 export function BookingFlow({ data }: { readonly data: BookingPageData }) {
   const flow = useBookingFlow(data);
   return (
     <form className="ice-booking-flow" onSubmit={flow.submit} aria-busy={flow.form.pending}>
       <input type="hidden" name="startsAtIso" value={flow.form.selectedIso} />
       {!flow.form.state?.success ? <BookingProgress flow={flow} /> : null}
+      {!flow.form.state?.success ? <EventInformation data={data} /> : null}
       <BookingDateStep flow={flow} />
       <BookingDetails flow={flow} />
       <BookingResult state={flow.form.state} flow={flow} />

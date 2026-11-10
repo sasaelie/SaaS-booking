@@ -13,3 +13,6 @@ Restent à réaliser avec les comptes et paramètres réels de l’organisation 
 Ces points dépendent des services réels ; aucun faux adaptateur ou secret de production n’est intégré pour les simuler.
 
 Le dernier audit, ses corrections et le plan restant sont décrits dans [RAPPORT-TESTS-SERVICE.md](RAPPORT-TESTS-SERVICE.md). Les tests locaux ne valident pas à eux seuls les connexions et procédures d’exploitation ci-dessus.
+
+La revue suivante des parcours, actions et espacements est décrite dans
+[RAPPORT-AUDIT-PARCOURS.md](RAPPORT-AUDIT-PARCOURS.md), avec son plan et les captures avant/après.

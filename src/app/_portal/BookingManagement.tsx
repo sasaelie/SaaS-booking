@@ -51,7 +51,7 @@ function BankReview({
   readonly hasProof: boolean;
 }) {
   return (
-    <section className="portal-panel">
+    <section className="portal-panel portal-review-actions">
       <h3>{PORTAL.BANK_REVIEW}</h3>
       {hasProof ? (
         <AdminOperation command={{ ...base, action: 'view-proof' }} label={PORTAL.VIEW_PROOF} />

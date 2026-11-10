@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-581 fichiers versionnés, dont 440 sous `src/`.
+594 fichiers versionnés, dont 442 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 014.
 
@@ -23,16 +23,22 @@ docs/HEBERGEMENT-RECETTE.md
 docs/INTERFACE.md
 docs/INVENTAIRE.md
 docs/OPERATIONS.md
+docs/PLAN-AUDIT-PARCOURS.md
 docs/PLAN-PAIEMENTS-MOLLIE.md
 docs/PLAN-SERVICE-ORGANISATEUR.md
 docs/PLAN-TESTS-SERVICE.md
 docs/POINTS-A-COMPLETER.md
+docs/RAPPORT-AUDIT-PARCOURS.md
 docs/RAPPORT-SERVICE-ORGANISATEUR.md
 docs/RAPPORT-TESTS-SERVICE.md
 docs/RECETTE-EN-LIGNE.md
 docs/SAAS-IMPLEMENTATION.md
 docs/SAAS-VERIFICATION.md
 docs/VERIFICATION.md
+docs/audit-parcours/organisateur-apres.png
+docs/audit-parcours/organisateur-avant.png
+docs/audit-parcours/participant-apres.png
+docs/audit-parcours/participant-avant.png
 docs/previews/desktop-coordonnees.png
 docs/previews/desktop-seance.png
 docs/previews/mobile-coordonnees.png
@@ -280,6 +286,7 @@ src/app/_portal/portal-media.css
 src/app/_portal/portal-request.ts
 src/app/_portal/portal-response.ts
 src/app/_portal/portal-responsive.css
+src/app/_portal/reveal-invalid-field.ts
 src/app/_portal/use-admin-operation.ts
 src/app/_portal/use-appearance.ts
 src/app/_portal/use-media-upload.ts
@@ -424,6 +431,7 @@ src/core/domain/booking-request.ts
 src/core/domain/booking-validation.ts
 src/core/domain/date-math.ts
 src/core/domain/iban.ts
+src/core/domain/manual-voucher-eligibility.ts
 src/core/domain/payment-configuration.ts
 src/core/domain/proof-validator.ts
 src/core/domain/public-booking-page.ts
@@ -527,6 +535,9 @@ tests/e2e/embed-fixtures.ts
 tests/e2e/embed.spec.ts
 tests/e2e/empty-states.spec.ts
 tests/e2e/interface.spec.ts
+tests/e2e/journey-audit-fixtures.ts
+tests/e2e/journey-audit.spec.ts
+tests/e2e/journey-recovery.spec.ts
 tests/e2e/organization-link.spec.ts
 tests/e2e/organizer-service.spec.ts
 tests/e2e/participant-return.spec.ts
@@ -548,6 +559,7 @@ tests/integration/connect-webhook.test.ts
 tests/integration/connect.test.ts
 tests/integration/database.ts
 tests/integration/fixtures.ts
+tests/integration/journey-eligibility.test.ts
 tests/integration/lifecycle-fixtures.ts
 tests/integration/payment.test.ts
 tests/integration/platform-monitoring.test.ts
@@ -573,6 +585,7 @@ tests/unit/event-details.test.ts
 tests/unit/foundations.test.ts
 tests/unit/http-body.test.ts
 tests/unit/iban.test.ts
+tests/unit/manual-voucher-eligibility.test.ts
 tests/unit/portal-inputs.test.ts
 tests/unit/proof-and-auth.test.ts
 tests/unit/schedule.test.ts

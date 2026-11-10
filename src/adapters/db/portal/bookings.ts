@@ -7,7 +7,14 @@ import type { BookingFilter } from '../../../core/ports/portal-inputs';
 import { getOrganization } from './organizations';
 import { SAAS } from '../../../config/constants';
 import { ok } from '../../../lib/result';
+import { canIssueManualVoucher } from '../../../core/domain/manual-voucher-eligibility';
 const bookingColumns = {
+  confirmedAt: bookings.confirmedAt,
+  anonymizedAt: bookings.anonymizedAt,
+  appliedVoucherId: bookings.appliedVoucherId,
+  sourceStatus: sql<
+    string | null
+  >`(SELECT v.status FROM reschedule_vouchers v WHERE v.id=${bookings.appliedVoucherId} AND v.organization_id=${bookings.organizationId})`,
   id: bookings.id,
   vouchers: sql<
     NonNullable<import('../../../core/ports/portal-models').PortalBooking['vouchers']>
@@ -40,7 +47,16 @@ export async function portalBookings(
   const organization = await getOrganization(db, actor, id);
   if (!organization.ok) return organization;
   const query = bookingFilter(id, filter);
-  const list = await db
+  const list = await bookingList(db, query, filter);
+  const [count] = await db
+    .select({ total: sql<number>`count(*)::int` })
+    .from(bookings)
+    .where(query);
+  return ok({ bookings: list.map(toPortalBooking), total: count?.total ?? 0, page: filter.page });
+}
+
+function bookingList(db: Executor, query: ReturnType<typeof bookingFilter>, filter: BookingFilter) {
+  return db
     .select(bookingColumns)
     .from(bookings)
     .innerJoin(
@@ -54,11 +70,16 @@ export async function portalBookings(
     .orderBy(desc(bookings.createdAt))
     .limit(SAAS.PAGE_SIZE)
     .offset((filter.page - 1) * SAAS.PAGE_SIZE);
-  const [count] = await db
-    .select({ total: sql<number>`count(*)::int` })
-    .from(bookings)
-    .where(query);
-  return ok({ bookings: list, total: count?.total ?? 0, page: filter.page });
+}
+
+function toPortalBooking(row: Awaited<ReturnType<typeof bookingList>>[number]) {
+  const { confirmedAt, anonymizedAt, appliedVoucherId, sourceStatus, ...booking } = row;
+  const canIssueVoucher =
+    canIssueManualVoucher(
+      { ...booking, confirmedAt, anonymizedAt, appliedVoucherId },
+      sourceStatus,
+    ) && !booking.vouchers.some((voucher) => voucher.kind === 'CANCELLATION');
+  return { ...booking, canIssueVoucher };
 }
 
 function bookingFilter(id: string, filter: BookingFilter) {

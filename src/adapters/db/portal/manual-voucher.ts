@@ -11,6 +11,7 @@ import { newVoucherCode } from '../vouchers/code';
 import { ERROR_CODES } from '../../../config/constants';
 import { failure } from '../../../lib/errors';
 import { ok } from '../../../lib/result';
+import { canIssueManualVoucher } from '../../../core/domain/manual-voucher-eligibility';
 export async function issueManualVoucher(
   tx: Transaction,
   actor: PortalActor,
@@ -19,7 +20,8 @@ export async function issueManualVoucher(
   await requireMembership(tx, actor, input.organizationId);
   const context = await lockBookingContext(tx, input.organizationId, input.bookingId);
   if (!context) return failure(ERROR_CODES.NOT_FOUND, 'ManualVoucher', 'booking');
-  if (!eligible(context)) return failure(ERROR_CODES.CONFLICT, 'ManualVoucher', 'state');
+  if (!canIssueManualVoucher(context.booking, context.voucher?.status ?? null))
+    return failure(ERROR_CODES.CONFLICT, 'ManualVoucher', 'state');
   if (await existingVoucher(tx, input.organizationId, input.bookingId)) return ok(undefined);
   const now = new Date();
   const expiresAt = new Date(input.expiresAt);
@@ -43,15 +45,4 @@ export async function issueManualVoucher(
     action: 'MANUAL_VOUCHER_GRANTED',
   });
   return ok(undefined);
-}
-
-function eligible(context: import('../payment/locks').LockedBooking) {
-  const b = context.booking;
-  return (
-    b.status === 'CANCELLED_BY_ATTENDEE' &&
-    Boolean(b.confirmedAt) &&
-    !b.refundStatus &&
-    !b.anonymizedAt &&
-    (!context.voucher || context.voucher.status === 'USED_FOR_BOOKING')
-  );
 }

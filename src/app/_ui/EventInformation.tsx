@@ -1,7 +1,8 @@
 import { SERVICE } from '../../config/service';
 import type { BookingPageData } from '../../core/use-cases/get-booking-page.use-case';
 export function EventInformation({ data }: { readonly data: BookingPageData }) {
-  if (!data.address && !data.addressDelayed && !data.practicalInfo) return null;
+  if (!data.address && !data.addressDelayed && !data.practicalInfo && !data.description)
+    return null;
   return (
     <section className="event-information" aria-label={SERVICE.DETAILS}>
       {data.addressDelayed ? (
@@ -9,7 +10,18 @@ export function EventInformation({ data }: { readonly data: BookingPageData }) {
       ) : data.address ? (
         <p>{data.address}</p>
       ) : null}
-      {data.practicalInfo ? <p>{data.practicalInfo}</p> : null}
+      {data.description ? (
+        <details>
+          <summary>{SERVICE.ABOUT}</summary>
+          <p>{data.description}</p>
+        </details>
+      ) : null}
+      {data.practicalInfo ? (
+        <details>
+          <summary>{SERVICE.PRACTICAL_SUMMARY}</summary>
+          <p>{data.practicalInfo}</p>
+        </details>
+      ) : null}
     </section>
   );
 }
