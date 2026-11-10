@@ -1,4 +1,6 @@
 import { issueManualVoucher } from './portal/manual-voucher';
+import { portalSessionDetails } from './portal/session-details';
+import type { SessionDetailsInput } from '../../core/validation/session-details';
 import type { ManualVoucherInput } from '../../core/validation/manual-voucher';
 import { platformHistory, platformOperations } from './portal/platform-monitoring';
 import type { AppearanceInput } from '../../core/validation/appearance';
@@ -30,6 +32,9 @@ import { isPlatformOperator } from './portal/authorization';
 import { platformOverview, setPlatformAccess } from './portal/platform';
 export class DrizzlePortalRepository implements PortalRepositoryPort {
   constructor(private readonly db: DrizzlePgDb) {}
+  sessionDetails(actor: PortalActor, input: SessionDetailsInput) {
+    return atomic(this.db, 'SessionDetails', (tx) => portalSessionDetails(tx, actor, input));
+  }
   issueManualVoucher(actor: PortalActor, input: ManualVoucherInput) {
     return atomic(this.db, 'ManualVoucher', (tx) => issueManualVoucher(tx, actor, input));
   }

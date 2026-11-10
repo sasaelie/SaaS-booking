@@ -24,6 +24,7 @@ export function ManualVoucherForm({ booking, organizationId, timezone }: Props) 
       {eligible ? (
         <PortalForm
           action="manual-voucher"
+          tone="green"
           organizationId={organizationId}
           submitLabel={SERVICE.GRANT_CODE}
           compact

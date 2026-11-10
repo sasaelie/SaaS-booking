@@ -5,6 +5,7 @@ import { usePortalForm } from './use-portal-form';
 import type { PortalAction } from './form-command';
 import { revealInvalidField } from './reveal-invalid-field';
 interface Props {
+  readonly tone?: 'green' | 'orange' | 'red';
   readonly action: PortalAction;
   readonly organizationId?: string;
   readonly children?: ReactNode;
@@ -19,6 +20,7 @@ export function PortalForm({
   submitLabel = PORTAL.SAVE,
   disabled = false,
   compact = false,
+  tone,
 }: Props) {
   const state = usePortalForm(action, organizationId);
   return (
@@ -30,7 +32,11 @@ export function PortalForm({
     >
       <fieldset className="portal-form-fields" disabled={state.pending || disabled}>
         {children}
-        <button className="liquid-ice-button portal-button" disabled={state.pending || disabled}>
+        <button
+          className="liquid-ice-button portal-button portal-action-button"
+          data-tone={tone}
+          disabled={state.pending || disabled}
+        >
           {state.pending ? PORTAL.SAVING : submitLabel}
         </button>
       </fieldset>

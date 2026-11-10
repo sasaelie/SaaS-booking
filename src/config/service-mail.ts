@@ -1,4 +1,9 @@
 export const SERVICE_MAIL = {
+  CANCELLATION: 'Annulation de votre séance',
+  CANCELLED: 'Votre séance est annulée.',
+  REASON: 'Motif communiqué par l’organisateur :',
+  REASON_UNSET: 'Aucun motif complémentaire communiqué.',
+  REFUND_PENDING: 'Votre remboursement est en cours de traitement.',
   CONFIRMATION: 'Confirmation de votre réservation',
   REMINDER: 'Rappel de votre séance',
   UPDATE: 'Mise à jour de votre séance',

@@ -43,6 +43,12 @@ test('participant uploads proof and organizer reads and approves it from the att
 });
 
 async function verifySeparatedDecisions(page: Page) {
+  await expect(
+    page.getByRole('button', { name: 'Confirmer le virement', exact: true }),
+  ).toHaveAttribute('data-tone', 'green');
+  await expect(
+    page.getByRole('button', { name: 'Refuser le virement', exact: true }),
+  ).toHaveAttribute('data-tone', 'red');
   const approve = await page
     .getByRole('button', { name: 'Confirmer le virement', exact: true })
     .boundingBox();

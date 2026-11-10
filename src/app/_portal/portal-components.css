@@ -161,7 +161,8 @@ a.portal-organization-card:hover {
   flex-wrap: wrap;
   gap: 12px;
 }
-.portal-card-actions a {
+.portal-card-actions a,
+.portal-secondary-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -172,11 +173,17 @@ a.portal-organization-card:hover {
   background: var(--ice-soft-fill);
   text-decoration: none;
   font-size: 13px;
+  color: inherit;
+  font-family: inherit;
+  text-align: center;
+  text-wrap: balance;
 }
-.portal-card-actions a:hover {
+.portal-card-actions a:hover,
+.portal-secondary-action:hover:not(:disabled) {
   background: var(--ice-paper);
 }
-.portal-card-actions a:focus-visible {
+.portal-card-actions a:focus-visible,
+.portal-secondary-action:focus-visible {
   outline: 2px solid var(--ui-text-primary);
   outline-offset: 3px;
 }

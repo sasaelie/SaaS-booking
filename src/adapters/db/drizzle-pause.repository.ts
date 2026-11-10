@@ -36,7 +36,11 @@ export class DrizzlePauseRepository implements PauseRepositoryPort {
         await tx.update(sessions).set({ isCancelled: true }).where(inArray(sessions.id, ids));
       for (const booking of affected)
         await cancelByOrganizer(tx, booking, input.reason, new Date());
-      return ok({ status: 'CLOSED_AND_REFUNDS_QUEUED', cancelledBookingsCount: affected.length });
+      return ok({
+        status: 'CLOSED_AND_REFUNDS_QUEUED',
+        cancelledBookingsCount: affected.length,
+        notificationBookingIds: affected.map((booking) => booking.id),
+      });
     });
   }
 }

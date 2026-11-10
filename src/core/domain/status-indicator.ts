@@ -15,8 +15,11 @@ export function paymentIndicator(
   >,
   now = new Date(),
 ): StatusIndicator {
-  if (booking.status.startsWith('CANCELLED')) return { tone: 'neutral', label: SERVICE.CANCELLED };
-  if (booking.status === 'EXPIRED' || (booking.lockedUntil && booking.lockedUntil <= now))
+  if (booking.status.startsWith('CANCELLED')) return { tone: 'red', label: SERVICE.CANCELLED };
+  if (
+    booking.status === 'EXPIRED' ||
+    (booking.status !== 'CONFIRMED' && booking.lockedUntil && booking.lockedUntil <= now)
+  )
     return { tone: 'red', label: SERVICE.EXPIRED };
   if (booking.status === 'PROOF_SUBMITTED') return { tone: 'orange', label: SERVICE.PROOF };
   if (booking.status !== 'CONFIRMED') return { tone: 'orange', label: SERVICE.DUE };
@@ -38,8 +41,8 @@ export function accessIndicator(access: OrganizationAccess, now = new Date()): S
         SERVICE.EXPIRY_WARNING_DAYS * TIME.DAY_MS;
     return { tone: soon ? 'orange' : 'green', label: soon ? SERVICE.SOON : BILLING_UI.ACTIVE };
   }
-  if (access.status === 'PAST_DUE') return { tone: 'red', label: BILLING_UI.PAST_DUE };
-  return access.currentPeriodEnd
+  if (access.status === 'PAST_DUE') return { tone: 'orange', label: BILLING_UI.PAST_DUE };
+  return access.currentPeriodEnd || access.status === 'CANCELED'
     ? { tone: 'red', label: BILLING_UI.CANCELED }
-    : { tone: 'neutral', label: BILLING_UI.INACTIVE };
+    : { tone: 'orange', label: BILLING_UI.INACTIVE };
 }

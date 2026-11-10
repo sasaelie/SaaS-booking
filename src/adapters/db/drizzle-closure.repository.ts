@@ -37,7 +37,11 @@ async function close(
   await tx.update(sessions).set({ isCancelled: true }).where(eq(sessions.id, session.id));
   for (const booking of affected)
     await cancelByOrganizer(tx, booking, input.reason, new Date(clock.now));
-  return ok({ status: 'CLOSED_AND_REFUNDS_QUEUED', cancelledBookingsCount: affected.length });
+  return ok({
+    status: 'CLOSED_AND_REFUNDS_QUEUED',
+    cancelledBookingsCount: affected.length,
+    notificationBookingIds: affected.map((booking) => booking.id),
+  });
 }
 export class DrizzleClosureRepository implements SessionClosureRepositoryPort {
   constructor(private readonly db: DrizzlePgDb) {}

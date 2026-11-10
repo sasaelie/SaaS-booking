@@ -2,6 +2,7 @@
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { PORTAL } from '../../config/constants';
+import { SESSION_UI } from '../../config/session-details';
 import { adminRequest } from './portal-request';
 import { useMutation } from './use-mutation';
 function useConfirmation() {
@@ -42,7 +43,11 @@ export function useAdminOperation(command: Readonly<Record<string, unknown>>) {
         return;
       }
       if (data?.presignedUrl) setProof(data.presignedUrl);
-      state.setMessage(PORTAL.MANAGEMENT_DONE);
+      state.setMessage(
+        data?.status === 'CLOSED_AND_REFUNDS_QUEUED'
+          ? SESSION_UI.MAIL_PENDING
+          : PORTAL.MANAGEMENT_DONE,
+      );
       confirmation.invalidate();
       router.refresh();
     });

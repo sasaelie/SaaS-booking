@@ -1,5 +1,6 @@
 'use client';
 import { ADMIN } from '../../config/administration';
+import { SESSION_UI } from '../../config/session-details';
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -130,6 +131,7 @@ function MobileBar({
 }
 
 function navigationTitle(selected: OrganizationSummary | undefined, path: string) {
+  if (selected && path.startsWith(`/app/${selected.id}/seances/`)) return SESSION_UI.TITLE;
   if (path.startsWith('/plateforme')) return ADMIN.TITLE;
   const section = selected
     ? sections.find(([suffix]) =>

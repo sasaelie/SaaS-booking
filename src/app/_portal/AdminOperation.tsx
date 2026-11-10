@@ -1,6 +1,8 @@
 'use client';
 import type { ReactNode } from 'react';
 import { PORTAL, INPUT_LIMITS } from '../../config/constants';
+import { SESSION_UI } from '../../config/session-details';
+import { managementTone } from './management-tone';
 import { PortalField } from './PortalField';
 import { useAdminOperation } from './use-admin-operation';
 interface Props {
@@ -22,17 +24,14 @@ export function AdminOperation({
     <form className="portal-form" onSubmit={state.submit} aria-busy={state.pending}>
       <fieldset className="portal-form-fields" disabled={state.pending}>
         {children ? <div onChange={state.invalidate}>{children}</div> : null}
-        {reasonRequired ? (
-          <PortalField
-            label={PORTAL.REASON}
-            name="reason"
-            required
-            maxLength={INPUT_LIMITS.TOKEN_MAX}
-          />
-        ) : null}
+        {reasonRequired ? <ReasonField /> : null}
         {voucherOverride ? <VoucherOverride /> : null}
         <AffectedConfirmation state={state} />
-        <button className="liquid-ice-button portal-button" disabled={state.pending}>
+        <button
+          className="liquid-ice-button portal-button portal-action-button"
+          data-tone={managementTone(command)}
+          disabled={state.pending}
+        >
           {state.pending ? PORTAL.SAVING : state.confirmation ? PORTAL.CONFIRM : label}
         </button>
       </fieldset>
@@ -80,5 +79,17 @@ function VoucherOverride() {
       <input type="checkbox" name="adminOverride" />
       {PORTAL.ALLOW_VOUCHER}
     </label>
+  );
+}
+
+function ReasonField() {
+  return (
+    <PortalField
+      label={PORTAL.REASON}
+      hint={SESSION_UI.REASON_HINT}
+      name="reason"
+      required
+      maxLength={INPUT_LIMITS.TOKEN_MAX}
+    />
   );
 }

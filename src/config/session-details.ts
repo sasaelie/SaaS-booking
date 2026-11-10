@@ -1,0 +1,20 @@
+export const SESSION_UI = {
+  OPEN: 'Voir les détails de la séance',
+  BACK: 'Retour au tableau de bord',
+  TITLE: 'Détails de la séance',
+  HOURS: 'Horaires',
+  VENUE: 'Lieu',
+  VENUE_UNSET: 'Lieu à préciser dans les réglages de l’activité.',
+  CAPACITY: 'Places disponibles',
+  TOTAL_CAPACITY: 'Capacité prévue',
+  PRICE: 'Tarif par personne',
+  ATTENDEES: 'Inscrits à cette séance',
+  EMPTY: 'Aucun inscrit pour cette séance.',
+  PRACTICAL: 'Informations pratiques',
+  CANCELLED: 'Séance annulée',
+  ENDED: 'Séance terminée',
+  ACTIVE: 'Séance ouverte',
+  MAIL_PENDING:
+    'Annulation enregistrée. Une notification par e-mail est prévue pour chaque inscrit concerné.',
+  REASON_HINT: 'Ce motif sera envoyé par e-mail aux participants concernés.',
+} as const;

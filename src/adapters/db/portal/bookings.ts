@@ -67,7 +67,7 @@ function bookingList(db: Executor, query: ReturnType<typeof bookingFilter>, filt
       ),
     )
     .where(query)
-    .orderBy(desc(bookings.createdAt))
+    .orderBy(desc(bookings.createdAt), desc(bookings.id))
     .limit(SAAS.PAGE_SIZE)
     .offset((filter.page - 1) * SAAS.PAGE_SIZE);
 }
@@ -86,6 +86,9 @@ function bookingFilter(id: string, filter: BookingFilter) {
   return and(
     eq(bookings.organizationId, id),
     filter.activityId ? eq(bookings.activityId, filter.activityId) : undefined,
+    filter.sessionStartsAt
+      ? sql`${bookings.sessionId} IN (SELECT id FROM sessions WHERE organization_id=${id} AND starts_at=${filter.sessionStartsAt}::timestamptz)`
+      : undefined,
     bookingStatusFilter(filter.status),
     filter.search
       ? or(
