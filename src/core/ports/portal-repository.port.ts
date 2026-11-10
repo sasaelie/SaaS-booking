@@ -1,4 +1,6 @@
 import type { ManualVoucherInput } from '../validation/manual-voucher';
+import type { SessionDetailsInput } from '../validation/session-details';
+import type { SessionDetails } from './session-details';
 import type { PlatformOperationsPage, PlatformHistoryPage } from './platform-monitoring';
 import type { AppearanceInput } from '../validation/appearance';
 import type { UpdateActivityInput, AddManualSessionInput } from './portal-inputs';
@@ -18,6 +20,7 @@ import type {
   PlatformFilter,
 } from './portal-inputs';
 export interface PortalRepositoryPort {
+  sessionDetails(actor: PortalActor, input: SessionDetailsInput): Promise<Result<SessionDetails>>;
   issueManualVoucher(actor: PortalActor, input: ManualVoucherInput): Promise<Result<void>>;
   listOrganizations(actor: PortalActor): Promise<Result<readonly OrganizationSummary[]>>;
   createOrganization(

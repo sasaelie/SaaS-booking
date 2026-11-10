@@ -1,4 +1,6 @@
 import type { PortalSession } from '../../core/ports/portal-models';
+import Link from 'next/link';
+import { SESSION_UI } from '../../config/session-details';
 import { PORTAL, BOOKING_UI } from '../../config/constants';
 import { portalDate } from './date-label';
 import { AdminOperation } from './AdminOperation';
@@ -40,26 +42,45 @@ function SessionCard({
       className="portal-panel"
       key={`${session.activityId}-${session.startsAt.toISOString()}`}
     >
-      <div className="portal-row">
-        <div>
-          <h3>{session.activityName}</h3>
-          <p>{portalDate(session.startsAt, timezone)}</p>
+      <Link
+        className="portal-session-link"
+        href={`/app/${organizationId}/seances/${session.activityId}?${new URLSearchParams({ startsAt: session.startsAt.toISOString() })}`}
+      >
+        <div className="portal-session-row">
+          <div>
+            <h3>{session.activityName}</h3>
+            <p>{portalDate(session.startsAt, timezone)}</p>
+          </div>
+          <span className="portal-badge">
+            {session.availabilityLabel} {BOOKING_UI.PLACES}
+          </span>
         </div>
-        <span className="portal-badge">
-          {session.availabilityLabel} {BOOKING_UI.PLACES}
-        </span>
-      </div>
-      <details className="portal-details">
-        <summary>{PORTAL.CLOSE_SESSION}</summary>
-        <div>
-          <AdminOperation
-            label={PORTAL.CLOSE_SESSION}
-            reasonRequired
-            command={sessionCommand(session, organizationId)}
-          />
-        </div>
-      </details>
+        <span className="portal-session-open">{SESSION_UI.OPEN} →</span>
+      </Link>
+      <SessionCancellation session={session} organizationId={organizationId} />
     </article>
+  );
+}
+
+export function SessionCancellation({
+  session,
+  organizationId,
+}: {
+  readonly session: PortalSession;
+  readonly organizationId: string;
+}) {
+  if (session.isCancelled || session.startsAt <= new Date()) return null;
+  return (
+    <details className="portal-details">
+      <summary>{PORTAL.CLOSE_SESSION}</summary>
+      <div>
+        <AdminOperation
+          label={PORTAL.CLOSE_SESSION}
+          reasonRequired
+          command={sessionCommand(session, organizationId)}
+        />
+      </div>
+    </details>
   );
 }
 

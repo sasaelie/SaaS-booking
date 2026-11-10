@@ -1,4 +1,5 @@
 import { scheduleReminders } from './reminders';
+import { cancellationScope, type CancellationScope } from './job-filter';
 import { sql, eq } from 'drizzle-orm';
 import { outboxJobs } from '../schema';
 import { rows, atomic, type Transaction } from '../transaction';
@@ -37,10 +38,11 @@ async function completeEffect(
 async function runOne(
   tx: Transaction,
   handler: JobHandlerPort,
+  scope?: CancellationScope,
 ): Promise<'completed' | 'deferred' | 'empty'> {
   const [candidate] = await rows<{ id: string }>(
     tx,
-    sql`SELECT id FROM outbox_jobs WHERE completed_at IS NULL AND available_at<=now() ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 1`,
+    sql`SELECT id FROM outbox_jobs WHERE completed_at IS NULL AND available_at<=now() ${cancellationScope(scope)} ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 1`,
   );
   if (!candidate) return 'empty';
   const [job] = await tx.select().from(outboxJobs).where(eq(outboxJobs.id, candidate.id));
@@ -68,11 +70,19 @@ export class DrizzleJobRunner implements JobRunnerPort {
   async runBatch(): Promise<Result<{ readonly completed: number; readonly deferred: number }>> {
     const scheduled = await scheduleReminders(this.db);
     if (!scheduled.ok) return scheduled;
+    return this.drain(JOB_RULES.BATCH_SIZE);
+  }
+  runCancellationBatch(organizationId: string, bookingIds: readonly string[]) {
+    return bookingIds.length
+      ? this.drain(bookingIds.length, { organizationId, bookingIds })
+      : Promise.resolve(ok({ completed: 0, deferred: 0 }));
+  }
+  private async drain(limit: number, scope?: CancellationScope) {
     let completed = 0;
     let deferred = 0;
-    for (let count = 0; count < JOB_RULES.BATCH_SIZE; count++) {
+    for (let count = 0; count < limit; count++) {
       const result = await atomic(this.db, 'Jobs', async (tx) =>
-        ok(await runOne(tx, this.handler)),
+        ok(await runOne(tx, this.handler, scope)),
       );
       if (!result.ok) return result;
       if (result.value === 'empty') break;

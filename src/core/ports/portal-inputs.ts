@@ -42,6 +42,7 @@ export interface OrganizationSettingsInput {
   readonly autoDeleteBankProof: boolean;
 }
 export interface BookingFilter {
+  readonly sessionStartsAt?: string;
   readonly activityId?: string;
   readonly page: number;
   readonly search: string;

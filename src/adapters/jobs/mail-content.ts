@@ -1,5 +1,7 @@
-import { readBookingMail, eventMailDetails } from './event-mail';
+import { readBookingMail, eventMailDetails, type BookingMailRow } from './event-mail';
 import { SERVICE_MAIL } from '../../config/service-mail';
+import { cancellationMessage } from '../../core/domain/cancellation-message';
+import { CancellationJobSchema } from './job-validation';
 import { formatMoney } from '../../lib/format-money';
 import { eq } from 'drizzle-orm';
 import type { DrizzlePgDb } from '../db/client';
@@ -47,6 +49,7 @@ async function bookingContent(
   if (!row || row.bookings.anonymizedAt || row.bookings.email === 'anonymous@invalid.local')
     return null;
   const booking = row.bookings;
+  if (type === JOB_TYPES.CANCELLATION && booking.status !== 'CANCELLED_BY_ORGANIZER') return null;
   if (
     type === JOB_TYPES.REMINDER &&
     ReminderJobSchema.parse(payload).startsAt !== row.sessions.startsAt.toISOString()
@@ -63,12 +66,7 @@ async function bookingContent(
       row.sessions.startsAt.getTime() > Date.now() + TIME.DAY_MS)
   )
     return null;
-  if (type === JOB_TYPES.CANCELLATION)
-    return {
-      to: booking.email,
-      subject: 'Annulation de votre séance',
-      text: `La séance ${booking.activityName} a été annulée. Les remboursements éventuels sont en cours de traitement.`,
-    };
+  if (type === JOB_TYPES.CANCELLATION) return cancellationContent(row, payload);
   const content = await confirmationContent(row, appUrl, secret);
   return enrichedMail(content, row, type);
 }
@@ -131,5 +129,22 @@ function enrichedMail(
           ? SERVICE_MAIL.UPDATE
           : content.subject,
     text: `${content.text}\n\n${eventMailDetails(row, type === JOB_TYPES.REMINDER)}`,
+  };
+}
+
+function cancellationContent(row: BookingMailRow, payload: unknown): MailContent {
+  return {
+    to: row.bookings.email,
+    subject: SERVICE_MAIL.CANCELLATION,
+    text: cancellationMessage({
+      organizationName: row.organizations.name,
+      activityName: row.bookings.activityName,
+      reason: CancellationJobSchema.parse(payload).reason ?? '',
+      startsAt: row.sessions.startsAt,
+      endsAt: row.sessions.endsAt,
+      timezone: row.organizations.timezone,
+      refundPending:
+        row.bookings.refundStatus === 'PENDING' || row.bookings.refundStatus === 'MANUAL_PENDING',
+    }),
   };
 }

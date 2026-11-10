@@ -11,6 +11,7 @@ export function RecordBankRefund({
   return (
     <PortalForm
       action="record-bank-refund"
+      tone="green"
       organizationId={organizationId}
       submitLabel={ACTIVITY_UI.REFUND_RECORD}
       compact

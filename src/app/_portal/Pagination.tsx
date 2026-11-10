@@ -7,6 +7,7 @@ export function Pagination({
   search = '',
   status = '',
   activityId = '',
+  startsAt = '',
 }: {
   readonly page: number;
   readonly total: number;
@@ -14,9 +15,10 @@ export function Pagination({
   readonly search?: string;
   readonly status?: string;
   readonly activityId?: string;
+  readonly startsAt?: string;
 }) {
   function href(value: number) {
-    return `${path}?${new URLSearchParams({ page: String(value), search, status, activityId })}`;
+    return `${path}?${new URLSearchParams({ page: String(value), search, status, activityId, ...(startsAt ? { startsAt } : {}) })}`;
   }
   if (total <= SAAS.PAGE_SIZE) return null;
   return (

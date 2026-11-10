@@ -2,7 +2,7 @@
 import { StoryPanel } from '../_ui/StoryPanel';
 import { StoryTextChoices } from './StoryTextChoices';
 import { STORY_UI, type StoryTextTone } from '../../config/story';
-import Link from 'next/link';
+import { AppearanceActions } from './AppearanceActions';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { APPEARANCE as UI } from '../../config/appearance';
 import { MEMBER_ROLES, PORTAL } from '../../config/constants';
@@ -13,15 +13,7 @@ export function AppearanceEditor({ organization }: { readonly organization: Orga
   return (
     <section className="portal-panel appearance-editor">
       <AppearanceControls state={state} organization={organization} />
-      <p role="status">{state.message || (state.dirty ? UI.DIRTY : '')}</p>
-      <Link
-        className="appearance-public-link"
-        href={`/${organization.slug}?from=appearance`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {UI.OPEN}
-      </Link>
+      <AppearanceActions state={state} organization={organization} />
     </section>
   );
 }
@@ -111,17 +103,6 @@ function AppearanceControls({
         tone={state.storyTextTone}
         photoUrl={organization.hasBackground ? `/api/branding/${organization.id}/background` : null}
       />
-      <button
-        type="button"
-        className="liquid-ice-button portal-button"
-        onClick={state.save}
-        disabled={!state.dirty || state.pending}
-      >
-        {state.pending ? PORTAL.SAVING : UI.SAVE}
-      </button>
-      <button type="button" className="appearance-reset" onClick={state.reset}>
-        {UI.RESET}
-      </button>
     </fieldset>
   );
 }

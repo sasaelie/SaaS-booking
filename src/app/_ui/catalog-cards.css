@@ -1,0 +1,62 @@
+:root {
+  --activity-title-font: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+}
+.participant-catalog > .portal-heading {
+  margin-top: 22px;
+  margin-bottom: 28px;
+}
+.catalog-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 24px;
+}
+.catalog-activity,
+.ice-story.ice-catalog-card.catalog-activity {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: 24px;
+  min-height: 360px;
+}
+.catalog-activity > .portal-badge {
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 500;
+}
+.catalog-activity h2,
+.ice-story h1,
+.appearance-story-preview .ice-story h2 {
+  font-family: var(--activity-title-font);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.catalog-activity h2 {
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.16;
+  margin: 0;
+}
+.catalog-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.catalog-booking-action {
+  display: grid;
+  gap: 20px;
+  padding-top: 14px;
+  margin-top: auto;
+}
+.catalog-price {
+  font-size: 24px;
+  font-weight: 550;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.catalog-booking-action > a {
+  width: 100%;
+  min-height: 52px;
+}

@@ -16,3 +16,6 @@ Le dernier audit, ses corrections et le plan restant sont décrits dans [RAPPORT
 
 La revue suivante des parcours, actions et espacements est décrite dans
 [RAPPORT-AUDIT-PARCOURS.md](RAPPORT-AUDIT-PARCOURS.md), avec son plan et les captures avant/après.
+
+Les fiches de séance, les notifications d’annulation et les changements de présentation suivants
+sont décrits dans [RAPPORT-SEANCES-ET-PRESENTATION.md](RAPPORT-SEANCES-ET-PRESENTATION.md).

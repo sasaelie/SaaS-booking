@@ -28,7 +28,7 @@ export default async function Page({
   if (!result.ok) return <CatalogError />;
   const data = result.value;
   return (
-    <main className="participant-page ice-branded-page">
+    <main className="participant-page ice-branded-page participant-catalog">
       {data.participantHue != null ? <ColorScene hue={data.participantHue} /> : null}
       <ParticipantNavigation
         organizationId={data.organizationId}
@@ -56,47 +56,50 @@ function CatalogActivities({
   readonly from?: string;
 }) {
   return (
-    <div className="portal-cards">
+    <div className="portal-cards catalog-grid">
       {data.activities.map((activity) => (
         <CatalogCard key={activity.id} data={data} activity={activity} from={from} />
       ))}
     </div>
   );
 }
-function CatalogCard({
-  data,
-  activity,
-  from,
-}: {
+interface CatalogCardProps {
   readonly data: PublicCatalog;
   readonly activity: PublicCatalog['activities'][number];
   readonly from?: string;
-}) {
+}
+function CatalogCard({ data, activity, from }: CatalogCardProps) {
   const content = (
     <>
       <span className="portal-badge">{AUDIENCE_LABELS[activity.audiencePolicy]}</span>
       <h2>{activity.name}</h2>
-      {activity.description ? <p className="portal-muted">{activity.description}</p> : null}
-      <strong>{formatMoney(activity.priceCents, activity.currency)}</strong>
-      <Link
-        className="liquid-ice-button portal-button"
-        href={`/${data.slug}/${activity.id}${from === PARTICIPANT_NAV.SOURCE ? '?from=appearance' : ''}`}
-      >
-        {SHARE_UI.CATALOG_OPEN}
-      </Link>
+      {activity.description ? (
+        <p className="portal-muted catalog-description">{activity.description}</p>
+      ) : null}
+      <div className="catalog-booking-action">
+        <strong className="catalog-price">
+          {formatMoney(activity.priceCents, activity.currency)}
+        </strong>
+        <Link
+          className="liquid-ice-button portal-button"
+          href={`/${data.slug}/${activity.id}${from === PARTICIPANT_NAV.SOURCE ? '?from=appearance' : ''}`}
+        >
+          {SHARE_UI.CATALOG_OPEN}
+        </Link>
+      </div>
     </>
   );
   return data.hasBackground ? (
     <StoryPanel
       as="article"
-      className="portal-organization-card ice-catalog-card"
+      className="portal-organization-card ice-catalog-card catalog-activity"
       tone={data.storyTextTone ?? 'WHITE'}
       photoUrl={`/api/branding/${data.organizationId}/background`}
     >
       {content}
     </StoryPanel>
   ) : (
-    <article className="portal-panel portal-organization-card">{content}</article>
+    <article className="portal-panel portal-organization-card catalog-activity">{content}</article>
   );
 }
 

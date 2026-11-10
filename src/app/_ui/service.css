@@ -53,12 +53,6 @@
   outline-offset: 3px;
 }
 
-:root {
-  --status-green: #21643b;
-  --status-orange: #945000;
-  --status-red: #b32d36;
-  --status-neutral: #5f6668;
-}
 .status-badge {
   display: inline-flex;
   align-items: center;

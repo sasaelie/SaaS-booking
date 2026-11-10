@@ -15,6 +15,7 @@ export type CloseSessionOutcome =
   | {
       readonly status: 'CLOSED_AND_REFUNDS_QUEUED';
       readonly cancelledBookingsCount: number;
+      readonly notificationBookingIds: readonly string[];
     };
 export interface SessionClosureRepositoryPort {
   closeSessionAtomically(input: CloseSessionInput): Promise<Result<CloseSessionOutcome>>;

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { SessionDetailsSchema } from '../../validation/session-details';
 import { ERROR_CODES } from '../../../config/constants';
 import { failure } from '../../../lib/errors';
 import type { PortalIdentityPort } from '../../ports/portal-identity.port';
@@ -17,6 +18,14 @@ export class ReadWorkspaceUseCase {
       return id.success
         ? this.repository.overview(actor, id.data)
         : failure(ERROR_CODES.VALIDATION_FAILED, 'Workspace', 'overview');
+    });
+  }
+  sessionDetails(raw: unknown) {
+    return withPortalActor(this.identity, 'SessionDetails', async (actor) => {
+      const input = SessionDetailsSchema.safeParse(raw);
+      return input.success
+        ? this.repository.sessionDetails(actor, input.data)
+        : failure(ERROR_CODES.VALIDATION_FAILED, 'Session', 'details');
     });
   }
   bookings(raw: unknown) {

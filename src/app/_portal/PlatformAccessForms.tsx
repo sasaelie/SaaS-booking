@@ -1,11 +1,10 @@
 import type { PlatformOrganization } from '../../core/ports/portal-models';
 import { PLATFORM_UI, PORTAL } from '../../config/constants';
 import { PortalForm } from './PortalForm';
-export function PlatformAccessForms({
-  organization,
-}: {
+interface Props {
   readonly organization: PlatformOrganization;
-}) {
+}
+export function PlatformAccessForms({ organization }: Props) {
   return (
     <details className="portal-details">
       <summary>{PLATFORM_UI.MANAGE_ACCESS}</summary>
@@ -13,6 +12,7 @@ export function PlatformAccessForms({
         <p className="portal-muted">{PLATFORM_UI.GRANT_NOTE}</p>
         <PortalForm
           action="grant-access"
+          tone={organization.access.complimentary ? 'red' : 'green'}
           organizationId={organization.id}
           submitLabel={organization.access.complimentary ? PLATFORM_UI.REVOKE : PLATFORM_UI.GRANT}
           compact
@@ -26,6 +26,7 @@ export function PlatformAccessForms({
         <p className="portal-muted">{PLATFORM_UI.SUSPEND_NOTE}</p>
         <PortalForm
           action="suspend"
+          tone={organization.access.suspendedAt ? 'green' : 'red'}
           organizationId={organization.id}
           submitLabel={organization.access.suspendedAt ? PLATFORM_UI.RESTORE : PLATFORM_UI.SUSPEND}
           compact
