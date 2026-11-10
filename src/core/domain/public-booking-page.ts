@@ -51,6 +51,7 @@ function publicIdentity(activity: ActivityWithScheduleConfig) {
     activityId: activity.id,
     organizationName: activity.organizationName,
     activityName: activity.name,
+    description: activity.description ?? '',
     priceCents: activity.priceCents,
     currency: activity.currency,
     audiencePolicy: activity.audiencePolicy,

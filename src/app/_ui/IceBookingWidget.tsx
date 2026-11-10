@@ -1,6 +1,5 @@
 'use client';
 import { ParticipationTerms } from './ParticipationTerms';
-import { EventInformation } from './EventInformation';
 import { SocialLinks } from './SocialLinks';
 import { BrandBackdrop } from './BrandBackdrop';
 import type { CSSProperties } from 'react';
@@ -19,7 +18,6 @@ export function IceBookingWidget({ data }: { readonly data: BookingPageData }) {
       <BrandBackdrop brand={data.brand} />
       <BookingBrand name={data.organizationName} logoUrl={data.brand.logoUrl} />
       <SocialLinks links={data.socialLinks} />
-      <EventInformation data={data} />
       <div className="ice-cube-shell ice-booking-shell">
         <BookingHeader data={data} />
         <BookingFlow data={data} />

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import sharp from 'sharp';
 import { bankSpace } from './bank-fixtures';
 import { closeBrowserDatabase, login, noHorizontalOverflow } from './portal-fixtures';
@@ -35,8 +35,23 @@ test('participant uploads proof and organizer reads and approves it from the att
   const url = await link.getAttribute('href');
   if (!url) throw Error('Missing private URL');
   expect((await page.request.get(url)).status()).toBe(200);
+  await verifySeparatedDecisions(page);
   await page.screenshot({ path: info.outputPath('organizer-attendee-mobile.png'), fullPage: true });
   await page.getByRole('button', { name: 'Confirmer le virement', exact: true }).click();
   await expect(page.locator('summary').getByText('Confirmée', { exact: true })).toBeVisible();
   expect((await page.request.get(url)).status()).toBe(404);
 });
+
+async function verifySeparatedDecisions(page: Page) {
+  const approve = await page
+    .getByRole('button', { name: 'Confirmer le virement', exact: true })
+    .boundingBox();
+  const reject = await page
+    .getByRole('button', { name: 'Refuser le virement', exact: true })
+    .boundingBox();
+  expect(approve).not.toBeNull();
+  expect(reject).not.toBeNull();
+  expect((reject?.y ?? 0) - ((approve?.y ?? 0) + (approve?.height ?? 0))).toBeGreaterThanOrEqual(
+    12,
+  );
+}

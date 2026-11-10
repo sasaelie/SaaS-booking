@@ -62,6 +62,7 @@ export interface PortalSession {
   readonly isCancelled: boolean;
 }
 export interface PortalBooking {
+  readonly canIssueVoucher?: boolean;
   readonly vouchers?: readonly {
     readonly kind: string;
     readonly code: string;

@@ -19,7 +19,7 @@
     transform 0.18s ease,
     box-shadow 0.18s ease;
 }
-.portal-organization-card:hover {
+a.portal-organization-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 28px -14px var(--ice-line);
 }
@@ -155,4 +155,36 @@
 .portal-section-stack {
   display: grid;
   gap: 24px;
+}
+.portal-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.portal-card-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--ice-line);
+  border-radius: 14px;
+  background: var(--ice-soft-fill);
+  text-decoration: none;
+  font-size: 13px;
+}
+.portal-card-actions a:hover {
+  background: var(--ice-paper);
+}
+.portal-card-actions a:focus-visible {
+  outline: 2px solid var(--ui-text-primary);
+  outline-offset: 3px;
+}
+
+.portal-review-actions {
+  display: grid;
+  gap: 16px;
+}
+.portal-review-actions > h3 {
+  margin: 0;
 }

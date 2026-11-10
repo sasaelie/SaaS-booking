@@ -27,10 +27,12 @@ export function ActivityCards({
             <span>{AUDIENCE_LABELS[activity.audiencePolicy]}</span>
             <span>{PAYMENT_LABELS[activity.paymentMode]}</span>
           </div>
-          <Link href={`/app/${organizationId}/activites/${activity.id}`}>{PORTAL.MANAGE} →</Link>
-          <Link href={`/app/${organizationId}/reservations?activityId=${activity.id}`}>
-            {PORTAL.VIEW_ATTENDEES}
-          </Link>
+          <nav className="portal-card-actions" aria-label={activity.name}>
+            <Link href={`/app/${organizationId}/activites/${activity.id}`}>{PORTAL.MANAGE} →</Link>
+            <Link href={`/app/${organizationId}/reservations?activityId=${activity.id}`}>
+              {PORTAL.VIEW_ATTENDEES}
+            </Link>
+          </nav>
         </article>
       ))}
     </div>

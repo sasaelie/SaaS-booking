@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { PORTAL } from '../../config/constants';
 import { usePortalForm } from './use-portal-form';
 import type { PortalAction } from './form-command';
+import { revealInvalidField } from './reveal-invalid-field';
 interface Props {
   readonly action: PortalAction;
   readonly organizationId?: string;
@@ -24,6 +25,7 @@ export function PortalForm({
     <form
       className={compact ? 'portal-form portal-form-compact' : 'portal-form'}
       onSubmit={state.submit}
+      onInvalidCapture={revealInvalidField}
       aria-busy={state.pending}
     >
       <fieldset className="portal-form-fields" disabled={state.pending || disabled}>

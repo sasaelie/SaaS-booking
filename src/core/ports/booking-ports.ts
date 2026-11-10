@@ -18,6 +18,7 @@ export interface ActivityWithScheduleConfig extends EventDetails {
   readonly organizationName: string;
   readonly timezone: string;
   readonly name: string;
+  readonly description?: string | null;
   readonly isActive: boolean;
   readonly bankIban: string | null;
   readonly bankAccountName: string | null;

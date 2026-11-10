@@ -1,4 +1,8 @@
 export const SERVICE = {
+  ABOUT: 'À propos de cette activité',
+  PRACTICAL_SUMMARY: 'Informations pratiques',
+  SOCIAL_HINT: 'Lien complet commençant par https:// (facultatif).',
+  SOCIAL_PATTERN: 'https://.*',
   REMAINDER_TERMS:
     '7. SOLDE DU CODE DE REPORT : Lorsqu’un code couvre une réservation moins chère que sa valeur, un nouveau code correspondant au solde est créé après confirmation de la réservation. Il conserve la date d’expiration du code utilisé. Le code initial est consommé et ne peut plus être utilisé.',
   MISSING_ADDRESS: 'Adresse à compléter avant le rappel',
