@@ -8,6 +8,7 @@ import { consumeVoucher } from './voucher';
 import { enqueue } from '../jobs/enqueue';
 import { bankReference } from './bank-reference';
 import { BOOKING_STATUSES, JOB_TYPES, PAYMENT_MODES } from '../../../config/constants';
+import { initializeFinancial } from '../financial-ledger';
 export async function insertReservation(tx: Transaction, context: InsertContext) {
   const prepared = await prepareReservation(tx, context);
   const state = initialState(context.activity, prepared.voucher, context.now);
@@ -20,6 +21,7 @@ export async function insertReservation(tx: Transaction, context: InsertContext)
     .values(reservationValues(context, prepared, id, state, reference))
     .returning();
   if (!inserted) throw Error('Insertion missing');
+  await initializeFinancial(tx, inserted);
   await issueRemainder(tx, id, inserted.organizationId);
   if (inserted.status === BOOKING_STATUSES.CONFIRMED)
     await enqueue(tx, inserted.organizationId, JOB_TYPES.CONFIRMATION, `confirmation:${id}`, {

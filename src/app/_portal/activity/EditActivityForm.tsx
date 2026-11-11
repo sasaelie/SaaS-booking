@@ -8,10 +8,12 @@ export function EditActivityForm({
   activity,
   organizationId,
   disabled,
+  pro = true,
 }: {
   readonly activity: PortalActivity;
   readonly organizationId: string;
   readonly disabled: boolean;
+  readonly pro?: boolean;
 }) {
   return (
     <details className="portal-panel portal-details">
@@ -19,7 +21,7 @@ export function EditActivityForm({
       <div>
         <PortalForm action="update-activity" organizationId={organizationId} disabled={disabled}>
           <input type="hidden" name="activityId" value={activity.id} />
-          <ActivityBasics initial={activity} />
+          <ActivityBasics initial={activity} pro={pro} />
           <ActivityRules initial={activity} />
         </PortalForm>
       </div>

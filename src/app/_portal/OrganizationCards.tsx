@@ -20,7 +20,7 @@ export function OrganizationCards({
               ? BILLING_UI.COMPLIMENTARY
               : hasCommercialAccess(organization.access, new Date())
                 ? BILLING_UI.ACTIVE
-                : BILLING_UI.INACTIVE}
+                : 'Liberté'}
           </span>
           <h2>{organization.name}</h2>
           <span>{PORTAL.MANAGE} →</span>

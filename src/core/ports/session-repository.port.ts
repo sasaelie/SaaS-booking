@@ -7,6 +7,8 @@ export interface AtomicSeatReservationInput {
   readonly requestHash: string;
 }
 export interface AtomicSeatReservationOutput {
+  readonly commissionCents?: number;
+  readonly chargeModel?: import('../../config/commercial').ChargeModel;
   readonly bankInstructions: {
     readonly iban: string;
     readonly accountName: string;

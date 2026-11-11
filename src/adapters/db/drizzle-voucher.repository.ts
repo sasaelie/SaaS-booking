@@ -1,4 +1,5 @@
 import { and, eq } from 'drizzle-orm';
+import { requirePro } from './commercial-access';
 import { bookings, rescheduleVouchers, activities } from './schema';
 import { atomic, required, type Transaction } from './transaction';
 import type { DrizzlePgDb } from './client';
@@ -56,6 +57,7 @@ export class DrizzleVoucherRepository implements VoucherRepositoryPort {
     input: Parameters<VoucherRepositoryPort['redeemVoucherForExternalBenefitAtomically']>[0],
   ) {
     return atomic(this.db, 'Voucher', async (tx) => {
+      await requirePro(tx, input.organizationId, input.now);
       const [voucher] = await tx
         .select()
         .from(rescheduleVouchers)
@@ -68,15 +70,7 @@ export class DrizzleVoucherRepository implements VoucherRepositoryPort {
         .for('update');
       if (!voucher) return failure(ERROR_CODES.VOUCHER_INVALID_OR_EXPIRED, 'Voucher', 'external');
       required(verifyVoucherIsUsable(voucher, input.organizationId, input.now));
-      const [activity] = await tx
-        .select()
-        .from(activities)
-        .where(
-          and(
-            eq(activities.id, voucher.originActivityId),
-            eq(activities.organizationId, input.organizationId),
-          ),
-        );
+      const activity = await externalActivity(tx, input.organizationId, voucher.originActivityId);
       if (!activity?.allowExternalBenefitExchange)
         return failure(ERROR_CODES.UNAUTHORIZED, 'Voucher', 'external');
       const [updated] = await tx
@@ -92,4 +86,12 @@ export class DrizzleVoucherRepository implements VoucherRepositoryPort {
       return updated ? ok(updated) : failure(ERROR_CODES.INTERNAL_ERROR, 'Voucher', 'external');
     });
   }
+}
+
+async function externalActivity(tx: Transaction, organizationId: string, activityId: string) {
+  const [activity] = await tx
+    .select()
+    .from(activities)
+    .where(and(eq(activities.id, activityId), eq(activities.organizationId, organizationId)));
+  return activity;
 }

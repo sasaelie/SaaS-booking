@@ -1,3 +1,6 @@
+import { OnlineVoucherSchema } from '../validation/commercial';
+import { ERROR_CODES } from '../../config/constants';
+import { failure } from '../../lib/errors';
 import { guardUseCase } from '../../lib/guard-use-case';
 import { INPUT_LIMITS } from '../../config/constants';
 
@@ -59,11 +62,12 @@ export class VoucherLifecycleUseCase {
       now,
     });
   }
-  async redeemForOnlineCourse(input: {
-    readonly organizationId: string;
-    readonly code: string;
-  }): Promise<Result<RescheduleVoucherSnapshot>> {
+  async redeemForOnlineCourse(raw: unknown): Promise<Result<RescheduleVoucherSnapshot>> {
     return guardUseCase('voucher-lifecycle.use-case.ts', 'redeemForOnlineCourse', async () => {
+      const parsed = OnlineVoucherSchema.safeParse(raw);
+      if (!parsed.success)
+        return failure(ERROR_CODES.VALIDATION_FAILED, 'Voucher', 'external-input');
+      const input = parsed.data;
       const auth = await this.deps.authorization.authorizeOrganizationAdmin(input.organizationId);
       if (!auth.ok) return auth;
       return this.deps.voucherRepo.redeemVoucherForExternalBenefitAtomically({

@@ -13,14 +13,14 @@ export class StripeSubscriptionAdapter implements SubscriptionGatewayPort {
     private readonly pool: Pool,
     private readonly settings: BillingSettings | null,
   ) {}
-  checkout(actor: PortalActor, organizationId: string) {
+  checkout(actor: PortalActor, organizationId: string, interval: 'month' | 'year' = 'month') {
     const settings = this.settings;
     if (!settings)
       return Promise.resolve(
         failure(ERROR_CODES.CONFIGURATION_ERROR, 'Subscription', 'configuration'),
       );
     return billingLock(this.pool, organizationId, (db) =>
-      checkout({ ...settings, db, actor, organizationId }),
+      checkout({ ...settings, db, actor, organizationId, interval }),
     );
   }
   async cancel(actor: PortalActor, organizationId: string): Promise<Result<void>> {

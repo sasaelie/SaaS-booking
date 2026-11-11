@@ -1,5 +1,7 @@
 import { SocialLinks } from '../_ui/SocialLinks';
 import { StoryPanel } from '../_ui/StoryPanel';
+import { PlatformSignature } from '../_ui/PlatformSignature';
+import { PLAN_UI } from '../../config/commercial';
 import { ParticipantNavigation } from '../_ui/ParticipantNavigation';
 import { PARTICIPANT_NAV } from '../../config/participant-navigation';
 import { ColorScene } from '../_ui/ColorScene';
@@ -44,6 +46,7 @@ export default async function Page({
       <PortalHeading title={SHARE_UI.CATALOG_TITLE} />
       {!data.activities.length ? <PortalEmpty title={SHARE_UI.CATALOG_EMPTY} /> : null}
       <CatalogActivities data={data} from={from} />
+      {data.showPlatformSignature ? <PlatformSignature /> : null}
     </main>
   );
 }
@@ -84,7 +87,7 @@ function CatalogCard({ data, activity, from }: CatalogCardProps) {
           className="liquid-ice-button portal-button"
           href={`/${data.slug}/${activity.id}${from === PARTICIPANT_NAV.SOURCE ? '?from=appearance' : ''}`}
         >
-          {SHARE_UI.CATALOG_OPEN}
+          {activity.reservationsOpen === false ? PLAN_UI.VIEW_ONLY : SHARE_UI.CATALOG_OPEN}
         </Link>
       </div>
     </>

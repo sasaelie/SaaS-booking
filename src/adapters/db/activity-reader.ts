@@ -1,6 +1,7 @@
+import { effectivePaymentMode } from '../../core/domain/commercial';
 import { hasPaymentConfiguration } from '../../core/domain/payment-configuration';
-import { organizationAccess, organizationBranding } from './schema/saas';
-import { hasCommercialAccess } from '../../core/domain/subscription-access';
+import { organizationBranding } from './schema/saas';
+import { commercialState } from './commercial-access';
 import { and, eq, sql } from 'drizzle-orm';
 import { activities, organizations } from './schema';
 import type { Executor } from './transaction';
@@ -19,29 +20,31 @@ export async function readActivity(
     .select({
       activity: activities,
       organization: organizations,
-      access: organizationAccess,
       branding: organizationBranding,
     })
     .from(activities)
     .innerJoin(organizations, eq(activities.organizationId, organizations.id))
-    .leftJoin(organizationAccess, eq(organizationAccess.organizationId, organizations.id))
     .leftJoin(organizationBranding, eq(organizationBranding.organizationId, organizations.id))
     .where(and(eq(activities.id, activityId), eq(activities.organizationId, organizationId)));
   if (!row) return failure(ERROR_CODES.NOT_FOUND, 'Activity', 'readActivity');
+  const state = await commercialState(db, organizationId);
+  const paymentMode = effectivePaymentMode(
+    row.activity.paymentMode,
+    row.activity.priceCents,
+    state.pro,
+  );
   const schedule = await readActivitySchedule(db, organizationId, activityId);
   return ok({
     ...row.activity,
-    socialLinks: row.organization.socialLinks,
-    participantHue: row.branding?.participantHue ?? null,
-    storyTextTone: row.branding?.storyTextTone ?? 'WHITE',
-    brandTheme: row.branding?.theme ?? 'SAGE',
-    hasLogo: Boolean(row.branding?.logoStorageKey),
-    hasBackground: Boolean(row.branding?.backgroundStorageKey),
-    commercialAccessAllowed: Boolean(
-      row.access &&
-      hasCommercialAccess(row.access, new Date()) &&
-      hasPaymentConfiguration(row.activity.paymentMode, row.organization),
-    ),
+    paymentMode,
+    commercialPlan: state.plan,
+    showPlatformSignature: !state.pro,
+    ...activityBrand(row),
+    paymentReady:
+      hasPaymentConfiguration(paymentMode, row.organization) &&
+      (state.pro || row.activity.priceCents === 0 || Boolean(row.organization.merchantAccountId)),
+    commercialAccessAllowed:
+      !state.access.suspendedAt && (state.pro || state.selected.includes(activityId)),
     ...schedule,
     ...organizationIdentity(row.organization),
   });
@@ -65,5 +68,19 @@ function organizationIdentity(org: typeof organizations.$inferSelect) {
     merchantAccountId: org.merchantAccountId,
     bankIban: org.bankIban,
     bankAccountName: org.bankAccountName,
+  };
+}
+
+function activityBrand(row: {
+  organization: typeof organizations.$inferSelect;
+  branding: typeof organizationBranding.$inferSelect | null;
+}) {
+  return {
+    socialLinks: row.organization.socialLinks,
+    participantHue: row.branding?.participantHue ?? null,
+    storyTextTone: row.branding?.storyTextTone ?? 'WHITE',
+    brandTheme: row.branding?.theme ?? 'SAGE',
+    hasLogo: Boolean(row.branding?.logoStorageKey),
+    hasBackground: Boolean(row.branding?.backgroundStorageKey),
   };
 }

@@ -1,5 +1,9 @@
-import { ACCESS_STATUSES } from '../../config/constants';
+import { canUsePro } from './commercial';
 export interface OrganizationAccess {
+  readonly stripeCustomerId?: string | null;
+  readonly graceUntil?: Date | null;
+  readonly billingInterval?: string | null;
+  readonly libertyActivityIds?: readonly string[];
   readonly organizationId: string;
   readonly complimentary: boolean;
   readonly suspendedAt: Date | null;
@@ -8,12 +12,5 @@ export interface OrganizationAccess {
   readonly cancelAtPeriodEnd: boolean;
 }
 export function hasCommercialAccess(access: OrganizationAccess, now: Date): boolean {
-  if (access.suspendedAt !== null || !Number.isFinite(now.getTime())) return false;
-  if (access.complimentary) return true;
-  return (
-    access.status === ACCESS_STATUSES.ACTIVE &&
-    access.currentPeriodEnd !== null &&
-    Number.isFinite(access.currentPeriodEnd.getTime()) &&
-    access.currentPeriodEnd.getTime() > now.getTime()
-  );
+  return canUsePro(access, now);
 }

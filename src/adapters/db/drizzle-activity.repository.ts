@@ -1,3 +1,5 @@
+import { atomic } from './transaction';
+import { initializeCommercialSelection } from './commercial-access';
 import { and, eq } from 'drizzle-orm';
 import type {
   ActivityRepositoryPort,
@@ -25,8 +27,8 @@ export class DrizzleActivityRepository implements ActivityRepositoryPort {
     slug: string,
     activityId: string,
   ): Promise<Result<ActivityWithScheduleConfig>> {
-    try {
-      const [row] = await this.db
+    return atomic(this.db, 'PublicActivity', async (tx) => {
+      const [row] = await tx
         .select({ organizationId: organizations.id })
         .from(organizations)
         .innerJoin(activities, eq(activities.organizationId, organizations.id))
@@ -37,11 +39,10 @@ export class DrizzleActivityRepository implements ActivityRepositoryPort {
             eq(activities.isActive, true),
           ),
         );
+      if (row) await initializeCommercialSelection(tx, row.organizationId);
       return row
-        ? readActivity(this.db, row.organizationId, activityId)
+        ? readActivity(tx, row.organizationId, activityId)
         : failure(ERROR_CODES.NOT_FOUND, 'ActivityRepository', 'findPublicActivity');
-    } catch {
-      return unexpected('ActivityRepository', 'findPublicActivity');
-    }
+    });
   }
 }

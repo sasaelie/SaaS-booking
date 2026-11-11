@@ -21,7 +21,10 @@ export function bookingPricing(flow: BookingFlowState) {
     amount,
     discount: flow.data.priceCents - amount,
     label: flow.form.pending ? FORM_LABELS.SUBMITTING : actionLabel(flow.data.paymentMode, amount),
-    note: paymentNote(flow.data.paymentMode, amount, flow.quote.remaining === 0),
+    note:
+      !flow.data.paymentReady && amount > 0
+        ? BOOKING_UI.PAYMENT_NOT_READY
+        : paymentNote(flow.data.paymentMode, amount, flow.quote.remaining === 0),
     totalLabel: totalLabel(flow.data.paymentMode, amount),
   };
 }

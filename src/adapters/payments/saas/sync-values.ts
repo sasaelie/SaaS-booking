@@ -12,6 +12,7 @@ type Values = Pick<
   | 'currentPeriodEnd'
   | 'cancelAtPeriodEnd'
   | 'updatedAt'
+  | 'billingInterval'
 >;
 export async function syncValues(tx: Transaction, id: string, values: Values) {
   const [access] = await tx

@@ -17,9 +17,9 @@ test('shows one empty-space action and an actionable first-activity state', asyn
   if (!id) throw Error('Missing organization');
   const empty = page.locator('.portal-empty');
   const accessLink = empty.getByRole('link');
-  await expect(accessLink).toHaveAttribute('href', `/app/${id}/abonnement`);
+  await expect(accessLink).toHaveAttribute('href', `/app/${id}/activites/nouvelle`);
   await accessLink.click();
-  await expect(page).toHaveURL(new RegExp(`/app/${id}/abonnement$`));
+  await expect(page).toHaveURL(new RegExp(`/app/${id}/activites/nouvelle$`));
   await grantInBrowser(page, slug);
   for (const suffix of ['', '/activites']) {
     await page.goto(`/app/${id}${suffix}`);

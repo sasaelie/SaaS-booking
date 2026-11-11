@@ -5,8 +5,13 @@ import { atomic } from '../../db/transaction';
 import { ERROR_CODES, TIME, ACCESS_STATUSES } from '../../../config/constants';
 import { failure } from '../../../lib/errors';
 import { ok } from '../../../lib/result';
-export function subscriptionValues(subscription: Stripe.Subscription, priceId: string) {
-  const item = subscription.items.data.find((value) => value.price.id === priceId);
+export function subscriptionValues(
+  subscription: Stripe.Subscription,
+  priceId: string | readonly string[],
+) {
+  const item = subscription.items.data.find((value) =>
+    (typeof priceId === 'string' ? [priceId] : priceId).includes(value.price.id),
+  );
   if (!item) return failure(ERROR_CODES.VALIDATION_FAILED, 'Subscription', 'price');
   const customer =
     typeof subscription.customer === 'string' ? subscription.customer : subscription.customer.id;
@@ -17,6 +22,7 @@ export function subscriptionValues(subscription: Stripe.Subscription, priceId: s
         ? ACCESS_STATUSES.PAST_DUE
         : ACCESS_STATUSES.CANCELED;
   return ok({
+    billingInterval: item.price.recurring?.interval ?? null,
     stripeCustomerId: customer,
     stripeSubscriptionId: subscription.id,
     status,
@@ -29,7 +35,7 @@ export async function syncSubscription(
   db: DrizzlePgDb,
   id: string,
   subscription: Stripe.Subscription,
-  priceId: string,
+  priceId: string | readonly string[],
 ) {
   const values = subscriptionValues(subscription, priceId);
   if (!values.ok) return values;

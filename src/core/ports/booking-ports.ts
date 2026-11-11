@@ -6,6 +6,9 @@ import type { AppError, Result } from '../../lib/result';
 import type { PausePeriodRule, PersistedSession, TimeSlotRule } from '../domain/session-types';
 
 export interface ActivityWithScheduleConfig extends EventDetails {
+  readonly paymentReady?: boolean;
+  readonly commercialPlan?: import('../../config/commercial').CommercialPlan;
+  readonly showPlatformSignature?: boolean;
   readonly socialLinks?: SocialLinks;
   readonly commercialAccessAllowed: boolean;
   readonly storyTextTone?: StoryTextTone;

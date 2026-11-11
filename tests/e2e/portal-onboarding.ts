@@ -10,11 +10,7 @@ export async function createSpaceInBrowser(page: Page) {
   await expect(page).toHaveURL(/\/app\/[a-f0-9-]+$/);
   const id = page.url().split('/').pop();
   expect(id).toBeTruthy();
-  const accessTitle =
-    process.env['STAGING_BROWSER_TEST'] === 'true'
-      ? 'Votre accès de test est à activer.'
-      : 'Votre abonnement n’est pas actif.';
-  await expect(page.getByText(accessTitle, { exact: true })).toBeVisible();
+  await expect(page.getByText('Formule Liberté', { exact: true })).toBeVisible();
   return { id, slug };
 }
 export async function grantInBrowser(page: Page, slug: string) {

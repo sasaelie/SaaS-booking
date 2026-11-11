@@ -64,3 +64,18 @@ it('serializes concurrent checkout requests rather than creating duplicate subsc
   expect(mock.state.customerCount).toBe(1);
   expect(mock.state.checkoutCount).toBe(1);
 });
+it('validates the annual price and does not open two different subscription checkouts', async () => {
+  const owner = await portalFixture();
+  const mock = billingStripe();
+  mock.state.organizationId = owner.organizationId;
+  const gateway = new StripeSubscriptionAdapter(pool, {
+    ...mock.settings,
+    annualPriceId: 'price_annual',
+  });
+  required(await gateway.checkout(owner.actor, owner.organizationId, 'year'));
+  const body = new URLSearchParams(mock.state.lastCheckoutBody);
+  expect(body.get('line_items[0][price]')).toBe('price_annual');
+  expect(body.get('metadata[billing_interval]')).toBe('year');
+  expect((await gateway.checkout(owner.actor, owner.organizationId, 'month')).ok).toBe(false);
+  expect(mock.state.checkoutCount).toBe(1);
+});

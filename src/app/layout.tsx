@@ -1,3 +1,4 @@
+import './_portal/commercial.css';
 import './_ui/appearance.css';
 import type { ReactNode } from 'react';
 import { StagingNotice } from './_ui/StagingNotice';

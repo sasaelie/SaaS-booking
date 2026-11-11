@@ -9,13 +9,15 @@ import { paymentsEnabled } from '../config/staging';
 export function subscriptions(app: Runtime) {
   const env = app.env;
   const settings =
-    paymentsEnabled(env) && env.STRIPE_SECRET_KEY && env.STRIPE_SAAS_PRICE_ID
+    paymentsEnabled(env) && env.STRIPE_SECRET_KEY && env.STRIPE_PRO_MONTHLY_PRICE_ID
       ? {
           stripe: new Stripe(env.STRIPE_SECRET_KEY, {
             timeout: SAAS.PROVIDER_TIMEOUT_MS,
             maxNetworkRetries: 1,
           }),
-          priceId: env.STRIPE_SAAS_PRICE_ID,
+          priceId: env.STRIPE_PRO_MONTHLY_PRICE_ID,
+          annualPriceId: env.STRIPE_PRO_ANNUAL_PRICE_ID,
+          legacyPriceId: env.STRIPE_SAAS_PRICE_ID,
           appUrl: env.NEXT_PUBLIC_APP_URL,
         }
       : null;

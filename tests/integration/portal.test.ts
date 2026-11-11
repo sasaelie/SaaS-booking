@@ -6,7 +6,7 @@ import { portalFixture, recurringActivity } from './portal-fixtures';
 import { organizationAccess } from '../../src/adapters/db/schema/saas';
 import { required } from '../../src/adapters/db/transaction';
 import { hasCommercialAccess } from '../../src/core/domain/subscription-access';
-it('starts new spaces inactive and only a platform operator can grant complimentary access', async () => {
+it('starts new spaces in Liberty, blocks off-platform paid activities and only a platform operator can grant complimentary access', async () => {
   const owner = await portalFixture(true);
   const input = recurringActivity(owner.organizationId);
   const denied = await owner.repository.createActivity(owner.actor, input);
@@ -36,7 +36,7 @@ it('starts new spaces inactive and only a platform operator can grant compliment
   expect(platform.total).toBe(2);
   expect(platform.complimentaryCount).toBe(1);
 });
-it('keeps reservations open until the paid boundary despite canceled renewal, then refuses new bookings', async () => {
+it('preserves paid access and engaged replays but requires current terms after downgrade', async () => {
   const context = await fixture();
   const end = new Date(Date.now() + 3600000);
   await db
@@ -51,7 +51,7 @@ it('keeps reservations open until the paid boundary despite canceled renewal, th
     .where(eq(organizationAccess.organizationId, context.organizationId));
   const denied = await reserve(rawInput(context));
   expect(denied.ok).toBe(false);
-  if (!denied.ok) expect(denied.error.code).toBe('SUBSCRIPTION_REQUIRED');
+  if (!denied.ok) expect(denied.error.code).toBe('TERMS_NOT_ACCEPTED');
   expect((await reserve(input)).ok).toBe(true);
 });
 it('keeps account management after expiry and records privileged access changes', async () => {

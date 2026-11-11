@@ -97,19 +97,17 @@ test('keeps paid-period access after cancellation, blocks new bookings after exp
     [space.organizationId],
   );
   await page.goto(`/app/${space.organizationId}`);
-  const accessTitle =
-    process.env['STAGING_BROWSER_TEST'] === 'true'
-      ? 'Votre accès de test est à activer.'
-      : 'Votre abonnement n’est pas actif.';
-  await expect(page.getByText(accessTitle, { exact: true })).toBeVisible();
+  await expect(page.getByText('Formule Liberté', { exact: true })).toBeVisible();
   await page.goto(`/app/${space.organizationId}/activites/nouvelle`);
-  await expect(page.getByRole('button', { name: 'Créer et publier', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Créer et publier', exact: true })).toBeEnabled();
   await page.goto(`/${space.slug}/${space.activityId}`);
   await expect(
-    page.getByText(
-      'Les réservations sont actuellement fermées. Contactez l’organisateur pour toute question.',
-      { exact: true },
-    ),
+    page
+      .getByText(
+        'Le paiement est en cours de configuration. Vous pouvez utiliser un code de report couvrant la totalité de la réservation.',
+        { exact: true },
+      )
+      .first(),
   ).toBeVisible();
   await page.goto(`/app/${space.organizationId}/reservations`);
   await expect(page.locator('main h1')).toContainText('Réservations');

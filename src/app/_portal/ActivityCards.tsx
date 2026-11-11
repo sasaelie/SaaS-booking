@@ -1,3 +1,4 @@
+import { PLAN_UI } from '../../config/commercial';
 import { SERVICE } from '../../config/service';
 import { StatusBadge } from './StatusBadge';
 import Link from 'next/link';
@@ -16,7 +17,11 @@ export function ActivityCards({
       {activities.map((activity) => (
         <article className="portal-panel portal-organization-card" key={activity.id}>
           <span className="portal-badge" data-muted={!activity.isActive}>
-            {activity.isActive ? PORTAL.ACTIVE : PORTAL.ARCHIVED}
+            {activity.isActive
+              ? activity.reservationsOpen === false
+                ? PLAN_UI.VIEW_ONLY
+                : PORTAL.ACTIVE
+              : PORTAL.ARCHIVED}
           </span>
           {activity.addressVisibility === 'REMINDER' && !activity.address ? (
             <StatusBadge status={{ tone: 'orange', label: SERVICE.MISSING_ADDRESS }} />

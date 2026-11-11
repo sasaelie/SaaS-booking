@@ -20,6 +20,8 @@ import { PlatformUseCase } from '../core/use-cases/portal/platform.use-case';
 import { SubscriptionUseCase } from '../core/use-cases/portal/subscription.use-case';
 import { administration } from './administration';
 import { ok } from '../lib/result';
+import { FinancialUseCase } from '../core/use-cases/portal/financial.use-case';
+import { DrizzleFinancialRepository } from '../adapters/db/drizzle-financial.repository';
 export function portal(headers: Headers) {
   const app = runtime();
   if (!app.ok) return app;
@@ -30,6 +32,7 @@ export function portal(headers: Headers) {
   const authorization = new MembershipAuthorizationAdapter(identity, repository);
   const admin = administration(app.value, '', authorization);
   return ok({
+    financial: new FinancialUseCase(identity, new DrizzleFinancialRepository(app.value.db)),
     manualVoucher: new ManualVoucherUseCase(identity, repository),
     pause: new LocalPauseUseCase(identity, repository, admin.pause),
     session: new PortalSessionUseCase(identity),

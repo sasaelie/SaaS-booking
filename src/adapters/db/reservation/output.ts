@@ -55,6 +55,8 @@ function mapReservationOutput(
   } = booking;
   return {
     bankInstructions: transferInstructions(booking),
+    commissionCents: booking.commissionCents,
+    chargeModel: booking.chargeModel,
     bookingId,
     sessionId,
     organizationId,

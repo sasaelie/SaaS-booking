@@ -1,4 +1,4 @@
-import { ownerAccess, billingReturn, type BillingContext } from './context';
+import { ownerAccess, billingReturn, type BillingContext, acceptedPrices } from './context';
 import { syncSubscription } from './sync';
 import { checkout } from './checkout';
 import { ERROR_CODES } from '../../../config/constants';
@@ -28,7 +28,7 @@ export async function changeRenewal(
     context.db,
     context.organizationId,
     updated,
-    context.priceId,
+    acceptedPrices(context),
   );
   return synced.ok ? ok({ url: null }) : synced;
 }

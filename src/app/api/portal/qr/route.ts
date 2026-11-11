@@ -7,12 +7,16 @@ export async function GET(request: Request): Promise<Response> {
   const result = await service.value.share.qrCode({
     organizationId: query.get('organizationId'),
     activityId: query.get('activityId') ?? undefined,
+    format: query.get('format') ?? 'png',
   });
   return result.ok
     ? new Response(new Uint8Array(result.value), {
         headers: {
-          'Content-Type': 'image/png',
-          'Content-Disposition': 'attachment; filename="reservation-qr.png"',
+          'Content-Type': query.get('format') === 'pdf' ? 'application/pdf' : 'image/png',
+          'Content-Disposition':
+            query.get('format') === 'pdf'
+              ? 'attachment; filename="reservation-affiche.pdf"'
+              : 'attachment; filename="reservation-qr.png"',
           'Cache-Control': 'no-store',
         },
       })

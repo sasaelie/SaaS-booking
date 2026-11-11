@@ -1,7 +1,15 @@
 import { eq } from 'drizzle-orm';
 import { organizationAccess } from '../../db/schema/saas';
-import { ownerAccess, billingReturn, type BillingContext, type BillingAccess } from './context';
+import {
+  ownerAccess,
+  billingReturn,
+  type BillingContext,
+  type BillingAccess,
+  selectedPrice,
+  acceptedPrices,
+} from './context';
 import { syncSubscription } from './sync';
+import { COMMERCIAL } from '../../../config/commercial';
 import { ERROR_CODES, SAAS } from '../../../config/constants';
 import { failure } from '../../../lib/errors';
 import { ok } from '../../../lib/result';
@@ -18,38 +26,38 @@ async function customerId(context: BillingContext, access: BillingAccess) {
   return customer.id;
 }
 async function createCheckout(context: BillingContext, customer: string) {
-  const price = await context.stripe.prices.retrieve(context.priceId);
+  const priceId = selectedPrice(context);
+  if (!priceId) return failure(ERROR_CODES.CONFIGURATION_ERROR, 'Subscription', 'annual-price');
+  const price = await context.stripe.prices.retrieve(priceId);
   if (
-    price.unit_amount !== SAAS.MONTHLY_CENTS ||
+    price.unit_amount !==
+      (context.interval === 'year' ? COMMERCIAL.ANNUAL_CENTS : COMMERCIAL.MONTHLY_CENTS) ||
     price.currency !== SAAS.CURRENCY.toLowerCase() ||
-    price.recurring?.interval !== SAAS.INTERVAL ||
+    price.recurring?.interval !== (context.interval ?? 'month') ||
     price.recurring.interval_count !== SAAS.INTERVAL_COUNT
   )
     return failure(ERROR_CODES.CONFIGURATION_ERROR, 'Subscription', 'configured-price');
-  const open = await context.stripe.checkout.sessions.list({
-    customer,
-    status: 'open',
-    limit: SAAS.PAGE_SIZE,
-  });
-  const previous = open.data.find(
-    (session) =>
-      session.mode === 'subscription' &&
-      session.metadata?.['organization_id'] === context.organizationId,
-  );
-  if (previous?.url) return ok({ url: previous.url });
+  const previous = await openCheckout(context, customer);
+  if (previous?.url)
+    return previous.metadata?.['billing_interval'] === (context.interval ?? 'month')
+      ? ok({ url: previous.url })
+      : failure(ERROR_CODES.CONFLICT, 'Subscription', 'checkout-already-open');
   const session = await context.stripe.checkout.sessions.create(
     {
       mode: 'subscription',
       customer,
-      line_items: [{ price: context.priceId, quantity: 1 }],
+      line_items: [{ price: priceId, quantity: 1 }],
       billing_address_collection: 'required',
-      metadata: { organization_id: context.organizationId },
+      metadata: {
+        organization_id: context.organizationId,
+        billing_interval: context.interval ?? 'month',
+      },
       subscription_data: { metadata: { organization_id: context.organizationId } },
       success_url: `${billingReturn(context)}?retour=paiement`,
       cancel_url: billingReturn(context),
     },
     {
-      idempotencyKey: `saas-checkout:${context.organizationId}:${Math.floor(Date.now() / SAAS.CHECKOUT_BUCKET_MS)}`,
+      idempotencyKey: `saas-checkout:${context.organizationId}:${context.interval ?? 'month'}:${Math.floor(Date.now() / SAAS.CHECKOUT_BUCKET_MS)}`,
     },
   );
   return session.url
@@ -70,14 +78,14 @@ export async function checkout(context: BillingContext) {
   const existing = list.data.find(
     (subscription) =>
       !['canceled', 'incomplete_expired'].includes(subscription.status) &&
-      subscription.items.data.some((item) => item.price.id === context.priceId),
+      subscription.items.data.some((item) => acceptedPrices(context).includes(item.price.id)),
   );
   if (existing) {
     const synced = await syncSubscription(
       context.db,
       context.organizationId,
       existing,
-      context.priceId,
+      acceptedPrices(context),
     );
     if (!synced.ok) return synced;
     const portal = await context.stripe.billingPortal.sessions.create({
@@ -87,4 +95,17 @@ export async function checkout(context: BillingContext) {
     return ok({ url: portal.url });
   }
   return createCheckout(context, customer);
+}
+
+async function openCheckout(context: BillingContext, customer: string) {
+  const open = await context.stripe.checkout.sessions.list({
+    customer,
+    status: 'open',
+    limit: SAAS.PAGE_SIZE,
+  });
+  return open.data.find(
+    (session) =>
+      session.mode === 'subscription' &&
+      session.metadata?.['organization_id'] === context.organizationId,
+  );
 }

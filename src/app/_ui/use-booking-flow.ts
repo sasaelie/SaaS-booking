@@ -19,7 +19,12 @@ export function useBookingFlow(data: BookingPageData) {
     setDetails(value);
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
-    if (!details || quote.pending || (quote.code.trim() && quote.remaining === null)) {
+    if (
+      !details ||
+      quote.pending ||
+      (!data.paymentReady && (quote.remaining ?? data.priceCents) > 0) ||
+      (quote.code.trim() && quote.remaining === null)
+    ) {
       event.preventDefault();
       return;
     }

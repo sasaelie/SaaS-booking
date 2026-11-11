@@ -11,12 +11,15 @@ import { ok } from '../../../lib/result';
 export interface BillingSettings {
   readonly stripe: Stripe;
   readonly priceId: string;
+  readonly annualPriceId?: string;
+  readonly legacyPriceId?: string;
   readonly appUrl: string;
 }
 export interface BillingContext extends BillingSettings {
   readonly db: DrizzlePgDb;
   readonly actor: PortalActor;
   readonly organizationId: string;
+  readonly interval?: 'month' | 'year';
 }
 export function ownerAccess(context: BillingContext) {
   return atomic(context.db, 'Subscription', async (tx) => {
@@ -31,4 +34,13 @@ export function ownerAccess(context: BillingContext) {
 export type BillingAccess = typeof organizationAccess.$inferSelect;
 export function billingReturn(context: Pick<BillingContext, 'appUrl' | 'organizationId'>) {
   return `${context.appUrl}/app/${context.organizationId}/abonnement`;
+}
+
+export function acceptedPrices(settings: BillingSettings) {
+  return [settings.priceId, settings.annualPriceId, settings.legacyPriceId].filter(
+    (id): id is string => Boolean(id),
+  );
+}
+export function selectedPrice(settings: BillingContext) {
+  return settings.interval === 'year' ? settings.annualPriceId : settings.priceId;
 }

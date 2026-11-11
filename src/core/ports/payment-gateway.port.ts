@@ -1,6 +1,8 @@
 import type { PaymentMode } from '../../config/constants';
 import type { Result } from '../../lib/result';
 export interface InitiatePaymentInput {
+  readonly commissionCents?: number;
+  readonly chargeModel?: import('../../config/commercial').ChargeModel;
   readonly organizationId: string;
   readonly bookingId: string;
   readonly activityName: string;
@@ -18,6 +20,7 @@ export interface InitiatePaymentOutput {
   readonly expiresAt: Date;
 }
 export interface ParsedWebhookPaymentEvent {
+  readonly chargeAccountId?: string | null;
   readonly eventId: string;
   readonly provider: PaymentMode;
   readonly bookingId: string;
@@ -29,6 +32,7 @@ export interface ParsedWebhookPaymentEvent {
   readonly merchantAccountId: string | null;
 }
 export interface RefundPaymentInput {
+  readonly chargeModel?: import('../../config/commercial').ChargeModel;
   readonly paymentReference: string;
   readonly amountCents: number;
   readonly reason: string;
@@ -36,6 +40,10 @@ export interface RefundPaymentInput {
   readonly merchantAccountId: string | null;
 }
 export interface PaymentGatewayPort {
+  reconcilePayout?(
+    input: import('./financial.port').FinancialPayoutInput,
+  ): Promise<Result<import('./financial.port').ReconciledPayout>>;
+  reconcilePayment?: import('./financial.port').PaymentReconciliationPort['reconcilePayment'];
   readonly mode: PaymentMode;
   initiatePayment(input: InitiatePaymentInput): Promise<Result<InitiatePaymentOutput>>;
   verifyWebhookAndParse(

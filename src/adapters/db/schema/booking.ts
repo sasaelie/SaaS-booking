@@ -12,10 +12,20 @@ import {
 import { BOOKING_STATUSES, type BookingStatus, type PaymentMode } from '../../../config/constants';
 import { sessions } from './schedule';
 import { rescheduleVouchers } from './voucher';
+import type { CommercialPlan, ChargeModel } from '../../../config/commercial';
 export const bookings = pgTable(
   'bookings',
   {
     id: uuid('id').defaultRandom().primaryKey(),
+    commercialPlan: text('commercial_plan').$type<CommercialPlan>().notNull().default('LEGACY'),
+    pricingVersion: text('pricing_version').notNull().default('legacy-1999'),
+    commissionCents: integer('commission_cents').notNull().default(0),
+    chargeModel: text('charge_model').$type<ChargeModel>().notNull().default('DIRECT'),
+    legalHold: boolean('legal_hold').notNull().default(false),
+    disputeOpen: boolean('dispute_open').notNull().default(false),
+    proofIsAccounting: boolean('proof_is_accounting').notNull().default(false),
+    operationsClosedAt: timestamp('operations_closed_at', { withTimezone: true }),
+    refundUpdatedAt: timestamp('refund_updated_at', { withTimezone: true }),
     activityName: text('activity_name').notNull(),
     merchantAccountId: text('merchant_account_id'),
     bankIban: text('bank_iban'),

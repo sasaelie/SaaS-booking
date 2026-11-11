@@ -5,6 +5,7 @@ import { BookingDateStep } from './BookingDateStep';
 import { BookingDetails } from './BookingDetails';
 import { BookingResult } from './BookingResult';
 import { EventInformation } from './EventInformation';
+import { BOOKING_UI } from '../../config/constants';
 export function BookingFlow({ data }: { readonly data: BookingPageData }) {
   const flow = useBookingFlow(data);
   return (
@@ -12,6 +13,11 @@ export function BookingFlow({ data }: { readonly data: BookingPageData }) {
       <input type="hidden" name="startsAtIso" value={flow.form.selectedIso} />
       {!flow.form.state?.success ? <BookingProgress flow={flow} /> : null}
       {!flow.form.state?.success ? <EventInformation data={data} /> : null}
+      {!data.paymentReady && !flow.form.state?.success ? (
+        <p className="portal-notice" role="note">
+          {BOOKING_UI.PAYMENT_NOT_READY}
+        </p>
+      ) : null}
       <BookingDateStep flow={flow} />
       <BookingDetails flow={flow} />
       <BookingResult state={flow.form.state} flow={flow} />

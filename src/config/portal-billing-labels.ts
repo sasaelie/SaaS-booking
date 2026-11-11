@@ -1,9 +1,9 @@
 export const BILLING_UI = {
-  TITLE: 'Un abonnement simple, sans commission.',
+  TITLE: 'Liberté ou Studio Pro, selon votre rythme.',
   PRICE_HEADING: 'L’abonnement organisateur',
   OFFERED_NOTE:
     'Cet espace bénéficie d’un accès offert. Aucun renouvellement ni prélèvement d’abonnement n’est prévu.',
-  INTRO: 'Un tarif fixe pour gérer vos activités et vos inscriptions.',
+  INTRO: 'Démarrez sans abonnement ou choisissez Pro pour votre activité régulière.',
   PER_MONTH: 'par mois',
   NO_COMMISSION: 'Aucune commission de plateforme sur vos réservations.',
   PROVIDER_FEES: 'Les frais du prestataire de paiement restent distincts.',
@@ -24,7 +24,7 @@ export const BILLING_UI = {
   CANCEL_NOTE:
     'Votre abonnement ne sera plus renouvelé. Vous conservez toutes vos fonctionnalités jusqu’à la fin de la période payée.',
   EXPIRED_NOTE:
-    'Après l’échéance, votre compte reste accessible pour gérer les inscriptions existantes. Les nouvelles activités, séances et réservations sont bloquées.',
+    'Après l’échéance, votre compte reste accessible pour gérer les inscriptions existantes. Votre espace passe en Liberté : deux activités réservables et paiement en ligne.',
   CONFIRM_CANCEL: 'Je souhaite arrêter le renouvellement à la prochaine échéance.',
   STRIPE_PENDING:
     'Le paiement sera confirmé par Stripe. Actualisez cette page si vous revenez de votre règlement.',

@@ -1,0 +1,29 @@
+.commercial-plan-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  align-items: stretch;
+}
+.commercial-counter {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.commercial-counter > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+}
+.commercial-counter dt {
+  color: var(--ui-text-secondary);
+}
+.commercial-counter dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.platform-signature {
+  display: block;
+  text-align: center;
+  margin: 1.5rem auto;
+  font-size: 0.875rem;
+}

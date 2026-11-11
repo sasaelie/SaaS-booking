@@ -47,14 +47,14 @@ it('defers failed effects durably and resumes them after retry delay', async () 
     },
   });
   const first = required(await runner.runBatch());
-  expect(first.deferred).toBe(1);
+  expect(first.deferred).toBe(2);
   const [job] = await db.select().from(outboxJobs);
   expect(job?.completedAt).toBeNull();
   expect(job?.attempts).toBe(1);
   succeeds = true;
   await db.update(outboxJobs).set({ availableAt: new Date(Date.now() - 1000) });
   const second = required(await runner.runBatch());
-  expect(second.completed).toBe(1);
+  expect(second.completed).toBe(2);
   expect(required(await runner.runBatch()).completed).toBe(0);
 });
 

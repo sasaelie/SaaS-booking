@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
-import { hasCommercialAccess } from '../../core/domain/subscription-access';
 import { PORTAL } from '../../config/constants';
 import { STAGING, paymentsEnabled } from '../../config/staging';
 import { PortalEmpty } from './PortalEmpty';
@@ -10,7 +9,7 @@ export function ActivityCreationAction({
 }: {
   readonly organization: OrganizationSummary;
 }) {
-  const active = hasCommercialAccess(organization.access, new Date());
+  const active = !organization.access.suspendedAt;
   const billingLabel = paymentsEnabled({ PAYMENTS_ENABLED: process.env['PAYMENTS_ENABLED'] })
     ? PORTAL.BILLING_LINK
     : STAGING.ACCESS_LINK;
@@ -29,7 +28,7 @@ export function FirstActivityState({
 }: {
   readonly organization: OrganizationSummary;
 }) {
-  const active = hasCommercialAccess(organization.access, new Date());
+  const active = !organization.access.suspendedAt;
   const inactiveHint = paymentsEnabled({ PAYMENTS_ENABLED: process.env['PAYMENTS_ENABLED'] })
     ? PORTAL.FIRST_ACTIVITY_ACCESS_HINT
     : STAGING.ACCESS_HINT;

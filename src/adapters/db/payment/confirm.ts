@@ -8,6 +8,7 @@ import { calculateSeatAvailability } from '../../../core/domain/seat-calculator'
 import { required } from '../transaction';
 import { BOOKING_STATUSES, VOUCHER_STATUSES, JOB_TYPES } from '../../../config/constants';
 import type { ParsedWebhookPaymentEvent } from '../../../core/ports/payment-gateway.port';
+import { recordFinancialPayment } from '../financial-ledger';
 export async function canConfirm(
   tx: Transaction,
   context: LockedBooking,
@@ -75,6 +76,7 @@ export async function confirmBooking(
         usedAt: now,
       })
       .where(eq(rescheduleVouchers.id, voucher.id));
+  await recordFinancialPayment(tx, booking.id, event.paymentReference, now);
   await issueRemainder(tx, booking.id, booking.organizationId);
   await enqueue(tx, booking.organizationId, JOB_TYPES.CONFIRMATION, `confirmation:${booking.id}`, {
     bookingId: booking.id,
