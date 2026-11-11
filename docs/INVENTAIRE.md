@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-713 fichiers versionnés ou préparés dans cette branche, dont 500 sous `src/`.
+727 fichiers versionnés ou préparés dans cette branche, dont 507 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 018.
 
@@ -19,6 +19,7 @@ docs/ARCHITECTURE.md
 docs/AUDIT-BOUTONS-LIENS.md
 docs/AUDIT-LIBERTE-PRO.md
 docs/CAHIER-CHARGES-LIBERTE-PRO.md
+docs/CHOIX-FORMULES.md
 docs/CONNEXION.md
 docs/ENVIRONNEMENT-TEST.md
 docs/ETAT-FONCTIONNEL.md
@@ -52,6 +53,10 @@ docs/audit-parcours/participant-avant.png
 docs/boutons-relief/apres-mes-espaces.png
 docs/boutons-relief/apres-participant.png
 docs/boutons-relief/avant-mes-espaces.png
+docs/formules/apres-mobile.png
+docs/formules/apres-ordinateur.png
+docs/formules/avant.png
+docs/formules/choix-pro-mobile.png
 docs/navigation-alignements/apres-abonnement-mobile.png
 docs/navigation-alignements/apres-activite-mobile.png
 docs/navigation-alignements/apres-activite-ordinateur.png
@@ -260,6 +265,7 @@ src/app/(portal)/plateforme/operations/page.tsx
 src/app/(portal)/plateforme/page.tsx
 src/app/[organization]/[activityId]/page.tsx
 src/app/[organization]/page.tsx
+src/app/_auth/AuthEntry.tsx
 src/app/_auth/AuthFields.tsx
 src/app/_auth/AuthForm.tsx
 src/app/_auth/PasswordField.tsx
@@ -290,6 +296,8 @@ src/app/_portal/OrganizationIdentityFields.tsx
 src/app/_portal/OrganizationSettings.tsx
 src/app/_portal/Pagination.tsx
 src/app/_portal/PlanCards.tsx
+src/app/_portal/PlanCheckout.tsx
+src/app/_portal/PlanComparison.tsx
 src/app/_portal/PlatformAccessForms.tsx
 src/app/_portal/PlatformCostForm.tsx
 src/app/_portal/PlatformFinance.tsx
@@ -319,6 +327,7 @@ src/app/_portal/SocialSettings.tsx
 src/app/_portal/StatusBadge.tsx
 src/app/_portal/StoryTextChoices.tsx
 src/app/_portal/SubscriptionActions.tsx
+src/app/_portal/SubscriptionHistory.tsx
 src/app/_portal/SubscriptionPanel.tsx
 src/app/_portal/access-label.ts
 src/app/_portal/activity/ActivityBasics.tsx
@@ -496,6 +505,7 @@ src/config/file-signatures.ts
 src/config/http-limits.ts
 src/config/navigation.ts
 src/config/participant-navigation.ts
+src/config/plan-selection.ts
 src/config/portal-activity-labels.ts
 src/config/portal-billing-labels.ts
 src/config/portal-labels.ts
@@ -598,6 +608,7 @@ src/core/validation/commercial.ts
 src/core/validation/event-details.ts
 src/core/validation/local-pause.ts
 src/core/validation/manual-voucher.ts
+src/core/validation/plan-selection.ts
 src/core/validation/portal-activity.ts
 src/core/validation/portal-command.ts
 src/core/validation/portal-organization.ts
@@ -611,6 +622,7 @@ src/lib/guard-use-case.ts
 src/lib/http-body.ts
 src/lib/logger.ts
 src/lib/modulo97.ts
+src/lib/plan-selection.ts
 src/lib/result.ts
 src/lib/sha256.ts
 src/lib/suggest-organization-slug.ts
@@ -642,6 +654,7 @@ tests/e2e/organization-link.spec.ts
 tests/e2e/organizer-service.spec.ts
 tests/e2e/participant-return.spec.ts
 tests/e2e/password.spec.ts
+tests/e2e/plan-choice.spec.ts
 tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
@@ -703,6 +716,7 @@ tests/unit/foundations.test.ts
 tests/unit/http-body.test.ts
 tests/unit/iban.test.ts
 tests/unit/manual-voucher-eligibility.test.ts
+tests/unit/plan-selection.test.ts
 tests/unit/portal-inputs.test.ts
 tests/unit/proof-and-auth.test.ts
 tests/unit/schedule.test.ts

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { SHARE_UI } from '../config/constants';
 import { PlanCards } from './_portal/PlanCards';
+import { PlanComparison } from './_portal/PlanComparison';
 export default function Home() {
   return (
     <main className="portal-auth">
@@ -17,6 +18,7 @@ export default function Home() {
           </Link>
         </div>
         <PlanCards />
+        <PlanComparison />
       </section>
     </main>
   );

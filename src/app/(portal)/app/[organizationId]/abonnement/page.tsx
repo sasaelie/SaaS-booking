@@ -9,11 +9,16 @@ import { PortalHeading } from '../../../../_portal/PortalHeading';
 import { PortalError } from '../../../../_portal/PortalError';
 import { SubscriptionPanel } from '../../../../_portal/SubscriptionPanel';
 import { RefreshButton } from '../../../../_portal/RefreshButton';
+import { readPlanIntent } from '../../../../../lib/plan-selection';
 export default async function Page({
   params,
   searchParams,
-}: WorkspacePageProps & { readonly searchParams: Promise<{ retour?: string }> }) {
-  const returned = (await searchParams).retour === 'paiement';
+}: WorkspacePageProps & {
+  readonly searchParams: Promise<{ retour?: string; formule?: unknown }>;
+}) {
+  const query = await searchParams;
+  const returned = query.retour === 'paiement';
+  const selected = readPlanIntent(query.formule);
   const { organizationId } = await params;
   const result = await loadWorkspace(organizationId);
   if (!result.ok) return <PortalError />;
@@ -27,7 +32,7 @@ export default async function Page({
         action={<RefreshButton />}
       />
       <div className="portal-list">
-        <SubscriptionPanel organization={result.value.organization} />
+        <SubscriptionPanel organization={result.value.organization} selected={selected} />
         {summary?.ok ? <FinancialCounter summary={summary.value} /> : null}
         <LibertySelection data={result.value} />
         <OnlineVoucher organization={result.value.organization} />

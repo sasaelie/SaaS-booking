@@ -1,5 +1,5 @@
 export const BILLING_UI = {
-  TITLE: 'Liberté ou Studio Pro, selon votre rythme.',
+  TITLE: 'Ma formule',
   PRICE_HEADING: 'L’abonnement organisateur',
   OFFERED_NOTE:
     'Cet espace bénéficie d’un accès offert. Aucun renouvellement ni prélèvement d’abonnement n’est prévu.',

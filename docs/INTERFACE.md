@@ -53,3 +53,7 @@ Les badges d’état, les témoins lumineux, les champs, les liens de retour et 
 Captures Chromium avec un compte fictif : [avant](boutons-relief/avant-mes-espaces.png), [après](boutons-relief/apres-mes-espaces.png), [page participant](boutons-relief/apres-participant.png).
 
 Vérifications locales : TypeScript, ESLint, 86 tests unitaires et build Next.js réussis. Le contrôle navigateur de six écrans aux largeurs 320, 390, 768 et 1 440 pixels confirme les formes sans capsule, les cibles de 44 pixels minimum et l’absence de débordement horizontal. Le focus clavier, le relief à la pression et la suppression des transitions avec réduction des animations sont également vérifiés.
+
+Les offres sont désormais présentées sous forme de cartes compactes entièrement cliquables,
+avec un comparatif distinct et un parcours de choix conservé jusqu’à l’espace organisateur.
+[Parcours, contrôles et captures des formules](CHOIX-FORMULES.md).

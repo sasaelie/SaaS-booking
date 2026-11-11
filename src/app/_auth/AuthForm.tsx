@@ -4,6 +4,9 @@ import { AUTH_UI } from '../../config/constants';
 import { AuthFields } from './AuthFields';
 import { useAuthForm } from './use-auth-form';
 import type { AuthMode } from './auth-request';
+import type { PlanIntent } from '../../core/validation/plan-selection';
+import { PLAN_SELECTION } from '../../config/plan-selection';
+import { planPath } from '../../lib/plan-selection';
 const descriptions = {
   SIGN_IN: AUTH_UI.SIGN_IN_HINT,
   SIGN_UP: AUTH_UI.SIGN_UP_HINT,
@@ -16,8 +19,14 @@ const buttons = {
   FORGOT: AUTH_UI.SEND_RESET,
   RESET: AUTH_UI.SAVE_PASSWORD,
 } as const;
-export function AuthForm({ mode }: { readonly mode: AuthMode }) {
-  const form = useAuthForm(mode);
+export function AuthForm({
+  mode,
+  plan = null,
+}: {
+  readonly mode: AuthMode;
+  readonly plan?: PlanIntent | null;
+}) {
+  const form = useAuthForm(mode, plan);
   return (
     <main className="portal-auth">
       <Link href="/" className="portal-brand">
@@ -27,8 +36,9 @@ export function AuthForm({ mode }: { readonly mode: AuthMode }) {
       <section className="ice-cube-shell portal-auth-card">
         <h1>{AUTH_UI[mode]}</h1>
         <p>{descriptions[mode]}</p>
+        {plan ? <p className="commercial-intent-note">{PLAN_SELECTION.CHOICE[plan]}</p> : null}
         <form onSubmit={form.submit} className="portal-form" aria-busy={form.pending}>
-          <AuthFields mode={mode} />
+          <AuthFields mode={mode} plan={plan} />
           <button className="liquid-ice-button portal-button" disabled={form.pending}>
             {form.pending ? AUTH_UI.PENDING : buttons[mode]}
           </button>
@@ -38,17 +48,20 @@ export function AuthForm({ mode }: { readonly mode: AuthMode }) {
             </p>
           ) : null}
         </form>
-        <nav className="portal-auth-links">
-          {mode === 'SIGN_IN' ? (
-            <>
-              <Link href="/inscription">{AUTH_UI.SIGN_UP_LINK}</Link>
-            </>
-          ) : (
-            <Link href="/connexion">{AUTH_UI.SIGN_IN_LINK}</Link>
-          )}
-        </nav>
+        <AuthLinks mode={mode} plan={plan} />
         <p className="portal-auth-note">{AUTH_UI.PRIVACY}</p>
       </section>
     </main>
+  );
+}
+function AuthLinks({ mode, plan }: { readonly mode: AuthMode; readonly plan: PlanIntent | null }) {
+  return (
+    <nav className="portal-auth-links">
+      {mode === 'SIGN_IN' ? (
+        <Link href={planPath('/inscription', plan)}>{AUTH_UI.SIGN_UP_LINK}</Link>
+      ) : (
+        <Link href={planPath('/connexion', plan)}>{AUTH_UI.SIGN_IN_LINK}</Link>
+      )}
+    </nav>
   );
 }

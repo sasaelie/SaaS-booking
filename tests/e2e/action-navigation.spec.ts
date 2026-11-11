@@ -16,7 +16,7 @@ test('follows every organizer menu destination and mobile return through actual 
       ['Partager', '/partager'],
       ['Apparence', '/parametres'],
       ['Réglages', '/reglages'],
-      ['Abonnement', '/abonnement'],
+      ['Ma formule', '/abonnement'],
       ['Vue d’ensemble', ''],
     ]) {
       if (width === 390) await page.getByRole('button', { name: 'Menu', exact: true }).click();

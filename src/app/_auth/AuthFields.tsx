@@ -3,7 +3,15 @@ import { AUTH_UI, INPUT_LIMITS } from '../../config/constants';
 import { PasswordField } from './PasswordField';
 import { PortalField } from '../_portal/PortalField';
 import type { AuthMode } from './auth-request';
-export function AuthFields({ mode }: { readonly mode: AuthMode }) {
+import type { PlanIntent } from '../../core/validation/plan-selection';
+import { planPath } from '../../lib/plan-selection';
+export function AuthFields({
+  mode,
+  plan = null,
+}: {
+  readonly mode: AuthMode;
+  readonly plan?: PlanIntent | null;
+}) {
   return (
     <>
       {mode === 'SIGN_UP' ? (
@@ -28,7 +36,7 @@ export function AuthFields({ mode }: { readonly mode: AuthMode }) {
       ) : null}
       <AuthPasswordFields mode={mode} />
       {mode === 'SIGN_IN' ? (
-        <Link className="auth-forgot-link" href="/mot-de-passe-oublie">
+        <Link className="auth-forgot-link" href={planPath('/mot-de-passe-oublie', plan)}>
           {AUTH_UI.FORGOT_LINK}
         </Link>
       ) : null}

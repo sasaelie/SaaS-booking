@@ -7,10 +7,19 @@ import {
 import { PortalForm } from './PortalForm';
 import { OrganizationIdentityFields } from './OrganizationIdentityFields';
 import { PortalSelect } from './PortalSelect';
-export function CreateOrganizationForm({ appUrl = '' }: { readonly appUrl?: string }) {
+import type { PlanIntent } from '../../core/validation/plan-selection';
+import { PLAN_SELECTION } from '../../config/plan-selection';
+export function CreateOrganizationForm({
+  appUrl = '',
+  plan = null,
+}: {
+  readonly appUrl?: string;
+  readonly plan?: PlanIntent | null;
+}) {
   return (
     <section className="portal-panel portal-narrow">
       <PortalForm action="create-organization" submitLabel={PORTAL.CREATE}>
+        {plan ? <input type="hidden" name={PLAN_SELECTION.FIELD} value={plan} /> : null}
         <OrganizationIdentityFields appUrl={appUrl} />
         <PortalSelect label={PORTAL.KIND} name="kind" defaultValue="NONPROFIT">
           {Object.entries(ORGANIZATION_KIND_LABELS).map(([value, label]) => (
