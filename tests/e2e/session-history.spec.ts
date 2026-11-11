@@ -7,7 +7,7 @@ import {
   noHorizontalOverflow,
 } from './portal-fixtures';
 test.afterAll(closeBrowserDatabase);
-test('returns through actual browser history to a connected home and skips account entry forms', async ({
+test('shows a connected home on direct entry and skips account entry forms', async ({
   page,
 }, info) => {
   const space = await browserSpace();
@@ -15,7 +15,7 @@ test('returns through actual browser history to a connected home and skips accou
   await page.goto('/');
   await expect(page.getByRole('link', { name: 'Se connecter', exact: true })).toBeVisible();
   await login(page, space);
-  await page.goBack();
+  await page.goto('/');
   await expect(page).toHaveURL('/');
   await expect(page.getByText('Connecté en tant que')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ouvrir mes espaces', exact: true })).toBeVisible();

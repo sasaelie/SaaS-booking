@@ -67,7 +67,9 @@ test('retains the Pro preference after real sign-in and space creation without g
   await expect(page.getByRole('radio', { name: /Annuel/ })).toBeVisible();
   await page.getByRole('radio', { name: /Annuel/ }).check();
   await expect(page.getByRole('radio', { name: /Annuel/ })).toBeChecked();
-  await expect(page.getByRole('button', { name: 'Paiement désactivé en test' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Voir le récapitulatif de test' }).click();
+  await expect(page.getByRole('dialog')).toContainText('260,00 €');
+  await page.getByRole('button', { name: 'Revenir au choix de la formule' }).click();
   const access = await browserDatabase().query(
     'SELECT complimentary,status FROM organization_access WHERE organization_id=$1',
     [organizationId],

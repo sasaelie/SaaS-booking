@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import { PortalBackLink } from './PortalBackLink';
 import { usePathname } from 'next/navigation';
 import { portalReturnTarget } from './navigation-target';
 export function PortalReturn({ organizationIds }: { readonly organizationIds: readonly string[] }) {
@@ -9,8 +9,8 @@ export function PortalReturn({ organizationIds }: { readonly organizationIds: re
     return null;
   const target = portalReturnTarget(path, selected);
   return (
-    <Link className="portal-desktop-return" href={target.href} aria-label={target.label}>
+    <PortalBackLink className="portal-desktop-return" href={target.href} label={target.label}>
       ← {target.label}
-    </Link>
+    </PortalBackLink>
   );
 }

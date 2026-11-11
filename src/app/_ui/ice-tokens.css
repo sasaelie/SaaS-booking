@@ -14,6 +14,10 @@
   --button-surface-bottom: color-mix(in srgb, var(--ice-paper) 58%, var(--ice-mist));
   --button-edge: color-mix(in srgb, var(--ui-text-primary) 16%, var(--ice-mist));
   --button-shadow: color-mix(in srgb, var(--ui-text-primary) 13%, transparent);
+  --glass-fill: color-mix(in srgb, var(--ice-paper) 24%, transparent);
+  --glass-edge-light: color-mix(in srgb, var(--ice-paper) 90%, transparent);
+  --glass-edge-quiet: color-mix(in srgb, var(--ice-paper) 16%, transparent);
+  --glass-shadow: color-mix(in srgb, var(--ui-text-primary) 14%, transparent);
   --spring-easing: cubic-bezier(0.22, 1, 0.36, 1);
 }
 .ice-widget-root {

@@ -8,7 +8,7 @@
   padding: 4px 0;
   color: inherit;
   font-size: 12px;
-  text-decoration: underline;
+  text-decoration: none;
   text-underline-offset: 4px;
 }
 .portal-muted {

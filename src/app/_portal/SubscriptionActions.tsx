@@ -14,7 +14,8 @@ export function SubscriptionActions({
 }) {
   const access = organization.access;
   const active = canUsePro(access, new Date());
-  if (access.complimentary) return null;
+  if (access.complimentary)
+    return selected === 'pro' ? <PlanCheckout organization={organization} /> : null;
   return (
     <div className="portal-list">
       {!active && selected === 'pro' ? <PlanCheckout organization={organization} /> : null}

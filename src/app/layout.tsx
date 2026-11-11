@@ -2,6 +2,7 @@ import './_portal/commercial.css';
 import './_ui/appearance.css';
 import type { ReactNode } from 'react';
 import { SessionHistorySync } from './_auth/SessionHistorySync';
+import { SessionExitGuard } from './_auth/SessionExitGuard';
 import { StagingNotice } from './_ui/StagingNotice';
 import './_ui/staging.css';
 import './_ui/participant.css';
@@ -35,6 +36,10 @@ import './_ui/catalog-cards.css';
 import './_portal/session-details.css';
 import './_portal/portal-alignment.css';
 import './_ui/buttons.css';
+import './_ui/glass-frames.css';
+import './_ui/text-links.css';
+import './_portal/feature-comparison.css';
+import './_ui/modal.css';
 export const metadata = {
   title: 'Studio Créatif 360 — Réservations',
   description: 'Réservez votre place à une activité.',
@@ -43,6 +48,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
   return (
     <html lang="fr">
       <body>
+        <SessionExitGuard />
         <SessionHistorySync />
         <StagingNotice />
         {children}

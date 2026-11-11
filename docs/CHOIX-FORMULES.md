@@ -1,5 +1,8 @@
 # Cartes et choix de formule
 
+Mise à jour : le comparatif a été détaillé en 27 fonctionnalités et le paiement de test dispose
+d’un récapitulatif consultable, sans encaissement. [Détail actuel](CADRES-ET-PARCOURS.md).
+
 Les offres Liberté et Studio Pro utilisent une carte entière comme lien. Aucun bouton,
 autre lien ni contrôle de formulaire n’est imbriqué dans ces cartes. Le comparatif détaillé
 se déplie séparément, sans navigation. Les prix, frais et limites essentiels restent visibles.

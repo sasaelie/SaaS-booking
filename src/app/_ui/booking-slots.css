@@ -121,7 +121,7 @@
 .ice-text-button {
   padding: 7px 0;
   font-size: 10px;
-  text-decoration: underline;
+  text-decoration: none;
   text-underline-offset: 3px;
   background: none;
   border: 0;

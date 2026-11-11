@@ -60,3 +60,7 @@ avec un comparatif distinct et un parcours de choix conservé jusqu’à l’esp
 
 L’accueil distingue désormais la session connectée du visiteur, y compris après un retour
 dans l’historique du navigateur. [Règles de session et vérifications](SESSION-ACCUEIL.md).
+
+Les cadres neutres utilisent maintenant un contour en verre lumineux et un fond translucide.
+Les liens textuels sont identifiés sans soulignement ni forme de bouton.
+[Captures, sortie confirmée et comparatif détaillé](CADRES-ET-PARCOURS.md).

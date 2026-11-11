@@ -10,6 +10,10 @@ encore de se connecter. La carte ne créait pas une nouvelle connexion.
 
 ## Correction
 
+Mise à jour : le propriétaire a ensuite choisi une confirmation avec déconnexion effective
+uniquement pour quitter Mes espaces vers l’accueil. Cette règle précise les retours généraux
+décrits ci-dessous. [Fonctionnement actuel et vérifications](CADRES-ET-PARCOURS.md).
+
 - L’accueil est rendu pour la requête courante : une session vérifiée affiche le nom,
   « Ouvrir mes espaces » et « Se déconnecter ». Un visiteur garde les actions d’inscription
   et de connexion. Les cartes de formule restent accessibles dans les deux états.
