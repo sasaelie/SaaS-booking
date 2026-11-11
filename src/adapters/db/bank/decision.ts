@@ -1,3 +1,4 @@
+import { recordFinancialPayment } from '../financial-ledger';
 import { eq } from 'drizzle-orm';
 import { bookings, organizations } from '../schema';
 import type { Transaction } from '../transaction';
@@ -64,6 +65,8 @@ export async function decideBankTransfer(
     .update(bookings)
     .set(decisionValues(booking, approved, input.now))
     .where(eq(bookings.id, booking.id));
+  if (approved)
+    await recordFinancialPayment(tx, booking.id, booking.paymentReference ?? booking.id, input.now);
   await decisionEffects(tx, booking, approved, proofStorageKey);
   return ok({ proofStorageKey });
 }

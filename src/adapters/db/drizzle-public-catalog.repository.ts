@@ -1,3 +1,4 @@
+import type { Executor } from './transaction';
 import { and, eq, asc } from 'drizzle-orm';
 import type { PublicCatalogPort } from '../../core/ports/public-catalog.port';
 import type { DrizzlePgDb } from './client';
@@ -7,22 +8,14 @@ import { organizationBranding } from './schema/saas';
 import { ok } from '../../lib/result';
 import { failure } from '../../lib/errors';
 import { ERROR_CODES } from '../../config/constants';
+import { initializeCommercialSelection } from './commercial-access';
 export class DrizzlePublicCatalogRepository implements PublicCatalogPort {
   constructor(private readonly db: DrizzlePgDb) {}
   find(slug: string) {
     return atomic(this.db, 'Catalog', async (tx) => {
-      const [organization] = await tx
-        .select({
-          id: organizations.id,
-          socialLinks: organizations.socialLinks,
-          name: organizations.name,
-          slug: organizations.slug,
-          branding: organizationBranding,
-        })
-        .from(organizations)
-        .leftJoin(organizationBranding, eq(organizationBranding.organizationId, organizations.id))
-        .where(eq(organizations.slug, slug));
+      const organization = await findOrganization(tx, slug);
       if (!organization) return failure(ERROR_CODES.NOT_FOUND, 'Catalog', 'find');
+      const state = await initializeCommercialSelection(tx, organization.id);
       const list = await tx
         .select({
           id: activities.id,
@@ -45,8 +38,28 @@ export class DrizzlePublicCatalogRepository implements PublicCatalogPort {
         hasBackground: Boolean(organization.branding?.backgroundStorageKey),
         storyTextTone: organization.branding?.storyTextTone ?? 'WHITE',
         hasLogo: Boolean(organization.branding?.logoStorageKey),
-        activities: list,
+        showPlatformSignature: !state.pro,
+        activities: list.map((activity) => ({
+          ...activity,
+          reservationsOpen:
+            !state.access.suspendedAt && (state.pro || state.selected.includes(activity.id)),
+        })),
       });
     });
   }
+}
+
+async function findOrganization(tx: Executor, slug: string) {
+  const [organization] = await tx
+    .select({
+      id: organizations.id,
+      socialLinks: organizations.socialLinks,
+      name: organizations.name,
+      slug: organizations.slug,
+      branding: organizationBranding,
+    })
+    .from(organizations)
+    .leftJoin(organizationBranding, eq(organizationBranding.organizationId, organizations.id))
+    .where(eq(organizations.slug, slug));
+  return organization;
 }

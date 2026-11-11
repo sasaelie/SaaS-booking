@@ -1,3 +1,6 @@
+import { canUsePro } from '../../core/domain/commercial';
+import { PLAN_UI } from '../../config/commercial';
+import Link from 'next/link';
 import type { PortalOverview } from '../../core/ports/portal-models';
 import { SHARE_UI } from '../../config/constants';
 import { CopyCode } from './CopyCode';
@@ -17,17 +20,25 @@ export function SharePanel({
         <p className="portal-muted">{SHARE_UI.DIRECT_HINT}</p>
         <CopyCode value={url} />
       </section>
-      <section className="portal-panel">
-        <h2>{SHARE_UI.QR}</h2>
-        <p className="portal-muted">{SHARE_UI.QR_HINT}</p>
-        <a
-          className="liquid-ice-button portal-button"
-          href={`/api/portal/qr?organizationId=${organization.id}`}
-        >
-          {SHARE_UI.DOWNLOAD_QR}
-        </a>
-      </section>
-      <WebsiteSharing data={data} appUrl={appUrl} />
+      {canUsePro(organization.access, new Date()) ? (
+        <>
+          <section className="portal-panel">
+            <h2>{SHARE_UI.QR}</h2>
+            <p className="portal-muted">{SHARE_UI.QR_HINT}</p>
+            <a
+              className="liquid-ice-button portal-button"
+              href={`/api/portal/qr?organizationId=${organization.id}&format=pdf`}
+            >
+              {SHARE_UI.DOWNLOAD_QR}
+            </a>
+          </section>
+          <WebsiteSharing data={data} appUrl={appUrl} />
+        </>
+      ) : (
+        <p>
+          {PLAN_UI.PRO_REQUIRED} <Link href={`/app/${organization.id}/abonnement`}>Studio Pro</Link>
+        </p>
+      )}
     </div>
   );
 }

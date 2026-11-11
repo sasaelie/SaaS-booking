@@ -7,6 +7,9 @@ export function matchesBooking(booking: BookingRow, event: ParsedWebhookPaymentE
     event.currency === booking.currency &&
     event.amountPaidCents === booking.unitPriceCents - booking.voucherDiscountCents &&
     event.merchantAccountId === booking.merchantAccountId &&
+    (event.chargeAccountId === undefined ||
+      event.chargeAccountId ===
+        (booking.chargeModel === 'DESTINATION' ? null : booking.merchantAccountId)) &&
     (!booking.checkoutReference || booking.checkoutReference === event.checkoutReference)
   );
 }

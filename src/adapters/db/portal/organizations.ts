@@ -1,3 +1,4 @@
+import { initializeCommercialSelection } from '../commercial-access';
 import { and, eq, sql } from 'drizzle-orm';
 import { organizations } from '../schema';
 import { organizationAccess, organizationMembers, organizationBranding } from '../schema/saas';
@@ -48,7 +49,11 @@ export async function listOrganizations(db: Executor, actor: PortalActor) {
 }
 export async function getOrganization(db: Executor, actor: PortalActor, id: string) {
   const [row] = await organizationQuery(db, actor).where(eq(organizations.id, id));
-  return row ? ok(toOrganization(row)) : failure(ERROR_CODES.NOT_FOUND, 'Organization', 'get');
+  if (!row) return failure(ERROR_CODES.NOT_FOUND, 'Organization', 'get');
+  const state = await initializeCommercialSelection(db, id);
+  return ok(
+    toOrganization({ ...row, access: { ...row.access, libertyActivityIds: state.selected } }),
+  );
 }
 export async function createOrganization(
   tx: Transaction,

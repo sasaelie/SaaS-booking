@@ -3,6 +3,11 @@ import { integer, boolean, pgTable, text, timestamp, uuid, primaryKey } from 'dr
 import { organizations } from './organization';
 import { ACCESS_STATUSES, BRAND_THEMES } from '../../../config/constants';
 export const organizationAccess = pgTable('organization_access', {
+  libertySelectionManual: boolean('liberty_selection_manual').notNull().default(false),
+  graceUntil: timestamp('grace_until', { withTimezone: true }),
+  billingInterval: text('billing_interval'),
+  libertyActivityIds: uuid('liberty_activity_ids').array().notNull().default([]),
+  libertySelectionAt: timestamp('liberty_selection_at', { withTimezone: true }),
   organizationId: uuid('organization_id')
     .primaryKey()
     .references(() => organizations.id),

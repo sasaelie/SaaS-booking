@@ -8,12 +8,22 @@ export function checkoutParameters(
   const expires_at = Math.ceil(input.expiresAt.getTime() / TIME.SECOND_MS) + 1;
   return {
     mode: 'payment',
-    payment_method_types: ['card'],
+    payment_method_types: ['card', 'bancontact'],
     customer_email: input.customerEmail,
     expires_at,
     success_url: input.successUrl,
     cancel_url: input.cancelUrl,
-    metadata: { organization_id: input.organizationId, booking_id: input.bookingId },
+    metadata: paymentMetadata(input),
+    payment_intent_data: {
+      metadata: paymentMetadata(input),
+      ...(input.chargeModel === 'DESTINATION' && input.merchantAccountId
+        ? {
+            application_fee_amount: input.commissionCents,
+            transfer_data: { destination: input.merchantAccountId },
+            on_behalf_of: input.merchantAccountId,
+          }
+        : {}),
+    },
     line_items: [
       {
         quantity: BOOKING_LIMITS.SEATS_PER_BOOKING,
@@ -24,5 +34,13 @@ export function checkoutParameters(
         },
       },
     ],
+  };
+}
+function paymentMetadata(input: InitiatePaymentInput) {
+  return {
+    organization_id: input.organizationId,
+    booking_id: input.bookingId,
+    merchant_account_id: input.merchantAccountId ?? '',
+    charge_model: input.chargeModel ?? 'DIRECT',
   };
 }

@@ -15,6 +15,8 @@ import {
   StripeAmountSchema,
   StripeCurrencySchema,
 } from './stripe-validation';
+import { reconcileStripePayment } from './stripe-reconciliation';
+import { reconcileStripePayout } from './stripe-payout';
 function accountOptions(account: string | null): Stripe.RequestOptions {
   return account ? { stripeAccount: account } : {};
 }
@@ -48,7 +50,8 @@ function parseEvent(event: Stripe.Event): Result<ParsedWebhookPaymentEvent | nul
     checkoutReference: session.id,
     amountPaidCents: amount.data,
     currency: DEFAULTS.CURRENCY,
-    merchantAccountId: event.account ?? null,
+    merchantAccountId: event.account ?? (session.metadata?.['merchant_account_id'] || null),
+    chargeAccountId: event.account ?? null,
   });
 }
 export class StripePaymentAdapter implements PaymentGatewayPort {
@@ -66,9 +69,11 @@ export class StripePaymentAdapter implements PaymentGatewayPort {
       input.expiresAt <= now
     )
       return failure(ERROR_CODES.VALIDATION_FAILED, 'Stripe', 'initiatePayment');
+    if (input.chargeModel === 'DESTINATION' && !input.merchantAccountId)
+      return failure(ERROR_CODES.CONFIGURATION_ERROR, 'Stripe', 'destination-account');
     try {
       const session = await this.stripe.checkout.sessions.create(checkoutParameters(input, now), {
-        ...accountOptions(input.merchantAccountId),
+        ...accountOptions(input.chargeModel === 'DESTINATION' ? null : input.merchantAccountId),
         idempotencyKey: `checkout:${input.bookingId}`,
       });
       if (!session.url)
@@ -101,9 +106,12 @@ export class StripePaymentAdapter implements PaymentGatewayPort {
           payment_intent: input.paymentReference,
           amount: input.amountCents,
           reason: 'requested_by_customer',
+          ...(input.chargeModel === 'DESTINATION'
+            ? { reverse_transfer: true, refund_application_fee: true }
+            : {}),
         },
         {
-          ...accountOptions(input.merchantAccountId),
+          ...accountOptions(input.chargeModel === 'DESTINATION' ? null : input.merchantAccountId),
           idempotencyKey: input.idempotencyKey,
         },
       );
@@ -111,5 +119,11 @@ export class StripePaymentAdapter implements PaymentGatewayPort {
     } catch {
       return failure(ERROR_CODES.PAYMENT_PROVIDER_ERROR, 'Stripe', 'refundPayment');
     }
+  }
+  reconcilePayment(input: import('../../core/ports/financial.port').FinancialPaymentInput) {
+    return reconcileStripePayment(this.stripe, input);
+  }
+  reconcilePayout(input: import('../../core/ports/financial.port').FinancialPayoutInput) {
+    return reconcileStripePayout(this.stripe, input);
   }
 }

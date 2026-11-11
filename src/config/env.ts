@@ -9,6 +9,7 @@ export const EnvironmentSchema = z
   .object({
     APP_ENVIRONMENT: z.enum(['production', 'staging']).optional(),
     PAYMENTS_ENABLED: z.enum(['true', 'false']).optional(),
+    OPERATIONAL_PURGE_ENABLED: z.enum(['true', 'false']).optional(),
     DATABASE_URL: z
       .url()
       .refine((value) => value.startsWith('postgres') && supportsSessionLocks(value)),
@@ -24,6 +25,8 @@ export const EnvironmentSchema = z
     BETTER_AUTH_SECRET: optionalSecret,
     STRIPE_CONNECT_CLIENT_ID: z.string().startsWith('ca_').optional(),
     STRIPE_CONNECT_WEBHOOK_SECRET: z.string().startsWith('whsec_').optional(),
+    STRIPE_PRO_MONTHLY_PRICE_ID: z.string().startsWith('price_').optional(),
+    STRIPE_PRO_ANNUAL_PRICE_ID: z.string().startsWith('price_').optional(),
     STRIPE_SAAS_PRICE_ID: z.string().startsWith('price_').optional(),
     STRIPE_SAAS_WEBHOOK_SECRET: z.string().startsWith('whsec_').optional(),
     AUTH_ISSUER: z.url().optional(),

@@ -21,6 +21,13 @@ export default async function Page({
     slug: route.organization,
     activityId: route.activityId,
   });
+  if (result.ok && result.value.showPlatformSignature)
+    return (
+      <main className="booking-embed">
+        <p>{UI_MESSAGES.UNAVAILABLE}</p>
+        <EmbedHeightReporter />
+      </main>
+    );
   return (
     <main className="booking-embed">
       {result.ok ? <IceBookingWidget data={result.value} /> : <p>{UI_MESSAGES.UNAVAILABLE}</p>}

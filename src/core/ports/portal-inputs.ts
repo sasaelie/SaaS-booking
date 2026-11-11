@@ -13,6 +13,7 @@ export interface WeeklySlotInput {
   readonly capacity: number;
 }
 export interface CreateActivityInput extends EventDetails {
+  readonly allowExternalBenefitExchange?: boolean;
   readonly organizationId: string;
   readonly name: string;
   readonly description: string;

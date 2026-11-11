@@ -10,6 +10,8 @@ import { failure } from '../../lib/errors';
 import { ok, type Result } from '../../lib/result';
 import { RefundJobSchema } from './job-validation';
 import { mailContent } from './mail-content';
+import { reconcileFinancial } from './reconcile-financial';
+import { reconcilePayout } from './reconcile-payout';
 interface JobHandlerDeps {
   readonly db: DrizzlePgDb;
   readonly gateway: PaymentGatewayPort;
@@ -23,6 +25,10 @@ export class ProductionJobHandler implements JobHandlerPort {
   constructor(private readonly deps: JobHandlerDeps) {}
   async execute(type: string, payload: unknown, key: string): Promise<Result<JobEffect>> {
     try {
+      if (type === JOB_TYPES.FINANCIAL_PAYOUT)
+        return reconcilePayout(this.deps.db, this.deps.gateway, payload);
+      if (type === JOB_TYPES.FINANCIAL_RECONCILE)
+        return reconcileFinancial(this.deps.db, this.deps.gateway, payload);
       if (type === JOB_TYPES.REFUND)
         return this.deps.gateway.refundPayment({
           ...RefundJobSchema.parse(payload),

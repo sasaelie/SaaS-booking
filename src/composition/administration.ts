@@ -45,6 +45,7 @@ export function administration(app: Runtime, token: string, override?: Authoriza
       secret: env.SELF_CANCEL_HMAC_SECRET,
     }),
     gdpr: new GdprRetentionUseCase({
+      operationalPurgeEnabled: env.OPERATIONAL_PURGE_ENABLED === 'true',
       gdprRepo: new DrizzleGdprRepository(app.db),
       authorization,
     }),

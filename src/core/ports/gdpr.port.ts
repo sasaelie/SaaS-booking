@@ -7,6 +7,10 @@ export interface GdprBookingSummary {
   readonly paidAt: Date | null;
 }
 export interface GdprRepositoryPort {
+  purgeClosedOperationalData?(
+    now: Date,
+    dryRun: boolean,
+  ): Promise<Result<{ readonly anonymizedCount: number }>>;
   anonymizeUnpaidBookingsOlderThanAtomically(
     cutoffDate: Date,
   ): Promise<Result<{ readonly anonymizedCount: number }>>;

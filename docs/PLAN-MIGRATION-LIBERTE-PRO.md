@@ -126,6 +126,6 @@ Pas de suppression destructive de l'historique pour simplifier la bascule.
 
 ## État de ce livrable
 
-Cahier des charges, audit du code et plan de migration préparés.
-Le moteur des deux offres, la purge trente jours et le journal financier ne sont pas encore codés.
-Les tests de cette matrice ne sont pas encore exécutés ; ils ne doivent pas être annoncés comme réussis.
+Le moteur des deux offres, les migrations, le journal financier, la conservation et les interfaces sont implémentés dans la branche de travail.
+Les résultats locaux, la recette navigateur et les limites externes sont décrits dans LIVRAISON-LIBERTE-PRO.md.
+La recette Stripe Sandbox distante et la bascule hébergée restent des étapes distinctes.

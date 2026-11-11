@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { rescheduleVouchers } from '../schema';
+import { rescheduleVouchers, financialEntries } from '../schema';
 import { required, type Transaction } from '../transaction';
 import type { LockedBooking } from '../payment/locks';
 import { readActivity } from '../activity-reader';
@@ -57,8 +57,27 @@ export async function issueCancellationVoucher(
     })
     .returning();
   if (!voucher) throw Error('Voucher insertion failed');
+  await recordIssuedVoucher(tx, booking, voucher);
+  return voucher;
+}
+
+async function recordIssuedVoucher(
+  tx: Transaction,
+  booking: LockedBooking['booking'],
+  voucher: typeof rescheduleVouchers.$inferSelect,
+) {
+  await tx
+    .insert(financialEntries)
+    .values({
+      organizationId: booking.organizationId,
+      bookingId: booking.id,
+      kind: 'VOUCHER_ISSUED',
+      sourceKey: `voucher-issued:${voucher.id}`,
+      amountCents: voucher.initialValueCents,
+      reference: voucher.id,
+    })
+    .onConflictDoNothing();
   await enqueue(tx, booking.organizationId, JOB_TYPES.VOUCHER, `voucher:${voucher.id}`, {
     voucherId: voucher.id,
   });
-  return voucher;
 }

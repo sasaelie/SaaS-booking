@@ -1,3 +1,8 @@
+import { OnlineVoucher } from '../../../../_portal/OnlineVoucher';
+import { headers } from 'next/headers';
+import { portal } from '../../../../../composition/portal';
+import { FinancialCounter } from '../../../../_portal/FinancialCounter';
+import { LibertySelection } from '../../../../_portal/LibertySelection';
 import { BILLING_UI } from '../../../../../config/constants';
 import { loadWorkspace, type WorkspacePageProps } from '../../../../_portal/load-workspace';
 import { PortalHeading } from '../../../../_portal/PortalHeading';
@@ -12,6 +17,8 @@ export default async function Page({
   const { organizationId } = await params;
   const result = await loadWorkspace(organizationId);
   if (!result.ok) return <PortalError />;
+  const services = portal(await headers());
+  const summary = services.ok ? await services.value.financial.summary(organizationId) : null;
   return (
     <>
       <PortalHeading
@@ -19,7 +26,12 @@ export default async function Page({
         description={BILLING_UI.INTRO}
         action={<RefreshButton />}
       />
-      <SubscriptionPanel organization={result.value.organization} />
+      <div className="portal-list">
+        <SubscriptionPanel organization={result.value.organization} />
+        {summary?.ok ? <FinancialCounter summary={summary.value} /> : null}
+        <LibertySelection data={result.value} />
+        <OnlineVoucher organization={result.value.organization} />
+      </div>
       {returned ? <p className="portal-muted">{BILLING_UI.STRIPE_PENDING}</p> : null}
     </>
   );

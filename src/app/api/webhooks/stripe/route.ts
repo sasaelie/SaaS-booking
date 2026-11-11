@@ -1,3 +1,4 @@
+import { financialWebhook } from '../../../../composition/financial-webhook';
 import { boundedBody } from '../../../../lib/http-body';
 import { HTTP_STATUS } from '../../../../config/constants';
 import { runtime as runtimeServices } from '../../../../composition/runtime';
@@ -23,5 +24,13 @@ export async function POST(request: Request): Promise<Response> {
             : HTTP_STATUS.INTERNAL,
       },
     );
-  return Response.json({ received: true });
+  const financial = await financialWebhook(
+    services.value,
+    body,
+    request.headers.get('stripe-signature') ?? '',
+  );
+  return Response.json(
+    { received: financial.ok },
+    { status: financial.ok ? HTTP_STATUS.OK : HTTP_STATUS.INTERNAL },
+  );
 }

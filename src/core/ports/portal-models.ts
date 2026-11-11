@@ -31,6 +31,8 @@ export interface OrganizationSummary {
   readonly hasBackground: boolean;
 }
 export interface PortalActivity extends EventDetails {
+  readonly reservationsOpen?: boolean;
+  readonly allowExternalBenefitExchange?: boolean;
   readonly id: string;
   readonly name: string;
   readonly description: string | null;
@@ -116,6 +118,15 @@ export interface PlatformOrganization {
   readonly bookingCount: number;
 }
 export interface PlatformOverview {
+  readonly financial?: {
+    readonly bookingVolumeCents: number;
+    readonly commissionGrossCents: number;
+    readonly stripeFeeCents: number;
+    readonly pendingCount: number;
+    readonly subscriptionCents: number;
+    readonly commissionNetCents: number;
+    readonly otherCostsCents?: number;
+  };
   readonly organizations: readonly PlatformOrganization[];
   readonly total: number;
   readonly activeCount: number;

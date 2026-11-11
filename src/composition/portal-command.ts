@@ -1,3 +1,4 @@
+import { dispatchCommercial } from './dispatch-commercial';
 import type { Result } from '../lib/result';
 import type { PortalServices } from './portal';
 import type { PortalCommand } from '../core/validation/portal-command';
@@ -6,8 +7,11 @@ export function dispatchPortal(
   command: PortalCommand,
 ): Promise<Result<unknown>> {
   switch (command.action) {
+    case 'platform-cost':
+    case 'redeem-online-voucher':
+    case 'liberty-selection':
     case 'manual-voucher':
-      return services.manualVoucher.issue(command.input);
+      return dispatchCommercial(services, command);
     case 'appearance':
       return services.organizations.appearance(command.input);
     case 'connect-stripe':

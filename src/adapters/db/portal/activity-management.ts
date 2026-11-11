@@ -12,6 +12,8 @@ import type { UpdateActivityInput, AddManualSessionInput } from '../../../core/p
 import { ok } from '../../../lib/result';
 import { failure } from '../../../lib/errors';
 import { ERROR_CODES, PAYMENT_MODES } from '../../../config/constants';
+import { recordFinancialRefund } from '../financial-ledger';
+import { requirePublication, requirePro } from '../commercial-access';
 async function lockManagedActivity(
   tx: Transaction,
   actor: PortalActor,
@@ -19,11 +21,11 @@ async function lockManagedActivity(
   activityId: string,
 ) {
   await requireMembership(tx, actor, id);
+  await requireCommercialAccess(tx, id, new Date());
   const result = await rows(
     tx,
     sql`SELECT id FROM activities WHERE id=${activityId} AND organization_id=${id} FOR UPDATE`,
   );
-  await requireCommercialAccess(tx, id, new Date());
   return result.length > 0;
 }
 export async function updateActivity(
@@ -34,7 +36,13 @@ export async function updateActivity(
   const { organizationId, activityId, ...values } = input;
   if (!(await lockManagedActivity(tx, actor, organizationId, activityId)))
     return failure(ERROR_CODES.NOT_FOUND, 'Activity', 'update');
-  const payment = await paymentConfiguration(tx, organizationId, input.paymentMode);
+  if (input.allowExternalBenefitExchange) await requirePro(tx, organizationId);
+  const payment = await paymentConfiguration(
+    tx,
+    organizationId,
+    input.paymentMode,
+    input.priceCents,
+  );
   if (!payment.ok) return payment;
   const [previous] = await tx
     .select()
@@ -66,6 +74,7 @@ export async function publishActivity(
 ) {
   if (!(await lockManagedActivity(tx, actor, id, activityId)))
     return failure(ERROR_CODES.NOT_FOUND, 'Activity', 'publish');
+  await requirePublication(tx, id, activityId);
   await tx
     .update(activities)
     .set({ isActive: true })
@@ -105,8 +114,9 @@ export async function recordBankRefund(
     return failure(ERROR_CODES.CONFLICT, 'Refund', 'state');
   await tx
     .update(bookings)
-    .set({ refundStatus: 'MANUAL_DONE', refundId: reference })
+    .set({ refundStatus: 'MANUAL_DONE', refundId: reference, refundUpdatedAt: new Date() })
     .where(and(eq(bookings.id, bookingId), eq(bookings.organizationId, id)));
+  await recordFinancialRefund(tx, bookingId, reference, booking.amountPaidCents);
   await tx
     .insert(platformAudit)
     .values({ organizationId: id, actorUserId: actor.id, action: 'MANUAL_REFUND_RECORDED' });

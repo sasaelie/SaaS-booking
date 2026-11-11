@@ -3,6 +3,7 @@ import type { StoryTextTone } from '../../config/story';
 import type { Result } from '../../lib/result';
 import type { AudiencePolicy } from '../../config/constants';
 export interface PublicCatalog {
+  readonly showPlatformSignature?: boolean;
   readonly socialLinks?: SocialLinks;
   readonly organizationId: string;
   readonly name: string;
@@ -14,6 +15,7 @@ export interface PublicCatalog {
   readonly storyTextTone?: StoryTextTone;
   readonly activities: readonly {
     readonly id: string;
+    readonly reservationsOpen?: boolean;
     readonly name: string;
     readonly description: string | null;
     readonly priceCents: number;
@@ -25,5 +27,5 @@ export interface PublicCatalogPort {
   find(slug: string): Promise<Result<PublicCatalog>>;
 }
 export interface QrCodePort {
-  encode(url: string): Promise<Result<Uint8Array>>;
+  encode(url: string, format?: 'png' | 'pdf'): Promise<Result<Uint8Array>>;
 }

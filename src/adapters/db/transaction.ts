@@ -18,13 +18,14 @@ export async function atomic<T>(
   db: DrizzlePgDb,
   module: string,
   action: (tx: Transaction) => Promise<Result<T>>,
+  configuration?: Parameters<DrizzlePgDb['transaction']>[1],
 ): Promise<Result<T>> {
   try {
     return await db.transaction(async (tx) => {
       const result = await action(tx);
       required(result);
       return result;
-    });
+    }, configuration);
   } catch (error: unknown) {
     return error instanceof DatabaseFailure ? failAndLog(error.appError) : logUnexpected(module);
   }

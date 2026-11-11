@@ -3,3 +3,4 @@ export * from './schema/schedule';
 export * from './schema/booking';
 export * from './schema/voucher';
 export * from './schema/jobs';
+export * from './schema/financial';

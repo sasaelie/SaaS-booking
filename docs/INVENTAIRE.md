@@ -1,8 +1,8 @@
 # Inventaire de la plateforme
 
-629 fichiers versionnés ou préparés dans cette branche, dont 460 sous `src/`.
+685 fichiers versionnés ou préparés dans cette branche, dont 495 sous `src/`.
 
-Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 014.
+Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 018.
 
 ```text
 .env.example
@@ -21,9 +21,11 @@ docs/CAHIER-CHARGES-LIBERTE-PRO.md
 docs/CONNEXION.md
 docs/ENVIRONNEMENT-TEST.md
 docs/ETAT-FONCTIONNEL.md
+docs/EXPLOITATION-LIBERTE-PRO.md
 docs/HEBERGEMENT-RECETTE.md
 docs/INTERFACE.md
 docs/INVENTAIRE.md
+docs/LIVRAISON-LIBERTE-PRO.md
 docs/OPERATIONS.md
 docs/PLAN-AUDIT-PARCOURS.md
 docs/PLAN-MIGRATION-LIBERTE-PRO.md
@@ -44,6 +46,8 @@ docs/audit-parcours/organisateur-apres.png
 docs/audit-parcours/organisateur-avant.png
 docs/audit-parcours/participant-apres.png
 docs/audit-parcours/participant-avant.png
+docs/previews/commercial/liberte-mobile.png
+docs/previews/commercial/pro-desktop.png
 docs/previews/desktop-coordonnees.png
 docs/previews/desktop-seance.png
 docs/previews/mobile-coordonnees.png
@@ -81,6 +85,10 @@ migrations/011_appearance.sql
 migrations/012_story_text_tone.sql
 migrations/013_organizer_service.sql
 migrations/014_default_voucher_validity.sql
+migrations/015_commercial_financial.sql
+migrations/016_commercial_transitions.sql
+migrations/017_financial_jobs.sql
+migrations/018_financial_history.sql
 next-env.d.ts
 next.config.ts
 package-lock.json
@@ -91,6 +99,7 @@ scripts/check-storage.ts
 scripts/export-hosted-migrations.ts
 scripts/grant-platform-admin.ts
 scripts/migrate.ts
+scripts/preview-operational-retention.ts
 scripts/seed.ts
 scripts/test-summary.ts
 src/adapters/auth/application-auth.ts
@@ -98,6 +107,7 @@ src/adapters/auth/auth-email.ts
 src/adapters/auth/membership-authorization.adapter.ts
 src/adapters/auth/oidc-authorization.adapter.ts
 src/adapters/auth/session-identity.adapter.ts
+src/adapters/db/accounting-expiry.ts
 src/adapters/db/activity-reader.ts
 src/adapters/db/activity-schedule.ts
 src/adapters/db/bank/decision.ts
@@ -106,10 +116,12 @@ src/adapters/db/client.ts
 src/adapters/db/closure/cancel-booking.ts
 src/adapters/db/closure/pause-context.ts
 src/adapters/db/closure/read.ts
+src/adapters/db/commercial-access.ts
 src/adapters/db/drizzle-activity.repository.ts
 src/adapters/db/drizzle-bank.repository.ts
 src/adapters/db/drizzle-brand-media.repository.ts
 src/adapters/db/drizzle-closure.repository.ts
+src/adapters/db/drizzle-financial.repository.ts
 src/adapters/db/drizzle-gdpr.repository.ts
 src/adapters/db/drizzle-pause.repository.ts
 src/adapters/db/drizzle-payment.repository.ts
@@ -120,16 +132,21 @@ src/adapters/db/drizzle-self-booking.repository.ts
 src/adapters/db/drizzle-session.repository.ts
 src/adapters/db/drizzle-voucher-quote.repository.ts
 src/adapters/db/drizzle-voucher.repository.ts
+src/adapters/db/financial-export.ts
+src/adapters/db/financial-ledger.ts
 src/adapters/db/jobs/enqueue.ts
 src/adapters/db/jobs/event-updates.ts
 src/adapters/db/jobs/job-filter.ts
 src/adapters/db/jobs/reminders.ts
 src/adapters/db/jobs/runner.ts
+src/adapters/db/operational-retention.ts
 src/adapters/db/payment/collision.ts
 src/adapters/db/payment/confirm.ts
 src/adapters/db/payment/locks.ts
 src/adapters/db/payment/refunds.ts
 src/adapters/db/payment/verify.ts
+src/adapters/db/platform-cost.ts
+src/adapters/db/platform-finance.ts
 src/adapters/db/pool-options.ts
 src/adapters/db/portal/access.ts
 src/adapters/db/portal/activities.ts
@@ -159,6 +176,7 @@ src/adapters/db/reservation/values.ts
 src/adapters/db/reservation/voucher.ts
 src/adapters/db/schema.ts
 src/adapters/db/schema/booking.ts
+src/adapters/db/schema/financial.ts
 src/adapters/db/schema/jobs.ts
 src/adapters/db/schema/organization.ts
 src/adapters/db/schema/saas.ts
@@ -178,11 +196,15 @@ src/adapters/jobs/job-validation.ts
 src/adapters/jobs/mail-content.ts
 src/adapters/jobs/purge-brand.ts
 src/adapters/jobs/purge.ts
+src/adapters/jobs/reconcile-financial.ts
+src/adapters/jobs/reconcile-payout.ts
 src/adapters/payments/connect-state.ts
 src/adapters/payments/saas/change.ts
 src/adapters/payments/saas/checkout.ts
 src/adapters/payments/saas/context.ts
+src/adapters/payments/saas/invoice.ts
 src/adapters/payments/saas/lock.ts
+src/adapters/payments/saas/refund.ts
 src/adapters/payments/saas/sync-values.ts
 src/adapters/payments/saas/sync.ts
 src/adapters/payments/saas/webhook-event.ts
@@ -190,10 +212,14 @@ src/adapters/payments/saas/webhook.ts
 src/adapters/payments/stripe-checkout.ts
 src/adapters/payments/stripe-connect-webhook.adapter.ts
 src/adapters/payments/stripe-connect.adapter.ts
+src/adapters/payments/stripe-financial-webhook.ts
 src/adapters/payments/stripe-payment.adapter.ts
+src/adapters/payments/stripe-payout.ts
+src/adapters/payments/stripe-reconciliation.ts
 src/adapters/payments/stripe-subscription.adapter.ts
 src/adapters/payments/stripe-validation.ts
 src/adapters/share/qr-code.adapter.ts
+src/adapters/share/qr-pdf.ts
 src/adapters/share/widget-source.ts
 src/adapters/storage/brand-reader.adapter.ts
 src/adapters/storage/postgres-proof.adapter.ts
@@ -239,14 +265,20 @@ src/app/_portal/BookingManagement.tsx
 src/app/_portal/ConnectSettings.tsx
 src/app/_portal/CopyCode.tsx
 src/app/_portal/CreateOrganizationForm.tsx
+src/app/_portal/FinancialCounter.tsx
 src/app/_portal/FirstActivityState.tsx
+src/app/_portal/LibertySelection.tsx
 src/app/_portal/ManualVoucherForm.tsx
 src/app/_portal/MediaUpload.tsx
+src/app/_portal/OnlineVoucher.tsx
 src/app/_portal/OrganizationCards.tsx
 src/app/_portal/OrganizationIdentityFields.tsx
 src/app/_portal/OrganizationSettings.tsx
 src/app/_portal/Pagination.tsx
+src/app/_portal/PlanCards.tsx
 src/app/_portal/PlatformAccessForms.tsx
+src/app/_portal/PlatformCostForm.tsx
+src/app/_portal/PlatformFinance.tsx
 src/app/_portal/PlatformHistoryCards.tsx
 src/app/_portal/PlatformOperationCards.tsx
 src/app/_portal/PlatformOrganizations.tsx
@@ -289,8 +321,11 @@ src/app/_portal/activity/WeeklySlotRow.tsx
 src/app/_portal/activity/WeeklySlots.tsx
 src/app/_portal/admin-response.ts
 src/app/_portal/administration.css
+src/app/_portal/commercial-form.ts
+src/app/_portal/commercial.css
 src/app/_portal/date-label.ts
 src/app/_portal/form-command.ts
+src/app/_portal/form-values.ts
 src/app/_portal/load-workspace.ts
 src/app/_portal/management-tone.ts
 src/app/_portal/navigation.css
@@ -338,6 +373,7 @@ src/app/_ui/IceBookingWidget.tsx
 src/app/_ui/IceIcon.tsx
 src/app/_ui/ParticipantNavigation.tsx
 src/app/_ui/ParticipationTerms.tsx
+src/app/_ui/PlatformSignature.tsx
 src/app/_ui/SocialLinks.tsx
 src/app/_ui/StagingNotice.tsx
 src/app/_ui/StoryPanel.tsx
@@ -381,6 +417,7 @@ src/app/api/auth/[...all]/route.ts
 src/app/api/bank-proof/route.ts
 src/app/api/branding/[organizationId]/[kind]/route.ts
 src/app/api/jobs/route.ts
+src/app/api/portal/accounting/route.ts
 src/app/api/portal/command/route.ts
 src/app/api/portal/manage/route.ts
 src/app/api/portal/media/route.ts
@@ -414,6 +451,8 @@ src/composition/authentication.ts
 src/composition/brand-media.ts
 src/composition/cancellation-notifications.ts
 src/composition/connect.ts
+src/composition/dispatch-commercial.ts
+src/composition/financial-webhook.ts
 src/composition/portal-command.ts
 src/composition/portal-management.ts
 src/composition/portal-mutation.ts
@@ -431,6 +470,7 @@ src/config/appearance.ts
 src/config/auth-labels.ts
 src/config/auth-ui.ts
 src/config/booking-ui.ts
+src/config/commercial.ts
 src/config/constants.ts
 src/config/database.ts
 src/config/env.ts
@@ -453,6 +493,7 @@ src/core/domain/accounting-retention.ts
 src/core/domain/booking-request.ts
 src/core/domain/booking-validation.ts
 src/core/domain/cancellation-message.ts
+src/core/domain/commercial.ts
 src/core/domain/date-math.ts
 src/core/domain/iban.ts
 src/core/domain/manual-voucher-eligibility.ts
@@ -482,6 +523,7 @@ src/core/ports/brand-media.port.ts
 src/core/ports/closure.port.ts
 src/core/ports/connect-gateway.port.ts
 src/core/ports/event-details.ts
+src/core/ports/financial.port.ts
 src/core/ports/gdpr.port.ts
 src/core/ports/jobs.port.ts
 src/core/ports/pause.port.ts
@@ -514,6 +556,7 @@ src/core/use-cases/portal/actor.ts
 src/core/use-cases/portal/brand-media.use-case.ts
 src/core/use-cases/portal/connect.use-case.ts
 src/core/use-cases/portal/connected-account-webhook.use-case.ts
+src/core/use-cases/portal/financial.use-case.ts
 src/core/use-cases/portal/local-pause.use-case.ts
 src/core/use-cases/portal/manage-activity.use-case.ts
 src/core/use-cases/portal/manual-voucher.use-case.ts
@@ -532,6 +575,7 @@ src/core/use-cases/read-self-booking.use-case.ts
 src/core/use-cases/voucher-lifecycle.use-case.ts
 src/core/validation/admin-command.ts
 src/core/validation/appearance.ts
+src/core/validation/commercial.ts
 src/core/validation/event-details.ts
 src/core/validation/local-pause.ts
 src/core/validation/manual-voucher.ts
@@ -558,6 +602,7 @@ tests/e2e/appearance.spec.ts
 tests/e2e/bank-fixtures.ts
 tests/e2e/bank-proof.spec.ts
 tests/e2e/booking.spec.ts
+tests/e2e/commercial.spec.ts
 tests/e2e/embed-fixtures.ts
 tests/e2e/embed.spec.ts
 tests/e2e/empty-states.spec.ts
@@ -587,12 +632,20 @@ tests/integration/branding.test.ts
 tests/integration/cancellation-mail-fixtures.ts
 tests/integration/cancellation-notifications.test.ts
 tests/integration/closure-jobs.test.ts
+tests/integration/commercial-expiry.test.ts
+tests/integration/commercial-refusals.test.ts
+tests/integration/commercial.test.ts
 tests/integration/connect-webhook.test.ts
 tests/integration/connect.test.ts
 tests/integration/database.ts
+tests/integration/financial-fixtures.ts
+tests/integration/financial-refunds.test.ts
+tests/integration/financial-webhook.test.ts
+tests/integration/financial.test.ts
 tests/integration/fixtures.ts
 tests/integration/journey-eligibility.test.ts
 tests/integration/lifecycle-fixtures.ts
+tests/integration/operational-retention.test.ts
 tests/integration/payment.test.ts
 tests/integration/platform-monitoring.test.ts
 tests/integration/portal-fixtures.ts
@@ -609,11 +662,13 @@ tests/integration/service-voucher-fixtures.ts
 tests/integration/service-voucher-recovery.test.ts
 tests/integration/service-vouchers.test.ts
 tests/integration/session-details.test.ts
+tests/integration/subscription-finance.test.ts
 tests/integration/subscription-webhook.test.ts
 tests/integration/subscription.test.ts
 tests/integration/vouchers.test.ts
 tests/unit/calendar.test.ts
 tests/unit/cancellation-mail.test.ts
+tests/unit/commercial.test.ts
 tests/unit/database-config.test.ts
 tests/unit/event-details.test.ts
 tests/unit/foundations.test.ts
@@ -627,6 +682,7 @@ tests/unit/service-boundaries.test.ts
 tests/unit/session-details-input.test.ts
 tests/unit/staging.test.ts
 tests/unit/status-indicator.test.ts
+tests/unit/stripe-commercial.test.ts
 tests/unit/stripe.test.ts
 tests/unit/subscription-access.test.ts
 tests/unit/tokens.test.ts

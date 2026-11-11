@@ -1,7 +1,12 @@
 import { localDayAndTimeToUtc } from '../../core/domain/timezone';
 import { SOCIAL_NETWORKS } from '../../config/service';
-import { MONEY } from '../../config/constants';
+import { text, cents } from './form-values';
+export { cents } from './form-values';
+import { commercialFormInput } from './commercial-form';
 export type PortalAction =
+  | 'platform-cost'
+  | 'redeem-online-voucher'
+  | 'liberty-selection'
   | 'manual-voucher'
   | 'update-activity'
   | 'publish-activity'
@@ -16,15 +21,6 @@ export type PortalAction =
   | 'grant-access'
   | 'suspend'
   | 'subscription';
-function text(form: FormData, name: string) {
-  return String(form.get(name) ?? '').trim();
-}
-export function cents(value: string): number {
-  const normalized = value.trim().replace(',', '.');
-  if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) return Number.NaN;
-  const [whole, fraction = ''] = normalized.split('.');
-  return Number(whole) * MONEY.CENTS_PER_UNIT + Number(fraction.padEnd(MONEY.DECIMAL_PLACES, '0'));
-}
 function activityInput(form: FormData, organizationId: string) {
   const weekly = form.get('scheduleKind') === 'WEEKLY';
   const days = form.getAll('dayOfWeek');
@@ -110,6 +106,8 @@ function managementInput(action: PortalAction, form: FormData, organizationId: s
   }
 }
 export function formCommand(action: PortalAction, form: FormData, organizationId = '') {
+  const commercial = commercialFormInput(action, form, organizationId);
+  if (commercial !== undefined) return { action, input: commercial };
   const managed = managementInput(action, form, organizationId);
   if (managed !== undefined) return { action, input: managed };
   let input: unknown;
@@ -135,7 +133,11 @@ export function formCommand(action: PortalAction, form: FormData, organizationId
       input = { organizationId, suspended: text(form, 'value') === 'true' };
       break;
     case 'subscription':
-      input = { organizationId, operation: text(form, 'operation') };
+      input = {
+        organizationId,
+        operation: text(form, 'operation'),
+        interval: text(form, 'interval') || 'month',
+      };
       break;
   }
   return { action, input };
@@ -143,6 +145,9 @@ export function formCommand(action: PortalAction, form: FormData, organizationId
 
 function eventInput(form: FormData) {
   return {
+    ...(form.has('externalFieldAvailable')
+      ? { allowExternalBenefitExchange: form.has('allowExternalBenefitExchange') }
+      : {}),
     address: text(form, 'address'),
     addressVisibility: text(form, 'addressVisibility') || 'PUBLIC',
     practicalInfo: text(form, 'practicalInfo'),

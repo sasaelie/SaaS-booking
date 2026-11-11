@@ -1,3 +1,4 @@
+import { financialWebhook } from '../../../../composition/financial-webhook';
 import { boundedBody } from '../../../../lib/http-body';
 import { ERROR_CODES, HTTP_STATUS, JOB_RULES } from '../../../../config/constants';
 import { runtime as applicationRuntime } from '../../../../composition/runtime';
@@ -12,12 +13,20 @@ export async function POST(request: Request): Promise<Response> {
     new TextDecoder().decode(bytes.value),
     request.headers.get('stripe-signature') ?? '',
   );
+  const financial = result.ok
+    ? await financialWebhook(
+        app.value,
+        new TextDecoder().decode(bytes.value),
+        request.headers.get('stripe-signature') ?? '',
+        true,
+      )
+    : result;
   return Response.json(
-    { received: result.ok },
+    { received: financial.ok },
     {
-      status: result.ok
+      status: financial.ok
         ? HTTP_STATUS.OK
-        : result.error.code === ERROR_CODES.UNAUTHORIZED
+        : financial.error.code === ERROR_CODES.UNAUTHORIZED
           ? HTTP_STATUS.BAD_REQUEST
           : HTTP_STATUS.UNAVAILABLE,
     },

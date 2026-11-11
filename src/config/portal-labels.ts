@@ -23,7 +23,7 @@ export const PORTAL = {
   CONFIG_ERROR:
     'Ce service n’est pas encore configuré. Contactez l’administrateur de la plateforme.',
   ACCESS_ERROR:
-    'Votre abonnement doit être actif pour créer de nouvelles activités ou recevoir de nouvelles réservations.',
+    'Cette action nécessite Studio Pro. Liberté permet deux activités ouvertes aux réservations, avec paiement en ligne.',
   OWNER_ERROR: 'Vous n’avez pas les droits nécessaires pour cette opération.',
   SLUG_UNAVAILABLE: 'Ce nom de lien est déjà utilisé. Choisissez un autre nom.',
   RATE_LIMITED: 'Trop de demandes rapprochées. Patientez un moment avant de réessayer.',

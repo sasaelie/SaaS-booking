@@ -40,7 +40,9 @@ it('confirms once for duplicate and semantically duplicate payment events', asyn
   const [booking] = await db.select().from(bookings);
   expect(booking?.status).toBe(BOOKING_STATUSES.CONFIRMED);
   expect(booking?.amountPaidCents).toBe(3000);
-  expect(await db.select().from(outboxJobs)).toHaveLength(1);
+  const jobs = await db.select().from(outboxJobs);
+  expect(jobs.filter((job) => job.type === JOB_TYPES.CONFIRMATION)).toHaveLength(1);
+  expect(jobs.filter((job) => job.type === JOB_TYPES.FINANCIAL_RECONCILE)).toHaveLength(1);
 });
 it('rejects a signed payment whose amount or currency disagrees with the booking', async () => {
   const input = await paidFixture();
@@ -77,6 +79,6 @@ it('queues a durable refund instead of confirming a late payment on a cancelled 
   expect(result.status).toBe('REFUND_QUEUED');
   await repository.confirmPaymentOrDetectCollisionAtomically(payload, new Date());
   const jobs = await db.select().from(outboxJobs);
-  expect(jobs).toHaveLength(1);
-  expect(jobs[0]?.type).toBe(JOB_TYPES.REFUND);
+  expect(jobs.filter((job) => job.type === JOB_TYPES.REFUND)).toHaveLength(1);
+  expect(jobs.filter((job) => job.type === JOB_TYPES.FINANCIAL_RECONCILE)).toHaveLength(1);
 });

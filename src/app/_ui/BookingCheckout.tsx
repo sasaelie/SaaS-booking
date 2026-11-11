@@ -25,7 +25,7 @@ export function BookingCheckout({ flow }: { readonly flow: BookingFlowState }) {
       <button
         type="submit"
         className="liquid-ice-button ice-primary ice-submit"
-        disabled={disabled}
+        disabled={(!flow.data.paymentReady && price.amount > 0) || disabled}
       >
         {price.label}
         <IceIcon name="arrow" />

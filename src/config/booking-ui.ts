@@ -1,4 +1,6 @@
 export const BOOKING_UI = {
+  PAYMENT_NOT_READY:
+    'Le paiement est en cours de configuration. Vous pouvez utiliser un code de report couvrant la totalité de la réservation.',
   BRAND_NOTE: 'Réservation en ligne',
   EYEBROW: 'Un moment, à votre rythme',
   INDIVIDUAL: 'Une place, rien que pour vous.',

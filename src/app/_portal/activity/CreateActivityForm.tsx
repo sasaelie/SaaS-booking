@@ -7,9 +7,11 @@ import { ActivityRules } from './ActivityRules';
 export function CreateActivityForm({
   organizationId,
   disabled,
+  pro = true,
 }: {
   readonly organizationId: string;
   readonly disabled: boolean;
+  readonly pro?: boolean;
 }) {
   return (
     <section className="portal-panel">
@@ -19,7 +21,7 @@ export function CreateActivityForm({
         submitLabel={ACTIVITY_UI.CREATE}
         disabled={disabled}
       >
-        <ActivityBasics />
+        <ActivityBasics pro={pro} />
         <ActivitySchedule />
         <ActivityRules />
       </PortalForm>

@@ -1,3 +1,4 @@
+import { canUsePro, effectivePaymentMode } from '../../../core/domain/commercial';
 import { eq, sql } from 'drizzle-orm';
 import { bookings } from '../schema';
 import type { Executor } from '../transaction';
@@ -23,7 +24,18 @@ export async function portalOverview(db: Executor, actor: PortalActor, id: strin
   if (!schedule.ok) return schedule;
   return ok({
     organization: organization.value,
-    activities,
+    activities: activities.map((activity) => ({
+      ...activity,
+      reservationsOpen:
+        !organization.value.access.suspendedAt &&
+        (canUsePro(organization.value.access, new Date()) ||
+          Boolean(organization.value.access.libertyActivityIds?.includes(activity.id))),
+      paymentMode: effectivePaymentMode(
+        activity.paymentMode,
+        activity.priceCents,
+        canUsePro(organization.value.access, new Date()),
+      ),
+    })),
     sessions: schedule.value,
     bookingCount: counts?.bookingCount ?? 0,
     pendingProofCount: counts?.pendingProofCount ?? 0,

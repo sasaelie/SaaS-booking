@@ -34,7 +34,7 @@ it('allows a manager to manage activities but never settings, subscriptions or o
     false,
   );
 });
-it('blocks new dates and re-publication after expiry but keeps history and settings accessible', async () => {
+it('keeps dates, two publications, history and settings accessible in Liberty after expiry', async () => {
   const owner = await portalFixture(true);
   required(await owner.repository.grantAccess(owner.actor, owner.organizationId, true));
   const activity = required(
@@ -53,11 +53,11 @@ it('blocks new dates and re-publication after expiry but keeps history and setti
         capacity: 5,
       })
     ).ok,
-  ).toBe(false);
+  ).toBe(true);
   expect(
     (await owner.repository.publishActivity(owner.actor, owner.organizationId, activity.activityId))
       .ok,
-  ).toBe(false);
+  ).toBe(true);
   expect((await owner.repository.overview(owner.actor, owner.organizationId)).ok).toBe(true);
   required(
     await owner.repository.updateSettings(owner.actor, {

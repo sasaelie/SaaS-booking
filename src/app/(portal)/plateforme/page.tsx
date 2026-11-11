@@ -1,4 +1,6 @@
+import { PlatformCostForm } from '../../_portal/PlatformCostForm';
 import { ADMIN } from '../../../config/administration';
+import { PlatformFinance } from '../../_portal/PlatformFinance';
 import type { PlatformOverview } from '../../../core/ports/portal-models';
 import { headers } from 'next/headers';
 import { portal } from '../../../composition/portal';
@@ -25,6 +27,8 @@ export default async function Page({
     <>
       <PortalHeading title={ADMIN.OVERVIEW_TITLE} description={PLATFORM_UI.INTRO} />
       <PlatformMetrics data={data} />
+      <PlatformFinance data={data} />
+      <PlatformCostForm data={data} />
       {data.deferredJobs ? (
         <p className="portal-notice">
           {PLATFORM_UI.JOBS} : {data.deferredJobs}

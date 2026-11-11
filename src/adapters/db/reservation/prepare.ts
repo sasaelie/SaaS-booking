@@ -39,8 +39,6 @@ async function validateCapacity(
 }
 export async function prepareReservation(tx: Transaction, context: InsertContext) {
   const { activity, input, now } = context;
-  if (activity.paymentMode === 'BANK_TRANSFER' && (!activity.bankIban || !activity.bankAccountName))
-    required(failure(ERROR_CODES.CONFIGURATION_ERROR, 'Reservation', 'bankConfiguration'));
   const terms = required(await generateDynamicTerms({ ...activity, activityName: activity.name }));
   const data = required(
     validateBookingInputWithPolicy(input.input, {
@@ -60,6 +58,7 @@ export async function prepareReservation(tx: Transaction, context: InsertContext
       now,
     ),
   );
+  validatePayment(activity, voucher.remaining);
   const session = await lockSession(
     tx,
     activity.organizationId,
@@ -70,4 +69,17 @@ export async function prepareReservation(tx: Transaction, context: InsertContext
   );
   await validateCapacity(tx, session, now);
   return { terms, data, voucher, session };
+}
+
+function validatePayment(activity: ActivityWithScheduleConfig, remaining: number) {
+  if (remaining > 0 && activity.paymentReady === false)
+    required(
+      failure(
+        activity.paymentMode === 'BANK_TRANSFER'
+          ? ERROR_CODES.BANK_DETAILS_REQUIRED
+          : ERROR_CODES.STRIPE_ACCOUNT_REQUIRED,
+        'Reservation',
+        'payment-configuration',
+      ),
+    );
 }

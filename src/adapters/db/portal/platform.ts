@@ -9,6 +9,7 @@ import { ok } from '../../../lib/result';
 import { failure } from '../../../lib/errors';
 import { ERROR_CODES } from '../../../config/constants';
 import { platformOrganizationRows, platformCounts } from './platform-data';
+import { platformFinance } from '../platform-finance';
 export async function platformOverview(
   tx: Transaction,
   actor: PortalActor,
@@ -24,6 +25,7 @@ export async function platformOverview(
   const list = await platformOrganizationRows(tx, search, filter.page);
   const counts = await platformCounts(tx, search);
   return ok({
+    financial: await platformFinance(tx),
     organizations: list.map(({ organization, access, ...other }) => ({
       ...organization,
       access,
@@ -58,16 +60,25 @@ export async function setPlatformAccess(
     return failure(ERROR_CODES.CONFLICT, 'Platform', 'paid-subscription');
   await tx
     .update(organizationAccess)
-    .set({ ...values, updatedAt: new Date() })
+    .set({
+      ...values,
+      updatedAt: new Date(),
+      ...('complimentary' in values && !access.libertySelectionManual
+        ? { libertySelectionAt: null }
+        : {}),
+    })
     .where(eq(organizationAccess.organizationId, id));
-  const action =
-    'complimentary' in values
-      ? values.complimentary
-        ? 'ACCESS_GRANTED'
-        : 'ACCESS_REVOKED'
-      : values.suspendedAt
-        ? 'SUSPENDED'
-        : 'RESTORED';
+  const action = accessAction(values);
   await tx.insert(platformAudit).values({ organizationId: id, actorUserId: actor.id, action });
   return ok(undefined);
+}
+
+function accessAction(values: { complimentary: boolean } | { suspendedAt: Date | null }) {
+  return 'complimentary' in values
+    ? values.complimentary
+      ? 'ACCESS_GRANTED'
+      : 'ACCESS_REVOKED'
+    : values.suspendedAt
+      ? 'SUSPENDED'
+      : 'RESTORED';
 }

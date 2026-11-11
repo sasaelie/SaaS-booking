@@ -25,6 +25,8 @@ export function publicBookingPage(
 ) {
   return {
     ...publicIdentity(activity),
+    showPlatformSignature: activity.showPlatformSignature ?? false,
+    paymentReady: activity.paymentReady ?? true,
     terms,
     brand: {
       storyTextTone: activity.storyTextTone ?? 'WHITE',

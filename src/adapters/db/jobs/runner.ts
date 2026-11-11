@@ -8,6 +8,7 @@ import type { JobHandlerPort, JobRunnerPort } from '../../../core/ports/jobs.por
 import { JOB_RULES, JOB_TYPES, TIME } from '../../../config/constants';
 import { ok, type Result } from '../../../lib/result';
 import { RefundJobSchema, PurgeJobSchema } from '../../jobs/job-validation';
+import { recordFinancialRefund } from '../financial-ledger';
 async function completeEffect(
   tx: Transaction,
   job: typeof outboxJobs.$inferSelect,
@@ -24,6 +25,10 @@ async function completeEffect(
     const payload = RefundJobSchema.parse(job.payload);
     await tx.execute(
       sql`UPDATE bookings SET refund_status='REFUNDED',refund_id=${refundId} WHERE id=${payload.bookingId} AND organization_id=${job.organizationId} AND payment_reference=${payload.paymentReference}`,
+    );
+    await recordFinancialRefund(tx, payload.bookingId, refundId, payload.amountCents);
+    await tx.execute(
+      sql`UPDATE bookings SET refund_updated_at=now() WHERE id=${payload.bookingId} AND organization_id=${job.organizationId}`,
     );
   }
   await tx

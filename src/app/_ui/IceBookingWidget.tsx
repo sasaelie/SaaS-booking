@@ -8,6 +8,7 @@ import { DEFAULTS } from '../../config/constants';
 import { BookingBrand } from './BookingBrand';
 import { BookingHeader } from './BookingHeader';
 import { BookingFlow } from './BookingFlow';
+import { PlatformSignature } from './PlatformSignature';
 export function IceBookingWidget({ data }: { readonly data: BookingPageData }) {
   const color = /^#[0-9a-f]{6}$/i.test(data.primaryTextColor)
     ? data.primaryTextColor
@@ -23,6 +24,7 @@ export function IceBookingWidget({ data }: { readonly data: BookingPageData }) {
         <BookingFlow data={data} />
       </div>
       <ParticipationTerms text={data.terms.fullText} />
+      {data.showPlatformSignature ? <PlatformSignature /> : null}
     </div>
   );
 }

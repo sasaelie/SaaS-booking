@@ -9,6 +9,7 @@ import { ok, type Result } from '../../lib/result';
 import { failure, unexpected } from '../../lib/errors';
 import { ERROR_CODES, BOOKING_STATUSES, JOB_TYPES } from '../../config/constants';
 import type { GdprRepositoryPort, GdprBookingSummary } from '../../core/ports/gdpr.port';
+import { retainOperational } from './operational-retention';
 const NON_ACCOUNTING = { phone: null, marketingOptIn: false };
 const ANONYMIZED = {
   ...NON_ACCOUNTING,
@@ -20,6 +21,9 @@ const ANONYMIZED = {
 };
 export class DrizzleGdprRepository implements GdprRepositoryPort {
   constructor(private readonly db: DrizzlePgDb) {}
+  purgeClosedOperationalData(now: Date, dryRun: boolean) {
+    return retainOperational(this.db, now, dryRun);
+  }
   anonymizeUnpaidBookingsOlderThanAtomically(
     cutoffDate: Date,
   ): Promise<Result<{ readonly anonymizedCount: number }>> {

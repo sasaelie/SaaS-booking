@@ -1,7 +1,7 @@
 # Cahier des charges — Liberté et Studio Pro
 
 Décisions du propriétaire consolidées le 11 novembre 2026, dont sa réponse « 30 jours ».
-Ce document décrit la cible ; il ne décrit pas des fonctionnalités déjà livrées.
+Ce document fixe la cible. L’état de réalisation et les vérifications sont détaillés dans LIVRAISON-LIBERTE-PRO.md.
 Le Pass Événement et les anciennes propositions à commission plafonnée sont abandonnés.
 
 ## Offre par espace organisateur
@@ -37,8 +37,8 @@ La réservation représente une seule place, conformément au modèle existant.
 Les devis, reçus et commandes gardent le même prix et la même version tarifaire.
 Une commission ne doit jamais être comptée une seconde fois lors d'un webhook rejoué.
 Les réservations gratuites ou entièrement réglées par avoir n'entraînent pas un débit Stripe.
-Avant développement du calcul, préciser l'assiette d'un paiement partiellement réglé par avoir,
-l'arrondi et le montant minimal encaissable : ces cas ne sont pas fixés par l'exemple à 30 €.
+Règle appliquée pour les tests : assiette du paiement après avoir, arrondi au centime le plus proche
+(demi-centime vers le haut), encaissement positif minimal de 50 centimes et zéro sans frais.
 
 La commission est calibrée pour les paiements courants, sans garantie universelle de marge.
 Les autres cartes, conversions, coûts Connect et litiges sont suivis séparément dans la

@@ -1,6 +1,9 @@
 import type { bookings } from '../schema';
 import type { InsertContext, prepareReservation } from './prepare';
 import type { initialState } from './state';
+import { commercialQuote } from '../../../core/domain/commercial';
+import { required } from '../transaction';
+import { COMMERCIAL } from '../../../config/commercial';
 type Prepared = Awaited<ReturnType<typeof prepareReservation>>;
 function attendeeValues(data: Prepared['data']) {
   const { firstName, lastName, email, phone, marketingOptIn } = data;
@@ -23,6 +26,7 @@ export function reservationValues(
 ): typeof bookings.$inferInsert {
   const { activity, input, now } = context;
   return {
+    ...pricingSnapshot(activity, prepared.voucher.remaining, state.paymentMode),
     id,
     paymentReference,
     activityName: activity.name,
@@ -44,5 +48,23 @@ export function reservationValues(
     appliedVoucherId: prepared.voucher.id,
     ...state,
     ...termsValues(prepared, now),
+  };
+}
+
+function pricingSnapshot(activity: InsertContext['activity'], remaining: number, mode: string) {
+  const quote = required(
+    commercialQuote({
+      plan: activity.commercialPlan ?? COMMERCIAL.PRO,
+      amountCents: mode === 'NONE' ? 0 : remaining,
+    }),
+  );
+  return {
+    commercialPlan: quote.plan,
+    pricingVersion: quote.ruleVersion,
+    commissionCents: quote.commissionCents,
+    chargeModel:
+      quote.plan === COMMERCIAL.LIBERTE && quote.amountCents > 0
+        ? COMMERCIAL.DESTINATION
+        : COMMERCIAL.DIRECT,
   };
 }

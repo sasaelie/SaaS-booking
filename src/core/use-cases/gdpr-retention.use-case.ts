@@ -1,3 +1,5 @@
+import { COMMERCIAL } from '../../config/commercial';
+import { TIME } from '../../config/constants';
 import { guardUseCase } from '../../lib/guard-use-case';
 import { accountingArchiveUntil } from '../domain/accounting-retention';
 // src/core/use-cases/gdpr-retention.use-case.ts
@@ -17,6 +19,7 @@ export interface GdprRetentionDeps {
   readonly gdprRepo: GdprRepositoryPort;
   readonly authorization: AuthorizationPort;
   readonly nowProvider?: () => Date;
+  readonly operationalPurgeEnabled?: boolean;
 }
 function subtractMonthsUtc(date: Date, months: number): Date {
   return addMonthsClamped(date, -months);
@@ -31,8 +34,15 @@ export class GdprRetentionUseCase {
       'runScheduledUnpaidAnonymization',
       async () => {
         const now = this.deps.nowProvider ? this.deps.nowProvider() : new Date();
-        const cutoffDate = subtractMonthsUtc(now, DATA_RETENTION.UNPAID_BOOKING_ANONYMIZE_MONTHS);
-        const res = await this.deps.gdprRepo.anonymizeUnpaidBookingsOlderThanAtomically(cutoffDate);
+        const cutoffDate = this.deps.gdprRepo.purgeClosedOperationalData
+          ? new Date(now.getTime() - COMMERCIAL.OPERATIONAL_RETENTION_DAYS * TIME.DAY_MS)
+          : subtractMonthsUtc(now, DATA_RETENTION.UNPAID_BOOKING_ANONYMIZE_MONTHS);
+        const res = this.deps.gdprRepo.purgeClosedOperationalData
+          ? await this.deps.gdprRepo.purgeClosedOperationalData(
+              now,
+              !this.deps.operationalPurgeEnabled,
+            )
+          : await this.deps.gdprRepo.anonymizeUnpaidBookingsOlderThanAtomically(cutoffDate);
         if (!res.ok) return res;
         return ok({ cutoffDate, anonymizedCount: res.value.anonymizedCount });
       },

@@ -1,7 +1,7 @@
+import { commercialState } from '../commercial-access';
 import { eq } from 'drizzle-orm';
 import { organizationAccess } from '../schema/saas';
 import { required, type Executor } from '../transaction';
-import { hasCommercialAccess } from '../../../core/domain/subscription-access';
 import { failure } from '../../../lib/errors';
 import { ERROR_CODES } from '../../../config/constants';
 export async function requireCommercialAccess(db: Executor, organizationId: string, now: Date) {
@@ -9,7 +9,8 @@ export async function requireCommercialAccess(db: Executor, organizationId: stri
     .select()
     .from(organizationAccess)
     .where(eq(organizationAccess.organizationId, organizationId))
-    .for('share');
-  if (!access || !hasCommercialAccess(access, now))
+    .for('update');
+  if (!access || access.suspendedAt || !Number.isFinite(now.getTime()))
     required(failure(ERROR_CODES.SUBSCRIPTION_REQUIRED, 'Access', 'commercial'));
+  await commercialState(db, organizationId, now, true);
 }

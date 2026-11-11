@@ -7,7 +7,7 @@ Moteur de réservation Next.js App Router, TypeScript strict et PostgreSQL, orga
 [Cahier des charges Liberté / Studio Pro](docs/CAHIER-CHARGES-LIBERTE-PRO.md),
 [audit de l'existant](docs/AUDIT-LIBERTE-PRO.md) et
 [plan de migration et de tests](docs/PLAN-MIGRATION-LIBERTE-PRO.md).
-Cette cible remplace les propositions commerciales précédentes ; elle n'est pas encore implémentée.
+L’implémentation et ses limites de recette figurent dans le [rapport de livraison](docs/LIVRAISON-LIBERTE-PRO.md). Cette cible remplace les propositions commerciales précédentes.
 Le [plan Mollie antérieur](docs/PLAN-PAIEMENTS-MOLLIE.md) reste une référence historique,
 sans activation de Mollie ni priorité sur les décisions du nouveau cahier des charges.
 
@@ -43,7 +43,7 @@ Le script affiche le chemin de l’activité de démonstration. Cette activité 
 
 ## Espaces SaaS
 
-L’application comprend une console organisateur et une console du propriétaire de la plateforme. Le tarif initial est de **19,99 EUR par mois**, sans commission de plateforme sur les billets. Une résiliation arrête le renouvellement ; les fonctionnalités restent disponibles jusqu’à l’échéance payée. Ensuite, la gestion des inscriptions existantes reste accessible, les nouvelles activités, séances et réservations sont bloquées côté serveur.
+L’application comprend une console organisateur et une console du propriétaire de la plateforme. Chaque espace démarre en **Liberté : 0 EUR par mois, commission absorbée de 3,5 % + 0,45 EUR par réservation payée, deux activités ouvertes**. **Studio Pro : 29 EUR par mois ou 260 EUR par an**, sans commission de plateforme ; les frais Stripe réels restent dus. Une résiliation conserve Pro jusqu’à l’échéance, puis les nouvelles réservations suivent Liberté. Les dossiers engagés et leurs délais sont conservés. Les anciens comptes de test à 19,99 EUR restent identifiés comme historiques.
 
 - `/inscription`, `/connexion` : compte avec vérification e-mail et récupération du mot de passe.
 - `/app` : organisations, événements ponctuels ou récurrents, inscriptions, virements, remboursements, paramètres et abonnement.

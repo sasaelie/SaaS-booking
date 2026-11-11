@@ -39,6 +39,7 @@ export const CreateActivitySchema = EventDetailsSchema.extend({
   audiencePolicy: z.enum(AUDIENCE_POLICIES),
   paymentMode: z.enum(PAYMENT_MODES),
   requirePhone: z.boolean(),
+  allowExternalBenefitExchange: z.boolean().optional(),
   bookingWindowWeeks: z
     .number()
     .int()

@@ -72,6 +72,8 @@ async function checkout(
     successUrl: `${deps.appUrl}/booking-result`,
     cancelUrl: `${deps.appUrl}/booking-result`,
     merchantAccountId: booking.merchantAccountId,
+    commissionCents: booking.commissionCents,
+    chargeModel: booking.chargeModel,
   });
   if (!result.ok) return result;
   const attached = await deps.sessionRepo.attachCheckout({
@@ -81,13 +83,7 @@ async function checkout(
     checkoutUrl: result.value.checkoutUrl,
     expiresAt: result.value.expiresAt,
   });
-  return attached.ok
-    ? ok({
-        ...publicOutput(booking),
-        checkoutUrl: result.value.checkoutUrl,
-        lockedUntil: result.value.expiresAt,
-      })
-    : attached;
+  return attached.ok ? ok(checkoutResult(booking, result.value)) : attached;
 }
 export class CreateBookingUseCase {
   constructor(private readonly deps: CreateBookingUseCaseDeps) {}
@@ -118,4 +114,15 @@ export class CreateBookingUseCase {
       return token.ok ? ok({ ...output.value, selfServiceToken: token.value }) : token;
     });
   }
+}
+
+function checkoutResult(
+  booking: AtomicSeatReservationOutput,
+  payment: { checkoutUrl: string; expiresAt: Date },
+): CreateBookingOutput {
+  return {
+    ...publicOutput(booking),
+    checkoutUrl: payment.checkoutUrl,
+    lockedUntil: payment.expiresAt,
+  };
 }

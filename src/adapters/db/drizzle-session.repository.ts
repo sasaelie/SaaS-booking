@@ -1,4 +1,3 @@
-import { paymentConfiguration } from './portal/payment-configuration';
 import { requireCommercialAccess } from './portal/access';
 import { replayReservation } from './reservation/replay';
 import { lockBookingContext } from './payment/locks';
@@ -26,12 +25,13 @@ async function reserve(
   const now = await reservationClock(tx, input);
   const existing = await existingBooking(tx, input);
   if (existing) return replayReservation(tx, input, existing.id, now);
-  await lockActivity(tx, input.input.organizationId, input.input.activityId);
   await requireCommercialAccess(tx, input.input.organizationId, new Date());
+  await lockActivity(tx, input.input.organizationId, input.input.activityId);
   const activity = required(
     await readActivity(tx, input.input.organizationId, input.input.activityId),
   );
-  required(await paymentConfiguration(tx, input.input.organizationId, activity.paymentMode));
+  if (!activity.commercialAccessAllowed)
+    return failure(ERROR_CODES.SUBSCRIPTION_REQUIRED, 'Reservation', 'activity-access');
   return ok(
     await reservationOutput(tx, await insertReservation(tx, { activity, input, now }), now),
   );

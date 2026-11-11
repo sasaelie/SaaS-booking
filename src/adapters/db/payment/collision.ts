@@ -5,6 +5,7 @@ import type { BookingRow } from '../reservation/context';
 import type { ParsedWebhookPaymentEvent } from '../../../core/ports/payment-gateway.port';
 import { queueRefund } from './refunds';
 import { BOOKING_STATUSES } from '../../../config/constants';
+import { recordFinancialPayment } from '../financial-ledger';
 export async function queueCollision(
   tx: Transaction,
   booking: BookingRow,
@@ -25,6 +26,8 @@ export async function queueCollision(
         refundStatus: 'PENDING',
       })
       .where(eq(bookings.id, booking.id));
+  if (booking.status !== BOOKING_STATUSES.CONFIRMED)
+    await recordFinancialPayment(tx, booking.id, event.paymentReference, now);
   await queueRefund(
     tx,
     booking,

@@ -1,8 +1,8 @@
+import { canUsePro } from '../../../../../../core/domain/commercial';
 import { PauseForm } from '../../../../../_portal/activity/PauseForm';
 import type { PortalOverview } from '../../../../../../core/ports/portal-models';
 import { EditActivityForm } from '../../../../../_portal/activity/EditActivityForm';
 import { AddSessionForm } from '../../../../../_portal/activity/AddSessionForm';
-import { hasCommercialAccess } from '../../../../../../core/domain/subscription-access';
 import Link from 'next/link';
 import {
   PORTAL,
@@ -80,21 +80,22 @@ function ActivityManagement({
   return (
     <>
       <EditActivityForm
+        pro={canUsePro(data.organization.access, new Date())}
         activity={activity}
         organizationId={organizationId}
-        disabled={!hasCommercialAccess(data.organization.access, new Date())}
+        disabled={Boolean(data.organization.access.suspendedAt)}
       />
       <AddSessionForm
         activityId={activity.id}
         organizationId={organizationId}
-        disabled={!hasCommercialAccess(data.organization.access, new Date())}
+        disabled={Boolean(data.organization.access.suspendedAt)}
       />
       {!activity.isActive ? (
         <PortalForm
           action="publish-activity"
           organizationId={organizationId}
           submitLabel={ACTIVITY_UI.PUBLISH}
-          disabled={!hasCommercialAccess(data.organization.access, new Date())}
+          disabled={Boolean(data.organization.access.suspendedAt)}
         >
           <input type="hidden" name="activityId" value={activity.id} />
         </PortalForm>

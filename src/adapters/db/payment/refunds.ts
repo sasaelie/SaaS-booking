@@ -17,6 +17,7 @@ export async function queueRefund(
     paymentReference: reference,
     amountCents: amount,
     merchantAccountId: booking.merchantAccountId,
+    chargeModel: booking.chargeModel,
     idempotencyKey: key,
   });
 }
