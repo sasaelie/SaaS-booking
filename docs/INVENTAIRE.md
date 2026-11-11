@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-626 fichiers versionnés, dont 460 sous `src/`.
+629 fichiers versionnés ou préparés dans cette branche, dont 460 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 014.
 
@@ -16,6 +16,8 @@ deploy/supabase-bootstrap.sql
 deploy/supabase-harden.sql
 docs/ADMINISTRATION.md
 docs/ARCHITECTURE.md
+docs/AUDIT-LIBERTE-PRO.md
+docs/CAHIER-CHARGES-LIBERTE-PRO.md
 docs/CONNEXION.md
 docs/ENVIRONNEMENT-TEST.md
 docs/ETAT-FONCTIONNEL.md
@@ -24,6 +26,7 @@ docs/INTERFACE.md
 docs/INVENTAIRE.md
 docs/OPERATIONS.md
 docs/PLAN-AUDIT-PARCOURS.md
+docs/PLAN-MIGRATION-LIBERTE-PRO.md
 docs/PLAN-PAIEMENTS-MOLLIE.md
 docs/PLAN-SEANCES-ET-PRESENTATION.md
 docs/PLAN-SERVICE-ORGANISATEUR.md

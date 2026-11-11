@@ -4,7 +4,12 @@ Moteur de réservation Next.js App Router, TypeScript strict et PostgreSQL, orga
 
 ## Prochaine intégration
 
-[Plan de bataille : Mollie, choix des paiements, abonnements mensuels/annuels et préparation Supabase/Vercel](docs/PLAN-PAIEMENTS-MOLLIE.md). Ce plan décrit la prochaine livraison ; les fonctions Mollie et annuelles ne sont pas encore activées.
+[Cahier des charges Liberté / Studio Pro](docs/CAHIER-CHARGES-LIBERTE-PRO.md),
+[audit de l'existant](docs/AUDIT-LIBERTE-PRO.md) et
+[plan de migration et de tests](docs/PLAN-MIGRATION-LIBERTE-PRO.md).
+Cette cible remplace les propositions commerciales précédentes ; elle n'est pas encore implémentée.
+Le [plan Mollie antérieur](docs/PLAN-PAIEMENTS-MOLLIE.md) reste une référence historique,
+sans activation de Mollie ni priorité sur les décisions du nouveau cahier des charges.
 
 ## Installation
 
