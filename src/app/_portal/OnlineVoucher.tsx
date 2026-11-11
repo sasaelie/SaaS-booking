@@ -1,6 +1,7 @@
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { canUsePro } from '../../core/domain/commercial';
 import { PortalForm } from './PortalForm';
+import { PortalField } from './PortalField';
 export function OnlineVoucher({ organization }: { readonly organization: OrganizationSummary }) {
   if (!canUsePro(organization.access, new Date())) return null;
   return (
@@ -16,10 +17,7 @@ export function OnlineVoucher({ organization }: { readonly organization: Organiz
           organizationId={organization.id}
           submitLabel="Valider le report"
         >
-          <label>
-            Code de report
-            <input name="code" required placeholder="RPT-…" />
-          </label>
+          <PortalField label="Code de report" name="code" required placeholder="RPT-…" />
         </PortalForm>
       </div>
     </details>

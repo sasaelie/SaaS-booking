@@ -2,12 +2,13 @@
 import { ADMIN } from '../../config/administration';
 import { SESSION_UI } from '../../config/session-details';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, type KeyboardEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import { PORTAL } from '../../config/constants';
 import { APPEARANCE } from '../../config/appearance';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { IceIcon } from '../_ui/IceIcon';
+import { portalReturnTarget } from './navigation-target';
 const sections = [
   ['', PORTAL.HOME, 'calendar'],
   ['/activites', PORTAL.ACTIVITIES, 'ticket'],
@@ -29,7 +30,12 @@ export function PortalNav({
   const selected = organizations.find((org) => path.startsWith(`/app/${org.id}`));
   const title = navigationTitle(selected, path);
   return (
-    <nav className="portal-nav" aria-label={PORTAL.ORGANIZER} data-expanded={expanded}>
+    <nav
+      className="portal-nav"
+      aria-label={PORTAL.ORGANIZER}
+      data-expanded={expanded}
+      onKeyDown={(event) => closeOnEscape(event, expanded, () => setExpanded(false))}
+    >
       <MobileBar
         selected={selected}
         path={path}
@@ -112,7 +118,8 @@ function MobileBar({
     <div className="portal-mobile-bar">
       <Link
         className="portal-back"
-        href={selected && path !== `/app/${selected.id}` ? `/app/${selected.id}` : '/app'}
+        href={portalReturnTarget(path, selected?.id).href}
+        aria-label={portalReturnTarget(path, selected?.id).label}
       >
         ← {APPEARANCE.BACK}
       </Link>
@@ -139,4 +146,10 @@ function navigationTitle(selected: OrganizationSummary | undefined, path: string
       )
     : null;
   return section?.[1] ?? PORTAL.ORGANIZATIONS;
+}
+
+function closeOnEscape(event: KeyboardEvent<HTMLElement>, expanded: boolean, close: () => void) {
+  if (event.key !== 'Escape' || !expanded) return;
+  close();
+  event.currentTarget.querySelector<HTMLButtonElement>('.portal-menu-toggle')?.focus();
 }

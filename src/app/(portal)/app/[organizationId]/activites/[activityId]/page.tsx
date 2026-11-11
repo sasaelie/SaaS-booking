@@ -38,7 +38,7 @@ function ActivityDetail({
 }) {
   const organizationId = data.organization.id;
   return (
-    <>
+    <div className="portal-section-stack">
       <PortalHeading
         title={activity.name}
         description={activity.description ?? undefined}
@@ -53,8 +53,7 @@ function ActivityDetail({
           </Link>
         }
       />
-      <ActivityMeta activity={activity} />
-      <AttendeesLink organizationId={organizationId} activityId={activity.id} />
+      <ActivityMeta activity={activity} organizationId={organizationId} />
       <div className="portal-section-heading">
         <h2>{PORTAL.NEXT_SESSIONS}</h2>
       </div>
@@ -65,7 +64,7 @@ function ActivityDetail({
       />
       <PauseForm organizationId={organizationId} activityId={activity.id} />
       <ActivityManagement data={data} activity={activity} />
-    </>
+    </div>
   );
 }
 
@@ -136,15 +135,22 @@ function ArchiveActivity({
   );
 }
 
-function ActivityMeta({ activity }: { readonly activity: PortalOverview['activities'][number] }) {
+function ActivityMeta({
+  activity,
+  organizationId,
+}: {
+  readonly activity: PortalOverview['activities'][number];
+  readonly organizationId: string;
+}) {
   return (
-    <section className="portal-panel">
+    <section className="portal-panel portal-activity-summary">
       <div className="portal-activity-meta">
         <strong>{formatMoney(activity.priceCents, activity.currency)}</strong>
         <span>{AUDIENCE_LABELS[activity.audiencePolicy]}</span>
         <span>{PAYMENT_LABELS[activity.paymentMode]}</span>
         <span>{activity.isActive ? PORTAL.ACTIVE : PORTAL.ARCHIVED}</span>
       </div>
+      <AttendeesLink organizationId={organizationId} activityId={activity.id} />
     </section>
   );
 }

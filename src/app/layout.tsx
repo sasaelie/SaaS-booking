@@ -32,6 +32,7 @@ import './_ui/story-photo.css';
 import './_ui/status-lights.css';
 import './_ui/catalog-cards.css';
 import './_portal/session-details.css';
+import './_portal/portal-alignment.css';
 export const metadata = {
   title: 'Studio Créatif 360 — Réservations',
   description: 'Réservez votre place à une activité.',

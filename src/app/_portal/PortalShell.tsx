@@ -1,3 +1,4 @@
+import { PortalReturn } from './PortalReturn';
 import { PortalScene } from './PortalScene';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -31,7 +32,10 @@ export function PortalShell({
           <SignOutButton />
         </div>
       </aside>
-      <main className="portal-main">{children}</main>
+      <main className="portal-main">
+        <PortalReturn organizationIds={organizations.map((organization) => organization.id)} />
+        {children}
+      </main>
     </div>
   );
 }

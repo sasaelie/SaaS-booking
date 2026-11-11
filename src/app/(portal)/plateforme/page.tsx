@@ -24,7 +24,7 @@ export default async function Page({
   if (!result.ok) return <PortalError message={PLATFORM_UI.DENIED} />;
   const data = result.value;
   return (
-    <>
+    <div className="portal-section-stack">
       <PortalHeading title={ADMIN.OVERVIEW_TITLE} description={PLATFORM_UI.INTRO} />
       <PlatformMetrics data={data} />
       <PlatformFinance data={data} />
@@ -46,7 +46,7 @@ export default async function Page({
         path="/plateforme"
         search={filter.search}
       />
-    </>
+    </div>
   );
 }
 

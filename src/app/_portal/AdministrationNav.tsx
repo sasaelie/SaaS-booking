@@ -11,7 +11,14 @@ export function AdministrationNav() {
   const path = usePathname();
   return (
     <div className="administration-navigation">
-      <Link href="/app" className="administration-back">
+      <Link
+        href="/app"
+        className={
+          path === '/plateforme'
+            ? 'administration-back administration-back-mobile-duplicate'
+            : 'administration-back'
+        }
+      >
         ← {ADMIN.BACK}
       </Link>
       <nav className="administration-tabs" aria-label={ADMIN.TITLE}>

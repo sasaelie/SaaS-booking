@@ -1,0 +1,22 @@
+.portal-section-stack > .portal-heading,
+.portal-section-stack > .portal-metrics,
+.portal-section-stack > .portal-filters,
+.portal-section-stack > .portal-notice {
+  margin-bottom: 0;
+}
+.portal-section-stack > .portal-section-heading {
+  margin: 0;
+}
+.portal-activity-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.portal-activity-summary .portal-button {
+  max-width: 100%;
+}
+.portal-heading > .portal-button {
+  flex-shrink: 0;
+}

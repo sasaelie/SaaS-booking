@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-685 fichiers versionnés ou préparés dans cette branche, dont 495 sous `src/`.
+709 fichiers versionnés ou préparés dans cette branche, dont 499 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 018.
 
@@ -16,6 +16,7 @@ deploy/supabase-bootstrap.sql
 deploy/supabase-harden.sql
 docs/ADMINISTRATION.md
 docs/ARCHITECTURE.md
+docs/AUDIT-BOUTONS-LIENS.md
 docs/AUDIT-LIBERTE-PRO.md
 docs/CAHIER-CHARGES-LIBERTE-PRO.md
 docs/CONNEXION.md
@@ -35,6 +36,7 @@ docs/PLAN-SERVICE-ORGANISATEUR.md
 docs/PLAN-TESTS-SERVICE.md
 docs/POINTS-A-COMPLETER.md
 docs/RAPPORT-AUDIT-PARCOURS.md
+docs/RAPPORT-NAVIGATION-ALIGNEMENTS.md
 docs/RAPPORT-SEANCES-ET-PRESENTATION.md
 docs/RAPPORT-SERVICE-ORGANISATEUR.md
 docs/RAPPORT-TESTS-SERVICE.md
@@ -42,10 +44,19 @@ docs/RECETTE-EN-LIGNE.md
 docs/SAAS-IMPLEMENTATION.md
 docs/SAAS-VERIFICATION.md
 docs/VERIFICATION.md
+docs/audit-actions/inventaire.json
 docs/audit-parcours/organisateur-apres.png
 docs/audit-parcours/organisateur-avant.png
 docs/audit-parcours/participant-apres.png
 docs/audit-parcours/participant-avant.png
+docs/navigation-alignements/apres-abonnement-mobile.png
+docs/navigation-alignements/apres-activite-mobile.png
+docs/navigation-alignements/apres-activite-ordinateur.png
+docs/navigation-alignements/apres-couts-mobile.png
+docs/navigation-alignements/apres-couts-ordinateur.png
+docs/navigation-alignements/avant-abonnement-mobile.png
+docs/navigation-alignements/avant-activite-ordinateur.png
+docs/navigation-alignements/avant-couts-mobile.png
 docs/previews/commercial/liberte-mobile.png
 docs/previews/commercial/pro-desktop.png
 docs/previews/desktop-coordonnees.png
@@ -289,6 +300,7 @@ src/app/_portal/PortalForm.tsx
 src/app/_portal/PortalHeading.tsx
 src/app/_portal/PortalMetric.tsx
 src/app/_portal/PortalNav.tsx
+src/app/_portal/PortalReturn.tsx
 src/app/_portal/PortalScene.tsx
 src/app/_portal/PortalSelect.tsx
 src/app/_portal/PortalShell.tsx
@@ -328,8 +340,10 @@ src/app/_portal/form-command.ts
 src/app/_portal/form-values.ts
 src/app/_portal/load-workspace.ts
 src/app/_portal/management-tone.ts
+src/app/_portal/navigation-target.ts
 src/app/_portal/navigation.css
 src/app/_portal/organization-link.css
+src/app/_portal/portal-alignment.css
 src/app/_portal/portal-components.css
 src/app/_portal/portal-details.css
 src/app/_portal/portal-forms.css
@@ -476,6 +490,7 @@ src/config/database.ts
 src/config/env.ts
 src/config/file-signatures.ts
 src/config/http-limits.ts
+src/config/navigation.ts
 src/config/participant-navigation.ts
 src/config/portal-activity-labels.ts
 src/config/portal-billing-labels.ts
@@ -597,6 +612,12 @@ src/lib/sha256.ts
 src/lib/suggest-organization-slug.ts
 src/lib/trusted-origin.ts
 src/proxy.ts
+tests/e2e/action-audit-fixtures.ts
+tests/e2e/action-commercial.spec.ts
+tests/e2e/action-filters-admin.spec.ts
+tests/e2e/action-management.spec.ts
+tests/e2e/action-navigation.spec.ts
+tests/e2e/action-secondary.spec.ts
 tests/e2e/administration.spec.ts
 tests/e2e/appearance.spec.ts
 tests/e2e/bank-fixtures.ts
@@ -610,6 +631,9 @@ tests/e2e/interface.spec.ts
 tests/e2e/journey-audit-fixtures.ts
 tests/e2e/journey-audit.spec.ts
 tests/e2e/journey-recovery.spec.ts
+tests/e2e/layout-assertions.ts
+tests/e2e/layout-coherence.spec.ts
+tests/e2e/navigation-hierarchy.spec.ts
 tests/e2e/organization-link.spec.ts
 tests/e2e/organizer-service.spec.ts
 tests/e2e/participant-return.spec.ts

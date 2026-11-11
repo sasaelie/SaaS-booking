@@ -1,0 +1,1080 @@
+[
+  {
+    "file": "src/app/page.tsx",
+    "line": 12,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/inscription\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/page.tsx",
+    "line": 15,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/connexion\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/[organization]/page.tsx",
+    "line": 86,
+    "tag": "Link",
+    "attributes": [
+      "href={`/${data.slug}/${activity.id}${from === PARTICIPANT_NAV.SOURCE ? '?from=appearance' : ''}`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_auth/AuthFields.tsx",
+    "line": 31,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/mot-de-passe-oublie\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_auth/AuthForm.tsx",
+    "line": 23,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_auth/AuthForm.tsx",
+    "line": 32,
+    "tag": "button",
+    "attributes": [
+      "disabled={form.pending}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_auth/AuthForm.tsx",
+    "line": 44,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/inscription\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_auth/AuthForm.tsx",
+    "line": 47,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/connexion\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_auth/PasswordField.tsx",
+    "line": 29,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "aria-label={`${visible ? AUTH_UI.HIDE_PASSWORD : AUTH_UI.SHOW_PASSWORD} : ${label}`}",
+      "onClick={() => setVisible((value) => !value)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AccessNotice.tsx",
+    "line": 31,
+    "tag": "Link",
+    "attributes": [
+      "href={`/app/${organization.id}/abonnement`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/ActivityCards.tsx",
+    "line": 36,
+    "tag": "Link",
+    "attributes": [
+      "href={`/app/${organizationId}/activites/${activity.id}`}"
+    ],
+    "text": "→"
+  },
+  {
+    "file": "src/app/_portal/ActivityCards.tsx",
+    "line": 37,
+    "tag": "Link",
+    "attributes": [
+      "href={`/app/${organizationId}/reservations?activityId=${activity.id}`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AdminOperation.tsx",
+    "line": 30,
+    "tag": "button",
+    "attributes": [
+      "disabled={state.pending}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AdminOperation.tsx",
+    "line": 44,
+    "tag": "a",
+    "attributes": [
+      "href={state.proof}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AdministrationNav.tsx",
+    "line": 14,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/app\""
+    ],
+    "text": "←"
+  },
+  {
+    "file": "src/app/_portal/AdministrationNav.tsx",
+    "line": 19,
+    "tag": "Link",
+    "attributes": [
+      "href={href}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AdministrationSearch.tsx",
+    "line": 7,
+    "tag": "button",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AppearanceActions.tsx",
+    "line": 26,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={state.save}",
+      "disabled={disabled || !state.dirty}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AppearanceActions.tsx",
+    "line": 45,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={state.reset}",
+      "disabled={disabled}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AppearanceActions.tsx",
+    "line": 53,
+    "tag": "Link",
+    "attributes": [
+      "href={`/${organization.slug}?from=appearance`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AppearanceEditor.tsx",
+    "line": 29,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={() => change('organizer')}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/AppearanceEditor.tsx",
+    "line": 36,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={() => change('participant')}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/BookingCards.tsx",
+    "line": 44,
+    "tag": "a",
+    "attributes": [
+      "href={`mailto:${booking.email}`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/BookingCards.tsx",
+    "line": 61,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/BookingFilters.tsx",
+    "line": 35,
+    "tag": "button",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/BookingManagement.tsx",
+    "line": 24,
+    "tag": "AdminOperation",
+    "attributes": [
+      "label={PORTAL.CANCEL_ATTENDEE}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/BookingManagement.tsx",
+    "line": 57,
+    "tag": "AdminOperation",
+    "attributes": [
+      "label={PORTAL.VIEW_PROOF}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/BookingManagement.tsx",
+    "line": 59,
+    "tag": "AdminOperation",
+    "attributes": [
+      "label={PORTAL.APPROVE}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/BookingManagement.tsx",
+    "line": 63,
+    "tag": "AdminOperation",
+    "attributes": [
+      "label={PORTAL.REJECT}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/ConnectSettings.tsx",
+    "line": 29,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"connect-stripe\"",
+      "submitLabel={SETTINGS_UI.STRIPE_CONNECT}",
+      "disabled={!owner}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/ConnectSettings.tsx",
+    "line": 44,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/ConnectSettings.tsx",
+    "line": 47,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"platform-stripe\"",
+      "submitLabel={SETTINGS_UI.PLATFORM_PAYMENTS}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/CopyCode.tsx",
+    "line": 17,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={copy}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/CreateOrganizationForm.tsx",
+    "line": 13,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"create-organization\"",
+      "submitLabel={PORTAL.CREATE}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/FirstActivityState.tsx",
+    "line": 20,
+    "tag": "Link",
+    "attributes": [
+      "href={href}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/LibertySelection.tsx",
+    "line": 12,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"liberty-selection\"",
+      "submitLabel={PLAN_UI.SELECT_SAVE}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/ManualVoucherForm.tsx",
+    "line": 25,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"manual-voucher\"",
+      "submitLabel={SERVICE.GRANT_CODE}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/MediaUpload.tsx",
+    "line": 28,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "disabled={state.pending || props.disabled}",
+      "onClick={() => void state.remove()}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/MediaUpload.tsx",
+    "line": 67,
+    "tag": "button",
+    "attributes": [
+      "disabled={disabled}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/OnlineVoucher.tsx",
+    "line": 8,
+    "tag": "summary",
+    "attributes": [],
+    "text": "Valider un report pour un cours en ligne"
+  },
+  {
+    "file": "src/app/_portal/OnlineVoucher.tsx",
+    "line": 14,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"redeem-online-voucher\"",
+      "submitLabel=\"Valider le report\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/OrganizationCards.tsx",
+    "line": 13,
+    "tag": "Link",
+    "attributes": [
+      "href={`/app/${organization.id}`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/OrganizationSettings.tsx",
+    "line": 13,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"settings\"",
+      "disabled={organization.role !== MEMBER_ROLES.OWNER}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/Pagination.tsx",
+    "line": 26,
+    "tag": "Link",
+    "attributes": [
+      "href={href(page - 1)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/Pagination.tsx",
+    "line": 30,
+    "tag": "Link",
+    "attributes": [
+      "href={href(page + 1)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PlatformAccessForms.tsx",
+    "line": 10,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PlatformAccessForms.tsx",
+    "line": 13,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"grant-access\"",
+      "submitLabel={organization.access.complimentary ? PLATFORM_UI.REVOKE : PLATFORM_UI.GRANT}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PlatformAccessForms.tsx",
+    "line": 27,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"suspend\"",
+      "submitLabel={organization.access.suspendedAt ? PLATFORM_UI.RESTORE : PLATFORM_UI.SUSPEND}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PlatformCostForm.tsx",
+    "line": 6,
+    "tag": "summary",
+    "attributes": [],
+    "text": "Rapprocher un coût exceptionnel réel"
+  },
+  {
+    "file": "src/app/_portal/PlatformCostForm.tsx",
+    "line": 12,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"platform-cost\"",
+      "submitLabel=\"Enregistrer le coût\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PortalError.tsx",
+    "line": 7,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/app\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PortalForm.tsx",
+    "line": 35,
+    "tag": "button",
+    "attributes": [
+      "disabled={state.pending || disabled}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PortalNav.tsx",
+    "line": 62,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/app\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PortalNav.tsx",
+    "line": 65,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/app/nouveau\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PortalNav.tsx",
+    "line": 67,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/plateforme\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PortalNav.tsx",
+    "line": 88,
+    "tag": "Link",
+    "attributes": [
+      "href={href}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PortalNav.tsx",
+    "line": 113,
+    "tag": "Link",
+    "attributes": [
+      "href={selected && path !== `/app/${selected.id}` ? `/app/${selected.id}` : '/app'}"
+    ],
+    "text": "←"
+  },
+  {
+    "file": "src/app/_portal/PortalNav.tsx",
+    "line": 120,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={toggle}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/PortalShell.tsx",
+    "line": 23,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/app\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/RecordBankRefund.tsx",
+    "line": 12,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"record-bank-refund\"",
+      "submitLabel={ACTIVITY_UI.REFUND_RECORD}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/RefreshButton.tsx",
+    "line": 7,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={() => router.refresh()}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SessionDetails.tsx",
+    "line": 12,
+    "tag": "Link",
+    "attributes": [
+      "href={`/app/${org.id}`}"
+    ],
+    "text": "←"
+  },
+  {
+    "file": "src/app/_portal/SessionInformation.tsx",
+    "line": 35,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SessionList.tsx",
+    "line": 45,
+    "tag": "Link",
+    "attributes": [
+      "href={`/app/${organizationId}/seances/${session.activityId}?${new URLSearchParams({ startsAt: session.startsAt.toISOString() })}`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SessionList.tsx",
+    "line": 75,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SessionList.tsx",
+    "line": 77,
+    "tag": "AdminOperation",
+    "attributes": [
+      "label={PORTAL.CLOSE_SESSION}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SharePanel.tsx",
+    "line": 28,
+    "tag": "a",
+    "attributes": [
+      "href={`/api/portal/qr?organizationId=${organization.id}&format=pdf`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SharePanel.tsx",
+    "line": 39,
+    "tag": "Link",
+    "attributes": [
+      "href={`/app/${organization.id}/abonnement`}"
+    ],
+    "text": "Studio Pro"
+  },
+  {
+    "file": "src/app/_portal/SharePanel.tsx",
+    "line": 87,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SharePanel.tsx",
+    "line": 97,
+    "tag": "a",
+    "attributes": [
+      "href={`/api/portal/qr?organizationId=${organization.id}&activityId=${activity.id}`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SignOutButton.tsx",
+    "line": 29,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={signOut}",
+      "disabled={pending}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SocialSettings.tsx",
+    "line": 7,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SubscriptionActions.tsx",
+    "line": 50,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"subscription\"",
+      "submitLabel={label}",
+      "disabled={\n        organization.role !== MEMBER_ROLES.OWNER ||\n        (operation === 'checkout' && Boolean(organization.access.suspendedAt))\n      }"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SubscriptionActions.tsx",
+    "line": 68,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SubscriptionActions.tsx",
+    "line": 71,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"subscription\"",
+      "submitLabel={BILLING_UI.CANCEL}",
+      "disabled={organization.role !== MEMBER_ROLES.OWNER}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/SubscriptionPanel.tsx",
+    "line": 23,
+    "tag": "a",
+    "attributes": [
+      "href={`/api/portal/accounting?organizationId=${organization.id}`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/BookingCheckout.tsx",
+    "line": 25,
+    "tag": "button",
+    "attributes": [
+      "type=\"submit\"",
+      "disabled={(!flow.data.paymentReady && price.amount > 0) || disabled}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/BookingDateStep.tsx",
+    "line": 31,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "disabled={!flow.form.selectedIso}",
+      "onClick={() => flow.navigate(true)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/BookingDetails.tsx",
+    "line": 24,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={() => flow.navigate(false)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/BookingProgress.tsx",
+    "line": 7,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "disabled={flow.form.pending || flow.form.state?.success}",
+      "onClick={() => flow.navigate(false)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/BookingResult.tsx",
+    "line": 30,
+    "tag": "a",
+    "attributes": [
+      "href={`/manage#token=${encodeURIComponent(state.booking.selfServiceToken)}`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/BookingResult.tsx",
+    "line": 50,
+    "tag": "a",
+    "attributes": [
+      "href={checkout}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/BookingTerms.tsx",
+    "line": 6,
+    "tag": "a",
+    "attributes": [
+      "href=\"#participant-terms\"",
+      "onClick={() => {\n          const details = document.getElementById('participant-terms');\n          if (details instanceof HTMLDetailsElement) details.open = true;\n        }}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/CalendarDays.tsx",
+    "line": 14,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "aria-label={dayLabel(day)}",
+      "disabled={!calendar.availableDays.has(day)}",
+      "onClick={() => calendar.selectDay(day)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/CalendarNavigation.tsx",
+    "line": 10,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "aria-label={BOOKING_UI.PREVIOUS_MONTH}",
+      "disabled={!calendar.previous}",
+      "onClick={() => calendar.move(-1)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/CalendarNavigation.tsx",
+    "line": 19,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "aria-label={BOOKING_UI.NEXT_MONTH}",
+      "disabled={!calendar.next}",
+      "onClick={() => calendar.move(1)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/EventInformation.tsx",
+    "line": 15,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/EventInformation.tsx",
+    "line": 21,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/ParticipantNavigation.tsx",
+    "line": 34,
+    "tag": "Link",
+    "attributes": [
+      "href={href}"
+    ],
+    "text": "←"
+  },
+  {
+    "file": "src/app/_ui/ParticipationTerms.tsx",
+    "line": 5,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/PlatformSignature.tsx",
+    "line": 4,
+    "tag": "a",
+    "attributes": [
+      "href=\"/\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/SocialLinks.tsx",
+    "line": 18,
+    "tag": "a",
+    "attributes": [
+      "href={links[key as keyof Links]}",
+      "aria-label={label}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/VoucherField.tsx",
+    "line": 14,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_ui/VoucherInput.tsx",
+    "line": 27,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={quote.verify}",
+      "disabled={quote.pending || !quote.code.trim()}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/manage/ManageBooking.tsx",
+    "line": 15,
+    "tag": "Link",
+    "attributes": [
+      "href={back}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/manage/ManageBooking.tsx",
+    "line": 51,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/manage/ManageBooking.tsx",
+    "line": 57,
+    "tag": "button",
+    "attributes": [
+      "disabled={state.pending}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/manage/ManageBooking.tsx",
+    "line": 71,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "onClick={state.refresh}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/manage/ProofUpload.tsx",
+    "line": 30,
+    "tag": "button",
+    "attributes": [
+      "disabled={pending || !fileName}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/(portal)/app/page.tsx",
+    "line": 15,
+    "tag": "Link",
+    "attributes": [
+      "href=\"/app/nouveau\""
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/ActivityRules.tsx",
+    "line": 7,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/AddSessionForm.tsx",
+    "line": 16,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/AddSessionForm.tsx",
+    "line": 18,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"add-session\"",
+      "disabled={disabled}",
+      "submitLabel={ACTIVITY_UI.ADD_SESSION}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/CreateActivityForm.tsx",
+    "line": 18,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"create-activity\"",
+      "submitLabel={ACTIVITY_UI.CREATE}",
+      "disabled={disabled}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/EditActivityForm.tsx",
+    "line": 20,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/EditActivityForm.tsx",
+    "line": 22,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"update-activity\"",
+      "disabled={disabled}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/EventDetailsFields.tsx",
+    "line": 9,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/PauseForm.tsx",
+    "line": 14,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/PauseForm.tsx",
+    "line": 17,
+    "tag": "AdminOperation",
+    "attributes": [
+      "label={ACTIVITY_UI.PAUSE}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/_portal/activity/WeeklySlotRow.tsx",
+    "line": 34,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "disabled={!removable}",
+      "onClick={remove}",
+      "aria-label={ACTIVITY_UI.REMOVE_SLOT}"
+    ],
+    "text": "×"
+  },
+  {
+    "file": "src/app/_portal/activity/WeeklySlots.tsx",
+    "line": 22,
+    "tag": "button",
+    "attributes": [
+      "type=\"button\"",
+      "disabled={rows.length >= SAAS.MAX_WEEKLY_SLOTS}",
+      "onClick={add}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/(portal)/app/[organizationId]/page.tsx",
+    "line": 30,
+    "tag": "Link",
+    "attributes": [
+      "href={`/app/${organizationId}/activites`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/(portal)/app/[organizationId]/parametres/page.tsx",
+    "line": 19,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/(portal)/app/[organizationId]/activites/[activityId]/page.tsx",
+    "line": 46,
+    "tag": "Link",
+    "attributes": [
+      "href={`/${data.organization.slug}/${activity.id}`}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/(portal)/app/[organizationId]/activites/[activityId]/page.tsx",
+    "line": 94,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"publish-activity\"",
+      "submitLabel={ACTIVITY_UI.PUBLISH}",
+      "disabled={Boolean(data.organization.access.suspendedAt)}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/(portal)/app/[organizationId]/activites/[activityId]/page.tsx",
+    "line": 119,
+    "tag": "summary",
+    "attributes": [],
+    "text": ""
+  },
+  {
+    "file": "src/app/(portal)/app/[organizationId]/activites/[activityId]/page.tsx",
+    "line": 122,
+    "tag": "PortalForm",
+    "attributes": [
+      "action=\"archive-activity\"",
+      "submitLabel={ACTIVITY_UI.ARCHIVE}"
+    ],
+    "text": ""
+  },
+  {
+    "file": "src/app/(portal)/app/[organizationId]/activites/[activityId]/page.tsx",
+    "line": 160,
+    "tag": "Link",
+    "attributes": [
+      "href={`/app/${organizationId}/reservations?activityId=${activityId}`}"
+    ],
+    "text": ""
+  }
+]
