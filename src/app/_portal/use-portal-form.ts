@@ -24,8 +24,9 @@ export function usePortalForm(action: PortalAction, organizationId: string | und
         safeNavigate(data.url);
         return;
       }
-      if (data?.organizationId) router.push(`/app/${data.organizationId}`);
-      else if (data?.activityId && organizationId)
+      if (action === 'create-organization' && data?.organizationId)
+        router.push(`/app/${data.organizationId}`);
+      else if (action === 'create-activity' && data?.activityId && organizationId)
         router.push(`/app/${organizationId}/activites/${data.activityId}`);
       router.refresh();
     });

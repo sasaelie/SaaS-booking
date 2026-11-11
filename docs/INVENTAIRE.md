@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-685 fichiers versionnés ou préparés dans cette branche, dont 495 sous `src/`.
+693 fichiers versionnés ou préparés dans cette branche, dont 495 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 018.
 
@@ -16,6 +16,7 @@ deploy/supabase-bootstrap.sql
 deploy/supabase-harden.sql
 docs/ADMINISTRATION.md
 docs/ARCHITECTURE.md
+docs/AUDIT-BOUTONS-LIENS.md
 docs/AUDIT-LIBERTE-PRO.md
 docs/CAHIER-CHARGES-LIBERTE-PRO.md
 docs/CONNEXION.md
@@ -42,6 +43,7 @@ docs/RECETTE-EN-LIGNE.md
 docs/SAAS-IMPLEMENTATION.md
 docs/SAAS-VERIFICATION.md
 docs/VERIFICATION.md
+docs/audit-actions/inventaire.json
 docs/audit-parcours/organisateur-apres.png
 docs/audit-parcours/organisateur-avant.png
 docs/audit-parcours/participant-apres.png
@@ -597,6 +599,12 @@ src/lib/sha256.ts
 src/lib/suggest-organization-slug.ts
 src/lib/trusted-origin.ts
 src/proxy.ts
+tests/e2e/action-audit-fixtures.ts
+tests/e2e/action-commercial.spec.ts
+tests/e2e/action-filters-admin.spec.ts
+tests/e2e/action-management.spec.ts
+tests/e2e/action-navigation.spec.ts
+tests/e2e/action-secondary.spec.ts
 tests/e2e/administration.spec.ts
 tests/e2e/appearance.spec.ts
 tests/e2e/bank-fixtures.ts
