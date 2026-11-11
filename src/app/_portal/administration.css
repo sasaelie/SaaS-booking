@@ -76,3 +76,9 @@
   outline: 2px solid var(--ui-text-primary);
   outline-offset: 3px;
 }
+
+@media (max-width: 760px) {
+  .administration-back-mobile-duplicate {
+    display: none;
+  }
+}

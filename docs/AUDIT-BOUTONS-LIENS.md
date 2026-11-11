@@ -99,3 +99,8 @@ attendent une confirmation ou la réponse du serveur avant de conclure à un cha
 
 Le correctif reste proposé dans `codex/audit-actions-links` ; aucune fusion ni nouvelle
 publication Vercel n'est effectuée pendant cet audit.
+
+## Complément de navigation et de présentation
+
+Les retours hiérarchiques, le clavier et les alignements font l’objet du
+[rapport complémentaire](RAPPORT-NAVIGATION-ALIGNEMENTS.md), avec captures avant/après.

@@ -95,3 +95,20 @@
     padding: 0;
   }
 }
+
+.portal-desktop-return {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+@media (max-width: 760px) {
+  .portal-desktop-return,
+  .portal-main .portal-return-link {
+    display: none;
+  }
+  .portal-mobile-bar .portal-back {
+    min-height: 44px;
+  }
+}
