@@ -1,6 +1,6 @@
 # Interface Liquid Ice
 
-La page de réservation utilise un panneau d’activité vert sapin, une surface translucide et des capsules avec reflets. Les rayons, couleurs et effets restent définis dans les feuilles CSS. Le rendu ne nécessite aucune police distante ni bibliothèque de composants supplémentaire.
+La page de réservation utilise un panneau d’activité vert sapin et une surface translucide. Les boutons communs ont une forme rectangulaire aux coins arrondis, une surface mate et un relief doux. Les rayons, couleurs et effets restent définis dans les feuilles CSS. Le rendu ne nécessite aucune police distante ni bibliothèque de composants supplémentaire.
 
 ## Parcours
 
@@ -40,4 +40,16 @@ Captures du build de production local dans Chromium, avec des données fictives.
 
 ## Espaces organisateur et plateforme
 
-Le widget validé est conservé. Les nouvelles consoles réutilisent sa palette, ses capsules, ses espacements et ses composants accessibles, avec des surfaces lisibles et une navigation mobile repliable. [Captures et parcours vérifiés](SAAS-VERIFICATION.md).
+Les consoles réutilisent la palette, les boutons, les espacements et les composants accessibles du parcours participant, avec des surfaces lisibles et une navigation mobile repliable. [Captures et parcours vérifiés](SAAS-VERIFICATION.md).
+
+## Boutons à relief doux — novembre 2026
+
+`ice-tokens.css` définit les couleurs et le rayon commun de 16 pixels ; `buttons.css` applique le style aux actions principales, secondaires, au menu mobile, aux réseaux sociaux, à la navigation du calendrier et au retrait d’un créneau. Les commandes avec texte conservent une largeur adaptée à leur libellé. Les actions secondaires ont une ombre plus discrète.
+
+Le bouton capsule et sa bande de reflet sont retirés. Les couleurs utilisent les variables existantes : ivoire, teinte douce et texte vert sapin. Le focus reste visible, la pression enfonce légèrement la surface et les commandes désactivées perdent leur relief. Les transitions sont supprimées lorsque la réduction des animations est demandée.
+
+Les badges d’état, les témoins lumineux, les champs, les liens de retour et les sélecteurs conservent leur fonction visuelle distincte. La personnalisation de l’apparence reste disponible.
+
+Captures Chromium avec un compte fictif : [avant](boutons-relief/avant-mes-espaces.png), [après](boutons-relief/apres-mes-espaces.png), [page participant](boutons-relief/apres-participant.png).
+
+Vérifications locales : TypeScript, ESLint, 86 tests unitaires et build Next.js réussis. Le contrôle navigateur de six écrans aux largeurs 320, 390, 768 et 1 440 pixels confirme les formes sans capsule, les cibles de 44 pixels minimum et l’absence de débordement horizontal. Le focus clavier, le relief à la pression et la suppression des transitions avec réduction des animations sont également vérifiés.

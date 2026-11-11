@@ -1,0 +1,86 @@
+/* Actions communes : surface mate, coins arrondis et relief doux. */
+.liquid-ice-button,
+.portal-secondary-action,
+.portal-card-actions a,
+.portal-mobile-bar .portal-menu-toggle,
+.social-links a,
+.ice-calendar-nav .ice-icon-button,
+.portal-slot-row button {
+  border: 1px solid var(--ice-line);
+  border-bottom-color: var(--button-edge);
+  border-radius: var(--button-radius);
+  background: linear-gradient(145deg, var(--button-surface-top), var(--button-surface-bottom));
+  color: var(--ui-text-primary);
+  box-shadow:
+    inset 1px 1px 2px var(--ice-paper),
+    inset -1px -1px 2px var(--ice-line),
+    0 2px 0 var(--button-edge),
+    0 5px 10px -4px var(--button-shadow);
+  transition:
+    transform 0.16s var(--spring-easing),
+    box-shadow 0.16s ease;
+}
+.liquid-ice-button {
+  position: relative;
+  min-height: 52px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.portal-secondary-action,
+.portal-card-actions a {
+  background: color-mix(in srgb, var(--ice-paper) 78%, var(--ice-mist));
+  box-shadow:
+    inset 0 1px 1px var(--ice-paper),
+    0 1px 0 var(--button-edge),
+    0 3px 6px -4px var(--button-shadow);
+}
+.ice-calendar-nav > div {
+  gap: 8px;
+}
+.ice-calendar-nav .ice-icon-button {
+  width: 44px;
+  height: 44px;
+}
+.liquid-ice-button:focus-visible,
+.portal-secondary-action:focus-visible,
+.portal-card-actions a:focus-visible,
+.portal-mobile-bar .portal-menu-toggle:focus-visible,
+.social-links a:focus-visible,
+.ice-calendar-nav .ice-icon-button:focus-visible,
+.portal-slot-row button:focus-visible {
+  outline: 2px solid var(--ui-text-primary);
+  outline-offset: 4px;
+}
+.liquid-ice-button:active:not(:disabled),
+.portal-secondary-action:active:not(:disabled),
+.portal-card-actions a:active,
+.portal-mobile-bar .portal-menu-toggle:active:not(:disabled),
+.social-links a:active,
+.ice-calendar-nav .ice-icon-button:active:not(:disabled),
+.portal-slot-row button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow:
+    inset 1px 2px 4px var(--ice-line),
+    inset -1px -1px 2px var(--ice-paper);
+}
+.liquid-ice-button:disabled,
+.portal-secondary-action:disabled,
+.portal-mobile-bar .portal-menu-toggle:disabled,
+.ice-calendar-nav .ice-icon-button:disabled,
+.portal-slot-row button:disabled {
+  opacity: 0.5;
+  transform: none;
+  box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .liquid-ice-button,
+  .portal-secondary-action,
+  .portal-card-actions a,
+  .portal-mobile-bar .portal-menu-toggle,
+  .social-links a,
+  .ice-calendar-nav .ice-icon-button,
+  .portal-slot-row button {
+    transition: none;
+    transform: none;
+  }
+}

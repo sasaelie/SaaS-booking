@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-709 fichiers versionnés ou préparés dans cette branche, dont 499 sous `src/`.
+713 fichiers versionnés ou préparés dans cette branche, dont 500 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 018.
 
@@ -49,6 +49,9 @@ docs/audit-parcours/organisateur-apres.png
 docs/audit-parcours/organisateur-avant.png
 docs/audit-parcours/participant-apres.png
 docs/audit-parcours/participant-avant.png
+docs/boutons-relief/apres-mes-espaces.png
+docs/boutons-relief/apres-participant.png
+docs/boutons-relief/avant-mes-espaces.png
 docs/navigation-alignements/apres-abonnement-mobile.png
 docs/navigation-alignements/apres-activite-mobile.png
 docs/navigation-alignements/apres-activite-ordinateur.png
@@ -409,6 +412,7 @@ src/app/_ui/booking-story.css
 src/app/_ui/booking-submission.ts
 src/app/_ui/booking-voucher.css
 src/app/_ui/brand.css
+src/app/_ui/buttons.css
 src/app/_ui/calendar-dates.ts
 src/app/_ui/calendar-slots.ts
 src/app/_ui/catalog-cards.css
