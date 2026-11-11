@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-727 fichiers versionnés ou préparés dans cette branche, dont 507 sous `src/`.
+737 fichiers versionnés ou préparés dans cette branche, dont 512 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 018.
 
@@ -44,6 +44,7 @@ docs/RAPPORT-TESTS-SERVICE.md
 docs/RECETTE-EN-LIGNE.md
 docs/SAAS-IMPLEMENTATION.md
 docs/SAAS-VERIFICATION.md
+docs/SESSION-ACCUEIL.md
 docs/VERIFICATION.md
 docs/audit-actions/inventaire.json
 docs/audit-parcours/organisateur-apres.png
@@ -89,6 +90,8 @@ docs/previews/seances/voyant-mobile.png
 docs/references/design-system.json
 docs/references/ice-initial.css.txt
 docs/references/session-repository-initial.ts.txt
+docs/session-accueil/connecte-mobile.png
+docs/session-accueil/visiteur-mobile.png
 eslint.config.mjs
 migrations/001-schedule.sql
 migrations/002-bookings.sql
@@ -268,7 +271,9 @@ src/app/[organization]/page.tsx
 src/app/_auth/AuthEntry.tsx
 src/app/_auth/AuthFields.tsx
 src/app/_auth/AuthForm.tsx
+src/app/_auth/HomeActions.tsx
 src/app/_auth/PasswordField.tsx
+src/app/_auth/SessionHistorySync.tsx
 src/app/_auth/auth-request.ts
 src/app/_auth/auth.css
 src/app/_auth/use-auth-form.ts
@@ -478,6 +483,7 @@ src/composition/authentication.ts
 src/composition/brand-media.ts
 src/composition/cancellation-notifications.ts
 src/composition/connect.ts
+src/composition/current-visitor.ts
 src/composition/dispatch-commercial.ts
 src/composition/financial-webhook.ts
 src/composition/portal-command.ts
@@ -515,6 +521,7 @@ src/config/saas.ts
 src/config/service-mail.ts
 src/config/service.ts
 src/config/session-details.ts
+src/config/session-navigation.ts
 src/config/share-labels.ts
 src/config/staging.ts
 src/config/story.ts
@@ -624,6 +631,7 @@ src/lib/logger.ts
 src/lib/modulo97.ts
 src/lib/plan-selection.ts
 src/lib/result.ts
+src/lib/session-navigation.ts
 src/lib/sha256.ts
 src/lib/suggest-organization-slug.ts
 src/lib/trusted-origin.ts
@@ -662,6 +670,7 @@ tests/e2e/presentation.spec.ts
 tests/e2e/service-recovery.spec.ts
 tests/e2e/session-design-fixtures.ts
 tests/e2e/session-details.spec.ts
+tests/e2e/session-history.spec.ts
 tests/e2e/staging.spec.ts
 tests/e2e/story-photo.spec.ts
 tests/integration/appearance.test.ts
@@ -722,6 +731,7 @@ tests/unit/proof-and-auth.test.ts
 tests/unit/schedule.test.ts
 tests/unit/service-boundaries.test.ts
 tests/unit/session-details-input.test.ts
+tests/unit/session-navigation.test.ts
 tests/unit/staging.test.ts
 tests/unit/status-indicator.test.ts
 tests/unit/stripe-commercial.test.ts

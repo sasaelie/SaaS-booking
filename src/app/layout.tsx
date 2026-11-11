@@ -1,6 +1,7 @@
 import './_portal/commercial.css';
 import './_ui/appearance.css';
 import type { ReactNode } from 'react';
+import { SessionHistorySync } from './_auth/SessionHistorySync';
 import { StagingNotice } from './_ui/StagingNotice';
 import './_ui/staging.css';
 import './_ui/participant.css';
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
   return (
     <html lang="fr">
       <body>
+        <SessionHistorySync />
         <StagingNotice />
         {children}
       </body>

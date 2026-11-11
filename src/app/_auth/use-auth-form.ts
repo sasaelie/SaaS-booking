@@ -33,7 +33,7 @@ export function useAuthForm(mode: AuthMode, plan: PlanIntent | null = null) {
         return;
       }
       if (mode === 'SIGN_IN') {
-        window.location.assign(planPath('/app', plan));
+        window.location.replace(planPath('/app', plan));
         return;
       }
       state.setSuccess(true);

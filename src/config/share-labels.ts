@@ -29,6 +29,8 @@ export const SHARE_UI = {
     'Créez vos activités, partagez votre page et retrouvez vos inscriptions au même endroit.',
   START: 'Créer un compte organisateur',
   LOGIN: 'Se connecter',
+  CONNECTED_AS: 'Connecté en tant que',
+  OPEN_SPACES: 'Ouvrir mes espaces',
   LANDING_CANCEL_NOTE:
     'Sans engagement. Résiliez à tout moment et conservez votre accès jusqu’à la fin de la période payée.',
   CATALOG_OPEN: 'Choisir une séance',

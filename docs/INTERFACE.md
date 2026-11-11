@@ -57,3 +57,6 @@ Vérifications locales : TypeScript, ESLint, 86 tests unitaires et build Next.js
 Les offres sont désormais présentées sous forme de cartes compactes entièrement cliquables,
 avec un comparatif distinct et un parcours de choix conservé jusqu’à l’espace organisateur.
 [Parcours, contrôles et captures des formules](CHOIX-FORMULES.md).
+
+L’accueil distingue désormais la session connectée du visiteur, y compris après un retour
+dans l’historique du navigateur. [Règles de session et vérifications](SESSION-ACCUEIL.md).

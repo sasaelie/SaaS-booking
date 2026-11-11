@@ -1,7 +1,11 @@
 'use client';
 import { useState } from 'react';
 import { PORTAL } from '../../config/constants';
-export function SignOutButton() {
+export function SignOutButton({
+  className = 'portal-text-button',
+}: {
+  readonly className?: string;
+}) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(false);
   async function signOut() {
@@ -14,7 +18,7 @@ export function SignOutButton() {
         body: '{}',
       });
       if (response.ok) {
-        window.location.assign('/connexion');
+        window.location.replace('/connexion');
         return;
       }
       setError(true);
@@ -26,7 +30,7 @@ export function SignOutButton() {
   }
   return (
     <div>
-      <button type="button" className="portal-text-button" onClick={signOut} disabled={pending}>
+      <button type="button" className={className} onClick={signOut} disabled={pending}>
         {PORTAL.SIGN_OUT}
       </button>
       {error ? <p role="alert">{PORTAL.ERROR}</p> : null}
