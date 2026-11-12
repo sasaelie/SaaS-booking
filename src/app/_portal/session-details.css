@@ -24,7 +24,7 @@
 }
 .portal-session-open {
   font-size: 13px;
-  text-decoration: underline;
+  text-decoration: none;
   text-underline-offset: 4px;
 }
 .portal-session-link:hover .portal-session-open {

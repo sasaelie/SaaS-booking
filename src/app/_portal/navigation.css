@@ -57,7 +57,7 @@
     display: inline-flex;
     padding: 8px 0;
     font-size: 12px;
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 4px;
   }
   .portal-current-title {

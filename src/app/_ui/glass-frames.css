@@ -1,0 +1,44 @@
+/* Cadre lumineux indépendant du contenu ; les champs gardent leur surface lisible. */
+.portal-panel:not(.ice-story),
+.portal-sidebar,
+.ice-cube-shell {
+  isolation: isolate;
+  background: color-mix(in srgb, var(--ice-paper) 68%, transparent);
+  border: 1px solid var(--glass-edge-quiet);
+  box-shadow:
+    inset 0 1px 1px var(--glass-edge-light),
+    inset 0 -1px 1px var(--glass-edge-quiet),
+    0 12px 30px -22px var(--glass-shadow);
+}
+.portal-panel:not(.ice-story) {
+  position: relative;
+}
+@media (max-width: 760px) {
+  .portal-sidebar {
+    position: relative;
+  }
+}
+.portal-panel:not(.ice-story)::before,
+.portal-sidebar::before,
+.ice-cube-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--glass-edge-light), var(--glass-edge-quiet) 45%, var(--glass-edge-light));
+  -webkit-mask: linear-gradient(var(--ice-paper) 0 0) content-box, linear-gradient(var(--ice-paper) 0 0);
+  mask: linear-gradient(var(--ice-paper) 0 0) content-box, linear-gradient(var(--ice-paper) 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+@supports (backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px)) {
+  .portal-panel:not(.ice-story),
+  .portal-sidebar,
+  .ice-cube-shell {
+    background: linear-gradient(135deg, var(--glass-fill), color-mix(in srgb, var(--ice-paper) 12%, transparent));
+    backdrop-filter: blur(8px) saturate(115%);
+    -webkit-backdrop-filter: blur(8px) saturate(115%);
+  }
+}

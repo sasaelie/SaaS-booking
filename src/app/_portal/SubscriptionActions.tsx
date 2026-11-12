@@ -1,22 +1,24 @@
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { BILLING_UI, MEMBER_ROLES } from '../../config/constants';
 import { canUsePro } from '../../core/domain/commercial';
-import { PLAN_UI } from '../../config/commercial';
+import type { PlanIntent } from '../../core/validation/plan-selection';
+import { PlanCheckout } from './PlanCheckout';
 import { PortalForm } from './PortalForm';
-import { STAGING, paymentsEnabled } from '../../config/staging';
+import { paymentsEnabled } from '../../config/staging';
 export function SubscriptionActions({
   organization,
+  selected = null,
 }: {
   readonly organization: OrganizationSummary;
+  readonly selected?: PlanIntent | null;
 }) {
   const access = organization.access;
   const active = canUsePro(access, new Date());
-  if (!paymentsEnabled({ PAYMENTS_ENABLED: process.env['PAYMENTS_ENABLED'] }))
-    return <p className="portal-notice">{STAGING.SUBSCRIPTION_NOTE}</p>;
-  if (access.complimentary) return null;
+  if (access.complimentary)
+    return selected === 'pro' ? <PlanCheckout organization={organization} /> : null;
   return (
     <div className="portal-list">
-      {!active ? <SubscribeButtons organization={organization} /> : null}
+      {!active && selected === 'pro' ? <PlanCheckout organization={organization} /> : null}
       {active && access.cancelAtPeriodEnd ? (
         <SubscriptionButton
           organization={organization}
@@ -31,7 +33,9 @@ export function SubscriptionActions({
           label={BILLING_UI.INVOICES}
         />
       ) : null}
-      {active && !access.cancelAtPeriodEnd ? <CancelRenewal organization={organization} /> : null}
+      {active && !access.cancelAtPeriodEnd ? (
+        <CancelRenewal organization={organization} open={selected === 'liberte'} />
+      ) : null}
     </div>
   );
 }
@@ -55,6 +59,7 @@ function SubscriptionButton({
         organization.role !== MEMBER_ROLES.OWNER ||
         (operation === 'checkout' && Boolean(organization.access.suspendedAt))
       }
+      submitDisabled={!paymentsEnabled({ PAYMENTS_ENABLED: process.env['PAYMENTS_ENABLED'] })}
       compact
     >
       <input type="hidden" name="operation" value={operation} />
@@ -62,9 +67,15 @@ function SubscriptionButton({
     </PortalForm>
   );
 }
-function CancelRenewal({ organization }: { readonly organization: OrganizationSummary }) {
+function CancelRenewal({
+  organization,
+  open,
+}: {
+  readonly organization: OrganizationSummary;
+  readonly open: boolean;
+}) {
   return (
-    <details className="portal-details">
+    <details className="portal-details" open={open}>
       <summary>{BILLING_UI.CANCEL}</summary>
       <div>
         <p className="portal-muted">{BILLING_UI.CANCEL_NOTE}</p>
@@ -73,6 +84,7 @@ function CancelRenewal({ organization }: { readonly organization: OrganizationSu
           organizationId={organization.id}
           submitLabel={BILLING_UI.CANCEL}
           disabled={organization.role !== MEMBER_ROLES.OWNER}
+          submitDisabled={!paymentsEnabled({ PAYMENTS_ENABLED: process.env['PAYMENTS_ENABLED'] })}
           compact
         >
           <input type="hidden" name="operation" value="cancel" />
@@ -83,24 +95,5 @@ function CancelRenewal({ organization }: { readonly organization: OrganizationSu
         </PortalForm>
       </div>
     </details>
-  );
-}
-
-function SubscribeButtons({ organization }: { readonly organization: OrganizationSummary }) {
-  return (
-    <div className="portal-list">
-      <SubscriptionButton
-        organization={organization}
-        operation="checkout"
-        label={PLAN_UI.MONTHLY}
-      />
-      <SubscriptionButton
-        organization={organization}
-        operation="checkout"
-        label={PLAN_UI.YEARLY}
-        interval="year"
-      />
-      <p className="portal-muted">{PLAN_UI.YEAR_NOTE}</p>
-    </div>
   );
 }

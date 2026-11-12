@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-709 fichiers versionnés ou préparés dans cette branche, dont 499 sous `src/`.
+761 fichiers versionnés ou préparés dans cette branche, dont 530 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public validé, `src/app/_portal/` partage les composants de gestion, et les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 018.
 
@@ -18,7 +18,9 @@ docs/ADMINISTRATION.md
 docs/ARCHITECTURE.md
 docs/AUDIT-BOUTONS-LIENS.md
 docs/AUDIT-LIBERTE-PRO.md
+docs/CADRES-ET-PARCOURS.md
 docs/CAHIER-CHARGES-LIBERTE-PRO.md
+docs/CHOIX-FORMULES.md
 docs/CONNEXION.md
 docs/ENVIRONNEMENT-TEST.md
 docs/ETAT-FONCTIONNEL.md
@@ -43,12 +45,24 @@ docs/RAPPORT-TESTS-SERVICE.md
 docs/RECETTE-EN-LIGNE.md
 docs/SAAS-IMPLEMENTATION.md
 docs/SAAS-VERIFICATION.md
+docs/SESSION-ACCUEIL.md
 docs/VERIFICATION.md
 docs/audit-actions/inventaire.json
 docs/audit-parcours/organisateur-apres.png
 docs/audit-parcours/organisateur-avant.png
 docs/audit-parcours/participant-apres.png
 docs/audit-parcours/participant-avant.png
+docs/boutons-relief/apres-mes-espaces.png
+docs/boutons-relief/apres-participant.png
+docs/boutons-relief/avant-mes-espaces.png
+docs/cadres-et-parcours/comparatif-mobile.png
+docs/cadres-et-parcours/confirmation-sortie.png
+docs/cadres-et-parcours/espaces-mobile.png
+docs/cadres-et-parcours/recapitulatif-mensuel.png
+docs/formules/apres-mobile.png
+docs/formules/apres-ordinateur.png
+docs/formules/avant.png
+docs/formules/choix-pro-mobile.png
 docs/navigation-alignements/apres-abonnement-mobile.png
 docs/navigation-alignements/apres-activite-mobile.png
 docs/navigation-alignements/apres-activite-ordinateur.png
@@ -81,6 +95,8 @@ docs/previews/seances/voyant-mobile.png
 docs/references/design-system.json
 docs/references/ice-initial.css.txt
 docs/references/session-repository-initial.ts.txt
+docs/session-accueil/connecte-mobile.png
+docs/session-accueil/visiteur-mobile.png
 eslint.config.mjs
 migrations/001-schedule.sql
 migrations/002-bookings.sql
@@ -257,11 +273,17 @@ src/app/(portal)/plateforme/operations/page.tsx
 src/app/(portal)/plateforme/page.tsx
 src/app/[organization]/[activityId]/page.tsx
 src/app/[organization]/page.tsx
+src/app/_auth/AuthEntry.tsx
 src/app/_auth/AuthFields.tsx
 src/app/_auth/AuthForm.tsx
+src/app/_auth/HomeActions.tsx
 src/app/_auth/PasswordField.tsx
+src/app/_auth/SessionExitGuard.tsx
+src/app/_auth/SessionHistorySync.tsx
 src/app/_auth/auth-request.ts
 src/app/_auth/auth.css
+src/app/_auth/session-exit-navigation.ts
+src/app/_auth/sign-out-request.ts
 src/app/_auth/use-auth-form.ts
 src/app/_portal/AccessNotice.tsx
 src/app/_portal/ActivityCards.tsx
@@ -270,6 +292,7 @@ src/app/_portal/AdministrationNav.tsx
 src/app/_portal/AdministrationSearch.tsx
 src/app/_portal/AppearanceActions.tsx
 src/app/_portal/AppearanceEditor.tsx
+src/app/_portal/BillingPeriods.tsx
 src/app/_portal/BookingCards.tsx
 src/app/_portal/BookingFilters.tsx
 src/app/_portal/BookingManagement.tsx
@@ -286,13 +309,18 @@ src/app/_portal/OrganizationCards.tsx
 src/app/_portal/OrganizationIdentityFields.tsx
 src/app/_portal/OrganizationSettings.tsx
 src/app/_portal/Pagination.tsx
+src/app/_portal/PaymentReview.tsx
 src/app/_portal/PlanCards.tsx
+src/app/_portal/PlanCheckout.tsx
+src/app/_portal/PlanCheckoutPreview.tsx
+src/app/_portal/PlanComparison.tsx
 src/app/_portal/PlatformAccessForms.tsx
 src/app/_portal/PlatformCostForm.tsx
 src/app/_portal/PlatformFinance.tsx
 src/app/_portal/PlatformHistoryCards.tsx
 src/app/_portal/PlatformOperationCards.tsx
 src/app/_portal/PlatformOrganizations.tsx
+src/app/_portal/PortalBackLink.tsx
 src/app/_portal/PortalEmpty.tsx
 src/app/_portal/PortalError.tsx
 src/app/_portal/PortalField.tsx
@@ -316,6 +344,7 @@ src/app/_portal/SocialSettings.tsx
 src/app/_portal/StatusBadge.tsx
 src/app/_portal/StoryTextChoices.tsx
 src/app/_portal/SubscriptionActions.tsx
+src/app/_portal/SubscriptionHistory.tsx
 src/app/_portal/SubscriptionPanel.tsx
 src/app/_portal/access-label.ts
 src/app/_portal/activity/ActivityBasics.tsx
@@ -336,6 +365,7 @@ src/app/_portal/administration.css
 src/app/_portal/commercial-form.ts
 src/app/_portal/commercial.css
 src/app/_portal/date-label.ts
+src/app/_portal/feature-comparison.css
 src/app/_portal/form-command.ts
 src/app/_portal/form-values.ts
 src/app/_portal/load-workspace.ts
@@ -385,6 +415,7 @@ src/app/_ui/EmbedHeightReporter.tsx
 src/app/_ui/EventInformation.tsx
 src/app/_ui/IceBookingWidget.tsx
 src/app/_ui/IceIcon.tsx
+src/app/_ui/ModalFrame.tsx
 src/app/_ui/ParticipantNavigation.tsx
 src/app/_ui/ParticipationTerms.tsx
 src/app/_ui/PlatformSignature.tsx
@@ -409,17 +440,21 @@ src/app/_ui/booking-story.css
 src/app/_ui/booking-submission.ts
 src/app/_ui/booking-voucher.css
 src/app/_ui/brand.css
+src/app/_ui/buttons.css
 src/app/_ui/calendar-dates.ts
 src/app/_ui/calendar-slots.ts
 src/app/_ui/catalog-cards.css
 src/app/_ui/contact-fields.ts
 src/app/_ui/format-money.ts
+src/app/_ui/glass-frames.css
 src/app/_ui/ice-tokens.css
+src/app/_ui/modal.css
 src/app/_ui/participant.css
 src/app/_ui/service.css
 src/app/_ui/staging.css
 src/app/_ui/status-lights.css
 src/app/_ui/story-photo.css
+src/app/_ui/text-links.css
 src/app/_ui/use-booking-calendar.ts
 src/app/_ui/use-booking-flow.ts
 src/app/_ui/use-booking-form.ts
@@ -465,6 +500,7 @@ src/composition/authentication.ts
 src/composition/brand-media.ts
 src/composition/cancellation-notifications.ts
 src/composition/connect.ts
+src/composition/current-visitor.ts
 src/composition/dispatch-commercial.ts
 src/composition/financial-webhook.ts
 src/composition/portal-command.ts
@@ -483,6 +519,7 @@ src/config/administration.ts
 src/config/appearance.ts
 src/config/auth-labels.ts
 src/config/auth-ui.ts
+src/config/billing-preview.ts
 src/config/booking-ui.ts
 src/config/commercial.ts
 src/config/constants.ts
@@ -492,6 +529,11 @@ src/config/file-signatures.ts
 src/config/http-limits.ts
 src/config/navigation.ts
 src/config/participant-navigation.ts
+src/config/plan-features-activities.ts
+src/config/plan-features-payments.ts
+src/config/plan-features-sharing.ts
+src/config/plan-features.ts
+src/config/plan-selection.ts
 src/config/portal-activity-labels.ts
 src/config/portal-billing-labels.ts
 src/config/portal-labels.ts
@@ -501,6 +543,8 @@ src/config/saas.ts
 src/config/service-mail.ts
 src/config/service.ts
 src/config/session-details.ts
+src/config/session-exit.ts
+src/config/session-navigation.ts
 src/config/share-labels.ts
 src/config/staging.ts
 src/config/story.ts
@@ -594,6 +638,7 @@ src/core/validation/commercial.ts
 src/core/validation/event-details.ts
 src/core/validation/local-pause.ts
 src/core/validation/manual-voucher.ts
+src/core/validation/plan-selection.ts
 src/core/validation/portal-activity.ts
 src/core/validation/portal-command.ts
 src/core/validation/portal-organization.ts
@@ -607,7 +652,9 @@ src/lib/guard-use-case.ts
 src/lib/http-body.ts
 src/lib/logger.ts
 src/lib/modulo97.ts
+src/lib/plan-selection.ts
 src/lib/result.ts
+src/lib/session-navigation.ts
 src/lib/sha256.ts
 src/lib/suggest-organization-slug.ts
 src/lib/trusted-origin.ts
@@ -627,6 +674,7 @@ tests/e2e/commercial.spec.ts
 tests/e2e/embed-fixtures.ts
 tests/e2e/embed.spec.ts
 tests/e2e/empty-states.spec.ts
+tests/e2e/glass-exit-billing.spec.ts
 tests/e2e/interface.spec.ts
 tests/e2e/journey-audit-fixtures.ts
 tests/e2e/journey-audit.spec.ts
@@ -638,6 +686,7 @@ tests/e2e/organization-link.spec.ts
 tests/e2e/organizer-service.spec.ts
 tests/e2e/participant-return.spec.ts
 tests/e2e/password.spec.ts
+tests/e2e/plan-choice.spec.ts
 tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
@@ -645,6 +694,7 @@ tests/e2e/presentation.spec.ts
 tests/e2e/service-recovery.spec.ts
 tests/e2e/session-design-fixtures.ts
 tests/e2e/session-details.spec.ts
+tests/e2e/session-history.spec.ts
 tests/e2e/staging.spec.ts
 tests/e2e/story-photo.spec.ts
 tests/integration/appearance.test.ts
@@ -699,11 +749,13 @@ tests/unit/foundations.test.ts
 tests/unit/http-body.test.ts
 tests/unit/iban.test.ts
 tests/unit/manual-voucher-eligibility.test.ts
+tests/unit/plan-selection.test.ts
 tests/unit/portal-inputs.test.ts
 tests/unit/proof-and-auth.test.ts
 tests/unit/schedule.test.ts
 tests/unit/service-boundaries.test.ts
 tests/unit/session-details-input.test.ts
+tests/unit/session-navigation.test.ts
 tests/unit/staging.test.ts
 tests/unit/status-indicator.test.ts
 tests/unit/stripe-commercial.test.ts

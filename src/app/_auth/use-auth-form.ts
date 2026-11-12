@@ -3,7 +3,9 @@ import type { FormEvent } from 'react';
 import { AUTH_UI } from '../../config/constants';
 import { authRequest, type AuthMode } from './auth-request';
 import { useMutation } from '../_portal/use-mutation';
-export function useAuthForm(mode: AuthMode) {
+import type { PlanIntent } from '../../core/validation/plan-selection';
+import { planPath } from '../../lib/plan-selection';
+export function useAuthForm(mode: AuthMode, plan: PlanIntent | null = null) {
   const state = useMutation();
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -13,6 +15,7 @@ export function useAuthForm(mode: AuthMode) {
       mode,
       new FormData(event.currentTarget),
       query.get('token') ?? fragment.get('token') ?? '',
+      plan,
     );
     if ('error' in command) {
       state.setMessage(command.error);
@@ -30,7 +33,7 @@ export function useAuthForm(mode: AuthMode) {
         return;
       }
       if (mode === 'SIGN_IN') {
-        window.location.assign('/app');
+        window.location.replace(planPath('/app', plan));
         return;
       }
       state.setSuccess(true);

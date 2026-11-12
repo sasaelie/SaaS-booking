@@ -11,6 +11,7 @@ interface Props {
   readonly children?: ReactNode;
   readonly submitLabel?: string;
   readonly disabled?: boolean;
+  readonly submitDisabled?: boolean;
   readonly compact?: boolean;
 }
 export function PortalForm({
@@ -19,6 +20,7 @@ export function PortalForm({
   children,
   submitLabel = PORTAL.SAVE,
   disabled = false,
+  submitDisabled = false,
   compact = false,
   tone,
 }: Props) {
@@ -35,7 +37,7 @@ export function PortalForm({
         <button
           className="liquid-ice-button portal-button portal-action-button"
           data-tone={tone}
-          disabled={state.pending || disabled}
+          disabled={state.pending || disabled || submitDisabled}
         >
           {state.pending ? PORTAL.SAVING : submitLabel}
         </button>

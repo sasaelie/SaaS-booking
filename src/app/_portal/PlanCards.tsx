@@ -1,34 +1,64 @@
+import Link from 'next/link';
 import { COMMERCIAL, PLAN_UI } from '../../config/commercial';
+import { PLAN_SELECTION as UI } from '../../config/plan-selection';
+import type { PlanIntent } from '../../core/validation/plan-selection';
+import { planPath } from '../../lib/plan-selection';
 import { formatMoney } from '../_ui/format-money';
-export function PlanCards() {
+export function PlanCards({
+  organizationId,
+  current,
+  selected,
+}: {
+  readonly organizationId?: string;
+  readonly current?: PlanIntent;
+  readonly selected?: PlanIntent | null;
+}) {
+  const path = organizationId ? `/app/${organizationId}/abonnement` : '/inscription';
   return (
     <div className="portal-cards commercial-plan-grid">
-      <section className="portal-panel">
-        <h2>{PLAN_UI.LIBERTE}</h2>
-        <p className="portal-price">{PLAN_UI.LIBERTE_PRICE}</p>
-        <p>{PLAN_UI.COMMISSION}</p>
-        <p className="portal-muted">{PLAN_UI.ABSORBED}</p>
-        <PlanFeatures values={PLAN_UI.LIBERTE_FEATURES} />
-      </section>
-      <section className="portal-panel">
-        <h2>{PLAN_UI.PRO}</h2>
-        <p className="portal-price">
-          {formatMoney(COMMERCIAL.MONTHLY_CENTS, 'EUR')}
-          <small>par mois</small>
-        </p>
-        <p>{formatMoney(COMMERCIAL.ANNUAL_CENTS, 'EUR')} par an</p>
-        <p className="portal-muted">{PLAN_UI.FEES}</p>
-        <PlanFeatures values={PLAN_UI.PRO_FEATURES} />
-      </section>
+      {(['liberte', 'pro'] as const).map((plan) => (
+        <PlanCard
+          key={plan}
+          plan={plan}
+          current={current === plan}
+          selected={selected === plan}
+          href={`${planPath(path, plan)}${organizationId ? '#choix-formule' : ''}`}
+        />
+      ))}
     </div>
   );
 }
-function PlanFeatures({ values }: { readonly values: readonly string[] }) {
+function PlanCard({
+  plan,
+  current,
+  selected,
+  href,
+}: {
+  readonly plan: PlanIntent;
+  readonly current: boolean;
+  readonly selected: boolean;
+  readonly href: string;
+}) {
+  const pro = plan === 'pro';
   return (
-    <ul className="portal-feature-list">
-      {values.map((text) => (
-        <li key={text}>{text}</li>
-      ))}
-    </ul>
+    <Link
+      className="portal-panel commercial-plan-card"
+      href={href}
+      aria-label={pro ? UI.CHOOSE_PRO : UI.CHOOSE_LIBERTE}
+      aria-current={selected ? 'true' : undefined}
+    >
+      <h2>{pro ? PLAN_UI.PRO : PLAN_UI.LIBERTE}</h2>
+      <p className="commercial-price">
+        <strong>{formatMoney(pro ? COMMERCIAL.MONTHLY_CENTS : 0, 'EUR')}</strong>
+        <span>{UI.PRICE_MONTH}</span>
+      </p>
+      {pro ? <p className="commercial-annual">{UI.ANNUAL_OPTION}</p> : null}
+      <p className="commercial-plan-fees">{pro ? PLAN_UI.FEES : PLAN_UI.COMMISSION}</p>
+      <p className="commercial-plan-summary">{pro ? UI.PRO_SUMMARY : UI.LIBERTE_SUMMARY}</p>
+      <span className="commercial-plan-action">
+        {current ? UI.CURRENT : UI.SELECT}
+        <span aria-hidden="true">→</span>
+      </span>
+    </Link>
   );
 }

@@ -39,3 +39,13 @@
   font-weight: 600;
   text-underline-offset: 4px;
 }
+.portal-landing-actions > div {
+  display: grid;
+}
+.portal-landing-actions > div > button {
+  width: 100%;
+}
+.portal-auth-card .landing-session-note {
+  margin: 0 0 16px;
+  font-size: 13px;
+}

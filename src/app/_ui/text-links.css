@@ -1,0 +1,48 @@
+a {
+  text-decoration: none;
+}
+main a:not([class]),
+.portal-auth-links a,
+.auth-forgot-link,
+.portal-notice a,
+.participant-navigation a,
+.portal-back,
+.portal-desktop-return,
+.portal-return-link,
+.portal-text-button,
+.ice-text-button,
+.portal-session-open,
+.commercial-comparison > summary,
+.ice-terms details > summary {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--ui-text-primary);
+}
+main a:not([class]),
+.portal-auth-links a,
+.auth-forgot-link,
+.portal-notice a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+main a:not([class])::after,
+.portal-auth-links a::after,
+.auth-forgot-link::after,
+.portal-notice a::after {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+main a:not([class]):hover,
+.portal-auth-links a:hover,
+.auth-forgot-link:hover,
+.portal-notice a:hover,
+.portal-text-button:hover,
+.portal-session-link:hover .portal-session-open {
+  color: var(--ice-evergreen-deep);
+}

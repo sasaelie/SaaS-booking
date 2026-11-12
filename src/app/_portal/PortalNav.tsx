@@ -9,6 +9,7 @@ import { APPEARANCE } from '../../config/appearance';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { IceIcon } from '../_ui/IceIcon';
 import { portalReturnTarget } from './navigation-target';
+import { PortalBackLink } from './PortalBackLink';
 const sections = [
   ['', PORTAL.HOME, 'calendar'],
   ['/activites', PORTAL.ACTIVITIES, 'ticket'],
@@ -116,13 +117,13 @@ function MobileBar({
 }) {
   return (
     <div className="portal-mobile-bar">
-      <Link
+      <PortalBackLink
         className="portal-back"
         href={portalReturnTarget(path, selected?.id).href}
-        aria-label={portalReturnTarget(path, selected?.id).label}
+        label={portalReturnTarget(path, selected?.id).label}
       >
         ← {APPEARANCE.BACK}
-      </Link>
+      </PortalBackLink>
       <span className="portal-current-title">{title}</span>
       <button
         type="button"

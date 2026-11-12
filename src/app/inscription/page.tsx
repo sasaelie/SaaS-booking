@@ -1,4 +1,4 @@
-import { AuthForm } from '../_auth/AuthForm';
-export default function Page() {
-  return <AuthForm mode="SIGN_UP" />;
+import { AuthEntry, type AuthEntryProps } from '../_auth/AuthEntry';
+export default function Page(props: AuthEntryProps) {
+  return <AuthEntry {...props} mode="SIGN_UP" />;
 }

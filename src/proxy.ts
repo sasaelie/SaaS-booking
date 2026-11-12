@@ -1,6 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { isSessionNavigationPath } from './lib/session-navigation';
+import { SESSION_NAVIGATION } from './config/session-navigation';
 export function proxy(request: NextRequest) {
   const response = NextResponse.next();
+  if (isSessionNavigationPath(request.nextUrl.pathname))
+    response.headers.set('Cache-Control', SESSION_NAVIGATION.NO_STORE);
   if (request.nextUrl.pathname.startsWith('/embed/')) {
     let local = false;
     try {

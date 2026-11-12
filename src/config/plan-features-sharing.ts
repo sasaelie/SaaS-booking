@@ -1,0 +1,50 @@
+export const SHARING_FEATURES = [
+  [
+    'Page publique et lien de réservation',
+    'Un lien vers le catalogue de l’espace ou une activité, partageable sur le site et les réseaux sociaux de l’organisateur.',
+    'Inclus',
+    'Inclus',
+  ],
+  [
+    'Réseaux de l’organisateur',
+    'Liens vers les réseaux configurés, présentés sur la page participant avant la réservation.',
+    'Inclus',
+    'Inclus',
+  ],
+  [
+    'Apparence de vos pages',
+    'Logo, photo de présentation, couleur du texte de l’encart et dégradés distincts pour l’organisateur et les participants.',
+    'Inclus',
+    'Inclus',
+  ],
+  [
+    'Widget pour votre site',
+    'Calendrier intégré ou fenêtre de réservation flottante sur un site externe compatible avec le code d’intégration.',
+    'Non',
+    'Inclus',
+  ],
+  [
+    'QR code pour vos affiches',
+    'Téléchargement PNG et PDF vectoriel pour imprimer le lien de l’espace ou d’une activité.',
+    'Non',
+    'Inclus',
+  ],
+  [
+    'Signature de la plateforme',
+    'Mention « Propulsé par Studio Créatif 360 » sur les pages de réservation.',
+    'Affichée',
+    'Retirée',
+  ],
+  [
+    'Échange vers un cours en ligne',
+    'Utilisation d’un code de report contre un cours externe déclaré par l’organisateur, avec référence et traçabilité. Aucun hébergement vidéo n’est fourni.',
+    'Non',
+    'Inclus',
+  ],
+  [
+    'Retour à Liberté',
+    'Après la période payée, conservation des dossiers et des paiements engagés ; deux activités restent ouvertes aux nouvelles inscriptions.',
+    'Formule de départ',
+    'Possible à la fin de la période payée',
+  ],
+] as const;

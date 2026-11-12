@@ -42,7 +42,13 @@ test('uses explicit parent destinations without a self-referencing back link', a
       await expect(back).toHaveCount(1);
       await expect(back).toHaveAttribute('href', href);
       await back.click();
+      if (path === '/app')
+        await page
+          .getByRole('dialog')
+          .getByRole('button', { name: 'Me déconnecter', exact: true })
+          .click();
       await expect(page).toHaveURL(href);
+      if (path === '/app') await login(page, space);
     }
   }
 });
