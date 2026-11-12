@@ -1,13 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
-import {
-  SelfBookingContextSchema,
-  type SelfBookingContext,
-} from '../../core/validation/self-booking';
+import { SelfBookingContextSchema, type SelfBookingContext } from '../../core/validation/self-booking';
 import { HTTP_STATUS } from '../../config/constants';
 type ContextState = { context: SelfBookingContext | null; error: 'invalid' | 'unavailable' | null };
 const empty: ContextState = { context: null, error: null };
-export function useBookingContext(token: string | null) {
+export function useBookingContext(token: string | null, endpoint = '/api/self-service/context') {
   const [state, setState] = useState<ContextState>(empty);
   const [version, setVersion] = useState(0);
   useEffect(() => {
@@ -18,11 +15,11 @@ export function useBookingContext(token: string | null) {
       return;
     }
     const controller = new AbortController();
-    void readContext(token, controller.signal).then((result) => {
+    void readContext(token, controller.signal, endpoint).then((result) => {
       if (!controller.signal.aborted) setState(result);
     });
     return () => controller.abort();
-  }, [token, version]);
+  }, [token, version, endpoint]);
   return {
     context: state.context,
     invalid: state.error === 'invalid',
@@ -30,9 +27,9 @@ export function useBookingContext(token: string | null) {
     refresh: () => setVersion((value) => value + 1),
   };
 }
-async function readContext(token: string, signal: AbortSignal): Promise<ContextState> {
+async function readContext(token: string, signal: AbortSignal, endpoint: string): Promise<ContextState> {
   try {
-    const response = await fetch('/api/self-service/context', {
+    const response = await fetch(endpoint, {
       method: 'POST',
       signal,
       headers: { 'Content-Type': 'application/json' },

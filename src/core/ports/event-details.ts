@@ -1,5 +1,5 @@
 import type { SOCIAL_NETWORKS } from '../../config/service';
-export type SocialLinks = Partial<Record<keyof typeof SOCIAL_NETWORKS, string>>;
+export type SocialLinks = Partial<Record<keyof typeof SOCIAL_NETWORKS, string>> & { readonly phone?: string };
 export interface EventDetails {
   readonly address?: string;
   readonly addressVisibility?: 'PUBLIC' | 'REMINDER';

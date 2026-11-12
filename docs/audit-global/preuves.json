@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-12",
+  "base": "c12bfe225006bd37c6f5808c4ec9e6099e4b7fa1",
+  "source_files": 581,
+  "source_lines": 26060,
+  "api_routes": 19,
+  "use_case_files": 31,
+  "migrations": 19,
+  "tests": {
+    "unit": 117,
+    "integration": 132,
+    "browser": {
+      "startTime": "2026-11-12T15:07:41.785Z",
+      "duration": 243376.437,
+      "expected": 91,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "npm_audit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "hosted_read_only": {
+    "private_tables": 44,
+    "tables_without_rls": 0,
+    "api_table_grants": 0,
+    "api_schema_usage": 0,
+    "security_definer_functions": 0,
+    "advisor_security_info": 44,
+    "advisor_unindexed_foreign_keys_info": 35,
+    "advisor_unused_indexes_info": 17
+  },
+  "initial_regressions": {
+    "refund_states_and_resume": 4,
+    "pending_failed_refund_jobs": 2,
+    "protected_retention": 6,
+    "worker_pool": 1,
+    "schedule_data": 1,
+    "distant_event_links": 2,
+    "old_unknown_refund_attempt": 1
+  },
+  "payments_real": false,
+  "emails_real": false,
+  "database_changes": false,
+  "limitations": "See docs/AUDIT-GLOBAL.md; provider sandbox, delivered email, scheduler, restoration and production load remain unverified."
+}

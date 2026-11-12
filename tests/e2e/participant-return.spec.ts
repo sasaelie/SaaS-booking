@@ -13,18 +13,15 @@ test('returns from the appearance catalogue and activity to the organizer withou
     `/app/${space.organizationId}/parametres`,
   );
   await page.getByRole('link', { name: 'Choisir une séance' }).click();
-  await expect(page).toHaveURL(/from=appearance/);
+  await expect(page).toHaveURL(`/simulation/${space.organizationId}/activite/${space.activityId}`);
   await page.getByRole('link', { name: 'Retour aux réglages d’apparence' }).click();
   await expect(page).toHaveURL(`/app/${space.organizationId}/parametres`);
   const visitor = await browser.newContext();
   const other = await visitor.newPage();
-  await other.goto(`/${space.slug}/${space.activityId}?from=appearance`);
-  await expect(other.getByRole('link', { name: 'Retour aux activités' })).toHaveAttribute(
-    'href',
-    `/${space.slug}`,
-  );
-  await expect(
-    other.getByRole('link', { name: /Retour.*organisateur|Retour aux réglages/ }),
-  ).toHaveCount(0);
+  const denied = await other.goto(`/${space.slug}/${space.activityId}?from=appearance`);
+  expect(denied?.status()).toBe(404);
+  await other.goto(`/${space.slug}/${space.activityId}`);
+  await expect(other.getByRole('link', { name: 'Retour aux activités' })).toHaveAttribute('href', `/${space.slug}`);
+  await expect(other.getByRole('link', { name: /Retour.*organisateur|Retour aux réglages/ })).toHaveCount(0);
   await visitor.close();
 });

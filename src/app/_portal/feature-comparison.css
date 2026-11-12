@@ -74,3 +74,25 @@
     margin-bottom: 5px;
   }
 }
+
+:root {
+  --feature-included: #c7efda;
+  --feature-absent: #eef4ef;
+  --feature-partial: #e0eee4;
+}
+.feature-comparison td[data-availability] {
+  color: var(--story-forest);
+  border-left: 4px solid transparent;
+}
+.feature-comparison td[data-availability='included'] {
+  background: var(--feature-included);
+  border-left-color: #49b981;
+}
+.feature-comparison td[data-availability='absent'] {
+  background: var(--feature-absent);
+}
+.feature-comparison td[data-availability='limited'],
+.feature-comparison td[data-availability='conditional'] {
+  background: var(--feature-partial);
+  border-left-color: #a4cbb5;
+}

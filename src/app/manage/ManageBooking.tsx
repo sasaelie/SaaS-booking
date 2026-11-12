@@ -1,14 +1,19 @@
 'use client';
+import { simulationPath } from '../../config/simulation';
 import { ColorScene } from '../_ui/ColorScene';
 import Link from 'next/link';
 import { FORM_LABELS, BOOKING_STATUS_LABELS } from '../../config/constants';
 import { useManagement } from './use-management';
 import { ProofUpload } from './ProofUpload';
 import type { SelfBookingContext } from '../../core/validation/self-booking';
-export function ManageBooking() {
-  const state = useManagement();
+export function ManageBooking({ simulationId }: { readonly simulationId?: string } = {}) {
+  const state = useManagement(simulationId);
   const booking = state.context;
-  const back = booking ? `/${booking.organizationSlug}/${booking.activityId}` : '/';
+  const back = simulationId
+    ? simulationPath(simulationId)
+    : booking
+      ? `/${booking.organizationSlug}/${booking.activityId}`
+      : '/';
   return (
     <div className="ice-widget-root manage-container">
       {booking?.participantHue != null ? <ColorScene hue={booking.participantHue} /> : null}
@@ -22,7 +27,7 @@ export function ManageBooking() {
         {booking?.hasProof && booking.status === 'PROOF_SUBMITTED' && !state.message ? (
           <p className="manage-note">{FORM_LABELS.PROOF_RECEIVED}</p>
         ) : null}
-        {booking?.canUploadProof && !state.cancelled ? (
+        {!simulationId && booking?.canUploadProof && !state.cancelled ? (
           <ProofUpload submit={state.upload} pending={state.pending} />
         ) : null}
         {booking?.canCancel && !state.cancelled ? <CancelBooking state={state} /> : null}

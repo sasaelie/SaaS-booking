@@ -5,6 +5,7 @@ export interface GdprBookingSummary {
   readonly amountPaidCents: number;
   readonly createdAt: Date;
   readonly paidAt: Date | null;
+  readonly proofIsAccounting: boolean;
 }
 export interface GdprRepositoryPort {
   purgeClosedOperationalData?(

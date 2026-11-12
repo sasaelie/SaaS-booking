@@ -14,7 +14,7 @@ describe('Hosted database connection safety', () => {
   });
   it('preserves session locks and bounds connection usage', () => {
     const options = databasePoolOptions('postgresql://app:test@localhost/booking', 'booking');
-    expect(options.options).toBe('-c search_path=booking,public');
+    expect(options.options).toBe('-c search_path=booking,pg_catalog');
     expect(options.max).toBe(3);
     expect(options.connectionTimeoutMillis).toBeGreaterThan(0);
     expect(options.ssl).toBeUndefined();

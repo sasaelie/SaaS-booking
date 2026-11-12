@@ -2,7 +2,7 @@ export const STORY_TONES = ['WHITE', 'BLACK', 'FOREST'] as const;
 export type StoryTextTone = (typeof STORY_TONES)[number];
 export const STORY_UI = {
   TITLE: 'Texte de l’encart de présentation',
-  HINT: 'Ce choix concerne les textes de l’encart de réservation et des cartes d’activités.',
+  HINT: 'Ce choix concerne les textes de l’encart de réservation et des cartes d’activités. Choisissez une couleur contrastant avec votre photo.',
   WHITE: 'Blanc',
   BLACK: 'Noir',
   FOREST: 'Vert sapin',

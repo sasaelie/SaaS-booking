@@ -17,13 +17,7 @@ export function PlanComparison() {
     </div>
   );
 }
-function Features({
-  title,
-  rows,
-}: {
-  readonly title: string;
-  readonly rows: readonly FeatureRow[];
-}) {
+function Features({ title, rows }: { readonly title: string; readonly rows: readonly FeatureRow[] }) {
   return (
     <table className="feature-comparison">
       <caption>{title}</caption>
@@ -42,20 +36,20 @@ function Features({
     </table>
   );
 }
-function FeatureData({ row: [label, detail, liberte, pro] }: { readonly row: FeatureRow }) {
+function FeatureData({ row: [label, detail, liberte, pro, liberteState, proState] }: { readonly row: FeatureRow }) {
   return (
     <tr>
       <th scope="row">
         <strong>{label}</strong>
         <small>{detail}</small>
       </th>
-      <td>
+      <td data-availability={liberteState}>
         <span aria-hidden="true" className="feature-mobile-label">
           {PLAN_UI.LIBERTE}
         </span>
         {liberte}
       </td>
-      <td>
+      <td data-availability={proState}>
         <span aria-hidden="true" className="feature-mobile-label">
           {PLAN_UI.PRO}
         </span>

@@ -1,3 +1,4 @@
+import type { AccountingWorkbookPort } from '../../ports/accounting.port';
 import { z } from 'zod';
 import type { PortalIdentityPort } from '../../ports/portal-identity.port';
 import type { FinancialRepositoryPort } from '../../ports/financial.port';
@@ -18,6 +19,7 @@ export class FinancialUseCase {
   constructor(
     private readonly identity: PortalIdentityPort,
     private readonly repository: FinancialRepositoryPort,
+    private readonly spreadsheet?: AccountingWorkbookPort,
   ) {}
   summary(raw: unknown) {
     return withPortalActor(this.identity, 'Financial', async (actor) => {
@@ -25,6 +27,14 @@ export class FinancialUseCase {
       return id.success
         ? this.repository.summary(actor, id.data)
         : failure(ERROR_CODES.VALIDATION_FAILED, 'Financial', 'summary');
+    });
+  }
+  workbook(raw: unknown) {
+    return withPortalActor(this.identity, 'AccountingWorkbook', async (actor) => {
+      const id = z.uuid().safeParse(raw);
+      if (!id.success || !this.spreadsheet) return failure(ERROR_CODES.VALIDATION_FAILED, 'Accounting', 'input');
+      const report = await this.repository.report(actor, id.data);
+      return report.ok ? this.spreadsheet.build(report.value) : report;
     });
   }
   export(raw: unknown) {

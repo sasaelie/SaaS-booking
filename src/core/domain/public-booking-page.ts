@@ -24,6 +24,8 @@ export function publicBookingPage(
   schedule: readonly ComputedCalendarSession[],
 ) {
   return {
+    simulationId: undefined as string | undefined,
+    termsEditUrl: undefined as string | undefined,
     ...publicIdentity(activity),
     showPlatformSignature: activity.showPlatformSignature ?? false,
     paymentReady: activity.paymentReady ?? true,
@@ -33,9 +35,7 @@ export function publicBookingPage(
       hue: activity.participantHue ?? null,
       theme: activity.brandTheme,
       logoUrl: activity.hasLogo ? `/api/branding/${activity.organizationId}/logo` : null,
-      backgroundUrl: activity.hasBackground
-        ? `/api/branding/${activity.organizationId}/background`
-        : null,
+      backgroundUrl: activity.hasBackground ? `/api/branding/${activity.organizationId}/background` : null,
     },
     reservationsOpen: activity.commercialAccessAllowed,
     slots: schedule.map((session) => ({

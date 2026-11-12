@@ -1,0 +1,102 @@
+/* Brand links share one quiet glass frame, without navigation arrows. */
+:root {
+  --social-glass: rgb(255 255 255 / 0.25);
+  --social-edge: rgb(255 255 255 / 0.8);
+}
+.catalog-identity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-block: 24px;
+}
+.catalog-identity .social-links,
+.catalog-identity .ice-brand {
+  margin: 0;
+}
+.social-links {
+  align-items: center;
+  gap: 10px;
+}
+.social-links a.social-link {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: var(--story-forest);
+  background: linear-gradient(135deg, var(--social-edge), var(--social-glass) 45%, transparent);
+  border: 1px solid var(--social-edge);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.18),
+    0 3px 10px rgb(20 61 43 / 0.08);
+  backdrop-filter: blur(12px);
+}
+.social-links a.social-link::after {
+  content: none;
+}
+.social-links a.social-link:hover {
+  background: var(--social-edge);
+  transform: translateY(-1px);
+}
+.social-links a.social-link:focus-visible {
+  outline: 2px solid var(--story-forest);
+  outline-offset: 4px;
+}
+.social-links svg {
+  width: 22px;
+  height: 22px;
+}
+.simulation-notice {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.simulation-notice p {
+  margin: 0;
+}
+.simulation-card {
+  display: grid;
+  gap: 12px;
+}
+.simulation-card details p {
+  white-space: pre-wrap;
+}
+.terms-edit {
+  margin-top: 20px;
+}
+
+.simulation-notice a.simulation-nav-link {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--story-forest);
+}
+.simulation-nav-link::after {
+  content: '›';
+}
+.simulation-nav-link:focus-visible {
+  outline: 2px solid var(--story-forest);
+  outline-offset: 4px;
+}
+.simulation-card {
+  align-content: start;
+}
+.simulation-card > p,
+.simulation-card h2 {
+  margin: 0;
+}
+.simulation-card .portal-badge,
+.simulation-card .status-badge {
+  justify-self: start;
+}
+.simulation-card h2 {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  line-height: 1.2;
+}

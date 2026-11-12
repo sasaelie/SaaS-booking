@@ -20,12 +20,10 @@ export const SERVICE = {
   ADDRESS: 'Adresse ou lien de visioconférence',
   PUBLIC: 'Afficher l’adresse sur la page de réservation',
   DELAYED: 'Envoyer l’adresse par e-mail 24 heures avant',
-  DELAYED_NOTICE:
-    'L’adresse et les modalités pratiques vous seront envoyées par e-mail 24 heures avant votre séance.',
+  DELAYED_NOTICE: 'L’adresse et les modalités pratiques vous seront envoyées par e-mail 24 heures avant votre séance.',
   PRACTICAL: 'Accès, matériel et consignes pratiques',
   TERMS: 'Consignes de participation et droit au remboursement',
-  TERMS_HINT:
-    'Vos consignes complètent les règles de report ci-dessous, qui restent appliquées automatiquement.',
+  TERMS_HINT: 'Vos consignes complètent les règles de report ci-dessous, qui restent appliquées automatiquement.',
   SOCIALS: 'Réseaux et contact',
   PAID: 'Payé',
   COVERED: 'Couvert par un code',
@@ -53,6 +51,8 @@ export const CODE_STATES: Readonly<Record<string, string>> = {
   EXPIRED: 'Expiré',
 };
 export const PAYMENT_FILTERS = {
+  UPCOMING: 'Réservations à venir',
+  REFUND_PENDING: 'Remboursements à traiter',
   PAYMENT_DUE: 'Règlements attendus',
   PAYMENT_RECEIVED: 'Paiements reçus',
   PAYMENT_COVERED: 'Couverts par un code',

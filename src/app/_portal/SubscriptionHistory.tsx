@@ -16,7 +16,7 @@ export function SubscriptionHistory({
         <>
           <a
             className="liquid-ice-button portal-button"
-            href={`/api/portal/accounting?organizationId=${organization.id}`}
+            href={`/api/portal/accounting?organizationId=${organization.id}&format=xlsx`}
           >
             {PLAN_UI.EXPORT}
           </a>
@@ -30,9 +30,7 @@ export function SubscriptionHistory({
           <strong>{portalDate(access.currentPeriodEnd, organization.timezone)}</strong>
         </div>
       ) : null}
-      {access.cancelAtPeriodEnd && active ? (
-        <p className="portal-notice">{BILLING_UI.CANCEL_NOTE}</p>
-      ) : null}
+      {access.cancelAtPeriodEnd && active ? <p className="portal-notice">{BILLING_UI.CANCEL_NOTE}</p> : null}
       {!active && !access.complimentary && access.currentPeriodEnd ? (
         <p className="portal-muted">{BILLING_UI.EXPIRED_NOTE}</p>
       ) : null}

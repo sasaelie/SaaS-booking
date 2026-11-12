@@ -1,3 +1,4 @@
+import { simulationPath } from '../../config/simulation';
 import type { BookingFlowState } from './use-booking-flow';
 import { PAYMENT_MODES, BOOKING_STATUSES } from '../../config/constants';
 import { PARTICIPANT_NAV } from '../../config/participant-navigation';
@@ -29,7 +30,7 @@ export function BookingResult({
       {state.booking?.selfServiceToken ? (
         <a
           className="liquid-ice-button ice-result-link"
-          href={`/manage#token=${encodeURIComponent(state.booking.selfServiceToken)}`}
+          href={`${flow.data.simulationId ? simulationPath(flow.data.simulationId) + '/gestion' : '/manage'}#token=${encodeURIComponent(state.booking.selfServiceToken)}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -47,12 +48,7 @@ function PaymentInstructions({ state }: { readonly state: BookingActionState }) 
   return (
     <>
       {checkout ? (
-        <a
-          className="liquid-ice-button ice-result-link"
-          href={checkout}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a className="liquid-ice-button ice-result-link" href={checkout} target="_blank" rel="noopener noreferrer">
           {BOOKING_UI.CONTINUE_PAYMENT}
         </a>
       ) : null}
@@ -61,13 +57,7 @@ function PaymentInstructions({ state }: { readonly state: BookingActionState }) 
   );
 }
 
-function OfflinePayment({
-  state,
-  flow,
-}: {
-  readonly state: BookingActionState;
-  readonly flow: BookingFlowState;
-}) {
+function OfflinePayment({ state, flow }: { readonly state: BookingActionState; readonly flow: BookingFlowState }) {
   const amount = bookingPricing(flow).amount;
   if (
     !state.success ||

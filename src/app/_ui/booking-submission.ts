@@ -1,3 +1,4 @@
+import { createSimulationBookingAction } from '../actions/simulation.actions';
 import type { FormEvent } from 'react';
 import { createBookingAction, type BookingActionState } from '../actions/booking.actions';
 import type { BookingPageData } from '../../core/use-cases/get-booking-page.use-case';
@@ -22,18 +23,17 @@ export async function submitBooking(event: FormEvent<HTMLFormElement>, state: Su
   if (state.request.current.fingerprint !== fingerprint)
     state.request.current = { fingerprint, key: crypto.randomUUID() };
   try {
-    const result = await createBookingAction({
+    const submit = state.data.simulationId
+      ? (raw: unknown) => createSimulationBookingAction(state.data.organizationId, raw)
+      : createBookingAction;
+    const result = await submit({
       ...input,
       idempotencyKey: state.request.current.key,
     });
     state.setState(result);
-    if (
-      !result.success &&
-      (result.code === ERROR_CODES.SESSION_FULL || result.code === ERROR_CODES.TERMS_NOT_ACCEPTED)
-    )
+    if (!result.success && (result.code === ERROR_CODES.SESSION_FULL || result.code === ERROR_CODES.TERMS_NOT_ACCEPTED))
       state.refresh();
-    if (result.booking?.checkoutUrl && window.parent === window)
-      window.location.assign(result.booking.checkoutUrl);
+    if (result.booking?.checkoutUrl && window.parent === window) window.location.assign(result.booking.checkoutUrl);
   } catch {
     state.setState({ success: false, message: UI_MESSAGES.FAILURE });
   } finally {

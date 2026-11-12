@@ -2,6 +2,7 @@ import type { Result } from '../../lib/result';
 export interface JobEffect {
   readonly preserveProof?: true;
   readonly refundId?: string;
+  readonly status?: import('../../config/refunds').RefundState;
 }
 export interface JobHandlerPort {
   execute(type: string, payload: unknown, idempotencyKey: string): Promise<Result<JobEffect>>;

@@ -1,4 +1,5 @@
 'use client';
+import { SIMULATION } from '../../config/simulation';
 import { ADMIN } from '../../config/administration';
 import { SESSION_UI } from '../../config/session-details';
 import Link from 'next/link';
@@ -15,6 +16,7 @@ const sections = [
   ['/activites', PORTAL.ACTIVITIES, 'ticket'],
   ['/reservations', PORTAL.BOOKINGS, 'person'],
   ['/partager', PORTAL.SHARE, 'arrow'],
+  ['/tests', SIMULATION.LIST, 'calendar'],
   ['/parametres', APPEARANCE.TITLE, 'person'],
   ['/reglages', APPEARANCE.SETTINGS, 'calendar'],
   ['/abonnement', PORTAL.BILLING, 'lock'],
@@ -57,13 +59,7 @@ export function PortalNav({
     </nav>
   );
 }
-function PortalUtilities({
-  operator,
-  path,
-}: {
-  readonly operator: boolean;
-  readonly path: string;
-}) {
+function PortalUtilities({ operator, path }: { readonly operator: boolean; readonly path: string }) {
   return (
     <div className="portal-nav-utilities">
       <Link href="/app" aria-current={path === '/app' ? 'page' : undefined}>
@@ -78,13 +74,7 @@ function PortalUtilities({
     </div>
   );
 }
-function OrganizationNav({
-  selected,
-  path,
-}: {
-  readonly selected: OrganizationSummary;
-  readonly path: string;
-}) {
+function OrganizationNav({ selected, path }: { readonly selected: OrganizationSummary; readonly path: string }) {
   return (
     <div className="portal-nav-sections">
       <p className="portal-nav-organization">{selected.name}</p>

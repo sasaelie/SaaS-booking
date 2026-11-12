@@ -17,6 +17,7 @@ import {
 } from './stripe-validation';
 import { reconcileStripePayment } from './stripe-reconciliation';
 import { reconcileStripePayout } from './stripe-payout';
+import { refundStripePayment } from './stripe-refund';
 function accountOptions(account: string | null): Stripe.RequestOptions {
   return account ? { stripeAccount: account } : {};
 }
@@ -97,28 +98,8 @@ export class StripePaymentAdapter implements PaymentGatewayPort {
       return failure(ERROR_CODES.UNAUTHORIZED, 'Stripe', 'verifyWebhookAndParse');
     }
   }
-  async refundPayment(input: RefundPaymentInput): Promise<Result<{ readonly refundId: string }>> {
-    try {
-      if (!StripeAmountSchema.safeParse(input.amountCents).success)
-        return failure(ERROR_CODES.VALIDATION_FAILED, 'Stripe', 'refundPayment');
-      const refund = await this.stripe.refunds.create(
-        {
-          payment_intent: input.paymentReference,
-          amount: input.amountCents,
-          reason: 'requested_by_customer',
-          ...(input.chargeModel === 'DESTINATION'
-            ? { reverse_transfer: true, refund_application_fee: true }
-            : {}),
-        },
-        {
-          ...accountOptions(input.chargeModel === 'DESTINATION' ? null : input.merchantAccountId),
-          idempotencyKey: input.idempotencyKey,
-        },
-      );
-      return ok({ refundId: refund.id });
-    } catch {
-      return failure(ERROR_CODES.PAYMENT_PROVIDER_ERROR, 'Stripe', 'refundPayment');
-    }
+  refundPayment(input: RefundPaymentInput) {
+    return refundStripePayment(this.stripe, input);
   }
   reconcilePayment(input: import('../../core/ports/financial.port').FinancialPaymentInput) {
     return reconcileStripePayment(this.stripe, input);

@@ -1,14 +1,9 @@
+import { TERMS_DEFAULTS } from '../../config/participation-terms';
 import { SERVICE } from '../../config/service';
 import { sha256 } from '../../lib/sha256';
 import { ok, type Result } from '../../lib/result';
 // src/core/domain/terms-generator.ts
-import {
-  AUDIENCE_POLICIES,
-  PAYMENT_RULES,
-  MONEY,
-  type AudiencePolicy,
-  type PaymentMode,
-} from '../../config/constants';
+import { AUDIENCE_POLICIES, PAYMENT_RULES, MONEY, type AudiencePolicy, type PaymentMode } from '../../config/constants';
 export interface TermsGenerationContext {
   readonly participationTerms?: string;
   readonly organizationName: string;
@@ -28,9 +23,7 @@ export interface GeneratedTermsDocument {
   readonly versionHash: string;
 }
 function formatPriceEuros(priceCents: number, currency: string): string {
-  const amount = (priceCents / MONEY.CENTS_PER_UNIT)
-    .toFixed(MONEY.DECIMAL_PLACES)
-    .replace('.', ',');
+  const amount = (priceCents / MONEY.CENTS_PER_UNIT).toFixed(MONEY.DECIMAL_PLACES).replace('.', ',');
   return `${amount} ${currency}`;
 }
 function buildAudienceClause(policy: AudiencePolicy): {
@@ -49,8 +42,7 @@ function buildAudienceClause(policy: AudiencePolicy): {
     return {
       clause:
         'PUBLIC MAJEUR UNIQUEMENT : Cette activité est strictement réservée aux participants majeurs (18 ans accomplis le jour de la séance).',
-      checkboxLabel:
-        'Je certifie sur l’honneur être majeur(e) (18 ans ou plus) à la date de la séance.',
+      checkboxLabel: 'Je certifie sur l’honneur être majeur(e) (18 ans ou plus) à la date de la séance.',
     };
   }
   return {
@@ -60,9 +52,7 @@ function buildAudienceClause(policy: AudiencePolicy): {
       'Je certifie être majeur(e) et, si la place concerne un mineur, agir en qualité de représentant légal autorisé.',
   };
 }
-export async function generateDynamicTerms(
-  ctx: TermsGenerationContext,
-): Promise<Result<GeneratedTermsDocument>> {
+export async function generateDynamicTerms(ctx: TermsGenerationContext): Promise<Result<GeneratedTermsDocument>> {
   const formattedPrice = formatPriceEuros(ctx.priceCents, ctx.currency);
   const audienceInfo = buildAudienceClause(ctx.audiencePolicy);
   const externalBenefitText = ctx.allowExternalBenefitExchange
@@ -71,15 +61,15 @@ export async function generateDynamicTerms(
   const clauses: string[] = [
     `1. ORGANISATEUR & PRESTATION : Réservation d’une (1) place individuelle pour l’activité « ${ctx.activityName} » organisée par ${ctx.organizationName}, au tarif unitaire de référence de ${formattedPrice}.`,
     `2. ${audienceInfo.clause}`,
-    `3. ANNULATION PAR LE PARTICIPANT & CODE DE REPORT : Aucun remboursement en argent n’est effectué en cas d’annulation par le participant ou d’absence. Si le participant notifie son annulation au moins ${ctx.noticeHoursForVoucher} heures avant le début de la séance, un Code de report unique de la valeur éligible de sa réservation (paiement reçu et valeur de report effectivement appliquée) (valable ${ctx.voucherValidityMonths} mois sur une prochaine séance${externalBenefitText}) lui est transmis.`,
+    `3. ANNULATION PAR LE PARTICIPANT & CODE DE REPORT : Le parcours automatique propose un report plutôt qu’un remboursement en argent en cas d’annulation par le participant. Toute demande particulière ou droit légal au remboursement doit être adressé à l’organisateur. Si le participant notifie son annulation au moins ${ctx.noticeHoursForVoucher} heures avant le début de la séance, un Code de report unique de la valeur éligible de sa réservation (paiement reçu et valeur de report effectivement appliquée) (valable ${ctx.voucherValidityMonths} mois sur une prochaine séance${externalBenefitText}) lui est transmis.`,
     `4. ANNULATION PAR L’ORGANISATEUR : En cas d’annulation de la séance par ${ctx.organizationName}, le participant est intégralement remboursé de la somme versée dans un délai maximal de ${PAYMENT_RULES.ORGANIZER_REFUND_DEADLINE_DAYS} jours.`,
-    `5. ABSENCE DE DROIT DE RÉTRACTATION (DROIT BELGE) : Conformément à l’article VI.53, 12° du Code de droit économique belge, le consommateur ne dispose pas du droit de rétractation de 14 jours pour les prestations de services d’activités de loisirs fournies à une date ou selon une période d’exécution déterminée.`,
+    TERMS_DEFAULTS.LEGAL,
   ];
   clauses.push(
     `6. PAIEMENT : Mode ${ctx.paymentMode}. Une confirmation sans paiement en ligne ne constitue pas une preuve d’encaissement. Seules les sommes effectivement versées sont remboursables en argent ; la valeur d’un report est traitée séparément.`,
   );
   clauses.push(SERVICE.REMAINDER_TERMS);
-  if (ctx.participationTerms?.trim()) clauses.push(ctx.participationTerms.trim());
+  clauses.push(ctx.participationTerms?.trim() || TERMS_DEFAULTS.INSTRUCTIONS);
   const fullText = clauses.join('\n\n');
   const hash = await sha256(fullText);
   if (!hash.ok) return hash;

@@ -41,15 +41,9 @@ export interface FinancialSummary {
   readonly reconciledCount: number;
 }
 export interface FinancialRepositoryPort {
-  recordCost(
-    actor: PortalActor,
-    input: import('../validation/commercial').PlatformCostInput,
-  ): Promise<Result<void>>;
-  selectActivities(
-    actor: PortalActor,
-    organizationId: string,
-    activityIds: readonly string[],
-  ): Promise<Result<void>>;
+  report(actor: PortalActor, organizationId: string): Promise<Result<import('./accounting.port').AccountingReport>>;
+  recordCost(actor: PortalActor, input: import('../validation/commercial').PlatformCostInput): Promise<Result<void>>;
+  selectActivities(actor: PortalActor, organizationId: string, activityIds: readonly string[]): Promise<Result<void>>;
   summary(actor: PortalActor, organizationId: string): Promise<Result<FinancialSummary>>;
   export(actor: PortalActor, organizationId: string): Promise<Result<string>>;
 }

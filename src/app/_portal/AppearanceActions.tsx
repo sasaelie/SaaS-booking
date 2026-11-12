@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SIMULATION, simulationPath } from '../../config/simulation';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { APPEARANCE as UI } from '../../config/appearance';
 import { MEMBER_ROLES, PORTAL } from '../../config/constants';
@@ -10,13 +11,7 @@ interface Props {
 export function AppearanceActions({ state, organization }: Props) {
   const disabled = state.pending || organization.role !== MEMBER_ROLES.OWNER;
   const message = state.message || (state.dirty ? UI.DIRTY : '');
-  const tone = state.message
-    ? state.message === UI.SAVED
-      ? 'green'
-      : 'red'
-    : state.dirty
-      ? 'orange'
-      : undefined;
+  const tone = state.message ? (state.message === UI.SAVED ? 'green' : 'red') : state.dirty ? 'orange' : undefined;
   return (
     <footer className="appearance-footer">
       <p className="appearance-feedback" role="status" data-tone={tone}>
@@ -42,21 +37,16 @@ function AppearanceSecondary({ state, organization }: Props) {
   const disabled = state.pending || organization.role !== MEMBER_ROLES.OWNER;
   return (
     <>
-      <button
-        type="button"
-        className="portal-secondary-action"
-        onClick={state.reset}
-        disabled={disabled}
-      >
+      <button type="button" className="portal-secondary-action" onClick={state.reset} disabled={disabled}>
         {UI.RESET}
       </button>
       <Link
         className="portal-secondary-action appearance-public-link"
-        href={`/${organization.slug}?from=appearance`}
+        href={simulationPath(organization.id)}
         target="_blank"
         rel="noopener noreferrer"
       >
-        {UI.OPEN}
+        {SIMULATION.OPEN}
       </Link>
     </>
   );

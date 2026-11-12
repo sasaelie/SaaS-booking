@@ -20,7 +20,7 @@ test('saves the chosen Liberty activities and applies them after Pro is removed'
     [space.organizationId],
   );
   await page.getByRole('button', { name: 'Actualiser l’état', exact: true }).click();
-  await expect(page.getByText('Formule Liberté', { exact: true })).toBeVisible();
+  await expect(page.locator('#choix-formule .portal-badge')).toHaveText('Liberté');
   const row = (
     await browserDatabase().query(
       'SELECT liberty_activity_ids FROM organization_access WHERE organization_id=$1',

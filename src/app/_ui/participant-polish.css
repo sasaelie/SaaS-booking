@@ -1,0 +1,92 @@
+/* A background must never reserve space above participant content. */
+main.participant-page {
+  margin-top: 14px;
+  padding-top: 0;
+}
+.participant-catalog,
+.ice-booking-page {
+  position: relative;
+  display: flow-root;
+  min-height: 0;
+  padding-top: 0;
+}
+.participant-catalog > .color-scene,
+.ice-booking-page > .ice-brand-scene {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+.participant-navigation {
+  margin-bottom: 12px;
+}
+.participant-page .catalog-identity {
+  margin: 12px 0 18px;
+  align-items: center;
+}
+@media (max-width: 600px) {
+  .portal-metrics:has(.portal-metric-link) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .portal-metric-link {
+    padding: 18px 16px;
+  }
+  main.participant-page {
+    margin-top: 12px;
+  }
+  .participant-page .catalog-identity {
+    gap: 12px;
+  }
+  .dashboard-tests {
+    padding: 18px;
+    gap: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal-metric-link,
+  .portal-metric-link:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
+.dashboard-test-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.simulation-notice {
+  gap: 6px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+.simulation-notice > p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.simulation-shortcuts {
+  display: flex;
+  gap: 8px 18px;
+  flex-wrap: wrap;
+}
+.simulation-shortcuts a.simulation-nav-link {
+  min-height: 44px;
+  font-size: 12px;
+}
+.simulation-nav-link::after {
+  border: 0;
+  transform: none;
+  width: auto;
+  height: auto;
+}
+
+.participant-return-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: 10px;
+}
