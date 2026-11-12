@@ -93,35 +93,27 @@
   height: 16px;
   color: var(--link-ink);
 }
+/* La photo reste visible sous un voile sombre uniforme et progressif. */
 .marketing-preview-activity {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: 24px;
   border-radius: 19px;
-  background:
-    radial-gradient(
-      ellipse at 85% 70%,
-      color-mix(in srgb, var(--ice-sage) 24%, var(--ice-evergreen-deep)),
-      transparent 65%
-    ),
-    var(--ice-evergreen-deep);
+  background: var(--ice-evergreen-deep);
   color: var(--ice-on-dark);
 }
-.marketing-preview-activity[data-example='soins'] {
-  background:
-    radial-gradient(
-      ellipse at 85% 90%,
-      color-mix(in srgb, var(--ice-mist) 20%, var(--ice-evergreen-deep)),
-      transparent 80%
-    ),
-    var(--ice-evergreen-deep);
+.marketing-preview-photo {
+  object-fit: cover;
+  z-index: -2;
 }
-.marketing-preview-activity[data-example='sport'] {
-  background:
-    radial-gradient(
-      ellipse at 110% 100%,
-      color-mix(in srgb, var(--ice-sage) 26%, var(--ice-evergreen-deep)),
-      transparent 80%
-    ),
-    var(--ice-evergreen-deep);
+.marketing-preview-activity::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, rgb(0 0 0 / 0.7), rgb(0 0 0 / 0.63) 55%, rgb(0 0 0 / 0.76));
+  pointer-events: none;
 }
 .marketing-preview-activity > p.marketing-preview-tag {
   font-size: 11px;

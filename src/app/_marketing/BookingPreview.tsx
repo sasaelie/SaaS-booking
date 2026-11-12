@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { MARKETING_PREVIEW as UI } from '../../config/marketing-preview';
 import { IceIcon } from '../_ui/IceIcon';
@@ -103,6 +104,14 @@ function PreviewActivity({ example }: { readonly example: Example }) {
         <IceIcon name="lock" />
       </div>
       <div className="marketing-preview-activity" data-example={example.key}>
+        <Image
+          className="marketing-preview-photo"
+          src={example.image}
+          alt=""
+          fill
+          loading="eager"
+          sizes="(max-width: 760px) 380px, 440px"
+        />
         <p className="marketing-preview-tag">{example.tag}</p>
         <h2>{example.title}</h2>
         <p>{example.text}</p>

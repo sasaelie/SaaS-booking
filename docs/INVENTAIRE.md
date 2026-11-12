@@ -1,8 +1,9 @@
 # Inventaire de la plateforme
 
-893 fichiers versionnés ou préparés dans cette branche, dont 620 sous `src/`.
+898 fichiers versionnés ou préparés dans cette branche, dont 621 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
+
 
 ```text
 .env.example
@@ -56,6 +57,7 @@ docs/SESSION-ACCUEIL.md
 docs/SIMULATION-ET-COMPTABILITE.md
 docs/TABLEAU-DE-BORD-ET-CONTACT.md
 docs/VERIFICATION.md
+docs/accueil-commercial/CADRES-ET-PHOTOS.md
 docs/accueil-commercial/MISE-EN-LIGNE.md
 docs/accueil-commercial/VERIFICATIONS.md
 docs/audit-actions/inventaire.json
@@ -144,6 +146,9 @@ next.config.ts
 package-lock.json
 package.json
 playwright.config.ts
+public/marketing/atelier.webp
+public/marketing/soins.webp
+public/marketing/sport.webp
 scripts/check-deployment.ts
 scripts/check-storage.ts
 scripts/export-hosted-migrations.ts
@@ -337,6 +342,7 @@ src/app/_marketing/PublicStructuredData.tsx
 src/app/_marketing/SavingsIllustration.tsx
 src/app/_marketing/marketing-content.css
 src/app/_marketing/marketing-footer.css
+src/app/_marketing/marketing-glass.css
 src/app/_marketing/marketing-hero.css
 src/app/_marketing/marketing-layout.css
 src/app/_marketing/marketing-preview-controls.css

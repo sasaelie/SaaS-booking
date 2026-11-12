@@ -1,0 +1,76 @@
+/* Première version : cadre validé, avant toute variante ultra transparente. */
+.marketing-root .portal-panel,
+.marketing-root .marketing-header-inner {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--glass-edge-quiet);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--ice-paper) 68%, transparent);
+  box-shadow: var(--glass-frame-shadow);
+}
+.marketing-root .marketing-header-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--glass-edge-light),
+    var(--glass-edge-quiet) 45%,
+    var(--glass-edge-light)
+  );
+  -webkit-mask:
+    linear-gradient(var(--ice-paper) 0 0) content-box,
+    linear-gradient(var(--ice-paper) 0 0);
+  mask:
+    linear-gradient(var(--ice-paper) 0 0) content-box,
+    linear-gradient(var(--ice-paper) 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.marketing-root .marketing-header {
+  padding-block: 12px;
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+}
+.marketing-root .marketing-header-inner {
+  width: min(100% - 24px, 1160px);
+  padding-inline: 18px;
+}
+.marketing-root .liquid-ice-button,
+.marketing-root .marketing-hero .portal-landing-actions > a:first-child {
+  box-shadow:
+    inset 0 1px 1px var(--glass-edge-light),
+    0 2px 0 var(--button-edge),
+    0 10px 26px -8px var(--interaction-shadow);
+}
+.marketing-root .commercial-plan-card:hover {
+  border-color: var(--link-ink);
+}
+@supports (backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px)) {
+  .marketing-root .portal-panel,
+  .marketing-root .marketing-header-inner {
+    background: linear-gradient(
+      135deg,
+      var(--glass-fill),
+      color-mix(in srgb, var(--ice-paper) 12%, transparent)
+    );
+    backdrop-filter: blur(8px) saturate(115%);
+    -webkit-backdrop-filter: blur(8px) saturate(115%);
+  }
+  .marketing-root .marketing-header-inner {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--ice-paper) 78%, transparent),
+      color-mix(in srgb, var(--ice-paper) 65%, transparent)
+    );
+  }
+}
+@media (max-width: 760px) {
+  .marketing-root .marketing-header-inner {
+    padding-inline: 12px;
+  }
+}

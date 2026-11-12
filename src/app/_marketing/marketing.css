@@ -5,6 +5,7 @@
 @import './marketing-content.css';
 @import './marketing-pricing-faq.css';
 @import './marketing-footer.css';
+@import './marketing-glass.css';
 
 .marketing-root {
   color: var(--ui-text-primary);

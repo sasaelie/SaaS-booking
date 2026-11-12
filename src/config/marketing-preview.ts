@@ -11,6 +11,7 @@ export const MARKETING_PREVIEW = {
   EXAMPLES: [
     {
       key: 'atelier',
+      image: '/marketing/atelier.webp',
       label: 'Ateliers',
       initials: 'TM',
       organization: 'Terre & Mains',
@@ -23,6 +24,7 @@ export const MARKETING_PREVIEW = {
     },
     {
       key: 'soins',
+      image: '/marketing/soins.webp',
       label: 'Soins',
       initials: 'SI',
       organization: 'Studio Inès',
@@ -35,6 +37,7 @@ export const MARKETING_PREVIEW = {
     },
     {
       key: 'sport',
+      image: '/marketing/sport.webp',
       label: 'Sport',
       initials: 'MC',
       organization: 'Mouvement collectif',
