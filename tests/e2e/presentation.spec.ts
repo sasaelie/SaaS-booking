@@ -111,7 +111,7 @@ async function checkFooterAlignment(page: Page, width: number) {
   const reset = await page
     .getByRole('button', { name: 'Rétablir les couleurs par défaut' })
     .boundingBox();
-  const open = await page.getByRole('link', { name: /Ouvrir ma page participant/ }).boundingBox();
+  const open = await page.getByRole('link', { name: /Tester le parcours participant/ }).boundingBox();
   expect(reset).not.toBeNull();
   expect(open).not.toBeNull();
   if (width > 380) expect(reset?.y).toBe(open?.y);

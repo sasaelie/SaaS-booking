@@ -1,3 +1,5 @@
+import { useSearchParams } from 'next/navigation';
+import { TERMS_DEFAULTS } from '../../../config/participation-terms';
 import { useId } from 'react';
 import { SERVICE } from '../../../config/service';
 import type { EventDetails } from '../../../core/ports/event-details';
@@ -5,7 +7,7 @@ import { PortalField } from '../PortalField';
 export function EventDetailsFields({ initial = {} }: { readonly initial?: EventDetails }) {
   const id = useId();
   return (
-    <details className="portal-details">
+    <details className="portal-details" open={useSearchParams().get('edit') === 'terms' || undefined}>
       <summary>{SERVICE.DETAILS}</summary>
       <fieldset className="portal-fieldset" aria-label={SERVICE.DETAILS}>
         <PortalField
@@ -43,19 +45,17 @@ function DetailsText({ initial, id }: { readonly initial: EventDetails; readonly
     <>
       {(['practicalInfo', 'participationTerms'] as const).map((name) => (
         <div className="portal-field" key={name}>
-          <label htmlFor={`${id}-${name}`}>
-            {name === 'practicalInfo' ? SERVICE.PRACTICAL : SERVICE.TERMS}
-          </label>
+          <label htmlFor={`${id}-${name}`}>{name === 'practicalInfo' ? SERVICE.PRACTICAL : SERVICE.TERMS}</label>
           <textarea
             id={`${id}-${name}`}
             className="portal-input"
             name={name}
             maxLength={SERVICE.TEXT_MAX}
-            defaultValue={initial[name] ?? ''}
+            defaultValue={initial[name]?.trim() || (name === 'participationTerms' ? TERMS_DEFAULTS.INSTRUCTIONS : '')}
           />
         </div>
       ))}
-      <small>{SERVICE.TERMS_HINT}</small>
+      <small>{TERMS_DEFAULTS.EDIT_HINT}</small>
     </>
   );
 }

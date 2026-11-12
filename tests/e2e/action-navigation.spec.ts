@@ -2,9 +2,7 @@ import { expect, test } from '@playwright/test';
 import { browserSpace, closeBrowserDatabase, login } from './portal-fixtures';
 import { captureActions } from './action-audit-fixtures';
 test.afterAll(closeBrowserDatabase);
-test('follows every organizer menu destination and mobile return through actual links', async ({
-  page,
-}, info) => {
+test('follows every organizer menu destination and mobile return through actual links', async ({ page }, info) => {
   const space = await browserSpace();
   await login(page, space);
   for (const width of [1440, 390]) {
@@ -34,9 +32,7 @@ test('follows every organizer menu destination and mobile return through actual 
     }
   }
 });
-test('signs out, invalidates the real application session and follows account entry links', async ({
-  page,
-}) => {
+test('signs out, invalidates the real application session and follows account entry links', async ({ page }) => {
   const space = await browserSpace();
   await login(page, space);
   await page.getByRole('button', { name: 'Se déconnecter', exact: true }).click();
@@ -63,9 +59,7 @@ test('copies the actual booking link and downloads PDF, PNG and accounting files
   await page.goto(`/app/${space.organizationId}/partager`);
   await page.getByRole('button', { name: 'Copier', exact: true }).first().click();
   await expect(page.getByRole('status')).toContainText(/copié/i);
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-    new URL(page.url()).origin + '/' + space.slug,
-  );
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(new URL(page.url()).origin + '/' + space.slug);
   const pdfPromise = page.waitForEvent('download');
   await page.locator('a[href*="format=pdf"]').click();
   const pdf = await pdfPromise;
@@ -76,7 +70,9 @@ test('copies the actual booking link and downloads PDF, PNG and accounting files
   await page.locator(`a[href*="activityId=${space.activityId}"]`).click();
   expect((await pngPromise).suggestedFilename()).toMatch(/\.png$/);
   await page.goto(`/app/${space.organizationId}/abonnement`);
-  const csvPromise = page.waitForEvent('download');
+  const xlsxPromise = page.waitForEvent('download');
   await page.getByRole('link', { name: 'Télécharger l’export comptable', exact: true }).click();
-  expect((await csvPromise).suggestedFilename()).toMatch(/\.csv$/);
+  const workbook = await xlsxPromise;
+  expect(workbook.suggestedFilename()).toMatch(/\.xlsx$/);
+  expect(await workbook.failure()).toBeNull();
 });

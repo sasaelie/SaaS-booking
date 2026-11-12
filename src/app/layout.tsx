@@ -40,6 +40,7 @@ import './_ui/glass-frames.css';
 import './_ui/text-links.css';
 import './_portal/feature-comparison.css';
 import './_ui/modal.css';
+import './_ui/social-glass.css';
 export const metadata = {
   title: 'Studio Créatif 360 — Réservations',
   description: 'Réservez votre place à une activité.',

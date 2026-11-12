@@ -1,7 +1,15 @@
 import { ACTIVITY_FEATURES, PARTICIPANT_FEATURES } from './plan-features-activities';
 import { PAYMENT_FEATURES } from './plan-features-payments';
 import { SHARING_FEATURES } from './plan-features-sharing';
-export type FeatureRow = readonly [label: string, detail: string, liberte: string, pro: string];
+export type FeatureState = 'included' | 'absent' | 'limited' | 'conditional';
+export type FeatureRow = readonly [
+  label: string,
+  detail: string,
+  liberte: string,
+  pro: string,
+  liberteState: FeatureState,
+  proState: FeatureState,
+];
 export const FEATURE_GROUPS = [
   { title: 'Activités et calendrier', rows: ACTIVITY_FEATURES },
   { title: 'Participants, e-mails et reports', rows: PARTICIPANT_FEATURES },

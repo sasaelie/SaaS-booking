@@ -1,3 +1,4 @@
+import { AccountingWorkbookAdapter } from '../adapters/accounting/workbook.adapter';
 import { ManualVoucherUseCase } from '../core/use-cases/portal/manual-voucher.use-case';
 import { LocalPauseUseCase } from '../core/use-cases/portal/local-pause.use-case';
 import { ConnectUseCase } from '../core/use-cases/portal/connect.use-case';
@@ -32,17 +33,16 @@ export function portal(headers: Headers) {
   const authorization = new MembershipAuthorizationAdapter(identity, repository);
   const admin = administration(app.value, '', authorization);
   return ok({
-    financial: new FinancialUseCase(identity, new DrizzleFinancialRepository(app.value.db)),
+    financial: new FinancialUseCase(
+      identity,
+      new DrizzleFinancialRepository(app.value.db),
+      new AccountingWorkbookAdapter(),
+    ),
     manualVoucher: new ManualVoucherUseCase(identity, repository),
     pause: new LocalPauseUseCase(identity, repository, admin.pause),
     session: new PortalSessionUseCase(identity),
     connect: new ConnectUseCase(identity, connectGateway(app.value)),
-    share: new ShareUseCase(
-      identity,
-      repository,
-      new QrCodeAdapter(),
-      app.value.env.NEXT_PUBLIC_APP_URL,
-    ),
+    share: new ShareUseCase(identity, repository, new QrCodeAdapter(), app.value.env.NEXT_PUBLIC_APP_URL),
     organizations: new OrganizationsUseCase(identity, repository),
     activities: new ActivitiesUseCase(identity, repository),
     management: new ManageActivityUseCase(identity, repository),

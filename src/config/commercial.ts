@@ -51,10 +51,10 @@ export const PLAN_UI = {
   STRIPE: 'Frais Stripe rapprochés',
   AVOIDABLE: 'Part évitable avec Pro, avant autres charges et taxes',
   PENDING: 'Paiements en attente de rapprochement',
-  COUNTER_NOTE:
-    'Calcul sur les transactions rapprochées uniquement ; les frais Stripe restent dus en Pro.',
+  COUNTER_NOTE: 'Calcul sur les transactions rapprochées uniquement ; les frais Stripe restent dus en Pro.',
   EXPORT: 'Télécharger l’export comptable',
-  EXPORT_NOTE: 'Les lignes en attente sont signalées. Un montant inconnu reste vide.',
+  EXPORT_NOTE:
+    'Classeur Excel : synthèse, réservations et journal. Totaux à zéro si vide ; frais bancaires inconnus signalés « En attente ».',
   SELECT: 'Choisir mes deux activités en Liberté',
   SELECT_SAVE: 'Enregistrer mes activités',
   SIGNATURE: 'Propulsé par Studio Créatif 360',

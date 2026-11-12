@@ -1,5 +1,5 @@
 export const SESSION_NAVIGATION = {
   ENTRY_PATHS: ['/', '/connexion', '/inscription'],
-  PRIVATE_ROOTS: ['/app', '/plateforme'],
+  PRIVATE_ROOTS: ['/app', '/plateforme', '/simulation'],
   NO_STORE: 'private, no-store, max-age=0',
 } as const;

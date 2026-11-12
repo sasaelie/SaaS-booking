@@ -12,6 +12,7 @@ import { COMMERCIAL } from '../../config/commercial';
 import { TIME, ERROR_CODES } from '../../config/constants';
 import { failure } from '../../lib/errors';
 import { ok } from '../../lib/result';
+import { accountingReport } from './accounting-report';
 import { financialCsv } from './financial-export';
 import { recordPlatformCost } from './platform-cost';
 import type { PlatformCostInput } from '../../core/validation/commercial';
@@ -45,6 +46,18 @@ export class DrizzleFinancialRepository implements FinancialRepositoryPort {
       });
     });
   }
+  report(actor: PortalActor, id: string) {
+    return atomic(
+      this.db,
+      'AccountingReport',
+      async (tx) => {
+        await requireMembership(tx, actor, id);
+        await requirePro(tx, id);
+        return ok(await accountingReport(tx, id));
+      },
+      { isolationLevel: 'repeatable read' },
+    );
+  }
   export(actor: PortalActor, id: string) {
     return atomic(
       this.db,
@@ -66,11 +79,7 @@ export class DrizzleFinancialRepository implements FinancialRepositoryPort {
             .select({ id: activities.id })
             .from(activities)
             .where(
-              and(
-                eq(activities.organizationId, id),
-                eq(activities.isActive, true),
-                inArray(activities.id, [...ids]),
-              ),
+              and(eq(activities.organizationId, id), eq(activities.isActive, true), inArray(activities.id, [...ids])),
             )
         : [];
       if (

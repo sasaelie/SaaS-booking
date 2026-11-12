@@ -1,9 +1,11 @@
 'use client';
+import { simulationApi } from '../../config/simulation';
 import { SERVICE } from '../../config/service';
 import { formatMoney } from './format-money';
 import { useState, useRef, useEffect } from 'react';
 import { BOOKING_UI } from '../../config/constants';
 interface QuoteContext {
+  readonly simulationId?: string;
   readonly organizationId: string;
   readonly activityId: string;
   readonly priceCents: number;
@@ -14,28 +16,29 @@ function amountFrom(value: unknown): number | null {
   const amount = value.remainingToPayCents;
   return typeof amount === 'number' && Number.isSafeInteger(amount) && amount >= 0 ? amount : null;
 }
-async function fetchQuote(
-  context: QuoteContext,
-  code: string,
-): Promise<{ amount: number; remainder: number } | null> {
-  const response = await fetch('/api/voucher-quote', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      organizationId: context.organizationId,
-      activityId: context.activityId,
-      code,
-    }),
-  });
+async function fetchQuote(context: QuoteContext, code: string): Promise<{ amount: number; remainder: number } | null> {
+  const response = await fetch(
+    context.simulationId ? simulationApi(context.simulationId, 'quote') : '/api/voucher-quote',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        organizationId: context.organizationId,
+        activityId: context.activityId,
+        code,
+      }),
+    },
+  );
   const body: unknown = await response.json();
-  const amount = amountFrom(body);
+  const payload = body && typeof body === 'object' && 'data' in body ? body.data : body;
+  const amount = amountFrom(payload);
   if (!response.ok || amount === null) return null;
   const remainder =
-    typeof body === 'object' &&
-    body !== null &&
-    'remainderValueCents' in body &&
-    typeof body.remainderValueCents === 'number'
-      ? body.remainderValueCents
+    typeof payload === 'object' &&
+    payload !== null &&
+    'remainderValueCents' in payload &&
+    typeof payload.remainderValueCents === 'number'
+      ? payload.remainderValueCents
       : 0;
   return { amount, remainder };
 }

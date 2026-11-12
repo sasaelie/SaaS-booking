@@ -1,9 +1,10 @@
+import { useSearchParams } from 'next/navigation';
 import type { PortalActivity } from '../../../core/ports/portal-models';
 import { ACTIVITY_UI, BOOKING_LIMITS, VOUCHER_RULES } from '../../../config/constants';
 import { PortalField } from '../PortalField';
 export function ActivityRules({ initial }: { readonly initial?: PortalActivity }) {
   return (
-    <details className="portal-details">
+    <details className="portal-details" open={useSearchParams().get('edit') === 'terms' || undefined}>
       <summary>{ACTIVITY_UI.ADVANCED}</summary>
       <div className="portal-form-grid">
         <PortalField

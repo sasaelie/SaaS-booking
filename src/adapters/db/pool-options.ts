@@ -3,8 +3,7 @@ import { DATABASE, DatabaseSchema, supportsSessionLocks } from '../../config/dat
 
 function connectionOptions(connectionString: string, ca?: string): PoolConfig {
   const url = new URL(connectionString);
-  const hosted =
-    url.hostname.endsWith('.pooler.supabase.com') || url.hostname.endsWith('.supabase.co');
+  const hosted = url.hostname.endsWith('.pooler.supabase.com') || url.hostname.endsWith('.supabase.co');
   if (!hosted) return { connectionString };
   for (const key of ['sslmode', 'sslcert', 'sslkey', 'sslrootcert']) url.searchParams.delete(key);
   return {
@@ -25,6 +24,6 @@ export function databasePoolOptions(
     max: DATABASE.POOL_MAX,
     connectionTimeoutMillis: DATABASE.CONNECTION_TIMEOUT_MS,
     idleTimeoutMillis: DATABASE.IDLE_TIMEOUT_MS,
-    options: `-c search_path=${safeSchema},public`,
+    options: `-c search_path=${safeSchema},pg_catalog`,
   };
 }
