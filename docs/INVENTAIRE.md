@@ -1,9 +1,8 @@
 # Inventaire de la plateforme
 
-842 fichiers versionnés ou préparés dans cette branche, dont 581 sous `src/`.
+845 fichiers versionnés ou préparés dans cette branche, dont 582 sous `src/`.
 
-Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
-```text
+Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.```text
 .env.example
 .github/workflows/verify.yml
 .gitignore
@@ -25,6 +24,7 @@ docs/CONNEXION.md
 docs/ENVIRONNEMENT-TEST.md
 docs/ETAT-FONCTIONNEL.md
 docs/EXPLOITATION-LIBERTE-PRO.md
+docs/FORMULE-SANS-DOUBLON.md
 docs/HEBERGEMENT-RECETTE.md
 docs/INTERFACE.md
 docs/INVENTAIRE.md
@@ -65,6 +65,7 @@ docs/cadres-et-parcours/comparatif-mobile.png
 docs/cadres-et-parcours/confirmation-sortie.png
 docs/cadres-et-parcours/espaces-mobile.png
 docs/cadres-et-parcours/recapitulatif-mensuel.png
+docs/formule-sans-doublon/mobile.png
 docs/formules/apres-mobile.png
 docs/formules/apres-ordinateur.png
 docs/formules/avant.png
@@ -380,6 +381,7 @@ src/app/_portal/StoryTextChoices.tsx
 src/app/_portal/SubscriptionActions.tsx
 src/app/_portal/SubscriptionHistory.tsx
 src/app/_portal/SubscriptionPanel.tsx
+src/app/_portal/WorkspaceAccessNotice.tsx
 src/app/_portal/access-label.ts
 src/app/_portal/activity/ActivityBasics.tsx
 src/app/_portal/activity/ActivityDetailsFields.tsx

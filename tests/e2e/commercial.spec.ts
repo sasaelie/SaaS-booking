@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import {
   browserSpace,
   browserDatabase,
@@ -18,13 +18,26 @@ async function libertySpace() {
   ]);
   return space;
 }
+async function suspensionRemainsVisible(page: Page, organizationId: string) {
+  await browserDatabase().query(
+    'UPDATE organization_access SET suspended_at=now() WHERE organization_id=$1',
+    [organizationId],
+  );
+  await page.reload();
+  await expect(
+    page.getByText('Les nouvelles réservations sont suspendues.', { exact: true }),
+  ).toBeVisible();
+}
 test('shows both offers clearly on mobile and enforces Pro routes for a Liberty organizer', async ({
   page,
 }, info) => {
   const space = await libertySpace();
   await login(page, space);
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(`/app/${space.organizationId}/abonnement`);
+  await page.goto(`/app/${space.organizationId}`);
+  await expect(page.getByText('Formule Liberté', { exact: true })).toBeVisible();
+  await page.locator('.portal-notice a').click();
+  await expect(page.locator('aside.portal-notice')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Liberté', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Studio Pro', exact: true })).toBeVisible();
   await expect(
@@ -45,6 +58,7 @@ test('shows both offers clearly on mobile and enforces Pro routes for a Liberty 
     ).status(),
   ).toBe(403);
   await page.screenshot({ path: info.outputPath('liberte-mobile.png'), fullPage: true });
+  await suspensionRemainsVisible(page, space.organizationId);
   await page.goto(`/${space.slug}`);
   await expect(
     page.getByRole('link', { name: 'Propulsé par Studio Créatif 360', exact: true }),

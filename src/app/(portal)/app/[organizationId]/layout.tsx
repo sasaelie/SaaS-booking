@@ -4,6 +4,7 @@ import { portal } from '../../../../composition/portal';
 import { PORTAL } from '../../../../config/constants';
 import { PortalError } from '../../../_portal/PortalError';
 import { AccessNotice } from '../../../_portal/AccessNotice';
+import { WorkspaceAccessNotice } from '../../../_portal/WorkspaceAccessNotice';
 export default async function Layout({
   children,
   params,
@@ -18,7 +19,9 @@ export default async function Layout({
   if (!organization.ok) return <PortalError message={PORTAL.ORGANIZATION_ERROR} />;
   return (
     <>
-      <AccessNotice organization={organization.value} />
+      <WorkspaceAccessNotice critical={Boolean(organization.value.access.suspendedAt)}>
+        <AccessNotice organization={organization.value} />
+      </WorkspaceAccessNotice>
       {children}
     </>
   );
