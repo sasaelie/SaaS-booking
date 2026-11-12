@@ -1,6 +1,7 @@
 import './_portal/commercial.css';
 import './_ui/appearance.css';
 import type { ReactNode } from 'react';
+import { PLATFORM_BRAND } from '../config/platform-brand';
 import { SessionHistorySync } from './_auth/SessionHistorySync';
 import { SessionExitGuard } from './_auth/SessionExitGuard';
 import { StagingNotice } from './_ui/StagingNotice';
@@ -44,8 +45,9 @@ import './_ui/social-glass.css';
 import './_ui/interaction-polish.css';
 import './_ui/participant-polish.css';
 export const metadata = {
-  title: 'Studio Créatif 360 — Réservations',
+  title: `${PLATFORM_BRAND.NAME} — Réservations`,
   description: 'Réservez votre place à une activité.',
+  robots: { index: false, follow: false },
 };
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (

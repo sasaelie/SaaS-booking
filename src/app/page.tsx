@@ -1,22 +1,34 @@
 import { headers } from 'next/headers';
-import { SHARE_UI } from '../config/constants';
-import { PlanCards } from './_portal/PlanCards';
-import { PlanComparison } from './_portal/PlanComparison';
+import { MARKETING } from '../config/marketing';
 import { currentVisitor } from '../composition/current-visitor';
-import { HomeActions } from './_auth/HomeActions';
+import { MarketingHeader } from './_marketing/MarketingHeader';
+import { MarketingHero } from './_marketing/MarketingHero';
+import { MarketingWorkflow, MarketingBenefits } from './_marketing/MarketingFeatures';
+import { MarketingPricing } from './_marketing/MarketingPricing';
+import { MarketingFaq, MarketingFinalAction } from './_marketing/MarketingFaq';
+import { MarketingFooter } from './_marketing/MarketingFooter';
+import { publicMetadata } from './_marketing/public-metadata';
+import { PublicStructuredData } from './_marketing/PublicStructuredData';
+import './_marketing/marketing.css';
 export const dynamic = 'force-dynamic';
+export function generateMetadata() {
+  return publicMetadata(MARKETING.TITLE, MARKETING.DESCRIPTION);
+}
 export default async function Home() {
   const actor = await currentVisitor(new Headers(await headers()));
   return (
-    <main className="portal-auth">
-      <section className="ice-cube-shell portal-auth-card">
-        <span className="ice-brand-mark" aria-hidden="true" />
-        <h1>{SHARE_UI.LANDING_TITLE}</h1>
-        <p>{SHARE_UI.LANDING_HINT}</p>
-        <HomeActions name={actor?.name ?? null} />
-        <PlanCards />
-        <PlanComparison />
-      </section>
-    </main>
+    <div className="marketing-root">
+      <MarketingHeader connected={actor !== null} />
+      <main className="marketing-main" id="contenu" tabIndex={-1}>
+        <MarketingHero name={actor?.name ?? null} />
+        <MarketingWorkflow />
+        <MarketingBenefits />
+        <MarketingPricing />
+        <MarketingFaq />
+        <MarketingFinalAction connected={actor !== null} />
+      </main>
+      <MarketingFooter />
+      <PublicStructuredData />
+    </div>
   );
 }

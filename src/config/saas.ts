@@ -48,6 +48,12 @@ export const SAAS = {
     'nouveau-mot-de-passe',
     'widget.js',
     'plateforme',
+    'mentions-legales',
+    'confidentialite',
+    'conditions',
+    'contact',
+    'accessibilite',
+    'opengraph-image',
     '_next',
   ],
 } as const;

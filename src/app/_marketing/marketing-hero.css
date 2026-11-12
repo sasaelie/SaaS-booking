@@ -1,0 +1,149 @@
+.marketing-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: 64px;
+  padding-block: 64px 80px;
+}
+.marketing-hero-copy {
+  min-width: 0;
+}
+.marketing-hero h1 > span {
+  display: block;
+  color: var(--link-ink);
+}
+.marketing-hero-copy > .marketing-eyebrow {
+  max-width: 42ch;
+}
+.marketing-hero .portal-landing-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 30px 0 20px;
+}
+.marketing-hero .portal-landing-actions > a:first-child {
+  background: linear-gradient(145deg, var(--ice-evergreen), var(--ice-evergreen-deep));
+  border-color: var(--ice-evergreen-deep);
+  color: var(--ice-on-dark);
+  box-shadow:
+    inset 0 1px 1px var(--glass-edge-quiet),
+    0 10px 26px -12px var(--interaction-shadow);
+  min-height: 54px;
+  padding-inline: 24px;
+  font-size: 14px;
+}
+.marketing-hero .portal-landing-actions > a {
+  width: auto;
+  min-height: 54px;
+}
+.marketing-hero .portal-landing-actions > a + a {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--link-ink);
+  padding-inline: 6px;
+}
+.marketing-hero .landing-session-note {
+  margin-bottom: -12px;
+  font-size: 13px;
+}
+.marketing-hero .portal-landing-actions button {
+  font-size: 13px;
+}
+.marketing-reassurance {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+  margin: 20px 0;
+  color: var(--ui-text-secondary);
+  font-size: 12px;
+}
+.marketing-reassurance li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.marketing-reassurance .ice-icon {
+  width: 15px;
+  height: 15px;
+  color: var(--link-ink);
+}
+.marketing-hero-copy > .marketing-text-link {
+  margin-top: 10px;
+  font-size: 14px;
+}
+@media (max-width: 1000px) {
+  .marketing-nav {
+    gap: 14px;
+  }
+  .marketing-brand {
+    font-size: 14px;
+  }
+  .marketing-header-inner {
+    gap: 16px;
+  }
+  .marketing-header-cta {
+    display: none;
+  }
+  .marketing-hero {
+    gap: 32px;
+  }
+}
+@media (max-width: 760px) {
+  .marketing-header-inner {
+    min-height: 76px;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    padding-block: 12px;
+  }
+  .marketing-brand {
+    font-size: 14px;
+    gap: 9px;
+  }
+  .marketing-brand-mark {
+    width: 34px;
+    height: 38px;
+    border-radius: 11px;
+  }
+  .marketing-brand small {
+    font-size: 10px;
+  }
+  .marketing-nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12px;
+    border-top: 1px solid var(--ice-line);
+    margin-top: 6px;
+  }
+  .marketing-account {
+    gap: 0;
+    font-size: 12px;
+  }
+  .marketing-hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 30px 40px;
+    gap: 36px;
+  }
+  .marketing-hero h1 {
+    max-width: 15ch;
+    margin-top: 20px;
+  }
+  .marketing-intro {
+    font-size: 16px;
+  }
+  .marketing-hero .portal-landing-actions {
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .marketing-hero .portal-landing-actions > a:first-child {
+    padding-inline: 18px;
+  }
+  .marketing-preview-wrap {
+    width: min(100%, 420px);
+    margin-inline: auto;
+  }
+}
