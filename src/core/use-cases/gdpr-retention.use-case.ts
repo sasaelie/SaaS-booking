@@ -69,7 +69,8 @@ export class GdprRetentionUseCase {
         const booking = bookingRes.value;
         const archiveUntil = accountingArchiveUntil(booking.paidAt, booking.createdAt);
         const mustKeepForBelgianAccounting =
-          booking.amountPaidCents > 0 && now.getTime() < archiveUntil.getTime();
+          (booking.amountPaidCents > 0 || booking.proofIsAccounting) &&
+          now.getTime() < archiveUntil.getTime();
         if (mustKeepForBelgianAccounting) {
           return retainAccountingData(this.deps.gdprRepo, params, booking.bookingId, archiveUntil);
         }

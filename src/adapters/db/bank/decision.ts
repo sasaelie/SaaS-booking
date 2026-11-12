@@ -11,6 +11,7 @@ import { ok, type Result } from '../../../lib/result';
 import { failure } from '../../../lib/errors';
 import { ERROR_CODES, BOOKING_STATUSES, PAYMENT_MODES, JOB_TYPES } from '../../../config/constants';
 import type { BankTransferRepositoryPort } from '../../../core/ports/bank.port';
+import { accountingArchiveUntil } from '../../../core/domain/accounting-retention';
 function decisionValues(booking: BookingRow, approved: boolean, now: Date) {
   return {
     status: approved ? BOOKING_STATUSES.CONFIRMED : BOOKING_STATUSES.CANCELLED_BY_ORGANIZER,
@@ -72,6 +73,13 @@ export async function decideBankTransfer(
 }
 
 async function proofToPurge(tx: Transaction, booking: BookingRow): Promise<string | null> {
+  if (
+    booking.legalHold ||
+    booking.disputeOpen ||
+    (booking.proofIsAccounting &&
+      accountingArchiveUntil(booking.paidAt, booking.createdAt) > new Date())
+  )
+    return null;
   const [organization] = await tx
     .select({ autoDelete: organizations.autoDeleteBankProof })
     .from(organizations)

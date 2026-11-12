@@ -1,6 +1,5 @@
 import { guardUseCase } from '../../lib/guard-use-case';
-import { signSelfCancelToken } from '../domain/self-service-token';
-import { TIME, TOKEN_RULES } from '../../config/constants';
+import { signSelfCancelToken, selfServiceExpiry } from '../domain/self-service-token';
 import { PAYMENT_MODES, BOOKING_STATUSES, ERROR_CODES } from '../../config/constants';
 import { failure } from '../../lib/errors';
 import { ok, type Result } from '../../lib/result';
@@ -105,9 +104,7 @@ export class CreateBookingUseCase {
           organizationId: booked.value.organizationId,
           bookingId: booked.value.bookingId,
           version: 0,
-          expUnixSeconds: Math.floor(
-            (Date.now() + TOKEN_RULES.DURATION_DAYS * TIME.DAY_MS) / TIME.SECOND_MS,
-          ),
+          expUnixSeconds: selfServiceExpiry(new Date(), new Date(input.value.startsAtIso)),
         },
         this.deps.secret,
       );

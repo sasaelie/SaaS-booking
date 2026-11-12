@@ -104,7 +104,12 @@ it('rejects a balance from a different organization', async () => {
 it('refunds Liberty with transfer reversal and the application fee, on the platform account', async () => {
   const refund = vi
     .spyOn(stripe.refunds, 'create')
-    .mockResolvedValue({ id: 're_local' } as Stripe.Response<Stripe.Refund>);
+    .mockResolvedValue({
+      id: 're_local',
+      status: 'succeeded',
+      amount: 3000,
+      payment_intent: 'pi_local',
+    } as Stripe.Response<Stripe.Refund>);
   await adapter.refundPayment({
     paymentReference: 'pi_local',
     amountCents: 3000,

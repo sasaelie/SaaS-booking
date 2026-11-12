@@ -1,11 +1,16 @@
 import { scheduleReminders } from './reminders';
-import { cancellationScope, type CancellationScope } from './job-filter';
-import { sql, eq } from 'drizzle-orm';
+import { type CancellationScope } from './job-filter';
+import { sql, eq, and, isNull } from 'drizzle-orm';
 import { outboxJobs } from '../schema';
-import { rows, atomic, type Transaction } from '../transaction';
+import { atomic, type Transaction } from '../transaction';
 import type { DrizzlePgDb } from '../client';
-import type { JobHandlerPort, JobRunnerPort } from '../../../core/ports/jobs.port';
-import { JOB_RULES, JOB_TYPES, TIME } from '../../../config/constants';
+import type { JobHandlerPort, JobRunnerPort, JobEffect } from '../../../core/ports/jobs.port';
+import { JOB_RULES, JOB_TYPES } from '../../../config/constants';
+import { REFUND_STATES } from '../../../config/refunds';
+import { deferJob } from './defer';
+import { deferRefund } from './refund-pending';
+import { claimJob } from './claim';
+import { guardUseCase } from '../../../lib/guard-use-case';
 import { ok, type Result } from '../../../lib/result';
 import { RefundJobSchema, PurgeJobSchema } from '../../jobs/job-validation';
 import { recordFinancialRefund } from '../financial-ledger';
@@ -36,36 +41,52 @@ async function completeEffect(
     .set({
       completedAt: new Date(),
       lastError: null,
-      payload: refundId ? { ...RefundJobSchema.parse(job.payload), refundId } : job.payload,
+      payload: refundId
+        ? { ...RefundJobSchema.parse(job.payload), refundId, refundStatus: REFUND_STATES.SUCCEEDED }
+        : job.payload,
     })
     .where(eq(outboxJobs.id, job.id));
 }
-async function runOne(
+async function finishJob(
   tx: Transaction,
-  handler: JobHandlerPort,
-  scope?: CancellationScope,
+  job: typeof outboxJobs.$inferSelect,
+  result: Result<JobEffect>,
 ): Promise<'completed' | 'deferred' | 'empty'> {
-  const [candidate] = await rows<{ id: string }>(
-    tx,
-    sql`SELECT id FROM outbox_jobs WHERE completed_at IS NULL AND available_at<=now() ${cancellationScope(scope)} ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 1`,
-  );
-  if (!candidate) return 'empty';
-  const [job] = await tx.select().from(outboxJobs).where(eq(outboxJobs.id, candidate.id));
-  if (!job) return 'empty';
-  const result = await handler.execute(job.type, job.payload, job.deduplicationKey);
+  const [current] = await tx
+    .select({ id: outboxJobs.id })
+    .from(outboxJobs)
+    .where(
+      and(
+        eq(outboxJobs.id, job.id),
+        eq(outboxJobs.availableAt, job.availableAt),
+        isNull(outboxJobs.completedAt),
+      ),
+    )
+    .for('update');
+  if (!current) return 'deferred';
   if (result.ok) {
+    if (
+      job.type === JOB_TYPES.REFUND &&
+      (!result.value.refundId || result.value.status !== REFUND_STATES.SUCCEEDED)
+    ) {
+      await deferRefund(tx, job, result.value);
+      return 'deferred';
+    }
     await completeEffect(tx, job, result.value);
     return 'completed';
   }
-  await tx
-    .update(outboxJobs)
-    .set({
-      attempts: job.attempts + 1,
-      lastError: result.error.code,
-      availableAt: new Date(Date.now() + JOB_RULES.RETRY_MINUTES * TIME.MINUTE_MS),
-    })
-    .where(eq(outboxJobs.id, job.id));
+  await deferJob(tx, job, result.error.code);
   return 'deferred';
+}
+async function runOne(db: DrizzlePgDb, handler: JobHandlerPort, scope?: CancellationScope) {
+  const claimed = await claimJob(db, scope);
+  if (!claimed.ok) return claimed;
+  if (!claimed.value) return ok('empty' as const);
+  const job = claimed.value;
+  const result = await guardUseCase('Jobs', 'effect', () =>
+    handler.execute(job.type, job.payload, job.deduplicationKey),
+  );
+  return atomic(db, 'Jobs', async (tx) => ok(await finishJob(tx, job, result)));
 }
 export class DrizzleJobRunner implements JobRunnerPort {
   constructor(
@@ -86,9 +107,7 @@ export class DrizzleJobRunner implements JobRunnerPort {
     let completed = 0;
     let deferred = 0;
     for (let count = 0; count < limit; count++) {
-      const result = await atomic(this.db, 'Jobs', async (tx) =>
-        ok(await runOne(tx, this.handler, scope)),
-      );
+      const result = await runOne(this.db, this.handler, scope);
       if (!result.ok) return result;
       if (result.value === 'empty') break;
       if (result.value === 'completed') completed++;

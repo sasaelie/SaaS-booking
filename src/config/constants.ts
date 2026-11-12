@@ -130,15 +130,7 @@ export const VOUCHER_CODE = {
   ALPHABET: '23456789ABCDEFGHJKLMNPQRSTUVWXYZ',
   SEGMENTS: 2,
 } as const;
-export const JOB_RULES = {
-  BATCH_SIZE: 20,
-  RETRY_MINUTES: 5,
-  LOCK_TIMEOUT_SECONDS: 10,
-  MAX_IMAGE_PIXELS: 20000000,
-  MAX_WEBHOOK_BYTES: 262144,
-  RATE_WINDOW_SECONDS: 60,
-  RATE_MAX_REQUESTS: 20,
-} as const;
+export { JOB_RULES } from './jobs';
 export const TOKEN_RULES = {
   PURPOSE: 'booking-self-service',
   DURATION_DAYS: 90,

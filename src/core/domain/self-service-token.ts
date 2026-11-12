@@ -7,6 +7,12 @@ import {
   type SelfCancelTokenPayload,
 } from '../validation/self-service';
 export type { SelfCancelTokenPayload } from '../validation/self-service';
+export function selfServiceExpiry(now: Date, eventStartsAt: Date): number {
+  return Math.floor(
+    (Math.max(now.getTime(), eventStartsAt.getTime()) + TOKEN_RULES.DURATION_DAYS * TIME.DAY_MS) /
+      TIME.SECOND_MS,
+  );
+}
 function encode(bytes: Uint8Array): string {
   return btoa(String.fromCharCode(...bytes))
     .replace(/\+/g, '-')

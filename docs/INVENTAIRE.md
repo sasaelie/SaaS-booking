@@ -1,9 +1,8 @@
 # Inventaire de la plateforme
 
-826 fichiers versionnés ou préparés dans cette branche, dont 574 sous `src/`.
+842 fichiers versionnés ou préparés dans cette branche, dont 581 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
-
 ```text
 .env.example
 .github/workflows/verify.yml
@@ -17,6 +16,7 @@ deploy/supabase-harden.sql
 docs/ADMINISTRATION.md
 docs/ARCHITECTURE.md
 docs/AUDIT-BOUTONS-LIENS.md
+docs/AUDIT-GLOBAL.md
 docs/AUDIT-LIBERTE-PRO.md
 docs/CADRES-ET-PARCOURS.md
 docs/CAHIER-CHARGES-LIBERTE-PRO.md
@@ -30,6 +30,7 @@ docs/INTERFACE.md
 docs/INVENTAIRE.md
 docs/LIVRAISON-LIBERTE-PRO.md
 docs/OPERATIONS.md
+docs/PLAN-AUDIT-GLOBAL.md
 docs/PLAN-AUDIT-PARCOURS.md
 docs/PLAN-MIGRATION-LIBERTE-PRO.md
 docs/PLAN-PAIEMENTS-MOLLIE.md
@@ -52,6 +53,7 @@ docs/SIMULATION-ET-COMPTABILITE.md
 docs/TABLEAU-DE-BORD-ET-CONTACT.md
 docs/VERIFICATION.md
 docs/audit-actions/inventaire.json
+docs/audit-global/preuves.json
 docs/audit-parcours/organisateur-apres.png
 docs/audit-parcours/organisateur-avant.png
 docs/audit-parcours/participant-apres.png
@@ -180,9 +182,12 @@ src/adapters/db/drizzle-voucher-quote.repository.ts
 src/adapters/db/drizzle-voucher.repository.ts
 src/adapters/db/financial-export.ts
 src/adapters/db/financial-ledger.ts
+src/adapters/db/jobs/claim.ts
+src/adapters/db/jobs/defer.ts
 src/adapters/db/jobs/enqueue.ts
 src/adapters/db/jobs/event-updates.ts
 src/adapters/db/jobs/job-filter.ts
+src/adapters/db/jobs/refund-pending.ts
 src/adapters/db/jobs/reminders.ts
 src/adapters/db/jobs/runner.ts
 src/adapters/db/operational-retention.ts
@@ -263,6 +268,7 @@ src/adapters/payments/stripe-financial-webhook.ts
 src/adapters/payments/stripe-payment.adapter.ts
 src/adapters/payments/stripe-payout.ts
 src/adapters/payments/stripe-reconciliation.ts
+src/adapters/payments/stripe-refund.ts
 src/adapters/payments/stripe-subscription.adapter.ts
 src/adapters/payments/stripe-validation.ts
 src/adapters/share/qr-code.adapter.ts
@@ -576,6 +582,7 @@ src/config/database.ts
 src/config/env.ts
 src/config/file-signatures.ts
 src/config/http-limits.ts
+src/config/jobs.ts
 src/config/navigation.ts
 src/config/participant-navigation.ts
 src/config/participation-terms.ts
@@ -589,6 +596,7 @@ src/config/portal-billing-labels.ts
 src/config/portal-labels.ts
 src/config/presentation.ts
 src/config/private-files.ts
+src/config/refunds.ts
 src/config/saas.ts
 src/config/service-mail.ts
 src/config/service.ts
@@ -613,6 +621,7 @@ src/core/domain/payment-configuration.ts
 src/core/domain/portal-session.ts
 src/core/domain/proof-validator.ts
 src/core/domain/public-booking-page.ts
+src/core/domain/refund-attempt.ts
 src/core/domain/schedule-projection.ts
 src/core/domain/schedule-session.ts
 src/core/domain/schedule-validation.ts
@@ -758,6 +767,11 @@ tests/e2e/session-history.spec.ts
 tests/e2e/staging.spec.ts
 tests/e2e/story-photo.spec.ts
 tests/integration/appearance.test.ts
+tests/integration/audit-job-concurrency.test.ts
+tests/integration/audit-long-booking.test.ts
+tests/integration/audit-refund-jobs.test.ts
+tests/integration/audit-retention.test.ts
+tests/integration/audit-schedule-data.test.ts
 tests/integration/authentication.test.ts
 tests/integration/bank-and-pause.test.ts
 tests/integration/billing-fixtures.ts
@@ -803,6 +817,7 @@ tests/integration/subscription-webhook.test.ts
 tests/integration/subscription.test.ts
 tests/integration/vouchers.test.ts
 tests/unit/accounting-workbook.test.ts
+tests/unit/audit-refunds.test.ts
 tests/unit/calendar.test.ts
 tests/unit/cancellation-mail.test.ts
 tests/unit/commercial.test.ts

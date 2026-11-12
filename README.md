@@ -2,7 +2,7 @@
 
 Moteur de réservation Next.js App Router, TypeScript strict et PostgreSQL, organisé en domaine, ports, cas d’usage et adaptateurs.
 
-## Prochaine intégration
+## Modèle commercial et état vérifié
 
 [Cahier des charges Liberté / Studio Pro](docs/CAHIER-CHARGES-LIBERTE-PRO.md),
 [audit de l'existant](docs/AUDIT-LIBERTE-PRO.md) et
@@ -10,6 +10,8 @@ Moteur de réservation Next.js App Router, TypeScript strict et PostgreSQL, orga
 L’implémentation et ses limites de recette figurent dans le [rapport de livraison](docs/LIVRAISON-LIBERTE-PRO.md). Cette cible remplace les propositions commerciales précédentes.
 Le [plan Mollie antérieur](docs/PLAN-PAIEMENTS-MOLLIE.md) reste une référence historique,
 sans activation de Mollie ni priorité sur les décisions du nouveau cahier des charges.
+
+L’[audit global du 12 novembre 2026](docs/AUDIT-GLOBAL.md) présente les corrections prioritaires, les preuves de test et les validations restantes avant exploitation réelle.
 
 ## Installation
 
@@ -101,8 +103,8 @@ Les tests d’intégration exigent une base locale jetable `booking_test` et ref
 
 ## Limites et configuration de production
 
-Les tests automatisés ne remplacent pas une validation de paiement en environnement Stripe de test avec vos clés, ni le contrôle des permissions de votre bucket, des e-mails et de votre fournisseur d’identité. La base Supabase de recette et le projet Vercel sont préparés ; aucune application n’est publiée. Voir [l’état et le guide de connexion](docs/HEBERGEMENT-RECETTE.md).
+Les tests automatisés ne remplacent pas une validation de paiement en environnement Stripe de test avec vos clés, ni le contrôle des permissions de votre bucket, des e-mails et de votre fournisseur d’identité. Une [application de recette](https://saas-booking-recette-elis-projects-ddf0bd9d.vercel.app/app) est publiée avec les paiements réels désactivés. Les conditions d’ouverture commerciale sont détaillées dans l’[audit global](docs/AUDIT-GLOBAL.md).
 
 La région UE de la base, du stockage, des sauvegardes et des journaux est à configurer chez les hébergeurs. Utiliser un bucket privé sans conservation de versions incompatibles avec la purge des justificatifs. Configurer HTTPS, la confiance du proxy pour l’adresse client, les sauvegardes et la surveillance de la file.
 
-Les clauses contractuelles et la politique de conservation constituent des paramètres métier à faire valider pour l’organisation. La conservation comptable de sept ans reste la valeur initialement demandée, calculée à partir de la fin de l’année du paiement ; elle ne représente pas une certification juridique de la durée applicable en Belgique. Vérifier les obligations actuelles avant traitement de données ou paiements réels.
+Les clauses contractuelles et la politique de conservation constituent des paramètres métier à faire valider pour l’organisation. La configuration actuelle distingue dix ans de conservation comptable et trente jours après clôture des opérations pour les coordonnées non fiscales. La purge opérationnelle reste simulée tant que `OPERATIONAL_PURGE_ENABLED` n’est pas activé explicitement. Ces règles techniques ne représentent pas une certification juridique de la durée applicable à chaque organisation.

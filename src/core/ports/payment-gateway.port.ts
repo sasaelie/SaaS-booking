@@ -32,12 +32,18 @@ export interface ParsedWebhookPaymentEvent {
   readonly merchantAccountId: string | null;
 }
 export interface RefundPaymentInput {
+  readonly firstAttemptAt?: string;
+  readonly refundId?: string;
   readonly chargeModel?: import('../../config/commercial').ChargeModel;
   readonly paymentReference: string;
   readonly amountCents: number;
   readonly reason: string;
   readonly idempotencyKey: string;
   readonly merchantAccountId: string | null;
+}
+export interface RefundPaymentOutput {
+  readonly refundId: string;
+  readonly status: import('../../config/refunds').RefundState;
 }
 export interface PaymentGatewayPort {
   reconcilePayout?(
@@ -50,7 +56,7 @@ export interface PaymentGatewayPort {
     rawBody: string,
     signatureHeader: string,
   ): Promise<Result<ParsedWebhookPaymentEvent | null>>;
-  refundPayment(input: RefundPaymentInput): Promise<Result<{ readonly refundId: string }>>;
+  refundPayment(input: RefundPaymentInput): Promise<Result<RefundPaymentOutput>>;
 }
 export type AtomicConfirmOutcome = {
   readonly status: 'CONFIRMED_NOW' | 'ALREADY_PROCESSED' | 'REFUND_QUEUED';

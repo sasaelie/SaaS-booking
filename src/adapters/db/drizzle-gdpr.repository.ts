@@ -78,6 +78,7 @@ export class DrizzleGdprRepository implements GdprRepositoryPort {
             amountPaidCents: booking.amountPaidCents,
             createdAt: booking.createdAt,
             paidAt: booking.paidAt,
+            proofIsAccounting: booking.proofIsAccounting,
           })
         : failure(ERROR_CODES.NOT_FOUND, 'Retention', 'read');
     } catch {
@@ -101,9 +102,11 @@ export class DrizzleGdprRepository implements GdprRepositoryPort {
       const context = await lockBookingContext(tx, organizationId, bookingId);
       const booking = context?.booking;
       if (!booking) return failure(ERROR_CODES.NOT_FOUND, 'Retention', 'update');
+      if (booking.legalHold || booking.disputeOpen)
+        return failure(ERROR_CODES.CONFLICT, 'Retention', 'protected-erasure');
       if (
         full &&
-        booking.amountPaidCents > 0 &&
+        (booking.amountPaidCents > 0 || booking.proofIsAccounting) &&
         new Date() < accountingArchiveUntil(booking.paidAt, booking.createdAt)
       )
         return failure(ERROR_CODES.CONFLICT, 'Retention', 'paidDuringErasure');

@@ -6,9 +6,9 @@ import { formatMoney } from '../../lib/format-money';
 import { eq } from 'drizzle-orm';
 import type { DrizzlePgDb } from '../db/client';
 import { bookings, organizations, rescheduleVouchers } from '../db/schema';
-import { signSelfCancelToken } from '../../core/domain/self-service-token';
+import { signSelfCancelToken, selfServiceExpiry } from '../../core/domain/self-service-token';
 import { required } from '../db/transaction';
-import { TIME, TOKEN_RULES, JOB_TYPES, DEFAULTS } from '../../config/constants';
+import { TIME, JOB_TYPES, DEFAULTS } from '../../config/constants';
 import { BookingJobSchema, VoucherJobSchema, ReminderJobSchema } from './job-validation';
 export interface MailContent {
   readonly to: string;
@@ -89,9 +89,7 @@ async function confirmationContent(
   secret: string,
 ): Promise<MailContent> {
   const booking = row.bookings;
-  const expUnixSeconds = Math.floor(
-    (Date.now() + TOKEN_RULES.DURATION_DAYS * TIME.DAY_MS) / TIME.SECOND_MS,
-  );
+  const expUnixSeconds = selfServiceExpiry(new Date(), row.sessions.startsAt);
   const token = required(
     await signSelfCancelToken(
       {

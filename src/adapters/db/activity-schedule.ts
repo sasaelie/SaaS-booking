@@ -19,7 +19,12 @@ export async function readActivitySchedule(
     .from(sessions)
     .where(tenantActivity(sessions, organizationId, activityId));
   const snapshots = await db
-    .select()
+    .select({
+      id: bookings.id,
+      sessionId: bookings.sessionId,
+      status: bookings.status,
+      lockedUntil: bookings.lockedUntil,
+    })
     .from(bookings)
     .where(tenantActivity(bookings, organizationId, activityId));
   const bookingsBySessionId: Record<string, typeof snapshots> = {};

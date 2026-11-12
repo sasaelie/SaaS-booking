@@ -2,11 +2,11 @@ import { and, eq, desc, sql } from 'drizzle-orm';
 import type { DrizzlePgDb } from '../db/client';
 import { bookings, sessions, organizations } from '../db/schema';
 import { atomic } from '../db/transaction';
-import { signSelfCancelToken } from '../../core/domain/self-service-token';
+import { signSelfCancelToken, selfServiceExpiry } from '../../core/domain/self-service-token';
 import type { SimulationRepositoryPort, SimulationBooking } from '../../core/ports/simulation.port';
 import { ok } from '../../lib/result';
 import { required } from '../db/transaction';
-import { ERROR_CODES, TIME, TOKEN_RULES } from '../../config/constants';
+import { ERROR_CODES } from '../../config/constants';
 import { failure } from '../../lib/errors';
 import { simulationPayment } from './operations';
 import { deleteSimulation } from './delete';
@@ -58,7 +58,11 @@ export class SimulationRepository implements SimulationRepositoryPort {
           ),
         )
         .orderBy(desc(bookings.createdAt));
-      return ok(await Promise.all(list.map((row) => simulationBooking(row, this.organizationId, this.secret))));
+      return ok(
+        await Promise.all(
+          list.map((row) => simulationBooking(row, this.organizationId, this.secret)),
+        ),
+      );
     });
   }
   visible(id: string) {
@@ -96,7 +100,7 @@ async function simulationBooking(
         organizationId,
         bookingId: b.id,
         version: b.selfServiceVersion,
-        expUnixSeconds: Math.floor((Date.now() + TOKEN_RULES.DURATION_DAYS * TIME.DAY_MS) / TIME.SECOND_MS),
+        expUnixSeconds: selfServiceExpiry(new Date(), startsAt),
       },
       secret,
     ),
