@@ -1,5 +1,6 @@
+import { ContactPhoneSchema } from './contact-phone';
 import { z } from 'zod';
-import { SERVICE, SOCIAL_NETWORKS } from '../../config/service';
+import { SERVICE } from '../../config/service';
 const safeUrl = z
   .string()
   .trim()
@@ -13,15 +14,17 @@ const safeUrl = z
       return false;
     }
   });
-export const SocialLinksSchema = z.partialRecord(
-  z.enum(
-    Object.keys(SOCIAL_NETWORKS) as [
-      keyof typeof SOCIAL_NETWORKS,
-      ...(keyof typeof SOCIAL_NETWORKS)[],
-    ],
-  ),
-  safeUrl,
-);
+export const SocialLinksSchema = z
+  .object({
+    whatsapp: safeUrl.optional(),
+    facebook: safeUrl.optional(),
+    instagram: safeUrl.optional(),
+    youtube: safeUrl.optional(),
+    tiktok: safeUrl.optional(),
+    website: safeUrl.optional(),
+    phone: ContactPhoneSchema.optional(),
+  })
+  .strict();
 export const EventDetailsSchema = z.object({
   address: z.string().trim().max(SERVICE.TEXT_MAX).default(''),
   addressVisibility: z.enum(['PUBLIC', 'REMINDER']).default('PUBLIC'),

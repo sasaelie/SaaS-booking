@@ -98,6 +98,8 @@ export interface PortalOverview {
   readonly activities: readonly PortalActivity[];
   readonly sessions: readonly PortalSession[];
   readonly bookingCount: number;
+  readonly historicalBookingCount?: number;
+  readonly inactiveBookingCount?: number;
   readonly pendingProofCount: number;
   readonly pendingRefundCount: number;
 }

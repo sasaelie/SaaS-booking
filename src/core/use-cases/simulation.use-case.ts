@@ -5,6 +5,9 @@ import { failure } from '../../lib/errors';
 import { guardUseCase } from '../../lib/guard-use-case';
 export class SimulationUseCase {
   constructor(private readonly repository: SimulationRepositoryPort) {}
+  count() {
+    return guardUseCase('Simulation', 'count', () => this.repository.count());
+  }
   list() {
     return guardUseCase('Simulation', 'list', () => this.repository.list());
   }

@@ -15,8 +15,10 @@ export function IceBookingWidget({ data }: { readonly data: BookingPageData }) {
   return (
     <div className="ice-widget-root ice-booking-page ice-branded-page" style={style}>
       <BrandBackdrop brand={data.brand} />
-      <BookingBrand name={data.organizationName} logoUrl={data.brand.logoUrl} />
-      <SocialLinks links={data.socialLinks} />
+      <div className="catalog-identity">
+        <BookingBrand name={data.organizationName} logoUrl={data.brand.logoUrl} />
+        <SocialLinks links={data.socialLinks} />
+      </div>
       <div className="ice-cube-shell ice-booking-shell">
         <BookingHeader data={data} />
         <BookingFlow data={data} />

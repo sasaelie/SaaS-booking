@@ -22,6 +22,20 @@ export class SimulationRepository implements SimulationRepositoryPort {
   delete(id: string) {
     return deleteSimulation(this.db, this.organizationId, id);
   }
+  count() {
+    return atomic(this.db, 'Simulation', async (tx) => {
+      const [row] = await tx
+        .select({ count: sql<number>`count(*)::int` })
+        .from(bookings)
+        .where(
+          and(
+            eq(bookings.organizationId, this.organizationId),
+            sql`NOT EXISTS(SELECT 1 FROM simulation_attempts WHERE booking_id=${bookings.id} AND deleted_at IS NOT NULL)`,
+          ),
+        );
+      return ok(row?.count ?? 0);
+    });
+  }
   list() {
     return atomic(this.db, 'Simulation', async (tx) => {
       const list = await tx

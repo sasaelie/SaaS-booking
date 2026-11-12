@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-807 fichiers versionnés ou préparés dans cette branche, dont 565 sous `src/`.
+826 fichiers versionnés ou préparés dans cette branche, dont 574 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
 
@@ -36,6 +36,7 @@ docs/PLAN-PAIEMENTS-MOLLIE.md
 docs/PLAN-SEANCES-ET-PRESENTATION.md
 docs/PLAN-SERVICE-ORGANISATEUR.md
 docs/PLAN-SIMULATION-ET-LISIBILITE.md
+docs/PLAN-TABLEAU-DE-BORD-ET-CONTACT.md
 docs/PLAN-TESTS-SERVICE.md
 docs/POINTS-A-COMPLETER.md
 docs/RAPPORT-AUDIT-PARCOURS.md
@@ -48,6 +49,7 @@ docs/SAAS-IMPLEMENTATION.md
 docs/SAAS-VERIFICATION.md
 docs/SESSION-ACCUEIL.md
 docs/SIMULATION-ET-COMPTABILITE.md
+docs/TABLEAU-DE-BORD-ET-CONTACT.md
 docs/VERIFICATION.md
 docs/audit-actions/inventaire.json
 docs/audit-parcours/organisateur-apres.png
@@ -103,6 +105,11 @@ docs/simulation-et-comptabilite/catalogue-photo-mobile.png
 docs/simulation-et-comptabilite/comptabilite-vide.xlsx
 docs/simulation-et-comptabilite/reseaux-mobile.png
 docs/simulation-et-comptabilite/test-reussi-mobile.png
+docs/tableau-contact/catalogue-mobile.png
+docs/tableau-contact/fond-apres.png
+docs/tableau-contact/fond-avant.png
+docs/tableau-contact/simulation-mobile.png
+docs/tableau-contact/tableau-test-visible.png
 eslint.config.mjs
 migrations/001-schedule.sql
 migrations/002-bookings.sql
@@ -194,6 +201,7 @@ src/adapters/db/portal/activity-management.ts
 src/adapters/db/portal/authorization.ts
 src/adapters/db/portal/booking-status-filter.ts
 src/adapters/db/portal/bookings.ts
+src/adapters/db/portal/dashboard-counts.ts
 src/adapters/db/portal/manual-voucher.ts
 src/adapters/db/portal/organizations.ts
 src/adapters/db/portal/overview.ts
@@ -317,6 +325,7 @@ src/app/_portal/BookingManagement.tsx
 src/app/_portal/ConnectSettings.tsx
 src/app/_portal/CopyCode.tsx
 src/app/_portal/CreateOrganizationForm.tsx
+src/app/_portal/DashboardTests.tsx
 src/app/_portal/FinancialCounter.tsx
 src/app/_portal/FirstActivityState.tsx
 src/app/_portal/LibertySelection.tsx
@@ -326,6 +335,7 @@ src/app/_portal/OnlineVoucher.tsx
 src/app/_portal/OrganizationCards.tsx
 src/app/_portal/OrganizationIdentityFields.tsx
 src/app/_portal/OrganizationSettings.tsx
+src/app/_portal/OverviewMetrics.tsx
 src/app/_portal/Pagination.tsx
 src/app/_portal/PaymentReview.tsx
 src/app/_portal/PlanCards.tsx
@@ -470,7 +480,9 @@ src/app/_ui/contact-fields.ts
 src/app/_ui/format-money.ts
 src/app/_ui/glass-frames.css
 src/app/_ui/ice-tokens.css
+src/app/_ui/interaction-polish.css
 src/app/_ui/modal.css
+src/app/_ui/participant-polish.css
 src/app/_ui/participant.css
 src/app/_ui/service.css
 src/app/_ui/social-glass.css
@@ -558,6 +570,8 @@ src/config/billing-preview.ts
 src/config/booking-ui.ts
 src/config/commercial.ts
 src/config/constants.ts
+src/config/contact.ts
+src/config/dashboard.ts
 src/config/database.ts
 src/config/env.ts
 src/config/file-signatures.ts
@@ -591,6 +605,7 @@ src/core/domain/booking-request.ts
 src/core/domain/booking-validation.ts
 src/core/domain/cancellation-message.ts
 src/core/domain/commercial.ts
+src/core/domain/contact-phone.ts
 src/core/domain/date-math.ts
 src/core/domain/iban.ts
 src/core/domain/manual-voucher-eligibility.ts
@@ -676,6 +691,7 @@ src/core/use-cases/voucher-lifecycle.use-case.ts
 src/core/validation/admin-command.ts
 src/core/validation/appearance.ts
 src/core/validation/commercial.ts
+src/core/validation/contact-phone.ts
 src/core/validation/event-details.ts
 src/core/validation/local-pause.ts
 src/core/validation/manual-voucher.ts
@@ -713,6 +729,7 @@ tests/e2e/bank-fixtures.ts
 tests/e2e/bank-proof.spec.ts
 tests/e2e/booking.spec.ts
 tests/e2e/commercial.spec.ts
+tests/e2e/dashboard-contact.spec.ts
 tests/e2e/embed-fixtures.ts
 tests/e2e/embed.spec.ts
 tests/e2e/empty-states.spec.ts
@@ -754,6 +771,7 @@ tests/integration/commercial-refusals.test.ts
 tests/integration/commercial.test.ts
 tests/integration/connect-webhook.test.ts
 tests/integration/connect.test.ts
+tests/integration/dashboard.test.ts
 tests/integration/database.ts
 tests/integration/financial-fixtures.ts
 tests/integration/financial-refunds.test.ts
@@ -788,6 +806,7 @@ tests/unit/accounting-workbook.test.ts
 tests/unit/calendar.test.ts
 tests/unit/cancellation-mail.test.ts
 tests/unit/commercial.test.ts
+tests/unit/contact-phone.test.ts
 tests/unit/database-config.test.ts
 tests/unit/event-details.test.ts
 tests/unit/foundations.test.ts

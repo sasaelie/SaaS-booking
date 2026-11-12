@@ -23,7 +23,11 @@ test('tests a reservation, declined/successful payment, cancellation, voucher an
   await enterDetails(page, 'alex-simulation@example.invalid');
   await page.getByRole('button', { name: 'Confirmer ma place', exact: true }).click();
   await expect(page.locator('.ice-result')).toContainText('Simulation participant — TEST');
-  await page.goto(`/simulation/${space.organizationId}/reservations`);
+  await page.goto(`/app/${space.organizationId}`);
+  await expect(page.locator('.dashboard-tests')).toContainText('Mes réservations TEST · 1');
+  await expect(page.locator('.portal-metric-link').nth(1).locator('strong')).toHaveText('0');
+  await page.screenshot({ path: info.outputPath('dashboard-test-visible.png'), fullPage: true });
+  await page.locator('.dashboard-test-list').click();
   await expect(page.getByText('Test incomplet', { exact: true })).toBeVisible();
   await page.locator('.simulation-card').getByRole('link', { name: 'Paiement de test', exact: true }).click();
   await page.getByRole('button', { name: 'Simuler un paiement refusé', exact: true }).click();

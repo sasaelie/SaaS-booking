@@ -69,9 +69,10 @@ function settingsInput(form: FormData, organizationId: string) {
     bankAccountName: text(form, 'bankAccountName') || null,
     theme: text(form, 'theme'),
     autoDeleteBankProof: form.has('autoDeleteBankProof'),
-    socialLinks: Object.fromEntries(
-      Object.keys(SOCIAL_NETWORKS).map((key) => [key, text(form, `social-${key}`)]),
-    ),
+    socialLinks: {
+      ...Object.fromEntries(Object.keys(SOCIAL_NETWORKS).map((key) => [key, text(form, `social-${key}`)])),
+      phone: text(form, 'contactPhone'),
+    },
   };
 }
 function managementInput(action: PortalAction, form: FormData, organizationId: string) {

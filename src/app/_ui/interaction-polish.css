@@ -1,0 +1,116 @@
+:root {
+  --interaction-shadow: rgb(20 61 43 / 0.13);
+  --link-ink: #1b654b;
+  --link-hover: #104d38;
+}
+/* Reserve relief for controls that actually respond to interaction. */
+.liquid-ice-button,
+.portal-secondary-action,
+.portal-menu-toggle,
+.portal-card-actions a,
+.portal-slot-row button {
+  box-shadow:
+    inset 1px 1px 2px var(--ice-paper),
+    inset -1px -1px 2px var(--ice-line),
+    0 2px 0 var(--button-edge),
+    0 9px 24px -11px var(--interaction-shadow);
+}
+a.portal-organization-card,
+.commercial-plan-card,
+.portal-metric-link,
+.ice-slot-pebble,
+.social-links a.social-link {
+  box-shadow:
+    inset 0 1px 1px var(--glass-edge-light),
+    0 10px 26px -12px var(--interaction-shadow);
+}
+a.portal-metric-link {
+  text-decoration: none;
+  transition:
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+.portal-metric-link:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 1px var(--glass-edge-light),
+    0 12px 28px -12px var(--interaction-shadow);
+}
+.portal-metric-link:focus-visible {
+  outline: 2px solid var(--link-ink);
+  outline-offset: 4px;
+}
+.dashboard-scope,
+.dashboard-history {
+  margin: 10px 0;
+  font-size: 12px;
+}
+.dashboard-tests {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-block: 22px;
+}
+.dashboard-tests h2 {
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+.dashboard-tests p {
+  margin: 0;
+  max-width: 60ch;
+}
+.dashboard-test-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 22px;
+}
+.portal-metrics:has(.portal-metric-link) {
+  margin-bottom: 12px;
+}
+/* Text links remain distinct from buttons and complete clickable cards. */
+a:any-link,
+a:any-link:hover,
+a:any-link:focus {
+  text-decoration-line: none;
+}
+:is(
+  main a:not([class]),
+  .portal-back,
+  .portal-return-link,
+  .portal-desktop-return,
+  .participant-navigation a,
+  .auth-forgot-link,
+  .portal-auth-links a,
+  .portal-session-open,
+  .platform-signature,
+  .manage-back,
+  .dashboard-test-list,
+  .dashboard-test-start,
+  .dashboard-history a,
+  .simulation-nav-link
+) {
+  color: var(--link-ink);
+  opacity: 0.95;
+  font-size: 1.025em;
+  text-decoration: none;
+  transition:
+    color 160ms ease,
+    opacity 160ms ease;
+}
+:is(
+  main a:not([class]),
+  .portal-back,
+  .portal-return-link,
+  .participant-navigation a,
+  .auth-forgot-link,
+  .portal-auth-links a,
+  .dashboard-test-list,
+  .dashboard-test-start,
+  .dashboard-history a,
+  .simulation-nav-link
+):hover {
+  color: var(--link-hover);
+  opacity: 1;
+}

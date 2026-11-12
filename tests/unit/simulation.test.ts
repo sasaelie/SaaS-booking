@@ -6,6 +6,7 @@ import { required } from '../../src/adapters/db/transaction';
 import type { SimulationRepositoryPort } from '../../src/core/ports/simulation.port';
 it('rejects malformed test payment and delete commands before persistence', async () => {
   const repo: SimulationRepositoryPort = {
+    count: vi.fn(async () => ok(0)),
     list: vi.fn(async () => ok([])),
     payment: vi.fn(async () => ok(undefined)),
     delete: vi.fn(async () => ok(undefined)),

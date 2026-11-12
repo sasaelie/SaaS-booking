@@ -29,21 +29,20 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(
-    ellipse at 45% 42%,
-    rgb(78 107 87 / 0.74) 0%,
-    rgb(42 74 54 / 0.7) 35%,
-    rgb(8 26 17 / 0.8) 84%
-  );
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 44%, rgb(0 0 0 / 0.06) 0%, rgb(0 0 0 / 0.12) 35%, rgb(0 0 0 / 0.58) 100%);
 }
-.ice-story[data-photo='true'][data-tone='BLACK']::before,
-.ice-story[data-photo='true'][data-tone='FOREST']::before {
-  background: radial-gradient(
-    ellipse at 45% 42%,
-    rgb(255 253 244 / 0.97) 0%,
-    rgb(255 253 244 / 0.9) 38%,
-    rgb(255 253 244 / 0.68) 86%
-  );
+.ice-story[data-photo='true'] {
+  --story-caption-shadow: 0 1px 3px rgb(0 0 0 / 0.75), 0 0 1px rgb(0 0 0 / 0.9);
+}
+.ice-story[data-photo='true'][data-tone='BLACK'],
+.ice-story[data-photo='true'][data-tone='FOREST'] {
+  --story-caption-shadow: 0 1px 2px rgb(255 255 255 / 0.95), 0 0 1px rgb(255 255 255 / 0.95);
+}
+.ice-story[data-photo='true']
+  :is(h1, h2, .ice-eyebrow, .ice-audience, .ice-audience-note, .ice-price, .catalog-description, .catalog-price),
+.ice-story[data-photo='true'] > p {
+  text-shadow: var(--story-caption-shadow);
 }
 .ice-story[data-photo='true'] .ice-story-bottom {
   margin-top: auto;

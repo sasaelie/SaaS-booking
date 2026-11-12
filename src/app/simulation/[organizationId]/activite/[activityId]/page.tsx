@@ -19,7 +19,7 @@ export default async function Page({
   if (!data.ok || data.value.organizationId !== organizationId) notFound();
   return (
     <>
-      <Link className="portal-secondary-action" href={simulationPath(organizationId)}>
+      <Link className="simulation-nav-link participant-return-link" href={simulationPath(organizationId)}>
         {SIMULATION.RETURN_ACTIVITIES}
       </Link>
       <IceBookingWidget

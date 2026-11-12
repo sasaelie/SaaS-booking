@@ -24,6 +24,7 @@ export interface SimulationBooking {
   }[];
 }
 export interface SimulationRepositoryPort {
+  count(): Promise<Result<number>>;
   list(): Promise<Result<readonly SimulationBooking[]>>;
   payment(bookingId: string, success: boolean): Promise<Result<void>>;
   delete(bookingId: string): Promise<Result<void>>;
