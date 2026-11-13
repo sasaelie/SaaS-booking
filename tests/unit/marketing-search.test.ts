@@ -31,6 +31,7 @@ it('indexes only the deliberate public brochure on the confirmed production doma
     'https://booking.example.com/conditions',
     'https://booking.example.com/contact',
     'https://booking.example.com/accessibilite',
+    'https://booking.example.com/faq',
   ]);
   expect(publicMetadata('Titre', 'Description', '/contact')).toMatchObject({
     robots: { index: true, follow: true },

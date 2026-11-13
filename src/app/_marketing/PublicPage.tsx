@@ -12,10 +12,12 @@ export async function PublicPage({
   title,
   description,
   children,
+  showPublicationNotice = true,
 }: {
   readonly title: string;
   readonly description: string;
   readonly children: ReactNode;
+  readonly showPublicationNotice?: boolean;
 }) {
   const actor = await currentVisitor(new Headers(await headers()));
   return (
@@ -32,16 +34,19 @@ export async function PublicPage({
         </Link>
         <h1>{title}</h1>
         <p className="marketing-intro">{description}</p>
-        {!publicSiteSettings().identity ? (
-          <p className="marketing-document-notice" role="note">
-            {UI.INCOMPLETE}
-          </p>
-        ) : null}
+        {showPublicationNotice ? <PublicationNotice /> : null}
         {children}
       </main>
       <MarketingFooter />
     </div>
   );
+}
+function PublicationNotice() {
+  return !publicSiteSettings().identity ? (
+    <p className="marketing-document-notice" role="note">
+      {UI.INCOMPLETE}
+    </p>
+  ) : null;
 }
 export function PublicSections({
   sections,

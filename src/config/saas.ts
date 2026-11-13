@@ -53,6 +53,7 @@ export const SAAS = {
     'conditions',
     'contact',
     'accessibilite',
+    'faq',
     'opengraph-image',
     '_next',
   ],

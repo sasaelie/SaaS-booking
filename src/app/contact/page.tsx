@@ -31,7 +31,7 @@ export default function ContactPage() {
         <h2>{UI.CONTACT_ORGANIZER}</h2>
         <p>{UI.CONTACT_ORGANIZER_TEXT}</p>
         <div className="marketing-contact-links">
-          <Link className="marketing-text-link" href="/#questions">
+          <Link className="marketing-text-link" href="/faq">
             {UI.CONTACT_FAQ}
             <IceIcon name="arrow" />
           </Link>

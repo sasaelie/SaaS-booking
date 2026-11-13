@@ -45,6 +45,7 @@ test('links to real informational pages with a useful return path and no placeho
     ['Conditions d’utilisation', '/conditions'],
     ['Accessibilité', '/accessibilite'],
     ['Contact', '/contact'],
+    ['FAQ', '/faq'],
   ] as const) {
     await page.goto('/');
     await page.getByRole('contentinfo').getByRole('link', { name: label, exact: true }).click();

@@ -1,8 +1,9 @@
 # Inventaire de la plateforme
 
-898 fichiers versionnés ou préparés dans cette branche, dont 621 sous `src/`.
+902 fichiers versionnés ou préparés dans cette branche, dont 622 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
+
 
 
 ```text
@@ -58,6 +59,8 @@ docs/SIMULATION-ET-COMPTABILITE.md
 docs/TABLEAU-DE-BORD-ET-CONTACT.md
 docs/VERIFICATION.md
 docs/accueil-commercial/CADRES-ET-PHOTOS.md
+docs/accueil-commercial/CORRECTIONS-AVANT-ETUDE.md
+docs/accueil-commercial/ETUDE-PAGES-VENTE.md
 docs/accueil-commercial/MISE-EN-LIGNE.md
 docs/accueil-commercial/VERIFICATIONS.md
 docs/audit-actions/inventaire.json
@@ -563,6 +566,7 @@ src/app/confidentialite/page.tsx
 src/app/connexion/page.tsx
 src/app/contact/page.tsx
 src/app/embed/[organization]/[activityId]/page.tsx
+src/app/faq/page.tsx
 src/app/icon.svg
 src/app/inscription/page.tsx
 src/app/layout.tsx
@@ -815,6 +819,7 @@ tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
 tests/e2e/presentation.spec.ts
+tests/e2e/sales-corrections.spec.ts
 tests/e2e/service-recovery.spec.ts
 tests/e2e/session-design-fixtures.ts
 tests/e2e/session-details.spec.ts

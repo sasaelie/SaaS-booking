@@ -17,31 +17,10 @@
 .marketing-steps h3 {
   margin: 18px 0 12px;
 }
-.marketing-steps p,
-.marketing-benefit p {
+.marketing-steps p {
   color: var(--ui-text-secondary);
   font-size: 14px;
   margin: 0;
-}
-.marketing-benefits {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-}
-.marketing-benefit.portal-panel {
-  padding: 28px;
-}
-.marketing-feature-icon {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--ice-line);
-  border-radius: 13px;
-  background: var(--ice-soft-fill);
-}
-.marketing-benefit h3 {
-  margin-block: 22px 12px;
 }
 .marketing-pricing {
   max-width: 980px;

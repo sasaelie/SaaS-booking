@@ -31,11 +31,11 @@
   margin: 0 0 8px;
 }
 .marketing-footer nav > a {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
-  width: fit-content;
+  gap: 12px;
+  width: 100%;
   max-width: 100%;
   min-height: 44px;
   color: var(--ice-on-dark);
@@ -124,7 +124,10 @@
 .marketing-document-identity dd .marketing-text-link {
   min-height: 0;
 }
-.marketing-missing-value { color: var(--ui-text-secondary); font-style: italic; }
+.marketing-missing-value {
+  color: var(--ui-text-secondary);
+  font-style: italic;
+}
 .marketing-contact-links {
   display: flex;
   gap: 24px;
@@ -137,7 +140,7 @@
   }
   .marketing-footer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 30px 20px;
+    gap: 24px 28px;
   }
   .marketing-footer-grid > div {
     grid-column: 1 / -1;
@@ -154,5 +157,22 @@
   }
   .marketing-contact-links {
     gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .marketing-footer-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .marketing-footer nav {
+    border-top: 1px solid var(--glass-edge-quiet);
+    padding-top: 20px;
+  }
+  .marketing-footer-grid > div > p {
+    margin-bottom: 0;
+  }
+  .marketing-footer nav > a {
+    padding-block: 10px;
   }
 }

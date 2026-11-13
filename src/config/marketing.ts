@@ -15,7 +15,7 @@ export const MARKETING = {
   NAV: [
     { href: '/#fonctionnement', label: 'Comment ça marche' },
     { href: '/#tarifs', label: 'Tarifs' },
-    { href: '/#questions', label: 'Questions' },
+    { href: '/faq', label: 'FAQ' },
   ],
   SIGNUP: 'Créer mon espace',
   LOGIN: 'Connexion',
@@ -46,25 +46,6 @@ export const MARKETING = {
       text: 'Vos participants réservent une place. Retrouvez ensuite les inscrits, les paiements et les demandes à traiter dans votre espace.',
     },
   ],
-  BENEFITS_EYEBROW: 'Moins de gestion, plus de visibilité',
-  BENEFITS_TITLE: 'Les bons outils, au même endroit.',
-  BENEFITS: [
-    {
-      icon: 'calendar',
-      title: 'Des places à jour',
-      text: 'Les réservations confirmées et les paiements en cours mettent à jour les disponibilités. Un créneau complet ne prend plus de nouvelles inscriptions.',
-    },
-    {
-      icon: 'ticket',
-      title: 'Vos règles, clairement',
-      text: 'Précisez vos consignes et délais d’annulation. Un participant éligible reçoit un code de report, utilisable uniquement dans votre organisation.',
-    },
-    {
-      icon: 'lock',
-      title: 'Les paiements à leur place',
-      text: 'Carte et Bancontact en Liberté. Avec Pro, ajoutez les virements à communication structurée belge et retrouvez vos écritures dans un export Excel.',
-    },
-  ],
   PRICING_EYEBROW: 'Une formule par espace',
   PRICING_TITLE: 'Commencez librement. Évoluez à votre rythme.',
   PRICING_DESCRIPTION:
@@ -74,17 +55,10 @@ export const MARKETING = {
   YEAR_SAVING: 'de moins par an qu’avec douze mensualités.',
   BILLING_NOTE:
     'Tarifs par espace organisateur. Les modalités de facturation et le régime de TVA sont précisés avant tout paiement.',
-  FAQ_EYEBROW: 'Avant de vous lancer',
-  FAQ_TITLE: 'Des réponses, simplement.',
+  FAQ_PAGE_TITLE: 'Questions fréquentes',
+  FAQ_PAGE_DESCRIPTION:
+    'Les réponses à vos questions sur les réservations, les offres, les paiements et les reports.',
   CONTACT: 'Nous contacter',
-  FINAL_TITLE: 'Votre prochaine activité mérite mieux qu’un fil de messages.',
-  FINAL_DESCRIPTION:
-    'Créez votre espace, préparez votre calendrier et partagez votre premier lien.',
-  FINAL_CONNECTED: 'Votre calendrier vous attend.',
-  FINAL_CONNECTED_DESCRIPTION:
-    'Retrouvez vos activités et les prochaines inscriptions dans votre espace.',
-  FINAL_ACTION: 'Commencer avec Liberté',
-  FINAL_CONNECTED_ACTION: 'Retrouver mes activités',
   FOOTER_DESCRIPTION:
     'Votre page de réservation, votre calendrier et vos participants, réunis simplement.',
   FOOTER_LABEL: 'Informations et contact',

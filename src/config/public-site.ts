@@ -10,6 +10,7 @@ export const PUBLIC_SITE = {
     '/conditions',
     '/contact',
     '/accessibilite',
+    '/faq',
   ],
   PRIVATE_PATHS: [
     '/app',

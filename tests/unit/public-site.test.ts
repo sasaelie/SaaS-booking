@@ -80,6 +80,7 @@ it('refuses organization links that would collide with the new public brochure p
     'mentions-legales',
     'accessibilite',
     'opengraph-image',
+    'faq',
   ])
     expect(
       CreateOrganizationSchema.safeParse({

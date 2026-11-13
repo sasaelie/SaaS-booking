@@ -3,9 +3,8 @@ import { MARKETING } from '../config/marketing';
 import { currentVisitor } from '../composition/current-visitor';
 import { MarketingHeader } from './_marketing/MarketingHeader';
 import { MarketingHero } from './_marketing/MarketingHero';
-import { MarketingWorkflow, MarketingBenefits } from './_marketing/MarketingFeatures';
+import { MarketingWorkflow } from './_marketing/MarketingFeatures';
 import { MarketingPricing } from './_marketing/MarketingPricing';
-import { MarketingFaq, MarketingFinalAction } from './_marketing/MarketingFaq';
 import { MarketingFooter } from './_marketing/MarketingFooter';
 import { publicMetadata } from './_marketing/public-metadata';
 import { PublicStructuredData } from './_marketing/PublicStructuredData';
@@ -22,10 +21,7 @@ export default async function Home() {
       <main className="marketing-main" id="contenu" tabIndex={-1}>
         <MarketingHero name={actor?.name ?? null} />
         <MarketingWorkflow />
-        <MarketingBenefits />
         <MarketingPricing />
-        <MarketingFaq />
-        <MarketingFinalAction connected={actor !== null} />
       </main>
       <MarketingFooter />
       <PublicStructuredData />

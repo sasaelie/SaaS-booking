@@ -2,17 +2,14 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: color-mix(in srgb, var(--ice-scene) 94%, transparent);
+  background: var(--ice-scene);
+  box-shadow: 0 10px 28px -12px var(--glass-shadow);
   border-bottom: 1px solid var(--ice-line);
-}
-@supports (backdrop-filter: blur(12px)) {
-  .marketing-header {
-    background: color-mix(in srgb, var(--ice-scene) 85%, transparent);
-    backdrop-filter: blur(12px);
-  }
 }
 .marketing-header-inner {
   min-height: 88px;
+  width: min(100% - 24px, 1160px);
+  padding-inline: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
