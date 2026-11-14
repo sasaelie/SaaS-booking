@@ -1,3 +1,4 @@
+import { PLATFORM_BRAND } from './platform-brand';
 export const SHARING_FEATURES = [
   [
     'Page publique et lien de réservation',
@@ -41,7 +42,7 @@ export const SHARING_FEATURES = [
   ],
   [
     'Signature de la plateforme',
-    'Mention « Propulsé par Studio Créatif 360 » sur les pages de réservation.',
+    `Mention « Propulsé par ${PLATFORM_BRAND.NAME} » sur les pages de réservation.`,
     'Affichée',
     'Retirée',
     'included',

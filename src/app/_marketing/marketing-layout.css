@@ -1,0 +1,82 @@
+.marketing-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--ice-scene);
+  box-shadow: 0 10px 28px -12px var(--glass-shadow);
+  border-bottom: 1px solid var(--ice-line);
+}
+.marketing-header-inner {
+  min-height: 88px;
+  width: min(100% - 24px, 1160px);
+  padding-inline: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.marketing-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+.marketing-brand small {
+  display: block;
+  margin-top: 4px;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.035em;
+}
+.marketing-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 46px;
+  flex: none;
+  border: 1px solid var(--glass-edge-light);
+  border-radius: 13px;
+  background: var(--ice-soft-fill);
+  box-shadow:
+    inset 0 1px 1px var(--ice-paper),
+    0 8px 18px -12px var(--interaction-shadow);
+}
+.marketing-brand-mark .ice-icon {
+  width: 24px;
+  height: 24px;
+}
+.marketing-nav,
+.marketing-account {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.marketing-nav a,
+.marketing-account-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--link-ink);
+  gap: 4px;
+}
+.marketing-nav a:hover,
+.marketing-account-link:hover {
+  color: var(--link-hover);
+}
+.marketing-account {
+  gap: 16px;
+}
+.marketing-header .portal-button {
+  min-height: 44px;
+  padding: 10px 18px;
+}
+.marketing-account-link .ice-icon {
+  width: 15px;
+  height: 15px;
+}

@@ -1,0 +1,30 @@
+/* Première version : cadre validé, avant toute variante ultra transparente. */
+.marketing-root .portal-panel {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--glass-edge-quiet);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--ice-paper) 68%, transparent);
+  box-shadow: var(--glass-frame-shadow);
+}
+.marketing-root .liquid-ice-button,
+.marketing-root .marketing-hero .portal-landing-actions > a:first-child {
+  box-shadow:
+    inset 0 1px 1px var(--glass-edge-light),
+    0 2px 0 var(--button-edge),
+    0 10px 26px -8px var(--interaction-shadow);
+}
+.marketing-root .commercial-plan-card:hover {
+  border-color: var(--link-ink);
+}
+@supports (backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px)) {
+  .marketing-root .portal-panel {
+    background: linear-gradient(
+      135deg,
+      var(--glass-fill),
+      color-mix(in srgb, var(--ice-paper) 12%, transparent)
+    );
+    backdrop-filter: blur(8px) saturate(115%);
+    -webkit-backdrop-filter: blur(8px) saturate(115%);
+  }
+}

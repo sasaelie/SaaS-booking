@@ -1,0 +1,62 @@
+.marketing-preview-sessions {
+  border: 0;
+  padding: 0;
+  margin: 0 0 18px;
+}
+.marketing-preview-sessions legend {
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: var(--ui-text-secondary);
+}
+.marketing-preview-sessions label {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--ice-line);
+  border-radius: 11px;
+  margin: 7px 0 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.marketing-preview-sessions label:has(input:checked) {
+  background: var(--ice-paper);
+  border-color: var(--link-ink);
+}
+.marketing-preview-sessions input {
+  margin: 0;
+  accent-color: var(--link-ink);
+}
+.marketing-preview-sessions .ice-icon {
+  margin-left: auto;
+  width: 16px;
+  height: 16px;
+  visibility: hidden;
+}
+.marketing-preview-sessions input:checked ~ .ice-icon {
+  visibility: visible;
+}
+.marketing-preview-cta.portal-button {
+  width: 100%;
+  font-size: 12px;
+  padding-inline: 8px;
+  min-height: 48px;
+}
+.marketing-preview-note {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ui-text-secondary);
+}
+@media (max-width: 760px) {
+  .marketing-preview.portal-panel {
+    padding: 16px;
+  }
+  .marketing-preview-activity {
+    padding: 22px;
+  }
+  .marketing-preview-activity h2 {
+    font-size: 31px;
+  }
+}

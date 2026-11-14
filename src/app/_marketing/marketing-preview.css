@@ -1,0 +1,160 @@
+.marketing-preview-wrap {
+  position: relative;
+  min-width: 0;
+}
+.marketing-preview-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 12px 12px;
+  color: var(--link-ink);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.marketing-preview-caption > .ice-icon {
+  width: 22px;
+  height: 22px;
+  transform: rotate(45deg);
+}
+.marketing-preview.portal-panel {
+  padding: 20px;
+  border-radius: 30px;
+  background: color-mix(in srgb, var(--ice-paper) 68%, transparent);
+  box-shadow:
+    inset 0 1px 1px var(--glass-edge-light),
+    0 24px 60px -36px var(--interaction-shadow);
+}
+.marketing-preview-switch {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 0 22px;
+  padding: 4px;
+  border: 1px solid var(--ice-line);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--ice-mist) 50%, transparent);
+  gap: 4px;
+}
+.marketing-preview-switch label {
+  position: relative;
+  min-width: 0;
+  cursor: pointer;
+}
+.marketing-preview-switch input {
+  position: absolute;
+  opacity: 0;
+}
+.marketing-preview-switch span {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  padding: 6px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.marketing-preview-switch input:checked + span {
+  background: var(--ice-paper);
+  box-shadow: 0 4px 12px -8px var(--interaction-shadow);
+}
+.marketing-preview-switch input:focus-visible + span {
+  outline: 2px solid var(--link-ink);
+  outline-offset: 2px;
+}
+.marketing-preview-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.marketing-preview-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 40px;
+  border-radius: 11px;
+  background: var(--ice-mist);
+  font-size: 12px;
+  font-weight: 650;
+}
+.marketing-preview-identity strong {
+  font-size: 13px;
+  font-weight: 650;
+}
+.marketing-preview-identity small {
+  display: block;
+  font-size: 11px;
+  color: var(--ui-text-secondary);
+}
+.marketing-preview-identity > .ice-icon {
+  margin-left: auto;
+  width: 16px;
+  height: 16px;
+  color: var(--link-ink);
+}
+/* La photo reste visible sous un voile sombre uniforme et progressif. */
+.marketing-preview-activity {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 24px;
+  border-radius: 19px;
+  background: var(--ice-evergreen-deep);
+  color: var(--ice-on-dark);
+}
+.marketing-preview-photo {
+  object-fit: cover;
+  z-index: -2;
+}
+.marketing-preview-activity::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, rgb(0 0 0 / 0.7), rgb(0 0 0 / 0.63) 55%, rgb(0 0 0 / 0.76));
+  pointer-events: none;
+}
+.marketing-preview-activity > p.marketing-preview-tag {
+  font-size: 11px;
+  letter-spacing: 0.035em;
+  margin: 0 0 20px;
+}
+.marketing-preview-activity h2 {
+  font-size: 31px;
+  line-height: 1.08;
+  margin: 0 0 16px;
+  max-width: 14ch;
+}
+.marketing-preview-activity > p {
+  font-size: 12px;
+  max-width: 30ch;
+  margin-bottom: 20px;
+}
+.marketing-preview-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+}
+.marketing-preview-price strong {
+  font-size: 25px;
+  letter-spacing: -0.03em;
+}
+.marketing-preview-price span {
+  font-size: 10px;
+}
+.marketing-preview-availability {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 16px 0;
+}
+.marketing-preview-availability > span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--link-ink);
+}

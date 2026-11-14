@@ -1,3 +1,4 @@
+import { PLATFORM_BRAND } from './platform-brand';
 export const COMMERCIAL = {
   LIBERTE: 'LIBERTE',
   PRO: 'PRO',
@@ -51,13 +52,14 @@ export const PLAN_UI = {
   STRIPE: 'Frais Stripe rapprochés',
   AVOIDABLE: 'Part évitable avec Pro, avant autres charges et taxes',
   PENDING: 'Paiements en attente de rapprochement',
-  COUNTER_NOTE: 'Calcul sur les transactions rapprochées uniquement ; les frais Stripe restent dus en Pro.',
+  COUNTER_NOTE:
+    'Calcul sur les transactions rapprochées uniquement ; les frais Stripe restent dus en Pro.',
   EXPORT: 'Télécharger l’export comptable',
   EXPORT_NOTE:
     'Classeur Excel : synthèse, réservations et journal. Totaux à zéro si vide ; frais bancaires inconnus signalés « En attente ».',
   SELECT: 'Choisir mes deux activités en Liberté',
   SELECT_SAVE: 'Enregistrer mes activités',
-  SIGNATURE: 'Propulsé par Studio Créatif 360',
+  SIGNATURE: `Propulsé par ${PLATFORM_BRAND.NAME}`,
   VIEW_ONLY: 'Consultation uniquement',
   PRO_REQUIRED: 'Cette fonctionnalité nécessite Studio Pro.',
 } as const;

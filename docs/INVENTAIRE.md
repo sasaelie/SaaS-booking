@@ -1,8 +1,12 @@
 # Inventaire de la plateforme
 
-845 fichiers versionnés ou préparés dans cette branche, dont 582 sous `src/`.
+902 fichiers versionnés ou préparés dans cette branche, dont 622 sous `src/`.
 
-Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.```text
+Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
+
+
+
+```text
 .env.example
 .github/workflows/verify.yml
 .gitignore
@@ -30,6 +34,7 @@ docs/INTERFACE.md
 docs/INVENTAIRE.md
 docs/LIVRAISON-LIBERTE-PRO.md
 docs/OPERATIONS.md
+docs/PLAN-ACCUEIL-COMMERCIAL.md
 docs/PLAN-AUDIT-GLOBAL.md
 docs/PLAN-AUDIT-PARCOURS.md
 docs/PLAN-MIGRATION-LIBERTE-PRO.md
@@ -46,12 +51,18 @@ docs/RAPPORT-SEANCES-ET-PRESENTATION.md
 docs/RAPPORT-SERVICE-ORGANISATEUR.md
 docs/RAPPORT-TESTS-SERVICE.md
 docs/RECETTE-EN-LIGNE.md
+docs/RECHERCHE-NOM-KRENO.md
 docs/SAAS-IMPLEMENTATION.md
 docs/SAAS-VERIFICATION.md
 docs/SESSION-ACCUEIL.md
 docs/SIMULATION-ET-COMPTABILITE.md
 docs/TABLEAU-DE-BORD-ET-CONTACT.md
 docs/VERIFICATION.md
+docs/accueil-commercial/CADRES-ET-PHOTOS.md
+docs/accueil-commercial/CORRECTIONS-AVANT-ETUDE.md
+docs/accueil-commercial/ETUDE-PAGES-VENTE.md
+docs/accueil-commercial/MISE-EN-LIGNE.md
+docs/accueil-commercial/VERIFICATIONS.md
 docs/audit-actions/inventaire.json
 docs/audit-global/preuves.json
 docs/audit-parcours/organisateur-apres.png
@@ -138,6 +149,9 @@ next.config.ts
 package-lock.json
 package.json
 playwright.config.ts
+public/marketing/atelier.webp
+public/marketing/soins.webp
+public/marketing/sport.webp
 scripts/check-deployment.ts
 scripts/check-storage.ts
 scripts/export-hosted-migrations.ts
@@ -318,6 +332,27 @@ src/app/_auth/auth.css
 src/app/_auth/session-exit-navigation.ts
 src/app/_auth/sign-out-request.ts
 src/app/_auth/use-auth-form.ts
+src/app/_marketing/BookingPreview.tsx
+src/app/_marketing/MarketingFaq.tsx
+src/app/_marketing/MarketingFeatures.tsx
+src/app/_marketing/MarketingFooter.tsx
+src/app/_marketing/MarketingHeader.tsx
+src/app/_marketing/MarketingHero.tsx
+src/app/_marketing/MarketingPricing.tsx
+src/app/_marketing/PublicIdentity.tsx
+src/app/_marketing/PublicPage.tsx
+src/app/_marketing/PublicStructuredData.tsx
+src/app/_marketing/SavingsIllustration.tsx
+src/app/_marketing/marketing-content.css
+src/app/_marketing/marketing-footer.css
+src/app/_marketing/marketing-glass.css
+src/app/_marketing/marketing-hero.css
+src/app/_marketing/marketing-layout.css
+src/app/_marketing/marketing-preview-controls.css
+src/app/_marketing/marketing-preview.css
+src/app/_marketing/marketing-pricing-faq.css
+src/app/_marketing/marketing.css
+src/app/_marketing/public-metadata.ts
 src/app/_portal/AccessNotice.tsx
 src/app/_portal/ActivityCards.tsx
 src/app/_portal/AdminOperation.tsx
@@ -503,6 +538,7 @@ src/app/_ui/use-booking-flow.ts
 src/app/_ui/use-booking-form.ts
 src/app/_ui/use-voucher-quote.ts
 src/app/_ui/widget-layout.css
+src/app/accessibilite/page.tsx
 src/app/actions/booking.actions.ts
 src/app/actions/simulation.actions.ts
 src/app/api/admin/route.ts
@@ -525,8 +561,13 @@ src/app/api/webhooks/billing/route.ts
 src/app/api/webhooks/stripe-connect/route.ts
 src/app/api/webhooks/stripe/route.ts
 src/app/booking-result/page.tsx
+src/app/conditions/page.tsx
+src/app/confidentialite/page.tsx
 src/app/connexion/page.tsx
+src/app/contact/page.tsx
 src/app/embed/[organization]/[activityId]/page.tsx
+src/app/faq/page.tsx
+src/app/icon.svg
 src/app/inscription/page.tsx
 src/app/layout.tsx
 src/app/manage/ManageBooking.tsx
@@ -535,15 +576,19 @@ src/app/manage/management-response.ts
 src/app/manage/page.tsx
 src/app/manage/use-booking-context.ts
 src/app/manage/use-management.ts
+src/app/mentions-legales/page.tsx
 src/app/mot-de-passe-oublie/page.tsx
 src/app/nouveau-mot-de-passe/page.tsx
+src/app/opengraph-image.tsx
 src/app/page.tsx
+src/app/robots.ts
 src/app/simulation/[organizationId]/activite/[activityId]/page.tsx
 src/app/simulation/[organizationId]/gestion/page.tsx
 src/app/simulation/[organizationId]/layout.tsx
 src/app/simulation/[organizationId]/page.tsx
 src/app/simulation/[organizationId]/paiement/[bookingId]/page.tsx
 src/app/simulation/[organizationId]/reservations/page.tsx
+src/app/sitemap.ts
 src/app/widget.js/route.ts
 src/composition/admin-dispatch.ts
 src/composition/administration.ts
@@ -585,6 +630,10 @@ src/config/env.ts
 src/config/file-signatures.ts
 src/config/http-limits.ts
 src/config/jobs.ts
+src/config/marketing-faq.ts
+src/config/marketing-media.ts
+src/config/marketing-preview.ts
+src/config/marketing.ts
 src/config/navigation.ts
 src/config/participant-navigation.ts
 src/config/participation-terms.ts
@@ -593,11 +642,14 @@ src/config/plan-features-payments.ts
 src/config/plan-features-sharing.ts
 src/config/plan-features.ts
 src/config/plan-selection.ts
+src/config/platform-brand.ts
 src/config/portal-activity-labels.ts
 src/config/portal-billing-labels.ts
 src/config/portal-labels.ts
 src/config/presentation.ts
 src/config/private-files.ts
+src/config/public-documents.ts
+src/config/public-site.ts
 src/config/refunds.ts
 src/config/saas.ts
 src/config/service-mail.ts
@@ -722,6 +774,8 @@ src/lib/http-body.ts
 src/lib/logger.ts
 src/lib/modulo97.ts
 src/lib/plan-selection.ts
+src/lib/public-profile.ts
+src/lib/public-site.ts
 src/lib/result.ts
 src/lib/session-navigation.ts
 src/lib/sha256.ts
@@ -751,6 +805,9 @@ tests/e2e/journey-audit.spec.ts
 tests/e2e/journey-recovery.spec.ts
 tests/e2e/layout-assertions.ts
 tests/e2e/layout-coherence.spec.ts
+tests/e2e/marketing-accessibility.spec.ts
+tests/e2e/marketing-home.spec.ts
+tests/e2e/marketing-search.spec.ts
 tests/e2e/navigation-hierarchy.spec.ts
 tests/e2e/organization-link.spec.ts
 tests/e2e/organizer-service.spec.ts
@@ -762,6 +819,7 @@ tests/e2e/portal-fixtures.ts
 tests/e2e/portal-onboarding.ts
 tests/e2e/portal.spec.ts
 tests/e2e/presentation.spec.ts
+tests/e2e/sales-corrections.spec.ts
 tests/e2e/service-recovery.spec.ts
 tests/e2e/session-design-fixtures.ts
 tests/e2e/session-details.spec.ts
@@ -830,9 +888,12 @@ tests/unit/foundations.test.ts
 tests/unit/http-body.test.ts
 tests/unit/iban.test.ts
 tests/unit/manual-voucher-eligibility.test.ts
+tests/unit/marketing-search.test.ts
 tests/unit/plan-selection.test.ts
 tests/unit/portal-inputs.test.ts
 tests/unit/proof-and-auth.test.ts
+tests/unit/public-profile.test.ts
+tests/unit/public-site.test.ts
 tests/unit/schedule.test.ts
 tests/unit/service-boundaries.test.ts
 tests/unit/session-details-input.test.ts

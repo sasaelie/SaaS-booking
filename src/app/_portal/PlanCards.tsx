@@ -44,9 +44,9 @@ function PlanCard({
     <Link
       className="portal-panel commercial-plan-card"
       href={href}
-      aria-label={pro ? UI.CHOOSE_PRO : UI.CHOOSE_LIBERTE}
       aria-current={selected ? 'true' : undefined}
     >
+      <span className="ice-sr-only">{pro ? UI.CHOOSE_PRO : UI.CHOOSE_LIBERTE}</span>
       <h2>{pro ? PLAN_UI.PRO : PLAN_UI.LIBERTE}</h2>
       <p className="commercial-price">
         <strong>{formatMoney(pro ? COMMERCIAL.MONTHLY_CENTS : 0, 'EUR')}</strong>
