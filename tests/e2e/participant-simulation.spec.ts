@@ -95,7 +95,8 @@ test('keeps social symbols and availability colors clear on mobile and desktop',
     await noHorizontalOverflow(page);
     await page.screenshot({ path: info.outputPath(`catalogue-${width}.png`), fullPage: true });
   }
-  await page.goto('/');
+  await login(page, space);
+  await page.goto(`/app/${space.organizationId}/abonnement`);
   await page.getByText('Comparer les fonctionnalités', { exact: true }).click();
   const included = page.locator('[data-availability="included"]').first();
   const absent = page.locator('[data-availability="absent"]').first();

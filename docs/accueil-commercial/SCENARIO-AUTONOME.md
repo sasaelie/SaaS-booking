@@ -38,3 +38,5 @@ Les 26 scénarios navigateur ciblés sont validés. Ils parcourent les quatre é
 TypeScript, ESLint, 126 tests unitaires et la construction optimisée Next.js sont également validés. Les écrans sont vérifiés à 320, 390, 768 et 1440 px ; la comparaison des formules et le choix annuel restent disponibles dans l’espace organisateur.
 
 Lighthouse mobile local : performance 96/100, accessibilité 100/100, LCP 0,9 s, CLS 0. Ces mesures de laboratoire ne préjugent pas des résultats en conditions réelles.
+
+Deux contrôles historiques du comparateur ont aussi été validés dans la page d’abonnement organisateur : ils vérifient les 27 catégories, la distinction des disponibilités et le style des liens. Ils ne cherchent plus le comparateur supprimé de la page de vente.
