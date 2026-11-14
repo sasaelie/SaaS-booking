@@ -6,6 +6,7 @@ import { MarketingHero } from './_marketing/MarketingHero';
 import { MarketingWorkflow } from './_marketing/MarketingFeatures';
 import { MarketingPricing } from './_marketing/MarketingPricing';
 import { MarketingFooter } from './_marketing/MarketingFooter';
+import { MarketingDemo } from './_marketing/MarketingDemo';
 import { publicMetadata } from './_marketing/public-metadata';
 import { PublicStructuredData } from './_marketing/PublicStructuredData';
 import './_marketing/marketing.css';
@@ -18,11 +19,13 @@ export default async function Home() {
   return (
     <div className="marketing-root">
       <MarketingHeader connected={actor !== null} />
-      <main className="marketing-main" id="contenu" tabIndex={-1}>
-        <MarketingHero name={actor?.name ?? null} />
-        <MarketingWorkflow />
-        <MarketingPricing />
-      </main>
+      <MarketingDemo>
+        <main className="marketing-main" id="contenu" tabIndex={-1}>
+          <MarketingHero name={actor?.name ?? null} />
+          <MarketingWorkflow />
+          <MarketingPricing />
+        </main>
+      </MarketingDemo>
       <MarketingFooter />
       <PublicStructuredData />
     </div>

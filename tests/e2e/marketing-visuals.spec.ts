@@ -61,7 +61,7 @@ test('opens a card on the first touch and keeps the explanation in its own frame
     await context.close();
   }
 });
-test('keeps layered images, prices and expanded cards within the viewport without new writes', async ({
+test('keeps linked images and expanded cards within the viewport without new writes', async ({
   page,
 }, info) => {
   let writes = 0;
@@ -72,8 +72,6 @@ test('keeps layered images, prices and expanded cards within the viewport withou
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
     await checkExamplePhotos(page);
-    await expect(page.locator('.marketing-price-float')).toContainText('0 €');
-    await expect(page.locator('.marketing-price-float')).toContainText('3,5 % + 0,45 €');
     await expect(page.locator('.marketing-calendar-preview')).toContainText('données fictives');
     for (const button of await page.locator('.marketing-feature-trigger').all()) {
       await button.focus();
@@ -85,16 +83,16 @@ test('keeps layered images, prices and expanded cards within the viewport withou
       await page.screenshot({ path: info.outputPath(`visuels-${width}.png`), fullPage: true });
   }
   expect(writes).toBe(0);
-  await page.getByRole('link', { name: /Découvrir les formules/ }).click();
-  await expect(page).toHaveURL('/#tarifs');
 });
 async function checkExamplePhotos(page: Page) {
   for (const label of ['Ateliers', 'Soins', 'Sport']) {
+    await page.getByRole('radio', { name: label, exact: true }).focus();
     await page
       .getByRole('group', { name: 'Explorer un exemple d’activité' })
       .getByRole('radio', { name: label, exact: true })
       .check();
-    const image = page.locator('.marketing-stage-photo img');
+    const image = page.locator('.marketing-story-photo img');
+    await image.scrollIntoViewIfNeeded();
     await expect
       .poll(() =>
         image.evaluate(

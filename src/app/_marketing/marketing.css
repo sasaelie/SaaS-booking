@@ -6,10 +6,9 @@
 @import './marketing-pricing-faq.css';
 @import './marketing-footer.css';
 @import './marketing-glass.css';
-@import './marketing-visual-stage.css';
+@import './marketing-demo.css';
 @import './marketing-story.css';
 @import './marketing-feature-tiles.css';
-@import './marketing-pricing-visual.css';
 
 .marketing-root {
   color: var(--ui-text-primary);
