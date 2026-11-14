@@ -1,7 +1,7 @@
 .marketing-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
-  align-items: center;
+  align-items: start;
   gap: 64px;
   padding-block: 64px 80px;
 }

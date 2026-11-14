@@ -27,25 +27,6 @@ export const MARKETING = {
     'Sans compte participant',
     'Un prix public tout compris',
   ],
-  WORKFLOW_EYEBROW: 'Un lien suffit pour commencer',
-  WORKFLOW_TITLE: 'Vous créez. Vous partagez. Ils réservent.',
-  STEPS: [
-    {
-      number: '01',
-      title: 'Préparez vos activités',
-      text: 'Définissez un prix, vos horaires et le nombre de places. Séances ponctuelles ou calendrier hebdomadaire : vous choisissez.',
-    },
-    {
-      number: '02',
-      title: 'Partagez votre page',
-      text: 'Votre lien se partage en bio Instagram, sur WhatsApp ou par e-mail. Vos couleurs, votre photo et vos coordonnées présentent votre activité.',
-    },
-    {
-      number: '03',
-      title: 'Suivez les inscriptions',
-      text: 'Vos participants réservent une place. Retrouvez ensuite les inscrits, les paiements et les demandes à traiter dans votre espace.',
-    },
-  ],
   PRICING_EYEBROW: 'Une formule par espace',
   PRICING_TITLE: 'Commencez librement. Évoluez à votre rythme.',
   PRICING_DESCRIPTION:

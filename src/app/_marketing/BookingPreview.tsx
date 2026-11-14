@@ -1,44 +1,75 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
 import { MARKETING_PREVIEW as UI } from '../../config/marketing-preview';
 import { IceIcon } from '../_ui/IceIcon';
 import { formatMoney } from '../_ui/format-money';
+import { DemoPlayback, DemoRegion } from './DemoControls';
+import { useMarketingDemo } from './MarketingDemo';
+import { MARKETING_VISUALS } from '../../config/marketing-visuals';
 type Example = (typeof UI.EXAMPLES)[number];
 export function BookingPreview({ connected }: { readonly connected: boolean }) {
-  const [example, setExample] = useState<Example>(UI.EXAMPLES[0]);
-  const [session, setSession] = useState<string>(example.sessions[0]);
+  const { example, session, dispatch } = useMarketingDemo();
   return (
-    <div className="marketing-preview-wrap">
+    <DemoRegion className="marketing-preview-wrap">
       <div className="marketing-preview-caption">
         <span>{UI.LABEL}</span>
         <IceIcon name="arrow" />
       </div>
+      <DemoPlayback />
       <div className="portal-panel marketing-preview">
         <PreviewSwitch
           selected={example.key}
-          onSelect={(item) => {
-            setExample(item);
-            setSession(item.sessions[0]);
-          }}
+          onSelect={(item) => dispatch({ type: 'example', index: UI.EXAMPLES.indexOf(item) })}
         />
         <PreviewActivity example={example} />
-        <PreviewSessions example={example} selected={session} onSelect={setSession} />
-        <p className="ice-sr-only" role="status">
-          {UI.SELECTED} : {session}
-        </p>
-        <Link
-          className="liquid-ice-button portal-button marketing-preview-cta"
-          href={connected ? '/app' : '/inscription'}
-        >
-          {connected ? UI.CONNECTED_ACTION : UI.ACTION}
-          <IceIcon name="arrow" />
-        </Link>
+        <PreviewSessions
+          example={example}
+          selected={session.label}
+          onSelect={(index) => dispatch({ type: 'session', index })}
+        />
+        <PreviewActions connected={connected} />
       </div>
       <p className="marketing-preview-note">{UI.FICTION}</p>
-    </div>
+    </DemoRegion>
   );
+}
+function PreviewActions({ connected }: { readonly connected: boolean }) {
+  const { state, session, dispatch } = useMarketingDemo();
+  return (
+    <>
+      <p className="ice-sr-only" role="status" aria-live={state.playing ? 'off' : 'polite'}>
+        {UI.SELECTED} : {session.label}
+        {state.booked ? ` · ${UI.SIMULATED}` : ''}
+      </p>
+      <button
+        type="button"
+        className="liquid-ice-button portal-button marketing-preview-simulate"
+        onClick={() => {
+          dispatch({ type: 'book' });
+          showDemoResult();
+        }}
+      >
+        {UI.SIMULATE}
+        <IceIcon name="arrow" />
+      </button>
+      <Link
+        className="liquid-ice-button portal-button marketing-preview-cta"
+        href={connected ? '/app' : '/inscription'}
+      >
+        {connected ? UI.CONNECTED_ACTION : UI.ACTION}
+        <IceIcon name="arrow" />
+      </Link>
+    </>
+  );
+}
+function showDemoResult() {
+  const calendar = document.getElementById('demo-planning');
+  calendar?.focus({ preventScroll: true });
+  calendar?.scrollIntoView({
+    block: 'center',
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+  });
 }
 function PreviewSessions({
   example,
@@ -47,20 +78,20 @@ function PreviewSessions({
 }: {
   readonly example: Example;
   readonly selected: string;
-  readonly onSelect: (session: string) => void;
+  readonly onSelect: (index: number) => void;
 }) {
   return (
     <fieldset className="marketing-preview-sessions">
       <legend>{UI.DATE}</legend>
-      {example.sessions.map((time) => (
-        <label key={time}>
+      {example.sessions.map((time, index) => (
+        <label key={time.label}>
           <input
             type="radio"
             name="example-session"
-            checked={time === selected}
-            onChange={() => onSelect(time)}
+            checked={time.label === selected}
+            onChange={() => onSelect(index)}
           />
-          <span>{time}</span>
+          <span>{time.label}</span>
           <IceIcon name="check" />
         </label>
       ))}
@@ -110,7 +141,7 @@ function PreviewActivity({ example }: { readonly example: Example }) {
           alt=""
           fill
           loading="eager"
-          sizes="(max-width: 760px) 380px, 440px"
+          sizes={MARKETING_VISUALS.IMAGE_SIZES}
         />
         <p className="marketing-preview-tag">{example.tag}</p>
         <h2>{example.title}</h2>

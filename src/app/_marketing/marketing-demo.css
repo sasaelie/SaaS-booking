@@ -1,0 +1,62 @@
+.marketing-demo-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-block: 8px 14px;
+  font-size: 11px;
+  color: var(--ui-text-secondary);
+}
+.marketing-demo-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--link-ink);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+.marketing-demo-actions button:hover {
+  background: var(--glass-fill);
+}
+.marketing-preview-simulate.portal-button {
+  width: 100%;
+  min-height: 48px;
+  font-size: 12px;
+  padding-inline: 8px;
+}
+.marketing-preview-simulate + .marketing-preview-cta.portal-button {
+  margin-top: 10px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--link-ink);
+}
+.marketing-calendar-preview[data-booked='true'] .marketing-calendar-next {
+  color: var(--link-ink);
+  font-weight: 650;
+}
+.marketing-calendar-preview > p.marketing-calendar-month {
+  margin: 12px 0 0;
+}
+.marketing-story-demo {
+  min-width: 0;
+}
+.marketing-story-demo > .marketing-demo-actions {
+  margin-top: 14px;
+}
+.marketing-calendar-event strong {
+  display: block;
+  min-height: 2.8em;
+  line-height: 1.4;
+}
+.marketing-calendar-next {
+  min-height: 32px;
+}
