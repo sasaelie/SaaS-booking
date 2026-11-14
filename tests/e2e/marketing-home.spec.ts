@@ -51,10 +51,10 @@ test('keeps the sales page concise with simple offers and no repeated photo or s
   ).toHaveCount(0);
   await expect(page.getByRole('slider')).toHaveCount(0);
   await expect(page.locator('.marketing-stage-photo, .marketing-price-float')).toHaveCount(0);
-  for (const card of await page.locator('.commercial-plan-card').all())
-    expect(await card.evaluate((element) => getComputedStyle(element, '::after').content)).toBe(
-      'none',
-    );
+  await expect(page.locator('.marketing-offer')).toHaveCount(2);
+  await expect(
+    page.locator('.marketing-comparison, .marketing-annual-saving, .marketing-pricing-note'),
+  ).toHaveCount(0);
 });
 test('keeps SEO content and essential navigation available without JavaScript', async ({
   browser,
@@ -70,8 +70,6 @@ test('keeps SEO content and essential navigation available without JavaScript', 
       .click();
     await expect(page).toHaveURL('/inscription?formule=pro');
     await page.goto('/');
-    await page.locator('.commercial-comparison > summary').click();
-    await expect(page.getByText('Widget pour votre site', { exact: true })).toBeVisible();
     await page.getByRole('contentinfo').getByRole('link', { name: 'Mentions légales' }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Mentions légales');
   } finally {

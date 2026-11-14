@@ -15,8 +15,6 @@ export const MARKETING_PREVIEW = {
   PLAY: 'Reprendre la démonstration',
   AUTO: 'Défilement automatique',
   MONTH: 'Novembre 2026 · exemple',
-  SELECTION_DELAY_MS: 3000,
-  RESULT_DELAY_MS: 5000,
   EXAMPLES: [
     {
       key: 'atelier',
@@ -33,7 +31,7 @@ export const MARKETING_PREVIEW = {
         { label: 'Samedi · 10:00', date: '21', fullDate: 'Samedi 21 novembre 2026', end: '12:00' },
         { label: 'Samedi · 14:00', date: '21', fullDate: 'Samedi 21 novembre 2026', end: '16:00' },
       ],
-      availability: '4 places disponibles',
+      capacity: 5,
     },
     {
       key: 'soins',
@@ -50,7 +48,7 @@ export const MARKETING_PREVIEW = {
         { label: 'Mardi · 09:00', date: '17', fullDate: 'Mardi 17 novembre 2026', end: '10:00' },
         { label: 'Mardi · 11:00', date: '17', fullDate: 'Mardi 17 novembre 2026', end: '12:00' },
       ],
-      availability: '1 place disponible',
+      capacity: 1,
     },
     {
       key: 'sport',
@@ -72,7 +70,7 @@ export const MARKETING_PREVIEW = {
         },
         { label: 'Samedi · 09:00', date: '21', fullDate: 'Samedi 21 novembre 2026', end: '10:00' },
       ],
-      availability: '3 places disponibles',
+      capacity: 4,
     },
   ],
 } as const;

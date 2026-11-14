@@ -1,5 +1,5 @@
 'use client';
-import type { ReactNode, SyntheticEvent } from 'react';
+import type { ReactNode } from 'react';
 import { MARKETING_PREVIEW as UI } from '../../config/marketing-preview';
 import { useMarketingDemo } from './MarketingDemo';
 export function DemoRegion({
@@ -9,27 +9,20 @@ export function DemoRegion({
   readonly children: ReactNode;
   readonly className: string;
 }) {
-  const { dispatch } = useMarketingDemo();
-  const pause = (event: SyntheticEvent<HTMLElement>) => {
-    if (!(event.target instanceof Element) || !event.target.closest('[data-demo-playback]'))
-      dispatch({ type: 'pause' });
-  };
+  const { state, running } = useMarketingDemo();
   return (
-    <div
-      className={className}
-      data-booking-demo=""
-      onPointerDownCapture={pause}
-      onFocusCapture={pause}
-    >
+    <div className={className} data-booking-demo="" data-phase={state.phase} data-running={running}>
       {children}
     </div>
   );
 }
 export function DemoPlayback() {
-  const { state, dispatch } = useMarketingDemo();
+  const { state, dispatch, scene } = useMarketingDemo();
   return (
     <div className="marketing-demo-actions">
-      <span>{UI.AUTO}</span>
+      <span>
+        {scene.actor} · <strong>{scene.label}</strong>
+      </span>
       <button
         type="button"
         data-demo-playback=""

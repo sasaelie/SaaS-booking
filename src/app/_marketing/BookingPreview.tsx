@@ -7,9 +7,11 @@ import { formatMoney } from '../_ui/format-money';
 import { DemoPlayback, DemoRegion } from './DemoControls';
 import { useMarketingDemo } from './MarketingDemo';
 import { MARKETING_VISUALS } from '../../config/marketing-visuals';
+import { MARKETING_DEMO } from '../../config/marketing-demo';
+import { DemoDraft } from './DemoDraft';
 type Example = (typeof UI.EXAMPLES)[number];
 export function BookingPreview({ connected }: { readonly connected: boolean }) {
-  const { example, session, dispatch } = useMarketingDemo();
+  const { example, session, dispatch, state } = useMarketingDemo();
   return (
     <DemoRegion className="marketing-preview-wrap">
       <div className="marketing-preview-caption">
@@ -23,24 +25,32 @@ export function BookingPreview({ connected }: { readonly connected: boolean }) {
           onSelect={(item) => dispatch({ type: 'example', index: UI.EXAMPLES.indexOf(item) })}
         />
         <PreviewActivity example={example} />
-        <PreviewSessions
-          example={example}
-          selected={session.label}
-          onSelect={(index) => dispatch({ type: 'session', index })}
-        />
-        <PreviewActions connected={connected} />
+        <div className="marketing-preview-flow">
+          {state.phase === 'draft' ? (
+            <DemoDraft />
+          ) : (
+            <>
+              <PreviewSessions
+                example={example}
+                selected={session.label}
+                onSelect={(index) => dispatch({ type: 'session', index })}
+              />
+              <PreviewActions connected={connected} />
+            </>
+          )}
+        </div>
       </div>
       <p className="marketing-preview-note">{UI.FICTION}</p>
     </DemoRegion>
   );
 }
 function PreviewActions({ connected }: { readonly connected: boolean }) {
-  const { state, session, dispatch } = useMarketingDemo();
+  const { state, session, dispatch, booked } = useMarketingDemo();
   return (
     <>
       <p className="ice-sr-only" role="status" aria-live={state.playing ? 'off' : 'polite'}>
         {UI.SELECTED} : {session.label}
-        {state.booked ? ` · ${UI.SIMULATED}` : ''}
+        {booked ? ` · ${UI.SIMULATED}` : ''}
       </p>
       <button
         type="button"
@@ -124,6 +134,8 @@ function PreviewSwitch({
   );
 }
 function PreviewActivity({ example }: { readonly example: Example }) {
+  const { booked } = useMarketingDemo();
+  const available = example.capacity - (booked ? 1 : 0);
   return (
     <>
       <div className="marketing-preview-identity">
@@ -153,7 +165,7 @@ function PreviewActivity({ example }: { readonly example: Example }) {
       </div>
       <p className="marketing-preview-availability">
         <span aria-hidden="true" />
-        {example.availability}
+        {available} {available === 1 ? MARKETING_DEMO.PLACE : MARKETING_DEMO.PLACES}
       </p>
     </>
   );

@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-916 fichiers versionnés ou préparés dans cette branche, dont 633 sous `src/`.
+922 fichiers versionnés ou préparés dans cette branche, dont 638 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
 
@@ -63,6 +63,7 @@ docs/accueil-commercial/CORRECTIONS-AVANT-ETUDE.md
 docs/accueil-commercial/ETUDE-PAGES-VENTE.md
 docs/accueil-commercial/MISE-EN-LIGNE.md
 docs/accueil-commercial/MISE-EN-SCENE-VISUELLE.md
+docs/accueil-commercial/SCENARIO-AUTONOME.md
 docs/accueil-commercial/VERIFICATIONS.md
 docs/audit-actions/inventaire.json
 docs/audit-global/preuves.json
@@ -336,6 +337,7 @@ src/app/_auth/use-auth-form.ts
 src/app/_marketing/BookingPreview.tsx
 src/app/_marketing/DemoCalendar.tsx
 src/app/_marketing/DemoControls.tsx
+src/app/_marketing/DemoDraft.tsx
 src/app/_marketing/FeatureTile.tsx
 src/app/_marketing/FeatureTiles.tsx
 src/app/_marketing/MarketingDemo.tsx
@@ -344,6 +346,7 @@ src/app/_marketing/MarketingFeatures.tsx
 src/app/_marketing/MarketingFooter.tsx
 src/app/_marketing/MarketingHeader.tsx
 src/app/_marketing/MarketingHero.tsx
+src/app/_marketing/MarketingOffer.tsx
 src/app/_marketing/MarketingPricing.tsx
 src/app/_marketing/PublicIdentity.tsx
 src/app/_marketing/PublicPage.tsx
@@ -364,6 +367,7 @@ src/app/_marketing/marketing-story.css
 src/app/_marketing/marketing.css
 src/app/_marketing/public-metadata.ts
 src/app/_marketing/use-demo-playback.ts
+src/app/_marketing/use-demo-presence.ts
 src/app/_portal/AccessNotice.tsx
 src/app/_portal/ActivityCards.tsx
 src/app/_portal/AdminOperation.tsx
@@ -641,8 +645,10 @@ src/config/env.ts
 src/config/file-signatures.ts
 src/config/http-limits.ts
 src/config/jobs.ts
+src/config/marketing-demo.ts
 src/config/marketing-faq.ts
 src/config/marketing-media.ts
+src/config/marketing-offers.ts
 src/config/marketing-preview.ts
 src/config/marketing-visuals.ts
 src/config/marketing.ts

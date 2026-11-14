@@ -8,25 +8,23 @@ import {
   noHorizontalOverflow,
 } from './portal-fixtures';
 test.afterAll(closeBrowserDatabase);
-test('keeps entire offer cards compact, keyboard accessible and free of nested commands', async ({
+test('shows open offers with visible prices and keyboard accessible choice links', async ({
   page,
 }, info) => {
   for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
-    const cards = page.locator('.commercial-plan-card');
+    const cards = page.locator('.marketing-offer');
     await expect(cards).toHaveCount(2);
-    expect(await cards.locator('button,a,input,summary').count()).toBe(0);
+    expect(await cards.locator('a').count()).toBe(2);
+    expect(await cards.locator('button,input,summary').count()).toBe(0);
     const bounds = await cards.evaluateAll((es) => es.map((e) => e.getBoundingClientRect().height));
-    for (const height of bounds) expect(height).toBeLessThan(320);
+    for (const height of bounds) expect(height).toBeLessThan(450);
     await noHorizontalOverflow(page);
   }
   await page.setViewportSize({ width: 390, height: 900 });
   await page.screenshot({ path: info.outputPath('compact-offers.png'), fullPage: true });
-  await page
-    .locator('.commercial-plan-card')
-    .first()
-    .click({ position: { x: 8, y: 25 } });
+  await page.getByRole('link', { name: 'Choisir Liberté — 0 € par mois', exact: true }).click();
   await expect(page).toHaveURL('/inscription?formule=liberte');
   await page.goto('/');
   const pro = page.getByRole('link', {
@@ -40,13 +38,19 @@ test('keeps entire offer cards compact, keyboard accessible and free of nested c
   await page.getByRole('link', { name: 'Mot de passe oublié ?', exact: true }).click();
   await expect(page).toHaveURL('/mot-de-passe-oublie?formule=pro');
 });
-test('reveals the full comparison separately from the clickable cards', async ({ page }) => {
+test('removes material below the offer choices while preserving clear fee disclosures inside them', async ({
+  page,
+}) => {
   await page.goto('/');
-  const details = page.locator('.commercial-comparison');
-  await expect(details.getByText('Widget pour votre site', { exact: true })).toBeHidden();
-  await details.locator('summary').click();
-  await expect(details.getByText('Widget pour votre site', { exact: true })).toBeVisible();
-  await expect(page).toHaveURL('/');
+  await expect(page.locator('.commercial-comparison')).toHaveCount(0);
+  await expect(
+    page.locator('#tarifs .marketing-annual-saving, #tarifs .marketing-small-print'),
+  ).toHaveCount(0);
+  await expect(page.locator('#tarifs .marketing-offer').nth(1)).toContainText(
+    'frais Stripe à votre charge',
+  );
+  await expect(page.locator('#tarifs .marketing-offer').first()).toContainText('3,5 % + 0,45 €');
+  await expect(page.getByRole('contentinfo')).toBeVisible();
 });
 test('retains the Pro preference after real sign-in and space creation without granting Pro', async ({
   page,

@@ -31,11 +31,6 @@ export const MARKETING = {
   PRICING_TITLE: 'Commencez librement. Évoluez à votre rythme.',
   PRICING_DESCRIPTION:
     'Deux offres, un prix affiché respecté pour vos participants. Le choix d’une formule ne déclenche aucun prélèvement.',
-  PRICING_NOTE:
-    'Liberté : les frais sont déduits de votre prix. Studio Pro : seuls les frais bancaires Stripe réels restent dus pour les paiements en ligne.',
-  YEAR_SAVING: 'de moins par an qu’avec douze mensualités.',
-  BILLING_NOTE:
-    'Tarifs par espace organisateur. Les modalités de facturation et le régime de TVA sont précisés avant tout paiement.',
   FAQ_PAGE_TITLE: 'Questions fréquentes',
   FAQ_PAGE_DESCRIPTION:
     'Les réponses à vos questions sur les réservations, les offres, les paiements et les reports.',

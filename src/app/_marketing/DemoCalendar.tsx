@@ -3,8 +3,9 @@ import { MARKETING_VISUALS as UI } from '../../config/marketing-visuals';
 import { MARKETING_PREVIEW } from '../../config/marketing-preview';
 import { IceIcon } from '../_ui/IceIcon';
 import { useMarketingDemo } from './MarketingDemo';
+import { DemoDraft } from './DemoDraft';
 export function DemoCalendar() {
-  const { example, session, state } = useMarketingDemo();
+  const { state, booked, scene } = useMarketingDemo();
   return (
     <div
       id="demo-planning"
@@ -13,7 +14,8 @@ export function DemoCalendar() {
       aria-describedby="demo-calendar-event demo-calendar-result"
       tabIndex={-1}
       className="portal-panel marketing-calendar-preview"
-      data-booked={state.booked}
+      data-booked={booked}
+      data-phase={state.phase}
     >
       <p>{UI.CALENDAR_LABEL}</p>
       <h3>
@@ -21,20 +23,34 @@ export function DemoCalendar() {
         {UI.CALENDAR_TITLE}
       </h3>
       <p className="marketing-calendar-month">{MARKETING_PREVIEW.MONTH}</p>
-      <CalendarWeek />
-      <div className="marketing-calendar-event" id="demo-calendar-event">
-        <span aria-hidden="true" />
-        <div>
-          <strong>{example.title}</strong>
-          <p>{session.fullDate}</p>
-          <p>
-            {session.label} – {session.end}
-          </p>
-        </div>
+      <div className="marketing-calendar-stage" id="demo-calendar-event">
+        {state.phase === 'draft' ? (
+          <DemoDraft />
+        ) : (
+          <>
+            <CalendarWeek />
+            <CalendarEvent />
+          </>
+        )}
       </div>
       <div className="marketing-calendar-next" id="demo-calendar-result">
-        <IceIcon name={state.booked ? 'check' : 'clock'} />
-        {state.booked ? MARKETING_PREVIEW.SIMULATED : MARKETING_PREVIEW.PENDING}
+        <IceIcon name={booked ? 'check' : 'clock'} />
+        {scene.status}
+      </div>
+    </div>
+  );
+}
+function CalendarEvent() {
+  const { example, session } = useMarketingDemo();
+  return (
+    <div className="marketing-calendar-event">
+      <span aria-hidden="true" />
+      <div>
+        <strong>{example.title}</strong>
+        <p>{session.fullDate}</p>
+        <p>
+          {session.label} – {session.end}
+        </p>
       </div>
     </div>
   );

@@ -29,13 +29,6 @@
   color: var(--ui-text-secondary);
 }
 @media (max-width: 760px) {
-  .marketing-pricing .commercial-plan-card {
-    padding: 18px;
-    gap: 8px;
-  }
-  .marketing-pricing .commercial-plan-card .commercial-price strong {
-    font-size: 34px;
-  }
   .marketing-faq-list details > p {
     padding-right: 0;
   }

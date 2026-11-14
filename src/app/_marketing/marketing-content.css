@@ -1,47 +1,77 @@
 .marketing-pricing {
   max-width: 980px;
 }
-.marketing-pricing .commercial-plan-grid {
-  gap: 24px;
+.marketing-offers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 72px;
+  margin-top: 48px;
 }
-.marketing-pricing .commercial-plan-card {
-  padding: 22px;
-  gap: 12px;
-  background: color-mix(in srgb, var(--ice-paper) 52%, transparent);
+.marketing-offer {
+  min-width: 0;
+  text-align: center;
 }
-.marketing-pricing .commercial-plan-card h2 {
-  font-family: inherit;
-  letter-spacing: -0.025em;
-  font-size: 22px;
+.marketing-offer-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 14px;
+  color: var(--link-ink);
+  filter: drop-shadow(0 6px 7px var(--glass-shadow));
+}
+.marketing-offer-icon .ice-icon {
+  width: 40px;
+  height: 40px;
+}
+.marketing-offer h3 {
   font-weight: 600;
+  margin: 0 0 14px;
+  font-size: 20px;
 }
-.marketing-pricing .commercial-plan-card .commercial-price strong {
-  font-size: 38px;
+.marketing-offer .marketing-offer-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  line-height: 1.2;
 }
-.marketing-pricing .commercial-plan-card .commercial-plan-fees {
-  font-size: 14px;
+.marketing-offer-price strong {
+  font-size: clamp(3.5rem, 5.5vw, 4.5rem);
+  font-weight: 650;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
 }
-.marketing-pricing .commercial-plan-card .commercial-plan-action {
-  min-height: 36px;
-  color: var(--link-ink);
+.marketing-offer-price > span {
+  font-size: 15px;
 }
-.marketing-pricing-note,
-.marketing-annual-saving {
+.marketing-offer .marketing-offer-annual {
+  margin: 6px 0 0;
   font-size: 13px;
+}
+.marketing-offer .marketing-offer-description {
+  margin: 20px 0 8px;
+  font-size: 16px;
+}
+.marketing-offer .marketing-offer-summary {
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+.marketing-offer .marketing-offer-fees {
+  font-size: 13px;
+  max-width: 34ch;
   color: var(--ui-text-secondary);
+  margin: 8px auto 14px;
 }
-.marketing-annual-saving {
-  margin-block: 8px 24px;
+.marketing-offer > .marketing-text-link {
+  font-size: 15px;
 }
-.marketing-annual-saving strong {
-  color: var(--link-ink);
-}
-.marketing-comparison {
-  margin-top: 24px;
-}
-.marketing-comparison .commercial-price-note {
-  margin-top: 0;
-}
-.marketing-comparison .commercial-comparison > summary {
-  font-size: 14px;
+@media (max-width: 760px) {
+  .marketing-offers {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 64px;
+    margin-top: 36px;
+  }
 }
