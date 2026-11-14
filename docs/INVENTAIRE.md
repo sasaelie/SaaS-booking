@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-902 fichiers versionnés ou préparés dans cette branche, dont 622 sous `src/`.
+913 fichiers versionnés ou préparés dans cette branche, dont 631 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
 
@@ -62,6 +62,7 @@ docs/accueil-commercial/CADRES-ET-PHOTOS.md
 docs/accueil-commercial/CORRECTIONS-AVANT-ETUDE.md
 docs/accueil-commercial/ETUDE-PAGES-VENTE.md
 docs/accueil-commercial/MISE-EN-LIGNE.md
+docs/accueil-commercial/MISE-EN-SCENE-VISUELLE.md
 docs/accueil-commercial/VERIFICATIONS.md
 docs/audit-actions/inventaire.json
 docs/audit-global/preuves.json
@@ -333,17 +334,22 @@ src/app/_auth/session-exit-navigation.ts
 src/app/_auth/sign-out-request.ts
 src/app/_auth/use-auth-form.ts
 src/app/_marketing/BookingPreview.tsx
+src/app/_marketing/FeatureTile.tsx
+src/app/_marketing/FeatureTiles.tsx
 src/app/_marketing/MarketingFaq.tsx
 src/app/_marketing/MarketingFeatures.tsx
 src/app/_marketing/MarketingFooter.tsx
 src/app/_marketing/MarketingHeader.tsx
 src/app/_marketing/MarketingHero.tsx
 src/app/_marketing/MarketingPricing.tsx
+src/app/_marketing/PreviewStage.tsx
 src/app/_marketing/PublicIdentity.tsx
 src/app/_marketing/PublicPage.tsx
 src/app/_marketing/PublicStructuredData.tsx
 src/app/_marketing/SavingsIllustration.tsx
+src/app/_marketing/StoryPreview.tsx
 src/app/_marketing/marketing-content.css
+src/app/_marketing/marketing-feature-tiles.css
 src/app/_marketing/marketing-footer.css
 src/app/_marketing/marketing-glass.css
 src/app/_marketing/marketing-hero.css
@@ -351,6 +357,9 @@ src/app/_marketing/marketing-layout.css
 src/app/_marketing/marketing-preview-controls.css
 src/app/_marketing/marketing-preview.css
 src/app/_marketing/marketing-pricing-faq.css
+src/app/_marketing/marketing-pricing-visual.css
+src/app/_marketing/marketing-story.css
+src/app/_marketing/marketing-visual-stage.css
 src/app/_marketing/marketing.css
 src/app/_marketing/public-metadata.ts
 src/app/_portal/AccessNotice.tsx
@@ -633,6 +642,7 @@ src/config/jobs.ts
 src/config/marketing-faq.ts
 src/config/marketing-media.ts
 src/config/marketing-preview.ts
+src/config/marketing-visuals.ts
 src/config/marketing.ts
 src/config/navigation.ts
 src/config/participant-navigation.ts
@@ -808,6 +818,7 @@ tests/e2e/layout-coherence.spec.ts
 tests/e2e/marketing-accessibility.spec.ts
 tests/e2e/marketing-home.spec.ts
 tests/e2e/marketing-search.spec.ts
+tests/e2e/marketing-visuals.spec.ts
 tests/e2e/navigation-hierarchy.spec.ts
 tests/e2e/organization-link.spec.ts
 tests/e2e/organizer-service.spec.ts

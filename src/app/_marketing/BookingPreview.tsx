@@ -5,39 +5,43 @@ import { useState } from 'react';
 import { MARKETING_PREVIEW as UI } from '../../config/marketing-preview';
 import { IceIcon } from '../_ui/IceIcon';
 import { formatMoney } from '../_ui/format-money';
+import { PreviewStage } from './PreviewStage';
+import { MARKETING_VISUALS } from '../../config/marketing-visuals';
 type Example = (typeof UI.EXAMPLES)[number];
 export function BookingPreview({ connected }: { readonly connected: boolean }) {
   const [example, setExample] = useState<Example>(UI.EXAMPLES[0]);
   const [session, setSession] = useState<string>(example.sessions[0]);
   return (
-    <div className="marketing-preview-wrap">
-      <div className="marketing-preview-caption">
-        <span>{UI.LABEL}</span>
-        <IceIcon name="arrow" />
-      </div>
-      <div className="portal-panel marketing-preview">
-        <PreviewSwitch
-          selected={example.key}
-          onSelect={(item) => {
-            setExample(item);
-            setSession(item.sessions[0]);
-          }}
-        />
-        <PreviewActivity example={example} />
-        <PreviewSessions example={example} selected={session} onSelect={setSession} />
-        <p className="ice-sr-only" role="status">
-          {UI.SELECTED} : {session}
-        </p>
-        <Link
-          className="liquid-ice-button portal-button marketing-preview-cta"
-          href={connected ? '/app' : '/inscription'}
-        >
-          {connected ? UI.CONNECTED_ACTION : UI.ACTION}
+    <PreviewStage image={example.image}>
+      <div className="marketing-preview-wrap">
+        <div className="marketing-preview-caption">
+          <span>{UI.LABEL}</span>
           <IceIcon name="arrow" />
-        </Link>
+        </div>
+        <div className="portal-panel marketing-preview">
+          <PreviewSwitch
+            selected={example.key}
+            onSelect={(item) => {
+              setExample(item);
+              setSession(item.sessions[0]);
+            }}
+          />
+          <PreviewActivity example={example} />
+          <PreviewSessions example={example} selected={session} onSelect={setSession} />
+          <p className="ice-sr-only" role="status">
+            {UI.SELECTED} : {session}
+          </p>
+          <Link
+            className="liquid-ice-button portal-button marketing-preview-cta"
+            href={connected ? '/app' : '/inscription'}
+          >
+            {connected ? UI.CONNECTED_ACTION : UI.ACTION}
+            <IceIcon name="arrow" />
+          </Link>
+        </div>
+        <p className="marketing-preview-note">{UI.FICTION}</p>
       </div>
-      <p className="marketing-preview-note">{UI.FICTION}</p>
-    </div>
+    </PreviewStage>
   );
 }
 function PreviewSessions({
@@ -110,7 +114,7 @@ function PreviewActivity({ example }: { readonly example: Example }) {
           alt=""
           fill
           loading="eager"
-          sizes="(max-width: 760px) 380px, 440px"
+          sizes={MARKETING_VISUALS.IMAGE_SIZES}
         />
         <p className="marketing-preview-tag">{example.tag}</p>
         <h2>{example.title}</h2>

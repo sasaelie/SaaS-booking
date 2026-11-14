@@ -1,27 +1,3 @@
-.marketing-steps {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 44px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.marketing-step-number {
-  display: block;
-  border-top: 1px solid var(--ice-line);
-  padding-top: 22px;
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  color: var(--link-ink);
-}
-.marketing-steps h3 {
-  margin: 18px 0 12px;
-}
-.marketing-steps p {
-  color: var(--ui-text-secondary);
-  font-size: 14px;
-  margin: 0;
-}
 .marketing-pricing {
   max-width: 980px;
 }

@@ -1,0 +1,110 @@
+.marketing-visual-stage {
+  position: relative;
+  min-width: 0;
+  width: min(100%, 440px);
+  margin-inline: auto;
+  padding-top: 18px;
+}
+.marketing-stage-photo {
+  position: relative;
+  height: 238px;
+  width: calc(100% - 28px);
+  margin-left: 28px;
+  overflow: hidden;
+  border-radius: 24px;
+  box-shadow: 0 20px 38px -20px var(--interaction-shadow);
+}
+.marketing-stage-photo img {
+  object-fit: cover;
+}
+.marketing-price-float {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 10px;
+  display: grid;
+  width: 170px;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid var(--glass-edge-light);
+  border-radius: 18px;
+  background: var(--ice-scene);
+  color: var(--ui-text-primary);
+  box-shadow: var(--glass-frame-shadow);
+  text-decoration: none;
+  transition: transform 180ms var(--spring-easing);
+}
+.marketing-price-float:hover {
+  transform: translateY(-3px);
+}
+.marketing-price-float > span:first-child {
+  font-size: 12px;
+  font-weight: 650;
+}
+.marketing-price-float strong {
+  font-size: 42px;
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+}
+.marketing-price-float small {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.marketing-price-float > span:nth-of-type(2) {
+  max-width: 21ch;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.marketing-price-float > .ice-icon {
+  position: absolute;
+  right: 14px;
+  bottom: 17px;
+  width: 16px;
+  height: 16px;
+}
+.marketing-stage-front {
+  position: relative;
+  width: calc(100% - 24px);
+  margin-top: -72px;
+}
+.marketing-stage-front .marketing-preview-caption {
+  width: fit-content;
+  max-width: calc(100% - 12px);
+  gap: 12px;
+  padding: 7px 10px;
+  margin-left: 8px;
+  border-radius: 10px;
+  background: var(--ice-paper);
+}
+.marketing-stage-front .marketing-preview.portal-panel {
+  box-shadow:
+    var(--glass-frame-shadow),
+    0 24px 48px -32px var(--interaction-shadow);
+}
+@media (min-width: 761px) {
+  .marketing-hero {
+    align-items: start;
+  }
+}
+@media (max-width: 760px) {
+  .marketing-visual-stage {
+    margin-top: 8px;
+  }
+  .marketing-stage-photo {
+    height: 224px;
+    width: calc(100% - 18px);
+    margin-left: 18px;
+  }
+  .marketing-stage-front {
+    width: calc(100% - 12px);
+    margin-top: -66px;
+  }
+  .marketing-price-float {
+    right: 0;
+    width: 158px;
+    padding: 14px 16px;
+  }
+}

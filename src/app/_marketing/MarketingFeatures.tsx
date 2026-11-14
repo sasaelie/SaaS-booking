@@ -1,4 +1,6 @@
-import { MARKETING as UI } from '../../config/marketing';
+import { MARKETING_VISUALS as UI } from '../../config/marketing-visuals';
+import { StoryPreview } from './StoryPreview';
+import { FeatureTiles } from './FeatureTiles';
 export function MarketingWorkflow() {
   return (
     <section
@@ -7,20 +9,14 @@ export function MarketingWorkflow() {
       aria-labelledby="fonctionnement-titre"
     >
       <div className="marketing-section-heading">
-        <p className="marketing-eyebrow">{UI.WORKFLOW_EYEBROW}</p>
-        <h2 id="fonctionnement-titre">{UI.WORKFLOW_TITLE}</h2>
+        <p className="marketing-eyebrow">{UI.STORY_EYEBROW}</p>
+        <h2 id="fonctionnement-titre">{UI.STORY_TITLE}</h2>
+        <p>{UI.STORY_INTRO}</p>
       </div>
-      <ol className="marketing-steps">
-        {UI.STEPS.map((step) => (
-          <li key={step.number}>
-            <span className="marketing-step-number" aria-hidden="true">
-              {step.number}
-            </span>
-            <h3>{step.title}</h3>
-            <p>{step.text}</p>
-          </li>
-        ))}
-      </ol>
+      <div className="marketing-product-story">
+        <StoryPreview />
+        <FeatureTiles />
+      </div>
     </section>
   );
 }
