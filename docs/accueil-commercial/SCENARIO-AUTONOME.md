@@ -16,10 +16,10 @@ Aucune bibliothèque d’animation, vidéo préenregistrée, intelligence artifi
 
 | Étape | Acteur représenté | Ce qui est visible | Durée |
 | --- | --- | --- | --- |
-| Création | Organisateur | Le nom, l’horaire, la capacité et le tarif se remplissent dans une fiche de préparation | 2,4 s |
-| Publication | Organisateur | Les séances sont proposées au client et apparaissent dans le calendrier | 1,8 s |
-| Sélection | Client | Le second horaire est sélectionné ; le jour et l’heure du calendrier correspondent | 1,8 s |
-| Confirmation | Organisateur | Le planning reçoit une réservation simulée d’une place et les disponibilités diminuent d’une place | 3,2 s |
+| Création | Organisateur | Le nom, l’horaire, la capacité et le tarif se remplissent dans une fiche de préparation | 3,2 s |
+| Publication | Organisateur | Les séances sont proposées au client et apparaissent dans le calendrier | 2,6 s |
+| Sélection | Client | Le second horaire est sélectionné ; le jour et l’heure du calendrier correspondent | 2,6 s |
+| Confirmation | Organisateur | Le planning reçoit une réservation simulée d’une place et les disponibilités diminuent d’une place | 4 s |
 
 La séquence passe ensuite à l’activité suivante : Ateliers, Soins, Sport, puis recommence. Les données restent explicitement fictives. Les capacités de démonstration sont cohérentes entre création et réservation : 5 vers 4 places disponibles, 1 vers 0, puis 4 vers 3.
 
@@ -33,7 +33,7 @@ Les liens conservent le choix Liberté ou Pro dans les parcours d’inscription 
 
 ## Vérification locale
 
-Les 28 scénarios navigateur ciblés sont validés. Ils parcourent les quatre états sur les trois activités sans aucun clic sur Play ni requête POST, vérifient les heures et les places restantes, confirment qu’un toucher du calendrier n’arrête pas la lecture et contrôlent sa reprise après un passage hors écran. Les pauses volontaires restent actives. Les liens des deux offres, le parcours de connexion et les contrôles d’accessibilité passent également.
+La revue initiale a validé 28 scénarios navigateur ciblés. Ils parcourent les quatre états sur les trois activités sans aucun clic sur Play ni requête POST, vérifient les heures et les places restantes, confirment qu’un toucher du calendrier n’arrête pas la lecture et contrôlent sa reprise après un passage hors écran. Les pauses volontaires restent actives. Les liens des deux offres, le parcours de connexion et les contrôles d’accessibilité passent également.
 
 TypeScript, ESLint, 126 tests unitaires et la construction optimisée Next.js sont également validés. Les écrans sont vérifiés à 320, 390, 768 et 1440 px ; la comparaison des formules et le choix annuel restent disponibles dans l’espace organisateur.
 
@@ -43,7 +43,7 @@ Deux contrôles historiques du comparateur ont aussi été validés dans la page
 
 ## Fondus synchronisés
 
-Les changements automatiques suivent un fondu de sortie de 120 ms, puis un fondu d’entrée de 180 ms. Le contenu est remplacé après la sortie : l’aperçu participant, sa photo, les textes d’étape et la composition photo/planning utilisent le même état de transition. Les commandes de pause et de choix restent visibles. Les fondus font partie du temps d’affichage des étapes, dont le cycle complet dure environ neuf secondes.
+Les changements automatiques suivent un fondu de sortie de 450 ms, puis un fondu d’entrée de 650 ms, avec une courbe `ease-in-out` des deux côtés. La transition complète dure donc 1,1 seconde : les durées précédentes de 120 et 180 ms produisaient un effet de clignotement. Le contenu est remplacé après la sortie : l’aperçu participant, sa photo, les textes d’étape et la composition photo/planning utilisent le même état de transition. Les commandes de pause et de choix restent visibles. Les fondus font partie du temps d’affichage des étapes, dont le cycle complet dure environ 12,4 secondes. Les étapes ont été prolongées de 800 ms pour conserver leur temps de lecture stable malgré les fondus plus longs.
 
 Le bouton Pause ou une suspension de visibilité annule la transition en cours et rétablit la visibilité du contenu. La réduction des animations désactive les fondus CSS tout en conservant le déroulement automatique. Les champs de préparation apparaissent aussi en fondu court, avec un décalage de 60 ms entre champs, sans révélation saccadée des caractères.
 
@@ -58,3 +58,5 @@ La synchronisation attend désormais les promesses `Animation.finished` de toute
 Les tests figent volontairement les animations et vérifient que même un dépassement du délai théorique ne remplace pas le contenu ; ils terminent ensuite les animations réelles pour autoriser le changement. La mesure après correction montre une opacité nulle avant chaque remplacement observé sur les deux largeurs. Aucune image en retard ni erreur JavaScript n’a été détectée. Le déplacement de mise en page observé sur le cycle complet est négligeable (CLS environ 0,0006 sur mobile et 0,0002 sur ordinateur).
 
 Avis visuel : la disparition de toute la composition à chaque petite étape reste plus marquée qu’une animation réservée aux informations qui changent. Garder la photo et le cadre stables entre les étapes, avec un fondu complet au changement d’activité, serait une amélioration de mise en scène distincte.
+
+Après le retour utilisateur signalant un clignotement, les fondus ont été allongés à 450/650 ms sans changer la composition. Les sept parcours ciblés du scénario et des fondus, les 126 tests unitaires, TypeScript, ESLint et la construction optimisée passent. Une nouvelle capture en temps réel vérifie ces durées, la synchronisation et le chargement des images ; le temps de lecture stable de chaque étape reste conservé.

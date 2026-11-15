@@ -106,10 +106,10 @@
   }
 }
 .marketing-demo-fade[data-demo-fade='out'] {
-  animation: demo-fade-out var(--demo-fade-out) ease-in both;
+  animation: demo-fade-out var(--demo-fade-out) ease-in-out both;
 }
 .marketing-demo-fade[data-demo-fade='in'] {
-  animation: demo-fade-in var(--demo-fade-in) ease-out both;
+  animation: demo-fade-in var(--demo-fade-in) ease-in-out both;
 }
 @keyframes demo-fade-out {
   from {
