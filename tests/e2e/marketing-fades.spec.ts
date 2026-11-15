@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { MARKETING_DEMO as DEMO } from '../../src/config/marketing-demo';
-import { advanceDemoPhase } from './marketing-demo-clock';
+import { advanceDemoPhase, finishDemoFade, holdDemoAnimations } from './marketing-demo-clock';
 test('fades the old example out before changing photo and calendar, then fades the new example in', async ({
   page,
 }) => {
@@ -22,7 +22,9 @@ test('fades the old example out before changing photo and calendar, then fades t
     expect(value).toBeGreaterThan(0);
     expect(value).toBeLessThan(1);
   }
-  await page.clock.runFor(DEMO.FADE_OUT_MS + 1);
+  await page.clock.runFor(DEMO.FADE_OUT_MS * 4);
+  await expect(page.locator('.marketing-preview-wrap')).toHaveAttribute('data-phase', 'booked');
+  await finishDemoFade(page);
   await expect(page.locator('.marketing-preview-wrap')).toHaveAttribute('data-transition', 'in');
   await expect(
     page.getByRole('heading', { name: 'Votre moment de soin', exact: true }),
@@ -34,18 +36,16 @@ test('fades the old example out before changing photo and calendar, then fades t
     expect(value).toBeGreaterThan(0);
     expect(value).toBeLessThan(1);
   }
-  await page.clock.runFor(DEMO.FADE_IN_MS + 1);
+  await finishDemoFade(page);
   await expect(page.locator('.marketing-preview-wrap')).toHaveAttribute('data-transition', 'idle');
-  for (const value of await page
-    .locator('.marketing-demo-fade')
-    .evaluateAll((es) => es.map((e) => Number(getComputedStyle(e).opacity))))
-    expect(value).toBe(1);
+  await expectFullVisibility(page);
 });
 test('restores full visibility when paused during an exit and disables fades for reduced motion', async ({
   page,
 }) => {
   await page.clock.install();
   await page.goto('/');
+  await holdDemoAnimations(page);
   const preview = page.locator('.marketing-preview-wrap');
   await preview.scrollIntoViewIfNeeded();
   await page.clock.runFor(100);
@@ -55,14 +55,12 @@ test('restores full visibility when paused during an exit and disables fades for
   await expect(preview).toHaveAttribute('data-transition', 'idle');
   await page.clock.runFor(20000);
   await expect(preview).toHaveAttribute('data-phase', 'draft');
-  for (const value of await page
-    .locator('.marketing-demo-fade')
-    .evaluateAll((es) => es.map((e) => Number(getComputedStyle(e).opacity))))
-    expect(value).toBe(1);
+  await expectFullVisibility(page);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await preview.getByRole('button', { name: 'Reprendre la démonstration', exact: true }).click();
-  await page.clock.runFor(DEMO.STEPS[0].delayMs - DEMO.FADE_OUT_MS - DEMO.FADE_IN_MS + 50);
-  await expect(preview).toHaveAttribute('data-transition', 'out');
+  await page.clock.runFor(DEMO.STEPS[0].delayMs + 50);
+  await expect(preview).toHaveAttribute('data-phase', 'published');
+  await expect(preview).toHaveAttribute('data-transition', 'idle');
   for (const element of await page.locator('.marketing-demo-fade').all()) {
     await expect(element).toHaveCSS('animation-name', 'none');
     await expect(element).toHaveCSS('opacity', '1');
@@ -80,4 +78,11 @@ async function fadeOpacity(page: Page, time: number) {
       }),
     time,
   );
+}
+
+async function expectFullVisibility(page: Page) {
+  const values = await page
+    .locator('.marketing-demo-fade')
+    .evaluateAll((es) => es.map((e) => Number(getComputedStyle(e).opacity)));
+  for (const value of values) expect(value).toBe(1);
 }

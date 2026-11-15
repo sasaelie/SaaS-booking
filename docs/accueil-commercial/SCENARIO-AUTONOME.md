@@ -48,3 +48,13 @@ Les changements automatiques suivent un fondu de sortie de 120 ms, puis un fondu
 Le bouton Pause ou une suspension de visibilité annule la transition en cours et rétablit la visibilité du contenu. La réduction des animations désactive les fondus CSS tout en conservant le déroulement automatique. Les champs de préparation apparaissent aussi en fondu court, avec un décalage de 60 ms entre champs, sans révélation saccadée des caractères.
 
 La photo de l’activité suivante est préchargée à faible priorité via les mêmes URL optimisées Next.js et les mêmes dimensions que les images affichées. Deux tests dédiés contrôlent l’opacité de sortie et d’entrée des quatre zones synchronisées, le remplacement du contenu entre les deux, la pause pendant la sortie et la réduction des animations.
+
+## Revue visuelle en temps réel
+
+Une capture de cycles complets en Chromium, à 390 et 1440 px, a révélé un décalage que le contrôle des seules durées ne détectait pas : le changement de contenu pouvait arriver pendant que le navigateur affichait encore une partie du contenu sortant. Les départs effectifs des animations CSS peuvent être décalés par rapport aux minuteurs JavaScript.
+
+La synchronisation attend désormais les promesses `Animation.finished` de toutes les zones animées. Le nouveau contenu apparaît après leur sortie complète, puis la prochaine étape attend aussi la fin de l’entrée. Une annulation, une pause, une navigation ou une suspension de visibilité neutralise les callbacks en attente. Sans animation CSS, notamment en mode de réduction des animations, les étapes passent directement à leur état stable.
+
+Les tests figent volontairement les animations et vérifient que même un dépassement du délai théorique ne remplace pas le contenu ; ils terminent ensuite les animations réelles pour autoriser le changement. La mesure après correction montre une opacité nulle avant chaque remplacement observé sur les deux largeurs. Aucune image en retard ni erreur JavaScript n’a été détectée. Le déplacement de mise en page observé sur le cycle complet est négligeable (CLS environ 0,0006 sur mobile et 0,0002 sur ordinateur).
+
+Avis visuel : la disparition de toute la composition à chaque petite étape reste plus marquée qu’une animation réservée aux informations qui changent. Garder la photo et le cadre stables entre les étapes, avec un fondu complet au changement d’activité, serait une amélioration de mise en scène distincte.

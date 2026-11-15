@@ -41,7 +41,7 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
     case 'settle':
       return state.transition === 'idle' ? state : { ...state, transition: 'idle' };
     case 'advance':
-      return advanceDemo(state);
+      return state.transition === 'out' ? advanceDemo(state) : state;
   }
 }
 function advanceDemo(state: DemoState): DemoState {
