@@ -4,6 +4,7 @@ import { MARKETING_PREVIEW as UI } from '../../config/marketing-preview';
 import { INITIAL_DEMO, demoReducer, type DemoAction, type DemoState } from './demo-state';
 import { useDemoPlayback } from './use-demo-playback';
 import { MARKETING_DEMO } from '../../config/marketing-demo';
+import { useDemoImages } from './use-demo-images';
 const DemoContext = createContext<{
   readonly state: DemoState;
   readonly dispatch: Dispatch<DemoAction>;
@@ -11,6 +12,7 @@ const DemoContext = createContext<{
 } | null>(null);
 export function MarketingDemo({ children }: { readonly children: ReactNode }) {
   const [state, dispatch] = useReducer(demoReducer, INITIAL_DEMO);
+  useDemoImages(state.exampleIndex);
   const running = useDemoPlayback(state, dispatch);
   return (
     <DemoContext.Provider value={{ state, dispatch, running }}>{children}</DemoContext.Provider>

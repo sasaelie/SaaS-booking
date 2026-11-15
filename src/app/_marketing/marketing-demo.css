@@ -81,16 +81,16 @@
   border-bottom: 1px solid var(--ice-line);
   font-size: 12px;
   line-height: 1.4;
-  animation: demo-field-fill 500ms steps(12, end) both;
+  animation: demo-field-fill 180ms ease-out both;
 }
 .marketing-demo-draft dl > div:nth-child(2) dd {
-  animation-delay: 400ms;
+  animation-delay: 60ms;
 }
 .marketing-demo-draft dl > div:nth-child(3) dd {
-  animation-delay: 800ms;
+  animation-delay: 120ms;
 }
 .marketing-demo-draft dl > div:nth-child(4) dd {
-  animation-delay: 1200ms;
+  animation-delay: 180ms;
 }
 .marketing-demo-draft > p {
   font-size: 11px;
@@ -99,9 +99,31 @@
 }
 @keyframes demo-field-fill {
   from {
-    clip-path: inset(0 100% 0 0);
+    opacity: 0;
   }
   to {
-    clip-path: inset(0);
+    opacity: 1;
+  }
+}
+.marketing-demo-fade[data-demo-fade='out'] {
+  animation: demo-fade-out var(--demo-fade-out) ease-in both;
+}
+.marketing-demo-fade[data-demo-fade='in'] {
+  animation: demo-fade-in var(--demo-fade-in) ease-out both;
+}
+@keyframes demo-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes demo-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

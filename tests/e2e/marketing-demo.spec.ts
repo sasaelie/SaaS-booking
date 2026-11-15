@@ -1,6 +1,7 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { MARKETING_PREVIEW as UI } from '../../src/config/marketing-preview';
-import { MARKETING_DEMO as DEMO, type DemoPhase } from '../../src/config/marketing-demo';
+import { MARKETING_DEMO as DEMO } from '../../src/config/marketing-demo';
+import { advanceDemoPhase as advance } from './marketing-demo-clock';
 test('runs creation, publication, client selection and booking on its own without a Play click or server writes', async ({
   page,
 }) => {
@@ -132,8 +133,3 @@ test('continues after a touch on the calendar and restarts from offscreen with r
     await context.close();
   }
 });
-async function advance(page: Page, phase: DemoPhase) {
-  const scene = DEMO.STEPS.find((step) => step.key === phase);
-  expect(scene).toBeDefined();
-  await page.clock.runFor((scene?.delayMs ?? 0) + 100);
-}

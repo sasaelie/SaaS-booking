@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-922 fichiers versionnés ou préparés dans cette branche, dont 638 sous `src/`.
+925 fichiers versionnés ou préparés dans cette branche, dont 639 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
 
@@ -366,6 +366,7 @@ src/app/_marketing/marketing-pricing-faq.css
 src/app/_marketing/marketing-story.css
 src/app/_marketing/marketing.css
 src/app/_marketing/public-metadata.ts
+src/app/_marketing/use-demo-images.ts
 src/app/_marketing/use-demo-playback.ts
 src/app/_marketing/use-demo-presence.ts
 src/app/_portal/AccessNotice.tsx
@@ -824,7 +825,9 @@ tests/e2e/journey-recovery.spec.ts
 tests/e2e/layout-assertions.ts
 tests/e2e/layout-coherence.spec.ts
 tests/e2e/marketing-accessibility.spec.ts
+tests/e2e/marketing-demo-clock.ts
 tests/e2e/marketing-demo.spec.ts
+tests/e2e/marketing-fades.spec.ts
 tests/e2e/marketing-home.spec.ts
 tests/e2e/marketing-search.spec.ts
 tests/e2e/marketing-visuals.spec.ts

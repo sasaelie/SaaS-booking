@@ -24,20 +24,22 @@ export function BookingPreview({ connected }: { readonly connected: boolean }) {
           selected={example.key}
           onSelect={(item) => dispatch({ type: 'example', index: UI.EXAMPLES.indexOf(item) })}
         />
-        <PreviewActivity example={example} />
-        <div className="marketing-preview-flow">
-          {state.phase === 'draft' ? (
-            <DemoDraft />
-          ) : (
-            <>
-              <PreviewSessions
-                example={example}
-                selected={session.label}
-                onSelect={(index) => dispatch({ type: 'session', index })}
-              />
-              <PreviewActions connected={connected} />
-            </>
-          )}
+        <div className="marketing-demo-fade" data-demo-fade={state.transition}>
+          <PreviewActivity example={example} />
+          <div className="marketing-preview-flow">
+            {state.phase === 'draft' ? (
+              <DemoDraft />
+            ) : (
+              <>
+                <PreviewSessions
+                  example={example}
+                  selected={session.label}
+                  onSelect={(index) => dispatch({ type: 'session', index })}
+                />
+                <PreviewActions connected={connected} />
+              </>
+            )}
+          </div>
         </div>
       </div>
       <p className="marketing-preview-note">{UI.FICTION}</p>

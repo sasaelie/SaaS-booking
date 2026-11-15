@@ -16,10 +16,10 @@ Aucune bibliothèque d’animation, vidéo préenregistrée, intelligence artifi
 
 | Étape | Acteur représenté | Ce qui est visible | Durée |
 | --- | --- | --- | --- |
-| Création | Organisateur | Le nom, l’horaire, la capacité et le tarif se remplissent dans une fiche de préparation | 2,8 s |
-| Publication | Organisateur | Les séances sont proposées au client et apparaissent dans le calendrier | 2,2 s |
-| Sélection | Client | Le second horaire est sélectionné ; le jour et l’heure du calendrier correspondent | 2,2 s |
-| Confirmation | Organisateur | Le planning reçoit une réservation simulée d’une place et les disponibilités diminuent d’une place | 4 s |
+| Création | Organisateur | Le nom, l’horaire, la capacité et le tarif se remplissent dans une fiche de préparation | 2,4 s |
+| Publication | Organisateur | Les séances sont proposées au client et apparaissent dans le calendrier | 1,8 s |
+| Sélection | Client | Le second horaire est sélectionné ; le jour et l’heure du calendrier correspondent | 1,8 s |
+| Confirmation | Organisateur | Le planning reçoit une réservation simulée d’une place et les disponibilités diminuent d’une place | 3,2 s |
 
 La séquence passe ensuite à l’activité suivante : Ateliers, Soins, Sport, puis recommence. Les données restent explicitement fictives. Les capacités de démonstration sont cohérentes entre création et réservation : 5 vers 4 places disponibles, 1 vers 0, puis 4 vers 3.
 
@@ -33,10 +33,18 @@ Les liens conservent le choix Liberté ou Pro dans les parcours d’inscription 
 
 ## Vérification locale
 
-Les 26 scénarios navigateur ciblés sont validés. Ils parcourent les quatre états sur les trois activités sans aucun clic sur Play ni requête POST, vérifient les heures et les places restantes, confirment qu’un toucher du calendrier n’arrête pas la lecture et contrôlent sa reprise après un passage hors écran. Les pauses volontaires restent actives. Les liens des deux offres, le parcours de connexion et les contrôles d’accessibilité passent également.
+Les 28 scénarios navigateur ciblés sont validés. Ils parcourent les quatre états sur les trois activités sans aucun clic sur Play ni requête POST, vérifient les heures et les places restantes, confirment qu’un toucher du calendrier n’arrête pas la lecture et contrôlent sa reprise après un passage hors écran. Les pauses volontaires restent actives. Les liens des deux offres, le parcours de connexion et les contrôles d’accessibilité passent également.
 
 TypeScript, ESLint, 126 tests unitaires et la construction optimisée Next.js sont également validés. Les écrans sont vérifiés à 320, 390, 768 et 1440 px ; la comparaison des formules et le choix annuel restent disponibles dans l’espace organisateur.
 
-Lighthouse mobile local : performance 96/100, accessibilité 100/100, LCP 0,9 s, CLS 0. Ces mesures de laboratoire ne préjugent pas des résultats en conditions réelles.
+Lighthouse mobile local : performance 100/100, accessibilité 100/100, LCP 0,9 s, CLS 0. Ces mesures de laboratoire ne préjugent pas des résultats en conditions réelles.
 
 Deux contrôles historiques du comparateur ont aussi été validés dans la page d’abonnement organisateur : ils vérifient les 27 catégories, la distinction des disponibilités et le style des liens. Ils ne cherchent plus le comparateur supprimé de la page de vente.
+
+## Fondus synchronisés
+
+Les changements automatiques suivent un fondu de sortie de 120 ms, puis un fondu d’entrée de 180 ms. Le contenu est remplacé après la sortie : l’aperçu participant, sa photo, les textes d’étape et la composition photo/planning utilisent le même état de transition. Les commandes de pause et de choix restent visibles. Les fondus font partie du temps d’affichage des étapes, dont le cycle complet dure environ neuf secondes.
+
+Le bouton Pause ou une suspension de visibilité annule la transition en cours et rétablit la visibilité du contenu. La réduction des animations désactive les fondus CSS tout en conservant le déroulement automatique. Les champs de préparation apparaissent aussi en fondu court, avec un décalage de 60 ms entre champs, sans révélation saccadée des caractères.
+
+La photo de l’activité suivante est préchargée à faible priorité via les mêmes URL optimisées Next.js et les mêmes dimensions que les images affichées. Deux tests dédiés contrôlent l’opacité de sortie et d’entrée des quatre zones synchronisées, le remplacement du contenu entre les deux, la pause pendant la sortie et la réduction des animations.
