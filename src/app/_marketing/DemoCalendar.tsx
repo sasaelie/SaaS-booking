@@ -23,17 +23,12 @@ export function DemoCalendar() {
         {UI.CALENDAR_TITLE}
       </h3>
       <p className="marketing-calendar-month">{MARKETING_PREVIEW.MONTH}</p>
-      <div className="marketing-calendar-stage" id="demo-calendar-event">
-        {state.phase === 'draft' ? (
-          <DemoDraft />
-        ) : (
-          <>
-            <CalendarWeek />
-            <CalendarEvent />
-          </>
-        )}
-      </div>
-      <div className="marketing-calendar-next" id="demo-calendar-result">
+      <CalendarStage />
+      <div
+        className="marketing-calendar-next marketing-demo-fade"
+        data-demo-fade={state.transition}
+        id="demo-calendar-result"
+      >
         <IceIcon name={booked ? 'check' : 'clock'} />
         {scene.status}
       </div>
@@ -67,6 +62,26 @@ function CalendarWeek() {
           </strong>
         </span>
       ))}
+    </div>
+  );
+}
+
+function CalendarStage() {
+  const { state } = useMarketingDemo();
+  return (
+    <div
+      className="marketing-calendar-stage marketing-demo-fade"
+      data-demo-fade={state.transition}
+      id="demo-calendar-event"
+    >
+      {state.phase === 'draft' ? (
+        <DemoDraft />
+      ) : (
+        <>
+          <CalendarWeek />
+          <CalendarEvent />
+        </>
+      )}
     </div>
   );
 }

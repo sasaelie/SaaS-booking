@@ -26,5 +26,10 @@ export function useMarketingDemo() {
   const scene =
     MARKETING_DEMO.STEPS.find((step) => step.key === context.state.phase) ??
     MARKETING_DEMO.STEPS[0];
-  return { ...context, example, session, scene, booked: context.state.phase === 'booked' };
+  const { phase, transition } = context.state;
+  const exampleTransition =
+    (phase === 'booked' && transition === 'out') || (phase === 'draft' && transition === 'in')
+      ? transition
+      : 'idle';
+  return { ...context, example, session, scene, exampleTransition, booked: phase === 'booked' };
 }

@@ -25,9 +25,16 @@ export function useDemoPlayback(state: DemoState, dispatch: Dispatch<DemoAction>
 function finishDemoTransition(transition: 'out' | 'in', dispatch: Dispatch<DemoAction>) {
   let cancelled = false;
   const name = transition === 'out' ? 'demo-fade-out' : 'demo-fade-in';
-  const animations = [...document.querySelectorAll('.marketing-demo-fade')]
+  const animations = [
+    ...document.querySelectorAll('.marketing-demo-fade, .marketing-demo-photo-blend'),
+  ]
     .flatMap((element) => element.getAnimations())
-    .filter((animation) => animation instanceof CSSAnimation && animation.animationName === name);
+    .filter(
+      (animation) =>
+        animation instanceof CSSAnimation &&
+        (animation.animationName === name ||
+          (transition === 'in' && animation.animationName === 'demo-photo-blend')),
+    );
   void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
     if (!cancelled && !document.hidden)
       dispatch({ type: transition === 'out' ? 'advance' : 'settle' });

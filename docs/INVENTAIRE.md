@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-925 fichiers versionnés ou préparés dans cette branche, dont 639 sous `src/`.
+928 fichiers versionnés ou préparés dans cette branche, dont 641 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
 
@@ -338,6 +338,7 @@ src/app/_marketing/BookingPreview.tsx
 src/app/_marketing/DemoCalendar.tsx
 src/app/_marketing/DemoControls.tsx
 src/app/_marketing/DemoDraft.tsx
+src/app/_marketing/DemoPhoto.tsx
 src/app/_marketing/FeatureTile.tsx
 src/app/_marketing/FeatureTiles.tsx
 src/app/_marketing/MarketingDemo.tsx
@@ -348,6 +349,7 @@ src/app/_marketing/MarketingHeader.tsx
 src/app/_marketing/MarketingHero.tsx
 src/app/_marketing/MarketingOffer.tsx
 src/app/_marketing/MarketingPricing.tsx
+src/app/_marketing/PreviewActivity.tsx
 src/app/_marketing/PublicIdentity.tsx
 src/app/_marketing/PublicPage.tsx
 src/app/_marketing/PublicStructuredData.tsx
@@ -830,6 +832,7 @@ tests/e2e/marketing-demo.spec.ts
 tests/e2e/marketing-fades.spec.ts
 tests/e2e/marketing-home.spec.ts
 tests/e2e/marketing-search.spec.ts
+tests/e2e/marketing-stable-surfaces.spec.ts
 tests/e2e/marketing-visuals.spec.ts
 tests/e2e/navigation-hierarchy.spec.ts
 tests/e2e/organization-link.spec.ts

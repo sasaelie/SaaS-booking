@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { MARKETING_DEMO as DEMO } from '../../src/config/marketing-demo';
 import { advanceDemoPhase, finishDemoFade, holdDemoAnimations } from './marketing-demo-clock';
-test('fades the old example out before changing photo and calendar, then fades the new example in', async ({
+test('crossfades photos over an opaque base while the activity information changes', async ({
   page,
 }) => {
   await page.clock.install();
@@ -12,12 +12,10 @@ test('fades the old example out before changing photo and calendar, then fades t
     await advanceDemoPhase(page, phase);
   await page.clock.runFor(DEMO.STEPS[3].delayMs - DEMO.FADE_IN_MS - DEMO.FADE_OUT_MS + 50);
   await expect(page.locator('.marketing-preview-wrap')).toHaveAttribute('data-transition', 'out');
-  await expect(
-    page.getByRole('heading', { name: 'Une parenthèse céramique', exact: true }),
-  ).toBeVisible();
+  await expectTitle(page, 'Une parenthèse céramique');
   await expect(page.locator('.marketing-calendar-preview')).toHaveAttribute('data-phase', 'booked');
   const outgoing = await fadeOpacity(page, DEMO.FADE_OUT_MS / 2);
-  expect(outgoing).toHaveLength(4);
+  expect(outgoing).toHaveLength(8);
   for (const value of outgoing) {
     expect(value).toBeGreaterThan(0);
     expect(value).toBeLessThan(1);
@@ -26,12 +24,13 @@ test('fades the old example out before changing photo and calendar, then fades t
   await expect(page.locator('.marketing-preview-wrap')).toHaveAttribute('data-phase', 'booked');
   await finishDemoFade(page);
   await expect(page.locator('.marketing-preview-wrap')).toHaveAttribute('data-transition', 'in');
-  await expect(
-    page.getByRole('heading', { name: 'Votre moment de soin', exact: true }),
-  ).toBeVisible();
+  await expectTitle(page, 'Votre moment de soin');
   await expect(page.locator('.marketing-calendar-preview')).toHaveAttribute('data-phase', 'draft');
   for (const value of await fadeOpacity(page, 0)) expect(value).toBe(0);
-  await expect(page.locator('.marketing-preview-photo')).toHaveAttribute('src', /soins/);
+  await expect(page.locator('.marketing-preview-photo[data-photo-current="true"]')).toHaveAttribute(
+    'src',
+    /soins/,
+  );
   for (const value of await fadeOpacity(page, DEMO.FADE_IN_MS / 2)) {
     expect(value).toBeGreaterThan(0);
     expect(value).toBeLessThan(1);
@@ -67,7 +66,7 @@ test('restores full visibility when paused during an exit and disables fades for
   }
 });
 async function fadeOpacity(page: Page, time: number) {
-  return page.locator('.marketing-demo-fade').evaluateAll(
+  return page.locator('.marketing-demo-fade:not([data-demo-fade="idle"])').evaluateAll(
     (elements, position) =>
       elements.map((element) => {
         for (const animation of element.getAnimations()) {
@@ -85,4 +84,8 @@ async function expectFullVisibility(page: Page) {
     .locator('.marketing-demo-fade')
     .evaluateAll((es) => es.map((e) => Number(getComputedStyle(e).opacity)));
   for (const value of values) expect(value).toBe(1);
+}
+
+async function expectTitle(page: Page, name: string) {
+  await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
 }

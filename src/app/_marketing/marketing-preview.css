@@ -115,7 +115,7 @@
   background: linear-gradient(135deg, rgb(0 0 0 / 0.7), rgb(0 0 0 / 0.63) 55%, rgb(0 0 0 / 0.76));
   pointer-events: none;
 }
-.marketing-preview-activity > p.marketing-preview-tag {
+.marketing-preview-copy > p.marketing-preview-tag {
   font-size: 11px;
   letter-spacing: 0.035em;
   margin: 0 0 20px;
@@ -126,7 +126,7 @@
   margin: 0 0 16px;
   max-width: 14ch;
 }
-.marketing-preview-activity > p {
+.marketing-preview-copy > p {
   font-size: 12px;
   max-width: 30ch;
   margin-bottom: 20px;

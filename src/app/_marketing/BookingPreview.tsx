@@ -1,14 +1,11 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
 import { MARKETING_PREVIEW as UI } from '../../config/marketing-preview';
 import { IceIcon } from '../_ui/IceIcon';
-import { formatMoney } from '../_ui/format-money';
 import { DemoPlayback, DemoRegion } from './DemoControls';
 import { useMarketingDemo } from './MarketingDemo';
-import { MARKETING_VISUALS } from '../../config/marketing-visuals';
-import { MARKETING_DEMO } from '../../config/marketing-demo';
 import { DemoDraft } from './DemoDraft';
+import { PreviewActivity } from './PreviewActivity';
 type Example = (typeof UI.EXAMPLES)[number];
 export function BookingPreview({ connected }: { readonly connected: boolean }) {
   const { example, session, dispatch, state } = useMarketingDemo();
@@ -24,9 +21,12 @@ export function BookingPreview({ connected }: { readonly connected: boolean }) {
           selected={example.key}
           onSelect={(item) => dispatch({ type: 'example', index: UI.EXAMPLES.indexOf(item) })}
         />
-        <div className="marketing-demo-fade" data-demo-fade={state.transition}>
+        <div>
           <PreviewActivity example={example} />
-          <div className="marketing-preview-flow">
+          <div
+            className="marketing-preview-flow marketing-demo-fade"
+            data-demo-fade={state.transition}
+          >
             {state.phase === 'draft' ? (
               <DemoDraft />
             ) : (
@@ -133,42 +133,5 @@ function PreviewSwitch({
         </label>
       ))}
     </fieldset>
-  );
-}
-function PreviewActivity({ example }: { readonly example: Example }) {
-  const { booked } = useMarketingDemo();
-  const available = example.capacity - (booked ? 1 : 0);
-  return (
-    <>
-      <div className="marketing-preview-identity">
-        <span className="marketing-preview-avatar">{example.initials}</span>
-        <div>
-          <strong>{example.organization}</strong>
-          <small>{UI.ONLINE}</small>
-        </div>
-        <IceIcon name="lock" />
-      </div>
-      <div className="marketing-preview-activity" data-example={example.key}>
-        <Image
-          className="marketing-preview-photo"
-          src={example.image}
-          alt=""
-          fill
-          loading="eager"
-          sizes={MARKETING_VISUALS.IMAGE_SIZES}
-        />
-        <p className="marketing-preview-tag">{example.tag}</p>
-        <h2>{example.title}</h2>
-        <p>{example.text}</p>
-        <div className="marketing-preview-price">
-          <strong>{formatMoney(example.priceCents, 'EUR')}</strong>
-          <span>{UI.TOTAL}</span>
-        </div>
-      </div>
-      <p className="marketing-preview-availability">
-        <span aria-hidden="true" />
-        {available} {available === 1 ? MARKETING_DEMO.PLACE : MARKETING_DEMO.PLACES}
-      </p>
-    </>
   );
 }

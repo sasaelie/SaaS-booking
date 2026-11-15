@@ -127,3 +127,14 @@
     opacity: 1;
   }
 }
+.marketing-demo-photo-blend {
+  animation: demo-photo-blend calc(var(--demo-fade-out) + var(--demo-fade-in)) linear both;
+}
+@keyframes demo-photo-blend {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

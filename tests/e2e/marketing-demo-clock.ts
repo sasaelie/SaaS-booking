@@ -24,13 +24,20 @@ export async function holdDemoAnimations(page: Page) {
     if (document.getElementById('qa-hold-demo-animation')) return;
     const style = document.createElement('style');
     style.id = 'qa-hold-demo-animation';
-    style.textContent = '.marketing-demo-fade { animation-play-state: paused !important; }';
+    style.textContent =
+      '.marketing-demo-fade, .marketing-demo-photo-blend { animation-play-state: paused !important; }';
     document.head.append(style);
   });
 }
 export async function finishDemoFade(page: Page) {
-  await page.locator('.marketing-demo-fade').evaluateAll((elements) => {
-    for (const element of elements)
-      for (const animation of element.getAnimations()) animation.finish();
-  });
+  await page
+    .locator('.marketing-demo-fade, .marketing-demo-photo-blend')
+    .evaluateAll((elements) => {
+      const entering = document.querySelector('[data-transition="in"]') !== null;
+      for (const element of elements)
+        for (const animation of element.getAnimations()) {
+          if (element.classList.contains('marketing-demo-photo-blend') && !entering) continue;
+          animation.finish();
+        }
+    });
 }
