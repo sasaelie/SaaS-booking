@@ -42,27 +42,19 @@ test('keeps examples local, accessible and clearly fictional before a real signu
   await page.getByRole('link', { name: 'Créer une page comme celle-ci' }).click();
   await expect(page).toHaveURL('/inscription');
 });
-test('calculates the illustrative net saving after subscription and preserves its assumptions', async ({
+test('keeps the sales page concise with simple offers and no repeated photo or savings simulator', async ({
   page,
 }) => {
   await page.goto('/');
-  const slider = page.getByRole('slider', { name: /Réservations payées par mois/ });
-  const comparison = page.locator('.marketing-savings');
-  await slider.focus();
-  await slider.press('Home');
-  await expect(comparison.locator('.marketing-savings-net dd')).toHaveText('-29,00 €');
-  await slider.fill('36');
-  await expect(comparison.locator('.marketing-savings-net dd')).toHaveText('-0,20 €');
-  await expect(comparison.locator('.marketing-savings-result')).toContainText(
-    'Liberté coûte moins cher',
-  );
-  await slider.press('ArrowRight');
-  await expect(comparison.locator('.marketing-savings-net dd')).toHaveText('0,60 €');
-  await expect(comparison.locator('.marketing-savings-result')).toContainText(
-    'Pro couvre son abonnement',
-  );
-  await expect(comparison).toContainText('frais bancaires illustratifs');
-  await expect(comparison).toContainText('pas une promesse d’économie');
+  await expect(
+    page.getByRole('heading', { name: 'Quand Pro devient-il intéressant ?' }),
+  ).toHaveCount(0);
+  await expect(page.getByRole('slider')).toHaveCount(0);
+  await expect(page.locator('.marketing-stage-photo, .marketing-price-float')).toHaveCount(0);
+  await expect(page.locator('.marketing-offer')).toHaveCount(2);
+  await expect(
+    page.locator('.marketing-comparison, .marketing-annual-saving, .marketing-pricing-note'),
+  ).toHaveCount(0);
 });
 test('keeps SEO content and essential navigation available without JavaScript', async ({
   browser,
@@ -78,8 +70,6 @@ test('keeps SEO content and essential navigation available without JavaScript', 
       .click();
     await expect(page).toHaveURL('/inscription?formule=pro');
     await page.goto('/');
-    await page.locator('.commercial-comparison > summary').click();
-    await expect(page.getByText('Widget pour votre site', { exact: true })).toBeVisible();
     await page.getByRole('contentinfo').getByRole('link', { name: 'Mentions légales' }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Mentions légales');
   } finally {

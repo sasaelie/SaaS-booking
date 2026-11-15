@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { noHorizontalOverflow } from './portal-fixtures';
-test('has no detected WCAG A/AA violations in visible home, expanded comparison and preview states', async ({
+test('has no detected WCAG A/AA violations in visible home, offer links and preview states', async ({
   page,
 }, info) => {
   await page.setViewportSize({ width: 390, height: 900 });
@@ -11,7 +11,10 @@ test('has no detected WCAG A/AA violations in visible home, expanded comparison 
   await expect(page.getByRole('link', { name: 'Aller au contenu' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL('/#contenu');
-  await page.locator('.commercial-comparison > summary').click();
+  await page
+    .locator('.marketing-preview-wrap')
+    .getByRole('button', { name: 'Mettre en pause', exact: true })
+    .click();
   for (const label of ['Ateliers', 'Soins', 'Sport']) {
     await page
       .getByRole('group', { name: 'Explorer un exemple d’activité' })
@@ -51,6 +54,9 @@ test('links to real informational pages with a useful return path and no placeho
     await page.getByRole('contentinfo').getByRole('link', { name: label, exact: true }).click();
     await expect(page).toHaveURL(path);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect
+      .poll(() => page.title())
+      .toContain(await page.getByRole('heading', { level: 1 }).innerText());
     await expect(page.locator('a[href="#"]')).toHaveCount(0);
     await page.setViewportSize({ width: 320, height: 900 });
     await noHorizontalOverflow(page);

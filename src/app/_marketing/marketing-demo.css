@@ -1,0 +1,140 @@
+.marketing-demo-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-block: 8px 14px;
+  font-size: 11px;
+  color: var(--ui-text-secondary);
+}
+.marketing-demo-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--link-ink);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+.marketing-demo-actions button:hover {
+  background: var(--glass-fill);
+}
+.marketing-preview-simulate.portal-button {
+  width: 100%;
+  min-height: 48px;
+  font-size: 12px;
+  padding-inline: 8px;
+}
+.marketing-preview-simulate + .marketing-preview-cta.portal-button {
+  margin-top: 10px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--link-ink);
+}
+.marketing-calendar-preview[data-booked='true'] .marketing-calendar-next {
+  color: var(--link-ink);
+  font-weight: 650;
+}
+.marketing-calendar-preview > p.marketing-calendar-month {
+  margin: 12px 0 0;
+}
+.marketing-story-demo {
+  min-width: 0;
+}
+.marketing-story-demo > .marketing-demo-actions {
+  margin-top: 14px;
+}
+.marketing-calendar-event strong {
+  display: block;
+  min-height: 2.8em;
+  line-height: 1.4;
+}
+.marketing-calendar-next {
+  min-height: 32px;
+}
+.marketing-preview-flow {
+  min-height: 270px;
+}
+.marketing-calendar-stage {
+  min-height: 235px;
+}
+.marketing-demo-draft dl {
+  margin: 16px 0 0;
+  display: grid;
+  gap: 8px;
+}
+.marketing-demo-draft dt {
+  font-size: 10px;
+  color: var(--ui-text-secondary);
+}
+.marketing-demo-draft dd {
+  margin: 2px 0 0;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--ice-line);
+  font-size: 12px;
+  line-height: 1.4;
+  animation: demo-field-fill 180ms ease-out both;
+}
+.marketing-demo-draft dl > div:nth-child(2) dd {
+  animation-delay: 60ms;
+}
+.marketing-demo-draft dl > div:nth-child(3) dd {
+  animation-delay: 120ms;
+}
+.marketing-demo-draft dl > div:nth-child(4) dd {
+  animation-delay: 180ms;
+}
+.marketing-demo-draft > p {
+  font-size: 11px;
+  color: var(--link-ink);
+  margin-bottom: 0;
+}
+@keyframes demo-field-fill {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.marketing-demo-fade[data-demo-fade='out'] {
+  animation: demo-fade-out var(--demo-fade-out) ease-in-out both;
+}
+.marketing-demo-fade[data-demo-fade='in'] {
+  animation: demo-fade-in var(--demo-fade-in) ease-in-out both;
+}
+@keyframes demo-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes demo-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.marketing-demo-photo-blend {
+  animation: demo-photo-blend calc(var(--demo-fade-out) + var(--demo-fade-in)) linear both;
+}
+@keyframes demo-photo-blend {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -103,10 +103,12 @@ test('explains complimentary access and shows zero due without changing it', asy
   );
   expect(result.rows[0]?.complimentary).toBe(true);
 });
-test('details every comparison category and uses glass frames and text links without underlining', async ({
+test('details every organizer comparison category and uses glass frames and text links without underlining', async ({
   page,
 }) => {
-  await page.goto('/');
+  const space = await browserSpace();
+  await login(page, space);
+  await page.goto(`/app/${space.organizationId}/abonnement`);
   await page.locator('.commercial-comparison > summary').click();
   await expect(page.locator('.feature-comparison tbody tr')).toHaveCount(27);
   for (const width of [320, 390, 768, 1440]) {
@@ -114,7 +116,8 @@ test('details every comparison category and uses glass frames and text links wit
     await noHorizontalOverflow(page);
   }
   await expect(page.getByText(/Aucun hébergement vidéo n’est fourni/)).toBeVisible();
-  await page.goto('/connexion');
+  await page.getByRole('button', { name: 'Se déconnecter', exact: true }).click();
+  await expect(page).toHaveURL('/connexion');
   const link = page.getByRole('link', { name: 'Mot de passe oublié ?', exact: true });
   await expect(link).toHaveCSS('text-decoration-line', 'none');
   await expect(link).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
