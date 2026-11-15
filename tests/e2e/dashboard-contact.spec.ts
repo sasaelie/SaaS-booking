@@ -18,7 +18,9 @@ test('opens every dashboard metric and shows simulation access without mixing re
   for (let i = 0; i < 4; i++) {
     await page.goto(`/app/${s.organizationId}`);
     if (i === 0) {
+      await expect(metrics.nth(i)).toBeVisible();
       await metrics.nth(i).focus();
+      await expect(metrics.nth(i)).toBeFocused();
       await page.keyboard.press('Enter');
     } else await metrics.nth(i).click();
     await expect(page).toHaveURL(expected[i] ?? '');
