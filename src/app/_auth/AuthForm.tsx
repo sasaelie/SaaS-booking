@@ -7,6 +7,7 @@ import type { AuthMode } from './auth-request';
 import type { PlanIntent } from '../../core/validation/plan-selection';
 import { PLAN_SELECTION } from '../../config/plan-selection';
 import { planPath } from '../../lib/plan-selection';
+import { AuthTabs } from './AuthTabs';
 const descriptions = {
   SIGN_IN: AUTH_UI.SIGN_IN_HINT,
   SIGN_UP: AUTH_UI.SIGN_UP_HINT,
@@ -34,6 +35,7 @@ export function AuthForm({
         {AUTH_UI.BACK_HOME}
       </Link>
       <section className="ice-cube-shell portal-auth-card">
+        {mode === 'SIGN_IN' ? <AuthTabs plan={plan} /> : null}
         <h1>{AUTH_UI[mode]}</h1>
         <p>{descriptions[mode]}</p>
         {plan ? <p className="commercial-intent-note">{PLAN_SELECTION.CHOICE[plan]}</p> : null}

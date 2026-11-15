@@ -1,5 +1,15 @@
 import type { StoryTextTone } from '../../../config/story';
-import { integer, boolean, pgTable, text, timestamp, uuid, primaryKey } from 'drizzle-orm/pg-core';
+import {
+  integer,
+  boolean,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  primaryKey,
+  jsonb,
+} from 'drizzle-orm/pg-core';
+import type { StoryLayout } from '../../../core/validation/story-layout';
 import { organizations } from './organization';
 import { ACCESS_STATUSES, BRAND_THEMES } from '../../../config/constants';
 export const organizationAccess = pgTable('organization_access', {
@@ -42,6 +52,7 @@ export const organizationBranding = pgTable('organization_branding', {
   theme: text('theme').notNull().default(BRAND_THEMES[0]),
   logoStorageKey: text('logo_storage_key'),
   backgroundStorageKey: text('background_storage_key'),
+  storyLayout: jsonb('story_layout').$type<StoryLayout>(),
 });
 export const platformOperators = pgTable('platform_operators', {
   userId: text('user_id').primaryKey(),

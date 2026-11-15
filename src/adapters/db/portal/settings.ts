@@ -7,7 +7,11 @@ import { requireMembership } from './authorization';
 import type { PortalActor } from '../../../core/ports/portal-models';
 import type { OrganizationSettingsInput } from '../../../core/ports/portal-inputs';
 import { ok } from '../../../lib/result';
-export async function updateSettings(tx: Transaction, actor: PortalActor, input: OrganizationSettingsInput) {
+export async function updateSettings(
+  tx: Transaction,
+  actor: PortalActor,
+  input: OrganizationSettingsInput,
+) {
   await requireMembership(tx, actor, input.organizationId, true);
   await tx
     .update(organizations)
@@ -33,7 +37,11 @@ export async function updateSettings(tx: Transaction, actor: PortalActor, input:
   return ok(undefined);
 }
 
-export async function updateAppearance(tx: Transaction, actor: PortalActor, input: AppearanceInput) {
+export async function updateAppearance(
+  tx: Transaction,
+  actor: PortalActor,
+  input: AppearanceInput,
+) {
   await requireMembership(tx, actor, input.organizationId, true);
   await tx
     .insert(organizationBranding)
@@ -44,6 +52,7 @@ export async function updateAppearance(tx: Transaction, actor: PortalActor, inpu
         organizerHue: input.organizerHue,
         participantHue: input.participantHue,
         ...(input.storyTextTone ? { storyTextTone: input.storyTextTone } : {}),
+        ...(input.storyLayout !== undefined ? { storyLayout: input.storyLayout } : {}),
       },
     });
   return ok(undefined);

@@ -151,6 +151,7 @@ export { UI_MESSAGES, FORM_LABELS } from './presentation';
 export const MONEY = { CENTS_PER_UNIT: 100, DECIMAL_PLACES: 2 } as const;
 
 export { FILE_SIGNATURES } from './file-signatures';
+export { PARTICIPANT, PARTICIPANT_UI } from './participant';
 export const ENCODING = { HEX_RADIX: 16, BYTE_HEX_WIDTH: 2, BYTE_VALUES: 256 } as const;
 export const HTTP_STATUS = {
   OK: 200,

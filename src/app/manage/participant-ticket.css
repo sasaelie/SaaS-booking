@@ -1,0 +1,179 @@
+.participant-ticket {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  border-radius: 24px;
+  border: 1px solid var(--ice-line);
+  background: var(--ice-soft-fill);
+  overflow-wrap: anywhere;
+}
+.participant-ticket header {
+  display: grid;
+  gap: 8px;
+}
+.participant-ticket h2 {
+  font-size: clamp(22px, 5vw, 30px);
+}
+.ticket-test {
+  color: var(--ui-text-primary);
+}
+.ticket-qr {
+  width: 210px;
+  max-width: 100%;
+  height: auto;
+  justify-self: center;
+  border-radius: 12px;
+}
+.ticket-code {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+}
+.ticket-code textarea {
+  min-height: 7.2em;
+  width: 100%;
+  resize: vertical;
+  font:
+    13px/1.7 ui-monospace,
+    monospace;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--ice-line);
+  background: var(--ice-soft-fill);
+  color: inherit;
+  overflow-wrap: anywhere;
+}
+.ticket-private {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.ticket-money {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 0;
+}
+.ticket-money dt {
+  font-size: 12px;
+}
+.ticket-money dd {
+  margin: 4px 0 0;
+  font-weight: 600;
+}
+.ticket-actions {
+  display: grid;
+  gap: 12px;
+}
+.ticket-actions button {
+  min-width: 0;
+}
+.participant-details {
+  display: grid;
+  gap: 24px;
+}
+.participant-details section {
+  display: grid;
+  gap: 12px;
+}
+.participant-details p,
+.ticket-address {
+  white-space: pre-wrap;
+}
+.ticket-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+.ticket-contacts a {
+  min-height: 44px;
+  align-content: center;
+}
+.ticket-vouchers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+.ticket-vouchers li {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--ice-line);
+  border-radius: 16px;
+  overflow-wrap: anywhere;
+}
+.ticket-vouchers li a {
+  min-height: 44px;
+  align-content: center;
+}
+.participant-login-tabs {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.participant-login-tabs > * {
+  min-height: 44px;
+  padding: 10px 0;
+}
+.participant-login-tabs [aria-current] {
+  font-weight: 700;
+  border-bottom: 2px solid currentColor;
+}
+.inline-booking-proof {
+  margin-top: 24px;
+}
+@media print {
+  .participant-page,
+  .ice-widget-root,
+  .manage-shell,
+  .ice-result,
+  .inline-booking-proof,
+  .ice-brand-scene {
+    position: static !important;
+  }
+  @page {
+    size: A4;
+    margin: 18mm;
+  }
+  body:has(.printable-ticket) {
+    background: Canvas;
+    color: CanvasText;
+  }
+  body:has(.printable-ticket) * {
+    visibility: hidden;
+  }
+  body:has(.printable-ticket)::before,
+  body:has(.printable-ticket)::after {
+    display: none;
+  }
+  .printable-ticket,
+  .printable-ticket * {
+    visibility: visible !important;
+  }
+  .printable-ticket {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    max-width: 170mm;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+    border: 1px solid CanvasText;
+    break-inside: avoid;
+  }
+  .printable-ticket .no-print,
+  .printable-ticket .no-print * {
+    display: none !important;
+  }
+  .ticket-code textarea {
+    resize: none;
+    height: 20mm;
+    color: CanvasText;
+    background: Canvas;
+  }
+  .ticket-qr {
+    width: 42mm;
+  }
+}

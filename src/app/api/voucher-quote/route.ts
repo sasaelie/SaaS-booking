@@ -19,7 +19,7 @@ export async function POST(request: Request): Promise<Response> {
           forfeitedRemainderCents: result.value.forfeitedRemainderCents,
           remainderValueCents: result.value.remainderValueCents,
         }
-      : { success: false },
+      : { success: false, code: result.error.code },
     {
       status: result.ok ? HTTP_STATUS.OK : HTTP_STATUS.BAD_REQUEST,
       headers: { 'Cache-Control': 'no-store' },

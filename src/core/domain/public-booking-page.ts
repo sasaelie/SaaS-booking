@@ -31,11 +31,14 @@ export function publicBookingPage(
     paymentReady: activity.paymentReady ?? true,
     terms,
     brand: {
+      storyLayout: activity.storyLayout ?? null,
       storyTextTone: activity.storyTextTone ?? 'WHITE',
       hue: activity.participantHue ?? null,
       theme: activity.brandTheme,
       logoUrl: activity.hasLogo ? `/api/branding/${activity.organizationId}/logo` : null,
-      backgroundUrl: activity.hasBackground ? `/api/branding/${activity.organizationId}/background` : null,
+      backgroundUrl: activity.hasBackground
+        ? `/api/branding/${activity.organizationId}/background`
+        : null,
     },
     reservationsOpen: activity.commercialAccessAllowed,
     slots: schedule.map((session) => ({

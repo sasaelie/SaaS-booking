@@ -9,10 +9,22 @@ import {
 import type { VoucherQuotePort } from '../../core/ports/voucher-quote.port';
 import { failure, unexpected } from '../../lib/errors';
 import { ERROR_CODES } from '../../config/constants';
+import { resolveBookingVoucher, type ParticipantCodeOptions } from './participant/voucher';
 export class DrizzleVoucherQuoteRepository implements VoucherQuotePort {
-  constructor(private readonly db: DrizzlePgDb) {}
+  constructor(
+    private readonly db: DrizzlePgDb,
+    private readonly participantCode?: ParticipantCodeOptions,
+  ) {}
   async quote(organizationId: string, activityId: string, code: string) {
     try {
+      const resolved = await resolveBookingVoucher(
+        this.db,
+        code,
+        organizationId,
+        new Date(),
+        this.participantCode,
+      );
+      if (!resolved.ok) return resolved;
       const [activity] = await this.db
         .select()
         .from(activities)
@@ -28,7 +40,7 @@ export class DrizzleVoucherQuoteRepository implements VoucherQuotePort {
         .from(rescheduleVouchers)
         .where(
           and(
-            eq(rescheduleVouchers.code, code),
+            eq(rescheduleVouchers.code, resolved.value ?? ''),
             eq(rescheduleVouchers.organizationId, organizationId),
           ),
         );

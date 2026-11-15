@@ -1,15 +1,24 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { SelfBookingContextSchema, type SelfBookingContext } from '../../core/validation/self-booking';
-import { HTTP_STATUS } from '../../config/constants';
+import { useEffect, useRef, useState } from 'react';
+import {
+  SelfBookingContextSchema,
+  type SelfBookingContext,
+} from '../../core/validation/self-booking';
+import { HTTP_STATUS, PARTICIPANT } from '../../config/constants';
 type ContextState = { context: SelfBookingContext | null; error: 'invalid' | 'unavailable' | null };
 const empty: ContextState = { context: null, error: null };
 export function useBookingContext(token: string | null, endpoint = '/api/self-service/context') {
   const [state, setState] = useState<ContextState>(empty);
   const [version, setVersion] = useState(0);
+  const previousToken = useRef<string | null>(null);
   useEffect(() => {
-    if (token === null) return;
-    setState(empty);
+    const changed = previousToken.current !== token;
+    previousToken.current = token;
+    if (token === null) {
+      setState(empty);
+      return;
+    }
+    if (changed) setState(empty);
     if (!token) {
       setState({ context: null, error: 'invalid' });
       return;
@@ -20,6 +29,14 @@ export function useBookingContext(token: string | null, endpoint = '/api/self-se
     });
     return () => controller.abort();
   }, [token, version, endpoint]);
+  useEffect(() => {
+    if (!state.context || !['PENDING_PAYMENT', 'PROOF_SUBMITTED'].includes(state.context.status))
+      return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') setVersion((value) => value + 1);
+    }, PARTICIPANT.POLL_MS);
+    return () => window.clearInterval(timer);
+  }, [state.context]);
   return {
     context: state.context,
     invalid: state.error === 'invalid',
@@ -27,7 +44,11 @@ export function useBookingContext(token: string | null, endpoint = '/api/self-se
     refresh: () => setVersion((value) => value + 1),
   };
 }
-async function readContext(token: string, signal: AbortSignal, endpoint: string): Promise<ContextState> {
+async function readContext(
+  token: string,
+  signal: AbortSignal,
+  endpoint: string,
+): Promise<ContextState> {
   try {
     const response = await fetch(endpoint, {
       method: 'POST',

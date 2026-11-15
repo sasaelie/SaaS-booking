@@ -37,6 +37,7 @@ function toOrganization(
     organizerHue: row.branding?.organizerHue ?? null,
     participantHue: row.branding?.participantHue ?? null,
     storyTextTone: row.branding?.storyTextTone ?? 'WHITE',
+    storyLayout: row.branding?.storyLayout ?? null,
     theme: row.branding?.theme ?? 'SAGE',
     hasLogo: Boolean(row.branding?.logoStorageKey),
     hasBackground: Boolean(row.branding?.backgroundStorageKey),

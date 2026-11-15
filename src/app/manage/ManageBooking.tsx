@@ -3,9 +3,12 @@ import { simulationPath } from '../../config/simulation';
 import { ColorScene } from '../_ui/ColorScene';
 import { AppLink as Link } from '../_ui/AppLink';
 import { FORM_LABELS, BOOKING_STATUS_LABELS } from '../../config/constants';
+import { PARTICIPANT_UI } from '../../config/constants';
 import { useManagement } from './use-management';
 import { ProofUpload } from './ProofUpload';
 import type { SelfBookingContext } from '../../core/validation/self-booking';
+import { ParticipantTicket } from './ParticipantTicket';
+import { ParticipantDetails } from './ParticipantDetails';
 export function ManageBooking({ simulationId }: { readonly simulationId?: string } = {}) {
   const state = useManagement(simulationId);
   const booking = state.context;
@@ -23,6 +26,8 @@ export function ManageBooking({ simulationId }: { readonly simulationId?: string
       <section className="ice-cube-shell manage-shell">
         <h1>{FORM_LABELS.MANAGE}</h1>
         {booking ? <BookingSummary booking={booking} /> : null}
+        {booking ? <ParticipantTicket booking={booking} /> : null}
+        {booking ? <ParticipantDetails booking={booking} simulationId={simulationId} /> : null}
         <ContextFeedback state={state} />
         {booking?.hasProof && booking.status === 'PROOF_SUBMITTED' && !state.message ? (
           <p className="manage-note">{FORM_LABELS.PROOF_RECEIVED}</p>
@@ -68,7 +73,14 @@ function CancelBooking({ state }: { readonly state: ReturnType<typeof useManagem
 }
 
 function ContextFeedback({ state }: { readonly state: ReturnType<typeof useManagement> }) {
-  if (state.invalid) return <p role="alert">{FORM_LABELS.LINK_INVALID}</p>;
+  if (state.invalid)
+    return (
+      <div>
+        <p role="alert">{FORM_LABELS.LINK_INVALID}</p>
+        <Link href="/connexion?acces=participant">{PARTICIPANT_UI.LOGIN}</Link>
+      </div>
+    );
+  if (!state.context && !state.unavailable) return <p role="status">{PARTICIPANT_UI.LOADING}</p>;
   if (!state.unavailable) return null;
   return (
     <div>

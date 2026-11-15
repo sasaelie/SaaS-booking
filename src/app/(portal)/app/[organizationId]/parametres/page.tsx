@@ -14,7 +14,11 @@ export default async function Page({ params }: WorkspacePageProps) {
   return (
     <>
       <PortalHeading title={APPEARANCE.TITLE} description={APPEARANCE.INTRO} />
-      <AppearanceEditor key={organizationId} organization={organization} />
+      <AppearanceEditor
+        key={organizationId}
+        organization={organization}
+        activities={result.value.activities}
+      />
       <details className="portal-panel appearance-media">
         <summary>{APPEARANCE.MEDIA}</summary>
         <div className="portal-cards">

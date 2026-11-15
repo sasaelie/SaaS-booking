@@ -3,10 +3,13 @@ import { verifySelfCancelToken } from '../domain/self-service-token';
 import { BOOKING_STATUSES, PAYMENT_MODES } from '../../config/constants';
 import { ok } from '../../lib/result';
 import { guardUseCase } from '../../lib/guard-use-case';
+import type { ParticipantAccessPort } from '../ports/participant-access.port';
+import type { SelfBookingSnapshot } from '../ports/self-booking.port';
 export class ReadSelfBookingUseCase {
   constructor(
     private readonly repository: SelfBookingRepositoryPort,
     private readonly secret: string,
+    private readonly access?: ParticipantAccessPort,
   ) {}
   execute(token: string) {
     return guardUseCase('SelfBooking', 'read', async () => {
@@ -16,28 +19,31 @@ export class ReadSelfBookingUseCase {
       const result = await this.repository.read(verified.value);
       if (!result.ok) return result;
       const booking = result.value;
-      const pending =
-        booking.status === BOOKING_STATUSES.PENDING_PAYMENT ||
-        booking.status === BOOKING_STATUSES.PROOF_SUBMITTED;
-      return ok({
-        participantHue: booking.participantHue ?? null,
-        organizationSlug: booking.organizationSlug,
-        organizationName: booking.organizationName,
-        activityId: booking.activityId,
-        activityName: booking.activityName,
-        startsAtIso: booking.startsAt.toISOString(),
-        timezone: booking.timezone,
-        status: booking.status,
-        hasProof: booking.hasProof,
-        canUploadProof:
-          pending &&
-          booking.startsAt > now &&
-          booking.paymentMode === PAYMENT_MODES.BANK_TRANSFER &&
-          booking.lockedUntil !== null &&
-          booking.lockedUntil > now,
-        canCancel:
-          (pending || booking.status === BOOKING_STATUSES.CONFIRMED) && booking.startsAt > now,
-      });
+      const ticket = this.access ? await this.access.ticket(verified.value, now) : ok(null);
+      return ticket.ok ? ok({ ...bookingContext(booking, now), ticket: ticket.value }) : ticket;
     });
   }
+}
+function bookingContext(booking: SelfBookingSnapshot, now: Date) {
+  const pending =
+    booking.status === BOOKING_STATUSES.PENDING_PAYMENT ||
+    booking.status === BOOKING_STATUSES.PROOF_SUBMITTED;
+  return {
+    participantHue: booking.participantHue ?? null,
+    organizationSlug: booking.organizationSlug,
+    organizationName: booking.organizationName,
+    activityId: booking.activityId,
+    activityName: booking.activityName,
+    startsAtIso: booking.startsAt.toISOString(),
+    timezone: booking.timezone,
+    status: booking.status,
+    hasProof: booking.hasProof,
+    canUploadProof:
+      pending &&
+      booking.startsAt > now &&
+      booking.paymentMode === PAYMENT_MODES.BANK_TRANSFER &&
+      booking.lockedUntil !== null &&
+      booking.lockedUntil > now,
+    canCancel: (pending || booking.status === BOOKING_STATUSES.CONFIRMED) && booking.startsAt > now,
+  };
 }

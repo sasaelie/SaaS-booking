@@ -4,12 +4,17 @@ import { currentVisitor } from '../../composition/current-visitor';
 import { planPath, readPlanIntent } from '../../lib/plan-selection';
 import type { AuthMode } from './auth-request';
 import { AuthForm } from './AuthForm';
-export type AuthEntryProps = { readonly searchParams: Promise<{ formule?: unknown }> };
+import { ParticipantLogin } from './ParticipantLogin';
+export type AuthEntryProps = {
+  readonly searchParams: Promise<{ formule?: unknown; acces?: unknown }>;
+};
 export async function AuthEntry({
   mode,
   searchParams,
 }: AuthEntryProps & { readonly mode: AuthMode }) {
-  const plan = readPlanIntent((await searchParams).formule);
+  const params = await searchParams;
+  const plan = readPlanIntent(params.formule);
+  if (mode === 'SIGN_IN' && params.acces === 'participant') return <ParticipantLogin plan={plan} />;
   if (mode === 'SIGN_IN' || mode === 'SIGN_UP') {
     if (await currentVisitor(new Headers(await headers()))) redirect(planPath('/app', plan));
   }

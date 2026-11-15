@@ -1,5 +1,6 @@
 import { and, eq } from 'drizzle-orm';
 import { requirePro } from './commercial-access';
+import { hasBookingAccess } from './participant/access';
 import { bookings, rescheduleVouchers, activities } from './schema';
 import { atomic, required, type Transaction } from './transaction';
 import type { DrizzlePgDb } from './client';
@@ -22,8 +23,8 @@ async function cancel(
   const context = await lockBookingContext(tx, input.organizationId, input.bookingId);
   if (!context) return failure(ERROR_CODES.NOT_FOUND, 'Voucher', 'cancel');
   const { booking } = context;
-  if (input.version !== null && booking.selfServiceVersion !== input.version)
-    return failure(ERROR_CODES.UNAUTHORIZED, 'Voucher', 'cancel');
+  if (!(await validAttendeeAccess(tx, input)))
+    return failure(ERROR_CODES.UNAUTHORIZED, 'Voucher', 'access');
   if (booking.status === BOOKING_STATUSES.CANCELLED_BY_ATTENDEE) {
     const voucher = await existingVoucher(tx, input.organizationId, booking.id);
     return ok({
@@ -94,4 +95,19 @@ async function externalActivity(tx: Transaction, organizationId: string, activit
     .from(activities)
     .where(and(eq(activities.id, activityId), eq(activities.organizationId, organizationId)));
   return activity;
+}
+
+async function validAttendeeAccess(tx: Transaction, input: CancellationInput) {
+  return (
+    input.version === null ||
+    hasBookingAccess(
+      tx,
+      {
+        ...input,
+        version: input.version,
+        expUnixSeconds: Number.MAX_SAFE_INTEGER,
+      },
+      input.now,
+    )
+  );
 }

@@ -1,5 +1,6 @@
 import type { EventDetails, SocialLinks } from './event-details';
 import type { StoryTextTone } from '../../config/story';
+import type { StoryLayout } from '../validation/story-layout';
 // src/core/ports/booking-ports.ts
 import type { AudiencePolicy, PaymentMode } from '../../config/constants';
 import type { AppError, Result } from '../../lib/result';
@@ -12,6 +13,7 @@ export interface ActivityWithScheduleConfig extends EventDetails {
   readonly socialLinks?: SocialLinks;
   readonly commercialAccessAllowed: boolean;
   readonly storyTextTone?: StoryTextTone;
+  readonly storyLayout?: StoryLayout | null;
   readonly brandTheme: string;
   readonly participantHue?: number | null;
   readonly hasLogo: boolean;

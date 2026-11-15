@@ -9,6 +9,7 @@ import { bookings, organizations, rescheduleVouchers } from '../db/schema';
 import { signSelfCancelToken, selfServiceExpiry } from '../../core/domain/self-service-token';
 import { required } from '../db/transaction';
 import { TIME, JOB_TYPES, DEFAULTS } from '../../config/constants';
+import { bookingParticipantCode } from '../participant/booking-code';
 import { BookingJobSchema, VoucherJobSchema, ReminderJobSchema } from './job-validation';
 export interface MailContent {
   readonly to: string;
@@ -19,6 +20,7 @@ async function voucherContent(
   db: DrizzlePgDb,
   payload: unknown,
   appUrl: string,
+  secret: string,
 ): Promise<MailContent | null> {
   const { voucherId } = VoucherJobSchema.parse(payload);
   const [row] = await db
@@ -31,10 +33,19 @@ async function voucherContent(
     return null;
   const voucher = row.reschedule_vouchers;
   if (voucher.status !== 'ACTIVE' || voucher.expiresAt <= new Date()) return null;
+  const code = await bookingParticipantCode(
+    db,
+    row.bookings.organizationId,
+    row.bookings.id,
+    secret,
+  );
+  const access = code
+    ? `\nVotre code d’accès personnel : ${code}. Votre espace : ${appUrl}/manage#code=${encodeURIComponent(code)}`
+    : '';
   return {
     to: row.bookings.email,
     subject: 'Votre code de report',
-    text: `Votre code : ${voucher.code}. Valeur : ${formatMoney(voucher.initialValueCents, voucher.currency)}. Valable jusqu’au ${voucher.expiresAt.toISOString()}. Réserver : ${appUrl}/${row.organizations.slug}/${row.bookings.activityId}#voucher=${encodeURIComponent(voucher.code)}`,
+    text: `Votre code : ${voucher.code}. Valeur : ${formatMoney(voucher.initialValueCents, voucher.currency)}. Valable jusqu’au ${voucher.expiresAt.toISOString()}. Réserver : ${appUrl}/${row.organizations.slug}/${row.bookings.activityId}#voucher=${encodeURIComponent(voucher.code)}${access}`,
   };
 }
 async function bookingContent(
@@ -67,7 +78,7 @@ async function bookingContent(
   )
     return null;
   if (type === JOB_TYPES.CANCELLATION) return cancellationContent(row, payload);
-  const content = await confirmationContent(row, appUrl, secret);
+  const content = await confirmationContent(db, row, appUrl, secret);
   return enrichedMail(content, row, type);
 }
 
@@ -79,11 +90,12 @@ export function mailContent(
   secret: string,
 ): Promise<MailContent | null> {
   return type === JOB_TYPES.VOUCHER
-    ? voucherContent(db, payload, appUrl)
+    ? voucherContent(db, payload, appUrl, secret)
     : bookingContent(db, type, payload, appUrl, secret);
 }
 
 async function confirmationContent(
+  db: DrizzlePgDb,
   row: NonNullable<Awaited<ReturnType<typeof readBookingMail>>>,
   appUrl: string,
   secret: string,
@@ -106,10 +118,14 @@ async function confirmationContent(
     dateStyle: 'full',
     timeStyle: 'short',
   }).format(row.sessions.startsAt);
+  const code = await bookingParticipantCode(db, booking.organizationId, booking.id, secret);
+  const access = code
+    ? `Votre code personnel : ${code}. Conservez-le pour retrouver votre billet et vos reports.\nBillet et gestion : ${appUrl}/manage#code=${encodeURIComponent(code)}`
+    : `Gérer la réservation : ${appUrl}/manage#token=${encodeURIComponent(token)}`;
   return {
     to: booking.email,
     subject: 'Confirmation de votre réservation',
-    text: `Votre place pour ${booking.activityName} est confirmée : ${time}. Montant encaissé : ${formatMoney(booking.amountPaidCents, booking.currency)}. Gérer la réservation : ${appUrl}/manage#token=${encodeURIComponent(token)}`,
+    text: `Votre place pour ${booking.activityName} est confirmée : ${time}. Montant encaissé : ${formatMoney(booking.amountPaidCents, booking.currency)}.\n${access}`,
   };
 }
 

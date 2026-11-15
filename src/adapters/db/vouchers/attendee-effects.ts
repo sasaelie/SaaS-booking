@@ -22,6 +22,7 @@ export async function attendeeCancellationEffects(
   return null;
 }
 export function canCancelAttendee(context: LockedBooking, input: CancellationInput) {
+  if (input.version !== null && context.session.startsAt <= input.now) return false;
   if (context.booking.status === BOOKING_STATUSES.CONFIRMED) return true;
   return (
     [BOOKING_STATUSES.PENDING_PAYMENT, BOOKING_STATUSES.PROOF_SUBMITTED].some(
