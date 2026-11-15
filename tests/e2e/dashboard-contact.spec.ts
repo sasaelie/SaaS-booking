@@ -90,6 +90,7 @@ async function expectSimulationHeader(page: Page, id: string, activityId: string
   await expect(page.locator('.simulation-notice')).toContainText('Simulation participant — TEST');
   await expect(page.locator('.ice-branded-page')).toHaveCSS('isolation', 'auto');
   expect((await page.locator('.simulation-notice').boundingBox())?.height).toBeLessThan(180);
+  await expect(page.locator('.ice-brand-name')).toBeVisible();
   expect((await page.locator('.ice-brand-name').boundingBox())?.y).toBeLessThan(380);
   await page.screenshot({ path, fullPage: true });
 }
