@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-928 fichiers versionnés ou préparés dans cette branche, dont 641 sous `src/`.
+932 fichiers versionnés ou préparés dans cette branche, dont 643 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
 
@@ -58,6 +58,7 @@ docs/SESSION-ACCUEIL.md
 docs/SIMULATION-ET-COMPTABILITE.md
 docs/TABLEAU-DE-BORD-ET-CONTACT.md
 docs/VERIFICATION.md
+docs/accueil-commercial/ANIMATIONS-CIBLEES.md
 docs/accueil-commercial/CADRES-ET-PHOTOS.md
 docs/accueil-commercial/CORRECTIONS-AVANT-ETUDE.md
 docs/accueil-commercial/ETUDE-PAGES-VENTE.md
@@ -335,6 +336,7 @@ src/app/_auth/session-exit-navigation.ts
 src/app/_auth/sign-out-request.ts
 src/app/_auth/use-auth-form.ts
 src/app/_marketing/BookingPreview.tsx
+src/app/_marketing/DemoAvailability.tsx
 src/app/_marketing/DemoCalendar.tsx
 src/app/_marketing/DemoControls.tsx
 src/app/_marketing/DemoDraft.tsx
@@ -355,6 +357,7 @@ src/app/_marketing/PublicPage.tsx
 src/app/_marketing/PublicStructuredData.tsx
 src/app/_marketing/StoryPreview.tsx
 src/app/_marketing/demo-state.ts
+src/app/_marketing/demo-transitions.ts
 src/app/_marketing/marketing-content.css
 src/app/_marketing/marketing-demo.css
 src/app/_marketing/marketing-feature-tiles.css
@@ -831,6 +834,7 @@ tests/e2e/marketing-demo-clock.ts
 tests/e2e/marketing-demo.spec.ts
 tests/e2e/marketing-fades.spec.ts
 tests/e2e/marketing-home.spec.ts
+tests/e2e/marketing-precise-motion.spec.ts
 tests/e2e/marketing-search.spec.ts
 tests/e2e/marketing-stable-surfaces.spec.ts
 tests/e2e/marketing-visuals.spec.ts

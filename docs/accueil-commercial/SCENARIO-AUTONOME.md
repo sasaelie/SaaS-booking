@@ -43,7 +43,7 @@ Deux contrôles historiques du comparateur ont aussi été validés dans la page
 
 ## Transitions sans disparition globale
 
-Les cadres, leurs ombres, les photos, le titre du calendrier et son mois restent visibles à toutes les étapes. Le nom de l’organisation et la présentation de l’activité restent fixes pendant son scénario. Les horaires, les places et les messages d’étape sont les seules zones qui suivent le fondu de sortie de 1 seconde puis d’entrée de 1 seconde. Le cycle complet dure environ 16 secondes, avec les mêmes temps de lecture stable entre les transitions.
+Les cadres, leurs ombres, les photos, le titre du calendrier et son mois restent visibles à toutes les étapes. Le nom de l’organisation et la présentation de l’activité restent fixes pendant son scénario. Les animations suivent désormais les valeurs réellement modifiées : heure, date si le jour change, nombre de places, libellé si son singulier/pluriel change, rôle ou confirmation. Les autres informations et les boutons restent visibles. Les grands groupes ne changent qu’au passage entre la préparation et le formulaire ou vers une nouvelle activité. La durée reste 1 seconde en sortie puis 1 seconde en entrée. Le cycle complet dure environ 16 secondes, avec les mêmes temps de lecture stable entre les transitions.
 
 Lors du passage à une autre activité, `DemoPhoto` superpose la photo suivante sur la photo actuelle. La nouvelle photo apparaît progressivement pendant 2 secondes au-dessus d’une base toujours opaque. Les deux éléments et leur animation sont conservés lors du changement de phase React ; il n’y a ni fond vide entre les photos ni redémarrage du fondu à mi-parcours. Seules les légendes de l’activité utilisent alors aussi une sortie et une entrée.
 
@@ -56,3 +56,5 @@ La progression attend les promesses `Animation.finished` des informations animé
 Les tests figent les animations, font dépasser le délai théorique et vérifient que le contenu attend leur fin réelle. Un scénario supplémentaire traverse les quatre étapes et contrôle l’opacité effective des cadres, du titre et des photos, y compris celle de leurs parents. Il vérifie aussi qu’une photo de base reste opaque lorsque la photo suivante est à mi-fondu, puis qu’une seule photo reste montée à la fin.
 
 Vérification de cette version : TypeScript, ESLint, 126 tests unitaires, construction optimisée Next.js et 18 parcours navigateur ciblés réussis. Les captures de cycles complets à 390 et 1440 px montrent les surfaces fixes et le fondu croisé, sans erreur JavaScript, image manquante ni débordement horizontal. Les contrôles automatiques WCAG A/AA et les parcours clavier et tactiles passent également.
+
+Le repérage détaillé et les corrections ciblées sont décrits dans [ANIMATIONS-CIBLEES.md](ANIMATIONS-CIBLEES.md).

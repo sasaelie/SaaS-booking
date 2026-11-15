@@ -152,7 +152,7 @@
   font-weight: 600;
   margin: 16px 0;
 }
-.marketing-preview-availability > span {
+.marketing-preview-availability > span[aria-hidden] {
   width: 6px;
   height: 6px;
   border-radius: 50%;

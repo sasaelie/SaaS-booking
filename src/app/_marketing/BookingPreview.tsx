@@ -8,7 +8,7 @@ import { DemoDraft } from './DemoDraft';
 import { PreviewActivity } from './PreviewActivity';
 type Example = (typeof UI.EXAMPLES)[number];
 export function BookingPreview({ connected }: { readonly connected: boolean }) {
-  const { example, session, dispatch, state } = useMarketingDemo();
+  const { example, session, dispatch, state, transitions } = useMarketingDemo();
   return (
     <DemoRegion className="marketing-preview-wrap">
       <div className="marketing-preview-caption">
@@ -25,7 +25,7 @@ export function BookingPreview({ connected }: { readonly connected: boolean }) {
           <PreviewActivity example={example} />
           <div
             className="marketing-preview-flow marketing-demo-fade"
-            data-demo-fade={state.transition}
+            data-demo-fade={transitions.publication}
           >
             {state.phase === 'draft' ? (
               <DemoDraft />

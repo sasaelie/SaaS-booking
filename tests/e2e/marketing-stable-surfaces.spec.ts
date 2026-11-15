@@ -9,6 +9,9 @@ test('keeps photos, frames and calendar heading opaque throughout every automati
   await page.locator('.marketing-preview-wrap').scrollIntoViewIfNeeded();
   await holdDemoAnimations(page);
   await page.clock.runFor(100);
+  const height = await page
+    .locator('.marketing-calendar-preview')
+    .evaluate((e) => e.getBoundingClientRect().height);
   for (const scene of DEMO.STEPS) {
     await page.clock.runFor(scene.delayMs - DEMO.FADE_OUT_MS - DEMO.FADE_IN_MS + 100);
     await expect(page.locator('.marketing-preview-wrap')).toHaveAttribute('data-transition', 'out');
@@ -17,10 +20,12 @@ test('keeps photos, frames and calendar heading opaque throughout every automati
         for (const animation of element.getAnimations()) animation.currentTime = 1000;
     });
     await expectOpaqueSurfaces(page);
-    await expect(page.locator('.marketing-preview-copy')).toHaveCSS(
-      'opacity',
-      scene.key === 'booked' ? '0' : '1',
-    );
+    expect(
+      await page
+        .locator('.marketing-calendar-preview')
+        .evaluate((e) => e.getBoundingClientRect().height),
+    ).toBe(height);
+    await expect(page.locator('.marketing-preview-copy')).toHaveCSS('opacity', '1');
     if (scene.key === 'booked') await checkPhotoBlend(page);
     await finishDemoFade(page);
     await expect(page.locator('.marketing-preview-wrap')).toHaveAttribute('data-transition', 'in');

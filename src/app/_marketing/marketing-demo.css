@@ -26,6 +26,15 @@
 .marketing-demo-actions button:hover {
   background: var(--glass-fill);
 }
+.marketing-demo-actor {
+  display: inline-grid;
+}
+.marketing-demo-actor > span {
+  grid-area: 1 / 1;
+}
+.marketing-demo-actor-reserve {
+  visibility: hidden;
+}
 .marketing-preview-simulate.portal-button {
   width: 100%;
   min-height: 48px;
@@ -60,11 +69,25 @@
 .marketing-calendar-next {
   min-height: 32px;
 }
+.marketing-calendar-next > span:first-child {
+  display: inline-flex;
+}
+.marketing-calendar-week strong,
+.marketing-preview-sessions label {
+  transition:
+    background-color calc(var(--demo-fade-out) + var(--demo-fade-in)) ease,
+    border-color calc(var(--demo-fade-out) + var(--demo-fade-in)) ease,
+    color calc(var(--demo-fade-out) + var(--demo-fade-in)) ease;
+}
+.marketing-preview-sessions .ice-icon {
+  transition: opacity calc(var(--demo-fade-out) + var(--demo-fade-in)) ease;
+}
 .marketing-preview-flow {
   min-height: 270px;
 }
 .marketing-calendar-stage {
-  min-height: 235px;
+  display: flow-root;
+  min-height: 251px;
 }
 .marketing-demo-draft dl {
   margin: 16px 0 0;

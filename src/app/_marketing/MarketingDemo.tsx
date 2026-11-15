@@ -5,6 +5,7 @@ import { INITIAL_DEMO, demoReducer, type DemoAction, type DemoState } from './de
 import { useDemoPlayback } from './use-demo-playback';
 import { MARKETING_DEMO } from '../../config/marketing-demo';
 import { useDemoImages } from './use-demo-images';
+import { demoTransitions } from './demo-transitions';
 const DemoContext = createContext<{
   readonly state: DemoState;
   readonly dispatch: Dispatch<DemoAction>;
@@ -26,10 +27,14 @@ export function useMarketingDemo() {
   const scene =
     MARKETING_DEMO.STEPS.find((step) => step.key === context.state.phase) ??
     MARKETING_DEMO.STEPS[0];
-  const { phase, transition } = context.state;
-  const exampleTransition =
-    (phase === 'booked' && transition === 'out') || (phase === 'draft' && transition === 'in')
-      ? transition
-      : 'idle';
-  return { ...context, example, session, scene, exampleTransition, booked: phase === 'booked' };
+  const transitions = demoTransitions(context.state);
+  return {
+    ...context,
+    example,
+    session,
+    scene,
+    transitions,
+    exampleTransition: transitions.activity,
+    booked: context.state.phase === 'booked',
+  };
 }
