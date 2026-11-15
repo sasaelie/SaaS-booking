@@ -32,10 +32,10 @@
   margin-left: auto;
   width: 16px;
   height: 16px;
-  visibility: hidden;
+  opacity: 0;
 }
 .marketing-preview-sessions input:checked ~ .ice-icon {
-  visibility: visible;
+  opacity: 1;
 }
 .marketing-preview-cta.portal-button {
   width: 100%;

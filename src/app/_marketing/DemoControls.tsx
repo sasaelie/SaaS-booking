@@ -29,11 +29,22 @@ export function DemoRegion({
   );
 }
 export function DemoPlayback() {
-  const { state, dispatch, scene } = useMarketingDemo();
+  const { state, dispatch, scene, transitions } = useMarketingDemo();
   return (
     <div className="marketing-demo-actions">
-      <span className="marketing-demo-fade" data-demo-fade={state.transition}>
-        {scene.actor} · <strong>{scene.label}</strong>
+      <span>
+        <span className="marketing-demo-actor">
+          <span className="marketing-demo-actor-reserve" aria-hidden="true">
+            {MARKETING_DEMO.STEPS[0].actor}
+          </span>
+          <span className="marketing-demo-fade" data-demo-fade={transitions.actor}>
+            {scene.actor}
+          </span>
+        </span>
+        {' · '}
+        <strong className="marketing-demo-fade" data-demo-fade={transitions.label}>
+          {scene.label}
+        </strong>
       </span>
       <button
         type="button"

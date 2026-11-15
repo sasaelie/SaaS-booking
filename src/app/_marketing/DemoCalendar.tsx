@@ -5,7 +5,7 @@ import { IceIcon } from '../_ui/IceIcon';
 import { useMarketingDemo } from './MarketingDemo';
 import { DemoDraft } from './DemoDraft';
 export function DemoCalendar() {
-  const { state, booked, scene } = useMarketingDemo();
+  const { state, booked } = useMarketingDemo();
   return (
     <div
       id="demo-planning"
@@ -24,26 +24,23 @@ export function DemoCalendar() {
       </h3>
       <p className="marketing-calendar-month">{MARKETING_PREVIEW.MONTH}</p>
       <CalendarStage />
-      <div
-        className="marketing-calendar-next marketing-demo-fade"
-        data-demo-fade={state.transition}
-        id="demo-calendar-result"
-      >
-        <IceIcon name={booked ? 'check' : 'clock'} />
-        {scene.status}
-      </div>
+      <CalendarResult />
     </div>
   );
 }
 function CalendarEvent() {
-  const { example, session } = useMarketingDemo();
+  const { example, session, transitions } = useMarketingDemo();
+  const dateFade = transitions.publication === 'idle' ? transitions.date : 'idle';
+  const timeFade = transitions.publication === 'idle' ? transitions.time : 'idle';
   return (
     <div className="marketing-calendar-event">
       <span aria-hidden="true" />
       <div>
         <strong>{example.title}</strong>
-        <p>{session.fullDate}</p>
-        <p>
+        <p className="marketing-calendar-date marketing-demo-fade" data-demo-fade={dateFade}>
+          {session.fullDate}
+        </p>
+        <p className="marketing-calendar-time marketing-demo-fade" data-demo-fade={timeFade}>
           {session.label} – {session.end}
         </p>
       </div>
@@ -67,11 +64,11 @@ function CalendarWeek() {
 }
 
 function CalendarStage() {
-  const { state } = useMarketingDemo();
+  const { state, transitions } = useMarketingDemo();
   return (
     <div
       className="marketing-calendar-stage marketing-demo-fade"
-      data-demo-fade={state.transition}
+      data-demo-fade={transitions.publication}
       id="demo-calendar-event"
     >
       {state.phase === 'draft' ? (
@@ -82,6 +79,19 @@ function CalendarStage() {
           <CalendarEvent />
         </>
       )}
+    </div>
+  );
+}
+function CalendarResult() {
+  const { booked, scene, transitions } = useMarketingDemo();
+  return (
+    <div className="marketing-calendar-next" id="demo-calendar-result">
+      <span className="marketing-demo-fade" data-demo-fade={transitions.confirmation}>
+        <IceIcon name={booked ? 'check' : 'clock'} />
+      </span>
+      <span className="marketing-demo-fade" data-demo-fade={transitions.status}>
+        {scene.status}
+      </span>
     </div>
   );
 }
