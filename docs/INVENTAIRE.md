@@ -1,6 +1,6 @@
 # Inventaire de la plateforme
 
-932 fichiers versionnés ou préparés dans cette branche, dont 643 sous `src/`.
+940 fichiers versionnés ou préparés dans cette branche, dont 649 sous `src/`.
 
 Le domaine, les ports, les cas d’usage et les adaptateurs sont séparés. `src/app/_ui/` conserve le formulaire public partagé, `src/app/_portal/` les interfaces de gestion et `src/app/_simulation/` les commandes de test. Les routes regroupées sous `(portal)` portent les consoles protégées. Les migrations sont ordonnées de 001 à 019 ; la dernière crée un schéma privé de simulation sans copie de participants ni de comptes.
 
@@ -61,6 +61,7 @@ docs/VERIFICATION.md
 docs/accueil-commercial/ANIMATIONS-CIBLEES.md
 docs/accueil-commercial/CADRES-ET-PHOTOS.md
 docs/accueil-commercial/CORRECTIONS-AVANT-ETUDE.md
+docs/accueil-commercial/ESSAI-CHARGEMENT.md
 docs/accueil-commercial/ETUDE-PAGES-VENTE.md
 docs/accueil-commercial/MISE-EN-LIGNE.md
 docs/accueil-commercial/MISE-EN-SCENE-VISUELLE.md
@@ -335,6 +336,8 @@ src/app/_auth/auth.css
 src/app/_auth/session-exit-navigation.ts
 src/app/_auth/sign-out-request.ts
 src/app/_auth/use-auth-form.ts
+src/app/_loading-preview/LoadingPreview.tsx
+src/app/_loading-preview/loading-preview.css
 src/app/_marketing/BookingPreview.tsx
 src/app/_marketing/DemoAvailability.tsx
 src/app/_marketing/DemoCalendar.tsx
@@ -512,6 +515,7 @@ src/app/_ui/EventInformation.tsx
 src/app/_ui/IceBookingWidget.tsx
 src/app/_ui/IceIcon.tsx
 src/app/_ui/ModalFrame.tsx
+src/app/_ui/PageLoadingIndicator.tsx
 src/app/_ui/ParticipantNavigation.tsx
 src/app/_ui/ParticipationTerms.tsx
 src/app/_ui/PlatformSignature.tsx
@@ -546,6 +550,7 @@ src/app/_ui/glass-frames.css
 src/app/_ui/ice-tokens.css
 src/app/_ui/interaction-polish.css
 src/app/_ui/modal.css
+src/app/_ui/page-loading.css
 src/app/_ui/participant-polish.css
 src/app/_ui/participant.css
 src/app/_ui/service.css
@@ -562,6 +567,7 @@ src/app/_ui/widget-layout.css
 src/app/accessibilite/page.tsx
 src/app/actions/booking.actions.ts
 src/app/actions/simulation.actions.ts
+src/app/apercu-chargement/page.tsx
 src/app/api/admin/route.ts
 src/app/api/auth/[...all]/route.ts
 src/app/api/bank-proof/route.ts
@@ -659,6 +665,7 @@ src/config/marketing-preview.ts
 src/config/marketing-visuals.ts
 src/config/marketing.ts
 src/config/navigation.ts
+src/config/page-loading.ts
 src/config/participant-navigation.ts
 src/config/participation-terms.ts
 src/config/plan-features-activities.ts
@@ -829,6 +836,7 @@ tests/e2e/journey-audit.spec.ts
 tests/e2e/journey-recovery.spec.ts
 tests/e2e/layout-assertions.ts
 tests/e2e/layout-coherence.spec.ts
+tests/e2e/loading-preview.spec.ts
 tests/e2e/marketing-accessibility.spec.ts
 tests/e2e/marketing-demo-clock.ts
 tests/e2e/marketing-demo.spec.ts
