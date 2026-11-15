@@ -16,10 +16,10 @@ Aucune bibliothèque d’animation, vidéo préenregistrée, intelligence artifi
 
 | Étape | Acteur représenté | Ce qui est visible | Durée |
 | --- | --- | --- | --- |
-| Création | Organisateur | Le nom, l’horaire, la capacité et le tarif se remplissent dans une fiche de préparation | 3,2 s |
-| Publication | Organisateur | Les séances sont proposées au client et apparaissent dans le calendrier | 2,6 s |
-| Sélection | Client | Le second horaire est sélectionné ; le jour et l’heure du calendrier correspondent | 2,6 s |
-| Confirmation | Organisateur | Le planning reçoit une réservation simulée d’une place et les disponibilités diminuent d’une place | 4 s |
+| Création | Organisateur | Le nom, l’horaire, la capacité et le tarif se remplissent dans une fiche de préparation | 4,1 s |
+| Publication | Organisateur | Les séances sont proposées au client et apparaissent dans le calendrier | 3,5 s |
+| Sélection | Client | Le second horaire est sélectionné ; le jour et l’heure du calendrier correspondent | 3,5 s |
+| Confirmation | Organisateur | Le planning reçoit une réservation simulée d’une place et les disponibilités diminuent d’une place | 4,9 s |
 
 La séquence passe ensuite à l’activité suivante : Ateliers, Soins, Sport, puis recommence. Les données restent explicitement fictives. Les capacités de démonstration sont cohérentes entre création et réservation : 5 vers 4 places disponibles, 1 vers 0, puis 4 vers 3.
 
@@ -43,7 +43,7 @@ Deux contrôles historiques du comparateur ont aussi été validés dans la page
 
 ## Fondus synchronisés
 
-Les changements automatiques suivent un fondu de sortie de 450 ms, puis un fondu d’entrée de 650 ms, avec une courbe `ease-in-out` des deux côtés. La transition complète dure donc 1,1 seconde : les durées précédentes de 120 et 180 ms produisaient un effet de clignotement. Le contenu est remplacé après la sortie : l’aperçu participant, sa photo, les textes d’étape et la composition photo/planning utilisent le même état de transition. Les commandes de pause et de choix restent visibles. Les fondus font partie du temps d’affichage des étapes, dont le cycle complet dure environ 12,4 secondes. Les étapes ont été prolongées de 800 ms pour conserver leur temps de lecture stable malgré les fondus plus longs.
+Les changements automatiques suivent un fondu de sortie de 1 seconde, puis un fondu d’entrée de 1 seconde, avec une courbe `ease-in-out` des deux côtés. La transition complète dure donc 2 secondes, à la demande de l’utilisateur. Le contenu est remplacé après la sortie : l’aperçu participant, sa photo, les textes d’étape et la composition photo/planning utilisent le même état de transition. Les commandes de pause et de choix restent visibles. Les fondus font partie du temps d’affichage des étapes, dont le cycle complet dure environ 16 secondes. Les étapes ont été prolongées de 900 ms par rapport au réglage 450/650 ms pour conserver leur temps de lecture stable malgré les fondus plus longs.
 
 Le bouton Pause ou une suspension de visibilité annule la transition en cours et rétablit la visibilité du contenu. La réduction des animations désactive les fondus CSS tout en conservant le déroulement automatique. Les champs de préparation apparaissent aussi en fondu court, avec un décalage de 60 ms entre champs, sans révélation saccadée des caractères.
 
@@ -59,4 +59,4 @@ Les tests figent volontairement les animations et vérifient que même un dépas
 
 Avis visuel : la disparition de toute la composition à chaque petite étape reste plus marquée qu’une animation réservée aux informations qui changent. Garder la photo et le cadre stables entre les étapes, avec un fondu complet au changement d’activité, serait une amélioration de mise en scène distincte.
 
-Après le retour utilisateur signalant un clignotement, les fondus ont été allongés à 450/650 ms sans changer la composition. Les sept parcours ciblés du scénario et des fondus, les 126 tests unitaires, TypeScript, ESLint et la construction optimisée passent. Une nouvelle capture en temps réel vérifie ces durées, la synchronisation et le chargement des images ; le temps de lecture stable de chaque étape reste conservé.
+Après le retour utilisateur signalant un clignotement, les fondus ont d’abord été allongés à 450/650 ms sans changer la composition. Les sept parcours ciblés du scénario et des fondus, les 126 tests unitaires, TypeScript, ESLint et la construction optimisée passaient pour ce réglage. Une capture en temps réel a vérifié ces durées, la synchronisation et le chargement des images. Le réglage demandé ensuite est de 1000/1000 ms ; le temps de lecture stable de chaque étape reste conservé.
