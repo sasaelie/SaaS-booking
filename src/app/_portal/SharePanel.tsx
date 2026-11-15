@@ -1,6 +1,6 @@
 import { canUsePro } from '../../core/domain/commercial';
 import { PLAN_UI } from '../../config/commercial';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import type { PortalOverview } from '../../core/ports/portal-models';
 import { SHARE_UI } from '../../config/constants';
 import { CopyCode } from './CopyCode';

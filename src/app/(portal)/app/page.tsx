@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
+import { AppLink as Link } from '../../_ui/AppLink';
 import { portal } from '../../../composition/portal';
 import { PORTAL } from '../../../config/constants';
 import { PortalHeading } from '../../_portal/PortalHeading';

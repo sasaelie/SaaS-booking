@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { usePathname } from 'next/navigation';
 import type { ReactNode, MouseEvent } from 'react';
 import { SESSION_EXIT } from '../../config/session-exit';

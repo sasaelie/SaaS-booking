@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { SIMULATION, simulationPath } from '../../config/simulation';
 export function SimulationNotice({ id }: { readonly id: string }) {
   return (

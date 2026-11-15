@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { MARKETING as UI } from '../../config/marketing';
 import { MARKETING_FAQ } from '../../config/marketing-faq';
 import { IceIcon } from '../_ui/IceIcon';

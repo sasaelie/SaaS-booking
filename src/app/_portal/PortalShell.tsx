@@ -1,6 +1,6 @@
 import { PortalReturn } from './PortalReturn';
 import { PortalScene } from './PortalScene';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import type { ReactNode } from 'react';
 import type { PortalActor, OrganizationSummary } from '../../core/ports/portal-models';
 import { PORTAL } from '../../config/constants';

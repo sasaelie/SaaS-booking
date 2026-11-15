@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from './AppLink';
 import { headers } from 'next/headers';
 import { portal } from '../../composition/portal';
 import { PARTICIPANT_NAV as UI } from '../../config/participant-navigation';

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { COMMERCIAL, PLAN_UI } from '../../config/commercial';
 import { PLAN_SELECTION as UI } from '../../config/plan-selection';
 import type { PlanIntent } from '../../core/validation/plan-selection';

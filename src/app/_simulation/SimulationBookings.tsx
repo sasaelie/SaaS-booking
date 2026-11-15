@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import type { SimulationBooking } from '../../core/ports/simulation.port';
 import { SIMULATION, simulationPath, simulationApi } from '../../config/simulation';
 import { CODE_STATES } from '../../config/service';

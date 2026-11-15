@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from './AppLink';
 import type { PublicCatalog } from '../../core/ports/public-catalog.port';
 import { SHARE_UI, AUDIENCE_LABELS } from '../../config/constants';
 import { PLAN_UI } from '../../config/commercial';

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { MARKETING as UI } from '../../config/marketing';
 import { HomeActions } from '../_auth/HomeActions';
 import { IceIcon } from '../_ui/IceIcon';

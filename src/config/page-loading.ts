@@ -1,4 +1,5 @@
 export const PAGE_LOADING = {
+  DELAY_MS: 200,
   LABEL: 'Chargement de la page…',
   PREVIEW_TITLE: 'Aperçu du chargement',
   PREVIEW_DESCRIPTION: 'Un essai visuel pour choisir le bon mouvement.',

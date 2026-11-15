@@ -1,5 +1,5 @@
 import type { PortalSession } from '../../core/ports/portal-models';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { SESSION_UI } from '../../config/session-details';
 import { PORTAL, BOOKING_UI } from '../../config/constants';
 import { portalDate } from './date-label';

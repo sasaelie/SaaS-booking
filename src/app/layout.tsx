@@ -5,6 +5,7 @@ import { PLATFORM_BRAND } from '../config/platform-brand';
 import { SessionHistorySync } from './_auth/SessionHistorySync';
 import { SessionExitGuard } from './_auth/SessionExitGuard';
 import { StagingNotice } from './_ui/StagingNotice';
+import { PageNavigationProvider } from './_ui/PageNavigationProvider';
 import './_ui/staging.css';
 import './_ui/participant.css';
 import './_ui/ice-tokens.css';
@@ -53,10 +54,12 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
   return (
     <html lang="fr">
       <body>
-        <SessionExitGuard />
-        <SessionHistorySync />
-        <StagingNotice />
-        {children}
+        <PageNavigationProvider>
+          <SessionExitGuard />
+          <SessionHistorySync />
+          <StagingNotice />
+          {children}
+        </PageNavigationProvider>
       </body>
     </html>
   );

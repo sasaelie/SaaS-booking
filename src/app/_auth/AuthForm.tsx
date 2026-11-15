@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { AUTH_UI } from '../../config/constants';
 import { AuthFields } from './AuthFields';
 import { useAuthForm } from './use-auth-form';

@@ -1,7 +1,7 @@
 'use client';
 import { simulationPath } from '../../config/simulation';
 import { ColorScene } from '../_ui/ColorScene';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { FORM_LABELS, BOOKING_STATUS_LABELS } from '../../config/constants';
 import { useManagement } from './use-management';
 import { ProofUpload } from './ProofUpload';

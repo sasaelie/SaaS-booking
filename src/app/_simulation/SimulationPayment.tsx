@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SIMULATION, simulationApi, simulationPath } from '../../config/simulation';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 export function SimulationPayment({ id, bookingId }: { readonly id: string; readonly bookingId: string }) {
   const { pending, message, pay } = useSimulationPayment(id, bookingId);
   return (

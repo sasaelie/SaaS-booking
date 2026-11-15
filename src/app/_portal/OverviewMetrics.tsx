@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import type { PortalOverview } from '../../core/ports/portal-models';
 import { PORTAL } from '../../config/constants';
 import { DASHBOARD } from '../../config/dashboard';

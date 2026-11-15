@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { usePathname } from 'next/navigation';
 import { ADMIN } from '../../config/administration';
 const tabs = [

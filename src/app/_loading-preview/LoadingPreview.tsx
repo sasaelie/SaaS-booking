@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { useState } from 'react';
 import { PLATFORM_BRAND } from '../../config/platform-brand';
 import { PAGE_LOADING as UI } from '../../config/page-loading';

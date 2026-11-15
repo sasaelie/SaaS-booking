@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { PORTAL, BILLING_UI } from '../../config/constants';
 import { hasCommercialAccess } from '../../core/domain/subscription-access';
