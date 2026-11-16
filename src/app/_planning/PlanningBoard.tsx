@@ -1,13 +1,19 @@
-import type { CSSProperties } from 'react';
+import { useEffect, type CSSProperties } from 'react';
 import { CALENDAR_UI } from '../../config/constants';
 import { PLANNING } from '../../config/planning';
 import { dateNumber, weekdayLabel } from './planning-dates';
-import { positionSessions, sessionOccursOnDay, timelineRange } from './planning-sessions';
+import { positionSessions, timelineRange } from './planning-sessions';
 import { PlanningEvent } from './PlanningEvent';
 import type { PlanningProps } from './types';
 import type { PlanningState } from './use-planning';
 type BoardProps = PlanningProps & { readonly state: PlanningState };
 export function PlanningBoard({ state, ...props }: BoardProps) {
+  useEffect(() => {
+    if (state.view === 'day')
+      state.container.current
+        ?.querySelector<HTMLElement>('.planning-day-heading[data-selected="true"]')
+        ?.focus();
+  }, [state.view, state.container]);
   const range = timelineRange(state.sessions, props.timezone);
   const style = {
     '--planning-days': state.visibleDays.length,
@@ -49,13 +55,12 @@ function PlanningDay({
   rangeStart,
   ...props
 }: BoardProps & { readonly day: string; readonly rangeStart: number }) {
-  const sessions = state.sessions.filter((session) =>
-    sessionOccursOnDay(session, day, props.timezone),
-  );
+  const sessions = state.byDay.get(day) ?? [];
   return (
     <div className="planning-day">
       <div
         className="planning-day-heading"
+        tabIndex={-1}
         aria-current={day === state.today ? 'date' : undefined}
         data-selected={day === state.day}
       >

@@ -56,6 +56,7 @@ import './_planning/planning-tokens.css';
 import './_planning/planning-layout.css';
 import './_planning/planning-glass.css';
 import './_planning/planning-days.css';
+import './_planning/planning-month.css';
 import './_planning/planning-events.css';
 import './manage/ticket-layout.css';
 export const metadata = {

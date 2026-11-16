@@ -1,5 +1,6 @@
 import { PLANNING } from '../../config/planning';
-import { dayLabel } from '../_ui/calendar-dates';
+import { dayLabel, monthLabel, monthOf } from '../_ui/calendar-dates';
+import { PlanningViews } from './PlanningViews';
 import { dateNumber, weekdayLabel, weekLabel } from './planning-dates';
 import type { PlanningState } from './use-planning';
 export function PlanningNavigation({
@@ -13,12 +14,14 @@ export function PlanningNavigation({
     <>
       <div className="planning-toolbar">
         <div className="planning-period">
-          <strong aria-live="polite">{weekLabel(state.day)}</strong>
+          <strong aria-live="polite">
+            {state.view === 'month' ? monthLabel(monthOf(state.day)) : weekLabel(state.day)}
+          </strong>
           <small>{timezone}</small>
         </div>
         <PlanningControls state={state} />
       </div>
-      <PlanningDays state={state} />
+      {state.view !== 'month' ? <PlanningDays state={state} /> : null}
     </>
   );
 }
@@ -27,7 +30,7 @@ function PlanningControls({ state }: { readonly state: PlanningState }) {
     <div className="planning-controls">
       <button
         type="button"
-        aria-label={PLANNING.PREVIOUS}
+        aria-label={state.view === 'month' ? PLANNING.PREVIOUS_MONTH : PLANNING.PREVIOUS}
         disabled={!state.previous}
         onClick={() => state.move(-1)}
       >
@@ -35,28 +38,13 @@ function PlanningControls({ state }: { readonly state: PlanningState }) {
       </button>
       <button
         type="button"
-        aria-label={PLANNING.NEXT}
+        aria-label={state.view === 'month' ? PLANNING.NEXT_MONTH : PLANNING.NEXT}
         disabled={!state.next}
         onClick={() => state.move(1)}
       >
         →
       </button>
-      <div className="planning-modes" role="group" aria-label={PLANNING.VIEW}>
-        <button
-          type="button"
-          aria-pressed={state.view === 'week'}
-          onClick={() => state.setView('week')}
-        >
-          {PLANNING.WEEK}
-        </button>
-        <button
-          type="button"
-          aria-pressed={state.view === 'day'}
-          onClick={() => state.setView('day')}
-        >
-          {PLANNING.DAY}
-        </button>
-      </div>
+      <PlanningViews state={state} />
     </div>
   );
 }

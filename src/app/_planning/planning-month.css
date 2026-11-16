@@ -1,0 +1,149 @@
+.session-planning .planning-mobile-view {
+  display: none;
+  min-height: 44px;
+  padding: 8px 28px 8px 10px;
+  border: 1px solid var(--glass-button-light);
+  border-radius: var(--glass-button-radius);
+  color: inherit;
+  background-color: transparent;
+  font: inherit;
+  font-size: 13px;
+}
+.session-planning[data-compact='true'] .planning-mobile-view {
+  display: block;
+}
+.session-planning .planning-month,
+.session-planning .planning-month-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  position: relative;
+  z-index: 1;
+}
+.session-planning .planning-month-weekdays {
+  text-align: center;
+  padding-bottom: 12px;
+  font-size: 11px;
+  color: var(--ice-quiet);
+}
+.session-planning .planning-month {
+  border-top: 1px solid var(--planning-line);
+  border-left: 1px solid var(--planning-line);
+}
+body .session-planning[data-view='month'] .planning-month button.planning-month-day {
+  --glass-button-hover-relief: none;
+  --glass-button-active-relief: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 8px 5px;
+  min-width: 0;
+  min-height: 108px;
+  border: 0;
+  border-right: 1px solid var(--planning-line);
+  border-bottom: 1px solid var(--planning-line);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  text-shadow: none;
+  text-align: left;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+body .session-planning[data-view='month'] .planning-month button.planning-month-day::before {
+  display: none;
+}
+body
+  .session-planning[data-view='month']
+  .planning-month
+  button.planning-month-day:is(:hover, :active) {
+  scale: 1;
+  rotate: none;
+  background-color: var(--ice-soft-fill);
+  text-shadow: none;
+}
+.session-planning .planning-month-date {
+  align-self: flex-start;
+  padding: 2px 3px;
+  border-bottom: 2px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+}
+.session-planning .planning-month-day[aria-pressed='true'] .planning-month-date {
+  border-bottom-color: var(--ui-text-primary);
+}
+.session-planning .planning-month-day[aria-current='date'] .planning-month-date {
+  background: color-mix(in srgb, var(--planning-green) 12%, transparent);
+  border-radius: var(--glass-button-radius);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--planning-green) 55%, transparent);
+}
+.session-planning .planning-month-summary,
+.session-planning .planning-month-previews {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.session-planning .planning-month-session {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: 11px;
+}
+.session-planning .planning-month-session i {
+  width: 4px;
+  height: 12px;
+  flex: none;
+  border-radius: 2px;
+  background: var(--planning-light);
+  box-shadow: 0 0 7px var(--planning-light);
+}
+.session-planning .planning-month-session:is([data-phase='past'], [data-phase='cancelled']) {
+  --planning-light: var(--planning-off);
+}
+.session-planning .planning-month-session:is([data-phase='past'], [data-phase='cancelled']) i {
+  box-shadow: none;
+}
+.session-planning .planning-month-session-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.session-planning .planning-month-count {
+  font-size: 11px;
+  color: var(--ice-quiet);
+}
+.session-planning .planning-month-blank {
+  border-right: 1px solid var(--planning-line);
+  border-bottom: 1px solid var(--planning-line);
+}
+body .session-planning[data-view='month'] .planning-month button.planning-month-day:focus-visible {
+  outline-offset: -3px;
+}
+@container session-planning (max-width: 650px) {
+  body .session-planning[data-view='month'] .planning-month button.planning-month-day {
+    min-height: 76px;
+    padding: 6px 2px;
+    gap: 5px;
+  }
+  .session-planning .planning-month-session-text,
+  .session-planning .planning-month-count-name {
+    display: none;
+  }
+  .session-planning .planning-month-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .session-planning .planning-month-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .session-planning .planning-month-session i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+}
