@@ -1,0 +1,95 @@
+/* One shared glass surface; the days are positions on the strip, not raised cards. */
+.session-planning .planning-days {
+  display: none;
+  grid-template-columns: repeat(7, minmax(28px, 1fr));
+  gap: 0;
+  padding: 5px;
+  margin-bottom: 18px;
+  border: 1px solid var(--glass-button-light);
+  border-radius: var(--glass-button-radius);
+  background: var(--glass-button-surface);
+  box-shadow: inset 0 1px 1px var(--glass-button-bright);
+  overflow-x: auto;
+}
+.session-planning[data-day-view='true'] .planning-days {
+  display: grid;
+}
+body .session-planning[data-day-view] .planning-days button {
+  --glass-button-hover-relief: none;
+  --glass-button-active-relief: none;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  min-width: 28px;
+  min-height: 54px;
+  padding: 6px 0;
+  border: 1px solid transparent;
+  border-radius: var(--glass-button-radius);
+  background: none;
+  box-shadow: none;
+  text-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  transition:
+    background-color 400ms ease,
+    box-shadow 400ms ease;
+}
+body .session-planning[data-day-view] .planning-days button::before {
+  display: none;
+}
+body .session-planning[data-day-view] .planning-days button[aria-pressed]:is(:hover, :active) {
+  scale: 1;
+  rotate: none;
+  text-shadow: none;
+}
+.session-planning .planning-days small {
+  position: relative;
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 400;
+  color: var(--ice-quiet);
+}
+.session-planning .planning-days strong {
+  padding: 0 2px 3px;
+  border-bottom: 2px solid transparent;
+  font-size: 15px;
+  line-height: 18px;
+  font-weight: 500;
+}
+body .session-planning[data-day-view] .planning-days button[aria-pressed='true'] {
+  background-color: color-mix(in srgb, var(--planning-green) 10%, transparent);
+}
+.session-planning .planning-days button[aria-pressed='true'] strong {
+  border-bottom-color: var(--ui-text-primary);
+  font-weight: 700;
+}
+body .session-planning[data-day-view] .planning-days button[aria-current='date'] {
+  --glass-button-hover-relief: inset 0 0 12px
+    color-mix(in srgb, var(--planning-green) 24%, transparent);
+  --glass-button-active-relief: var(--glass-button-hover-relief);
+  background-color: color-mix(in srgb, var(--planning-green) 10%, transparent);
+  box-shadow: var(--glass-button-hover-relief);
+}
+.session-planning .planning-days button[aria-current='date'] small::after {
+  content: '';
+  position: absolute;
+  inset-inline-end: -5px;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--planning-green);
+  box-shadow: 0 0 6px var(--planning-green);
+}
+body .session-planning[data-day-view] .planning-days button:focus-visible {
+  outline-offset: -3px;
+}
+@media (forced-colors: active) {
+  body .session-planning[data-day-view] .planning-days button[aria-current='date'] {
+    border-color: Highlight;
+  }
+  .session-planning .planning-days button[aria-pressed='true'] strong {
+    border-bottom-color: Highlight;
+  }
+}

@@ -35,7 +35,7 @@ Après réussite, le grand encart de présentation de l’activité est masqué 
 
 La suppression du résumé en double conserve les précisions de statut : une annulation par le participant reste distinguée d’une annulation par l’organisateur. Le test du parcours de simulation a permis de repérer cette information avant de la rétablir dans le billet.
 
-Sur le calendrier participant à 390 px, les sept boutons de jour se répartissent sur deux lignes. Une piste complémentaire est un bandeau de jours sur une seule ligne, défilant sur les petits écrans, avec le jour choisi visible et des cibles tactiles suffisantes. Cette piste reste à essayer ; elle n’est pas appliquée dans cette correction.
+Sur le calendrier participant à 390 px, les sept boutons de jour se répartissaient sur deux lignes. Après le retour visuel du propriétaire sur cette zone, une correction complémentaire les regroupe dans une seule bande de verre : sept jours sur une ligne, sans relief individuel, avec le jour choisi souligné et le jour actuel éclairé. La bande est commune aux interfaces participant et organisateur. Les dates restent ancrées au survol et pendant l’appui ; le calendrier et ses événements ne sont pas réorganisés.
 
 ## Disposition proposée pour la confirmation
 
@@ -98,3 +98,5 @@ Résultats de la version corrigée :
 - Régression repérée puis corrigée : la précision du statut d’annulation reste visible après actualisation, sans réintroduire le récapitulatif complet en double.
 
 Ces résultats ne constituent ni un test Safari sur appareil réel, ni une validation de réception des e-mails, ni la preuve qu’un ordonnanceur hébergé exécute les reprises. Les corrections restent sur la branche `feat/booking-clarity-and-confirmation` ; la version publiée sur Vercel n’a pas été remplacée pendant cet audit.
+
+Affinage du sélecteur de jours après retour visuel : compilation et `npm run verify` réussis (152 tests unitaires), puis six tests navigateur existants réussis sur les calendriers et le billet. Un contrôle complémentaire confirme les sept jours sur une ligne sans débordement à 320, 390 et 768 px, la sélection au clavier, l’absence de déplacement au survol et les modes semaine/journée sur ordinateur. Captures et mesures : `/workspace/artifacts/planning-day-strip/`. L’horloge navigateur est placée au jour des séances fictives pour illustrer la lueur « aujourd’hui ».

@@ -58,15 +58,6 @@
     transition: --button-rim-angle 500ms ease;
   }
 }
-body .session-planning .planning-days button[aria-current='date'] {
-  border-color: color-mix(in srgb, var(--planning-green) 70%, transparent);
-  background-color: color-mix(in srgb, var(--planning-green) 10%, transparent);
-  box-shadow:
-    var(--glass-button-relief),
-    inset 0 0 10px color-mix(in srgb, var(--planning-green) 13%, transparent),
-    0 0 6px color-mix(in srgb, var(--planning-green) 45%, transparent),
-    0 0 18px color-mix(in srgb, var(--planning-green) 32%, transparent);
-}
 .session-planning .planning-day-heading[aria-current='date'] strong {
   background: linear-gradient(
     -75deg,
