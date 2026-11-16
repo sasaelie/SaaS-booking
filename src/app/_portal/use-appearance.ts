@@ -6,7 +6,9 @@ import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { APPEARANCE as UI } from '../../config/appearance';
 import { PORTAL } from '../../config/constants';
 import { portalRequest } from './portal-request';
+import type { StoryLayout } from '../../core/validation/story-layout';
 type Colors = {
+  storyLayout: StoryLayout | null;
   storyTextTone: StoryTextTone;
   organizerHue: number | null;
   participantHue: number | null;
@@ -14,6 +16,7 @@ type Colors = {
 export function useAppearance(organization: OrganizationSummary) {
   const [target, setTarget] = useState<'organizer' | 'participant'>('participant');
   const [colors, setColors] = useState<Colors>({
+    storyLayout: organization.storyLayout ?? null,
     storyTextTone: organization.storyTextTone,
     organizerHue: organization.organizerHue,
     participantHue: organization.participantHue,
@@ -23,6 +26,7 @@ export function useAppearance(organization: OrganizationSummary) {
   const key = target === 'organizer' ? 'organizerHue' : 'participantHue';
   const hue = colors[key] ?? (target === 'organizer' ? UI.ORGANIZER : UI.PARTICIPANT);
   const dirty =
+    JSON.stringify(colors.storyLayout) !== JSON.stringify(saved.storyLayout) ||
     colors.storyTextTone !== saved.storyTextTone ||
     colors.organizerHue !== saved.organizerHue ||
     colors.participantHue !== saved.participantHue;
@@ -31,23 +35,39 @@ export function useAppearance(organization: OrganizationSummary) {
     setTarget,
     hue,
     storyTextTone: colors.storyTextTone,
-    changeTone: (storyTextTone: StoryTextTone) => {
-      setColors({ ...colors, storyTextTone });
-      operation.clear();
-    },
+    storyLayout: colors.storyLayout,
     dirty,
     ...operation,
+    ...appearanceChanges(colors, setColors, key, operation.clear),
+  };
+}
+function appearanceChanges(
+  colors: Colors,
+  setColors: (value: Colors) => void,
+  key: 'organizerHue' | 'participantHue',
+  clear: () => void,
+) {
+  return {
+    changeLayout: (storyLayout: StoryLayout | null) => {
+      setColors({ ...colors, storyLayout });
+      clear();
+    },
+    changeTone: (storyTextTone: StoryTextTone) => {
+      setColors({ ...colors, storyTextTone });
+      clear();
+    },
     change: (value: number) => {
       setColors({ ...colors, [key]: value });
-      operation.clear();
+      clear();
     },
     reset: () => {
       setColors({
+        storyLayout: null,
         storyTextTone: 'WHITE',
         organizerHue: UI.ORGANIZER,
         participantHue: UI.PARTICIPANT,
       });
-      operation.clear();
+      clear();
     },
   };
 }

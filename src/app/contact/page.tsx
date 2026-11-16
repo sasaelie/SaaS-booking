@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { PUBLIC_DOCUMENT_UI as UI } from '../../config/public-documents';
 import { publicProfile } from '../../lib/public-profile';
 import { PublicPage } from '../_marketing/PublicPage';

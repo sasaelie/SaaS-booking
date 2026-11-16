@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import type { ReactNode } from 'react';
 import { headers } from 'next/headers';
 import { currentVisitor } from '../../composition/current-visitor';

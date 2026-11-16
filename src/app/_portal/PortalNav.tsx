@@ -2,7 +2,7 @@
 import { SIMULATION } from '../../config/simulation';
 import { ADMIN } from '../../config/administration';
 import { SESSION_UI } from '../../config/session-details';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { useState, type KeyboardEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import { PORTAL } from '../../config/constants';

@@ -1,0 +1,35 @@
+.page-navigation-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  pointer-events: auto;
+  color: var(--ui-text-primary);
+  background: var(--ice-scene);
+  animation: page-navigation-in 240ms ease-out both;
+}
+.page-navigation-loading > .page-loading-indicator {
+  animation: none;
+}
+.page-navigation-loading[data-leaving='true'] {
+  animation: page-loading-out 180ms ease-in both;
+  pointer-events: none;
+}
+@keyframes page-navigation-in {
+  from {
+    opacity: var(--page-loading-enter-from, 0);
+  }
+  to {
+    opacity: 1;
+  }
+}
+body:has(.page-navigation-loading) .page-loading-screen {
+  visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-navigation-loading {
+    animation: none !important;
+  }
+}

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from './AppLink';
 import { SERVICE } from '../../config/service';
 import { SIMULATION } from '../../config/simulation';
 export function ParticipationTerms({ text, editUrl }: { readonly text: string; readonly editUrl?: string }) {

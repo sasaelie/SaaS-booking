@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { simulation } from '../../../../../composition/simulation';
 import { IceBookingWidget } from '../../../../_ui/IceBookingWidget';
-import Link from 'next/link';
+import { AppLink as Link } from '../../../../_ui/AppLink';
 import { SIMULATION, simulationPath } from '../../../../../config/simulation';
 export default async function Page({
   params,

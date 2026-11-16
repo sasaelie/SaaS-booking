@@ -17,10 +17,12 @@ import { reservationClock, existingBooking } from './reservation/context';
 import { reservationOutput } from './reservation/output';
 import { insertReservation } from './reservation/insert';
 import type { DrizzlePgDb } from './client';
+import type { ParticipantCodeOptions } from './participant/voucher';
 export type { DrizzlePgDb } from './client';
 async function reserve(
   tx: Transaction,
   input: AtomicSeatReservationInput,
+  participantCode?: ParticipantCodeOptions,
 ): Promise<Result<AtomicSeatReservationOutput>> {
   const now = await reservationClock(tx, input);
   const existing = await existingBooking(tx, input);
@@ -33,15 +35,22 @@ async function reserve(
   if (!activity.commercialAccessAllowed)
     return failure(ERROR_CODES.SUBSCRIPTION_REQUIRED, 'Reservation', 'activity-access');
   return ok(
-    await reservationOutput(tx, await insertReservation(tx, { activity, input, now }), now),
+    await reservationOutput(
+      tx,
+      await insertReservation(tx, { activity, input, now, participantCode }),
+      now,
+    ),
   );
 }
 export class DrizzleSessionRepository implements SessionRepositoryPort {
-  constructor(private readonly db: DrizzlePgDb) {}
+  constructor(
+    private readonly db: DrizzlePgDb,
+    private readonly participantCode?: ParticipantCodeOptions,
+  ) {}
   reserveSeatAtomically(
     input: AtomicSeatReservationInput,
   ): Promise<Result<AtomicSeatReservationOutput>> {
-    return atomic(this.db, 'Reservation', (tx) => reserve(tx, input));
+    return atomic(this.db, 'Reservation', (tx) => reserve(tx, input, this.participantCode));
   }
   attachCheckout(
     input: Parameters<SessionRepositoryPort['attachCheckout']>[0],

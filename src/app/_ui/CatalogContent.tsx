@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from './AppLink';
 import type { PublicCatalog } from '../../core/ports/public-catalog.port';
 import { SHARE_UI, AUDIENCE_LABELS } from '../../config/constants';
 import { PLAN_UI } from '../../config/commercial';
@@ -11,6 +11,7 @@ import { PlatformSignature } from './PlatformSignature';
 import { PortalHeading } from '../_portal/PortalHeading';
 import { PortalEmpty } from '../_portal/PortalEmpty';
 import { formatMoney } from './format-money';
+import { StoryCanvas } from './StoryCanvas';
 export function CatalogContent({
   data,
   simulationId,
@@ -22,7 +23,10 @@ export function CatalogContent({
     <div className="ice-branded-page participant-catalog">
       {data.participantHue != null ? <ColorScene hue={data.participantHue} /> : null}
       <div className="catalog-identity">
-        <BookingBrand name={data.name} logoUrl={data.hasLogo ? `/api/branding/${data.organizationId}/logo` : null} />
+        <BookingBrand
+          name={data.name}
+          logoUrl={data.hasLogo ? `/api/branding/${data.organizationId}/logo` : null}
+        />
         <SocialLinks links={data.socialLinks} />
       </div>
       <PortalHeading title={SHARE_UI.CATALOG_TITLE} />
@@ -32,11 +36,22 @@ export function CatalogContent({
     </div>
   );
 }
-function CatalogActivities({ data, simulationId }: { readonly data: PublicCatalog; readonly simulationId?: string }) {
+function CatalogActivities({
+  data,
+  simulationId,
+}: {
+  readonly data: PublicCatalog;
+  readonly simulationId?: string;
+}) {
   return (
     <div className="portal-cards catalog-grid">
       {data.activities.map((activity) => (
-        <CatalogCard key={activity.id} data={data} activity={activity} simulationId={simulationId} />
+        <CatalogCard
+          key={activity.id}
+          data={data}
+          activity={activity}
+          simulationId={simulationId}
+        />
       ))}
     </div>
   );
@@ -50,14 +65,30 @@ function CatalogCard({ data, activity, simulationId }: CatalogCardProps) {
   const content = (
     <>
       <span className="portal-badge">{AUDIENCE_LABELS[activity.audiencePolicy]}</span>
-      <h2>{activity.name}</h2>
-      {activity.description ? <p className="portal-muted catalog-description">{activity.description}</p> : null}
+      {data.storyLayout ? (
+        <StoryCanvas
+          layout={data.storyLayout}
+          title={activity.name}
+          price={formatMoney(activity.priceCents, activity.currency)}
+        />
+      ) : (
+        <h2>{activity.name}</h2>
+      )}
+      {activity.description ? (
+        <p className="portal-muted catalog-description">{activity.description}</p>
+      ) : null}
       <div className="catalog-booking-action">
-        <strong className="catalog-price">{formatMoney(activity.priceCents, activity.currency)}</strong>
+        {!data.storyLayout ? (
+          <strong className="catalog-price">
+            {formatMoney(activity.priceCents, activity.currency)}
+          </strong>
+        ) : null}
         <Link
           className="liquid-ice-button portal-button"
           href={
-            simulationId ? `${simulationPath(simulationId)}/activite/${activity.id}` : `/${data.slug}/${activity.id}`
+            simulationId
+              ? `${simulationPath(simulationId)}/activite/${activity.id}`
+              : `/${data.slug}/${activity.id}`
           }
         >
           {activity.reservationsOpen === false ? PLAN_UI.VIEW_ONLY : SHARE_UI.CATALOG_OPEN}
@@ -65,6 +96,15 @@ function CatalogCard({ data, activity, simulationId }: CatalogCardProps) {
       </div>
     </>
   );
+  return <CatalogFrame data={data}>{content}</CatalogFrame>;
+}
+function CatalogFrame({
+  data,
+  children,
+}: {
+  readonly data: PublicCatalog;
+  readonly children: import('react').ReactNode;
+}) {
   return data.hasBackground ? (
     <StoryPanel
       as="article"
@@ -72,9 +112,9 @@ function CatalogCard({ data, activity, simulationId }: CatalogCardProps) {
       tone={data.storyTextTone ?? 'WHITE'}
       photoUrl={`/api/branding/${data.organizationId}/background`}
     >
-      {content}
+      {children}
     </StoryPanel>
   ) : (
-    <article className="portal-panel portal-organization-card catalog-activity">{content}</article>
+    <article className="portal-panel portal-organization-card catalog-activity">{children}</article>
   );
 }

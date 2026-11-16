@@ -1,0 +1,79 @@
+.story-canvas {
+  position: relative;
+  flex: 1;
+  min-height: 300px;
+  width: 100%;
+}
+.story-positioned {
+  position: absolute;
+  max-width: 100%;
+  width: max-content;
+  overflow-wrap: anywhere;
+  z-index: 1;
+}
+.story-positioned-title {
+  max-width: 95%;
+}
+.story-positioned-title :is(h1, h2) {
+  margin: 0;
+}
+.story-positioned-price {
+  font-size: 28px;
+  font-weight: 600;
+}
+.story-drag-handle {
+  touch-action: none;
+  cursor: grab;
+  color: inherit;
+  border: 1px dashed currentColor;
+  border-radius: 10px;
+  background: transparent;
+  padding: 8px;
+  text-align: start;
+  font: inherit;
+  text-shadow: var(--story-caption-shadow);
+}
+.story-drag-handle:active {
+  cursor: grabbing;
+}
+.story-drag-handle:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+.story-drag-handle.story-positioned-title {
+  font-family: var(--activity-title-font);
+  font-size: 28px;
+  line-height: 1.2;
+}
+.story-drag-handle.story-positioned-price {
+  font-size: 22px;
+}
+.story-placement-controls {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+.story-placement-controls > div,
+.story-placement-controls label {
+  display: grid;
+  gap: 8px;
+}
+.story-placement-controls input {
+  width: 100%;
+  min-height: 44px;
+  accent-color: var(--story-forest);
+}
+.story-placement-controls p,
+.appearance-activity-edit p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.appearance-activity-edit {
+  margin-top: 18px;
+}
+.appearance-activity-edit a {
+  min-height: 44px;
+}
+.ice-story:has(> .story-canvas) .ice-story-bottom {
+  margin-top: 0;
+}

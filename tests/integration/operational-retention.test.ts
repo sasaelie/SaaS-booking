@@ -22,6 +22,10 @@ async function oldClosedBooking() {
     .set({ startsAt: new Date(old.getTime() - 3600000), endsAt: old })
     .where(eq(sessions.id, booking.sessionId));
   await db.update(bookings).set({ createdAt: old }).where(eq(bookings.id, booking.bookingId));
+  // This fixture represents a dossier whose access was explicitly closed in the past.
+  await db.execute(
+    sql`UPDATE booking_access_credentials SET closed_at=${old} WHERE booking_id=${booking.bookingId}`,
+  );
   return { context, booking };
 }
 it('simulates first, erases operational contacts after closure, and repeats without duplicate purge', async () => {
@@ -75,6 +79,9 @@ it('retains the minimal fiscal identity separately while erasing operational con
     .set({ paidAt: old, createdAt: old })
     .where(eq(bookings.id, input.booking.bookingId));
   await db.execute(sql`UPDATE financial_entries SET created_at=${old}`);
+  await db.execute(
+    sql`UPDATE booking_access_credentials SET closed_at=${old} WHERE booking_id=${input.booking.bookingId}`,
+  );
   await db.update(outboxJobs).set({ completedAt: new Date() });
   expect(required(await retainOperational(db, new Date(), false)).anonymizedCount).toBe(1);
   expect((await db.select().from(bookings))[0]?.email).toBe('anonymous@invalid.local');

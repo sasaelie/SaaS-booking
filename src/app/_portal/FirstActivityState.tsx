@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { PORTAL } from '../../config/constants';
 import { STAGING, paymentsEnabled } from '../../config/staging';

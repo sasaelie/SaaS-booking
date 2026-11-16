@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { AUTH_UI, INPUT_LIMITS } from '../../config/constants';
 import { PasswordField } from './PasswordField';
 import { PortalField } from '../_portal/PortalField';

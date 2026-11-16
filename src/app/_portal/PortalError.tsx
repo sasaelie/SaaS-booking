@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { PORTAL } from '../../config/constants';
 export function PortalError({ message = PORTAL.ERROR }: { readonly message?: string }) {
   return (

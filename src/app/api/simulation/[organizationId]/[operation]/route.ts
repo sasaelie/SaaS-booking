@@ -1,7 +1,10 @@
 import { simulation } from '../../../../../composition/simulation';
 import { boundedJson } from '../../../../../lib/http-body';
 import { HTTP_STATUS } from '../../../../../config/constants';
-import { SimulationDeleteSchema, SimulationPaymentSchema } from '../../../../../core/validation/simulation';
+import {
+  SimulationDeleteSchema,
+  SimulationPaymentSchema,
+} from '../../../../../core/validation/simulation';
 import { z } from 'zod';
 export async function POST(
   request: Request,
@@ -27,8 +30,10 @@ async function operationResult(
   operation: string,
   body: unknown,
 ) {
-  if (operation === 'payment' && SimulationPaymentSchema.safeParse(body).success) return app.tests.payment(body);
-  if (operation === 'delete' && SimulationDeleteSchema.safeParse(body).success) return app.tests.delete(body);
+  if (operation === 'payment' && SimulationPaymentSchema.safeParse(body).success)
+    return app.tests.payment(body);
+  if (operation === 'delete' && SimulationDeleteSchema.safeParse(body).success)
+    return app.tests.delete(body);
   if (
     operation === 'quote' &&
     body &&
@@ -43,9 +48,11 @@ async function operationResult(
     if (!token.ok) return token;
     const exists = await app.repository.visible(token.value.bookingId);
     if (!exists.ok) return exists;
+    const resolved = await app.managementToken(token.value);
+    if (!resolved.ok) return resolved;
     return operation === 'context'
-      ? app.selfBooking.execute(parsed.data.token)
-      : app.cancellation.cancelByAttendee(parsed.data);
+      ? app.selfBooking.execute(resolved.value)
+      : app.cancellation.cancelByAttendee({ token: resolved.value });
   }
   return { ok: false as const, error: { code: 'VALIDATION_FAILED' as const } };
 }

@@ -52,6 +52,7 @@ function publicOutput(booking: AtomicSeatReservationOutput): CreateBookingOutput
 async function checkout(
   deps: CreateBookingUseCaseDeps,
   booking: AtomicSeatReservationOutput,
+  token: string,
 ): Promise<Result<CreateBookingOutput>> {
   if (
     booking.checkoutUrl ||
@@ -68,8 +69,8 @@ async function checkout(
     currency: booking.currency,
     customerEmail: booking.attendeeEmail,
     expiresAt: booking.lockedUntil,
-    successUrl: `${deps.appUrl}/booking-result`,
-    cancelUrl: `${deps.appUrl}/booking-result`,
+    successUrl: `${deps.appUrl}/manage#token=${encodeURIComponent(token)}`,
+    cancelUrl: `${deps.appUrl}/manage#token=${encodeURIComponent(token)}`,
     merchantAccountId: booking.merchantAccountId,
     commissionCents: booking.commissionCents,
     chargeModel: booking.chargeModel,
@@ -97,8 +98,6 @@ export class CreateBookingUseCase {
         requestHash: hash.value,
       });
       if (!booked.ok) return booked;
-      const output = await checkout(this.deps, booked.value);
-      if (!output.ok) return output;
       const token = await signSelfCancelToken(
         {
           organizationId: booked.value.organizationId,
@@ -108,7 +107,9 @@ export class CreateBookingUseCase {
         },
         this.deps.secret,
       );
-      return token.ok ? ok({ ...output.value, selfServiceToken: token.value }) : token;
+      if (!token.ok) return token;
+      const output = await checkout(this.deps, booked.value, token.value);
+      return output.ok ? ok({ ...output.value, selfServiceToken: token.value }) : output;
     });
   }
 }

@@ -3,7 +3,7 @@ import { simulationApi } from '../../config/simulation';
 import { SERVICE } from '../../config/service';
 import { formatMoney } from './format-money';
 import { useState, useRef, useEffect } from 'react';
-import { BOOKING_UI } from '../../config/constants';
+import { BOOKING_UI, PARTICIPANT_UI } from '../../config/constants';
 interface QuoteContext {
   readonly simulationId?: string;
   readonly organizationId: string;
@@ -16,7 +16,8 @@ function amountFrom(value: unknown): number | null {
   const amount = value.remainingToPayCents;
   return typeof amount === 'number' && Number.isSafeInteger(amount) && amount >= 0 ? amount : null;
 }
-async function fetchQuote(context: QuoteContext, code: string): Promise<{ amount: number; remainder: number } | null> {
+type Quote = { amount: number; remainder: number } | { multiple: true };
+async function fetchQuote(context: QuoteContext, code: string): Promise<Quote | null> {
   const response = await fetch(
     context.simulationId ? simulationApi(context.simulationId, 'quote') : '/api/voucher-quote',
     {
@@ -30,6 +31,8 @@ async function fetchQuote(context: QuoteContext, code: string): Promise<{ amount
     },
   );
   const body: unknown = await response.json();
+  if (body && typeof body === 'object' && 'code' in body && body.code === 'CONFLICT')
+    return { multiple: true };
   const payload = body && typeof body === 'object' && 'data' in body ? body.data : body;
   const amount = amountFrom(payload);
   if (!response.ok || amount === null) return null;
@@ -92,12 +95,8 @@ function quoteActions(state: QuoteActions) {
     try {
       const amount = await fetchQuote(state.context, state.code.trim());
       if (sequence !== state.request.current) return;
-      state.setRemaining(amount?.amount ?? null);
-      state.setMessage(
-        amount !== null
-          ? `${BOOKING_UI.VOUCHER_SUCCESS}${amount.remainder > 0 ? ` ${SERVICE.REMAINDER} ${formatMoney(amount.remainder, state.context.currency)}` : ''}`
-          : BOOKING_UI.VOUCHER_INVALID,
-      );
+      state.setRemaining(amount && 'amount' in amount ? amount.amount : null);
+      state.setMessage(quoteMessage(amount, state.context.currency));
     } catch {
       if (sequence === state.request.current) {
         state.setRemaining(null);
@@ -107,4 +106,10 @@ function quoteActions(state: QuoteActions) {
       if (sequence === state.request.current) state.setPending(false);
     }
   };
+}
+
+function quoteMessage(quote: Quote | null, currency: string) {
+  if (!quote) return BOOKING_UI.VOUCHER_INVALID;
+  if ('multiple' in quote) return PARTICIPANT_UI.MULTIPLE;
+  return `${BOOKING_UI.VOUCHER_SUCCESS}${quote.remainder > 0 ? ` ${SERVICE.REMAINDER} ${formatMoney(quote.remainder, currency)}` : ''}`;
 }

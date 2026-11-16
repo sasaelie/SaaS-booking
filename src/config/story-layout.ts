@@ -1,0 +1,19 @@
+export const STORY_LAYOUT = {
+  MIN: 0,
+  MAX: 100,
+  STEP: 1,
+  KEY_STEP: 2,
+  DEFAULT: { title: { x: 0, y: 15 }, price: { x: 0, y: 95 } },
+  TITLE: 'Position du titre et du tarif',
+  HINT: 'Déplacez les poignées dans l’encart. Les flèches du clavier et les curseurs permettent aussi un placement précis.',
+  NAME: 'Nom et tarif de l’activité',
+  ACTIVITY: 'Activité de l’aperçu',
+  EDIT: 'Modifier le nom et le tarif',
+  EDIT_HINT:
+    'Le nom et le prix se modifient dans l’activité. Les réservations déjà confirmées conservent leur tarif.',
+  TITLE_HANDLE: 'Déplacer le titre',
+  PRICE_HANDLE: 'Déplacer le tarif',
+  HORIZONTAL: 'Horizontal',
+  VERTICAL: 'Vertical',
+  RESET: 'Rétablir le placement',
+} as const;

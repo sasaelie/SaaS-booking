@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { headers } from 'next/headers';
 import { simulation } from '../../composition/simulation';
 import { DASHBOARD } from '../../config/dashboard';

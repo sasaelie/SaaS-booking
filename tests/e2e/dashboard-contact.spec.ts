@@ -18,7 +18,9 @@ test('opens every dashboard metric and shows simulation access without mixing re
   for (let i = 0; i < 4; i++) {
     await page.goto(`/app/${s.organizationId}`);
     if (i === 0) {
+      await expect(metrics.nth(i)).toBeVisible();
       await metrics.nth(i).focus();
+      await expect(metrics.nth(i)).toBeFocused();
       await page.keyboard.press('Enter');
     } else await metrics.nth(i).click();
     await expect(page).toHaveURL(expected[i] ?? '');
@@ -90,6 +92,7 @@ async function expectSimulationHeader(page: Page, id: string, activityId: string
   await expect(page.locator('.simulation-notice')).toContainText('Simulation participant — TEST');
   await expect(page.locator('.ice-branded-page')).toHaveCSS('isolation', 'auto');
   expect((await page.locator('.simulation-notice').boundingBox())?.height).toBeLessThan(180);
+  await expect(page.locator('.ice-brand-name')).toBeVisible();
   expect((await page.locator('.ice-brand-name').boundingBox())?.y).toBeLessThan(380);
   await page.screenshot({ path, fullPage: true });
 }

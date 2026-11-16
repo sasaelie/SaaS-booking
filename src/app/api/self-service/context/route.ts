@@ -2,6 +2,7 @@ import { selfBooking } from '../../../../composition/self-booking';
 import { boundedJson } from '../../../../lib/http-body';
 import { SelfCancelTokenSchema } from '../../../../core/validation/self-service';
 import { HTTP_STATUS, ERROR_CODES } from '../../../../config/constants';
+import { resolveParticipantToken } from '../../../../composition/participant';
 export async function POST(request: Request): Promise<Response> {
   const body = await boundedJson(request);
   const token =
@@ -12,7 +13,8 @@ export async function POST(request: Request): Promise<Response> {
   if (!service.ok) return Response.json({ success: false }, { status: HTTP_STATUS.UNAVAILABLE });
   if (!token?.success)
     return Response.json({ success: false }, { status: HTTP_STATUS.BAD_REQUEST });
-  const result = await service.value.execute(token.data);
+  const resolved = await resolveParticipantToken(token.data, request);
+  const result = resolved.ok ? await service.value.execute(resolved.value) : resolved;
   return Response.json(result.ok ? { success: true, data: result.value } : { success: false }, {
     status: result.ok
       ? HTTP_STATUS.OK

@@ -1,8 +1,10 @@
 import type { SocialLinks } from './event-details';
 import type { StoryTextTone } from '../../config/story';
+import type { StoryLayout } from '../validation/story-layout';
 import type { Result } from '../../lib/result';
 import type { AudiencePolicy } from '../../config/constants';
 export interface PublicCatalog {
+  readonly storyLayout?: StoryLayout | null;
   readonly showPlatformSignature?: boolean;
   readonly socialLinks?: SocialLinks;
   readonly organizationId: string;

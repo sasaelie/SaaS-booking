@@ -1,0 +1,80 @@
+.loading-preview-page {
+  min-height: 100svh;
+  box-sizing: border-box;
+  padding: 36px 20px;
+  color: var(--ui-text-primary);
+  background:
+    radial-gradient(ellipse at 85% 5%, var(--ice-mist), transparent 65%),
+    radial-gradient(ellipse at 10% 85%, var(--ice-mist), transparent 70%), var(--ice-cream);
+}
+.loading-preview-content {
+  max-width: 660px;
+  margin-inline: auto;
+}
+.loading-preview-back {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+}
+.loading-preview-back .ice-icon {
+  width: 18px;
+  height: 18px;
+}
+.loading-preview-brand {
+  margin: 28px 0 12px;
+  font-size: 14px;
+}
+.loading-preview-page h1 {
+  margin: 0 0 14px;
+  font-size: clamp(30px, 5vw, 42px);
+}
+.loading-preview-intro,
+.loading-preview-hint {
+  color: var(--ui-text-secondary);
+  line-height: 1.6;
+}
+.loading-preview-stage {
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+.loading-preview-ready {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  animation: page-loading-in 220ms ease-out both;
+}
+.loading-preview-ready h2 {
+  margin: 0;
+  font-size: 21px;
+}
+.loading-preview-ready p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ui-text-secondary);
+}
+.loading-preview-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.loading-preview-actions > .portal-button {
+  min-height: 48px;
+}
+.loading-preview-actions > button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.loading-preview-hint {
+  margin: 20px 0 0;
+  text-align: center;
+  font-size: 13px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .loading-preview-ready {
+    animation: none;
+  }
+}

@@ -15,6 +15,9 @@ import { VoucherLifecycleUseCase } from '../core/use-cases/voucher-lifecycle.use
 import { verifySelfCancelToken } from '../core/domain/self-service-token';
 import { failure } from '../lib/errors';
 import { ERROR_CODES } from '../config/constants';
+import { ParticipantAccessRepository } from '../adapters/db/participant/repository';
+import { signSelfCancelToken } from '../core/domain/self-service-token';
+import { ParticipantCodeSchema } from '../core/validation/participant';
 export function simulationServices(
   db: DrizzlePgDb,
   organizationId: string,
@@ -22,17 +25,18 @@ export function simulationServices(
   appUrl: string,
   gateway: PaymentGatewayPort,
 ) {
+  const access = new ParticipantAccessRepository(db, secret, appUrl, true);
   return {
     catalog: new PublicCatalogUseCase(new DrizzlePublicCatalogRepository(db)),
     bookingPage: new GetBookingPageUseCase(new DrizzleActivityRepository(db)),
     createBooking: new CreateBookingUseCase({
-      sessionRepo: new DrizzleSessionRepository(db),
+      sessionRepo: new DrizzleSessionRepository(db, { secret, test: true }),
       paymentGateway: gateway,
       secret,
       appUrl,
     }),
-    quote: new QuoteVoucherUseCase(new DrizzleVoucherQuoteRepository(db)),
-    selfBooking: new ReadSelfBookingUseCase(new DrizzleSelfBookingRepository(db), secret),
+    quote: new QuoteVoucherUseCase(new DrizzleVoucherQuoteRepository(db, { secret, test: true })),
+    selfBooking: new ReadSelfBookingUseCase(new DrizzleSelfBookingRepository(db), secret, access),
     cancellation: new VoucherLifecycleUseCase({
       voucherRepo: new DrizzleVoucherRepository(db),
       secret,
@@ -42,11 +46,26 @@ export function simulationServices(
         },
       },
     }),
+    ...simulationTokenServices(access, secret, organizationId),
+  };
+}
+
+function simulationTokenServices(
+  access: ParticipantAccessRepository,
+  secret: string,
+  organizationId: string,
+) {
+  return {
     async verify(token: string) {
-      const parsed = await verifySelfCancelToken(token, secret, new Date());
+      const parsed = ParticipantCodeSchema.safeParse(token).success
+        ? await access.authorizeCode(token, new Date())
+        : await verifySelfCancelToken(token, secret, new Date());
       return parsed.ok && parsed.value.organizationId !== organizationId
         ? failure(ERROR_CODES.UNAUTHORIZED, 'Simulation', 'token-tenant')
         : parsed;
+    },
+    async managementToken(payload: Parameters<typeof signSelfCancelToken>[0]) {
+      return signSelfCancelToken(payload, secret);
     },
   };
 }

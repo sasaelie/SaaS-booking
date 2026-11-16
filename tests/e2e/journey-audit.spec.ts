@@ -53,6 +53,8 @@ test('explains the activity reached by a direct link and keeps its title above l
   );
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`/${space.slug}/${space.activityId}`);
+  await expect(page.getByRole('heading', { name: 'Initiation à la céramique', exact: true })).toBeVisible();
+  await expect(page.locator('.event-information').first()).toBeVisible();
   const title = await page.locator('h1').boundingBox(),
     details = await page.locator('.event-information').first().boundingBox();
   await page.screenshot({ path: info.outputPath('participant-hierarchy.png'), fullPage: true });

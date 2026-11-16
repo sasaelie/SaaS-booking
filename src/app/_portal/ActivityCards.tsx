@@ -1,7 +1,7 @@
 import { PLAN_UI } from '../../config/commercial';
 import { SERVICE } from '../../config/service';
 import { StatusBadge } from './StatusBadge';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import type { PortalActivity } from '../../core/ports/portal-models';
 import { PORTAL, AUDIENCE_LABELS, PAYMENT_LABELS } from '../../config/constants';
 import { formatMoney } from '../_ui/format-money';

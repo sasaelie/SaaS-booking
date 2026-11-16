@@ -79,6 +79,7 @@ function activityBrand(row: {
     socialLinks: row.organization.socialLinks,
     participantHue: row.branding?.participantHue ?? null,
     storyTextTone: row.branding?.storyTextTone ?? 'WHITE',
+    storyLayout: row.branding?.storyLayout ?? null,
     brandTheme: row.branding?.theme ?? 'SAGE',
     hasLogo: Boolean(row.branding?.logoStorageKey),
     hasBackground: Boolean(row.branding?.backgroundStorageKey),

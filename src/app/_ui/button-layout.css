@@ -1,0 +1,63 @@
+/* Equal heights and stable gaps, while preserving the DOM and keyboard order. */
+body :is(.portal-card-actions, .portal-dialog-actions, .ticket-actions) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--glass-action-column)), 1fr));
+  gap: var(--glass-action-gap);
+  align-items: stretch;
+}
+body .portal-card-actions {
+  --glass-action-column: 9rem;
+}
+body :is(.portal-card-actions, .portal-dialog-actions, .ticket-actions) > :is(button, a) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--glass-action-height);
+  padding: 12px 16px;
+  line-height: 1.4;
+  text-align: center;
+}
+body .marketing-hero .portal-landing-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--glass-action-column)), 1fr));
+  gap: var(--glass-action-gap);
+  align-items: stretch;
+}
+body .marketing-hero .portal-landing-actions > :is(a, button) {
+  width: 100%;
+  min-width: 0;
+  min-height: 54px;
+  justify-content: center;
+  margin: 0;
+}
+body .portal-row-actions {
+  gap: var(--glass-action-gap);
+  align-items: center;
+}
+body .appearance-actions {
+  gap: var(--glass-action-gap);
+  align-items: stretch;
+}
+body .appearance-actions > :is(a, button) {
+  min-height: var(--glass-action-height);
+  min-width: 0;
+}
+@media (max-width: 600px) {
+  body .ice-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  body .marketing-hero .portal-landing-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  body :is(.portal-form-fields, .portal-auth-card .portal-form) > .portal-button,
+  body .portal-heading > .portal-button,
+  body .ice-action-bar > .ice-primary,
+  body .ice-result-link {
+    width: 100%;
+    min-width: 0;
+    justify-self: stretch;
+  }
+}

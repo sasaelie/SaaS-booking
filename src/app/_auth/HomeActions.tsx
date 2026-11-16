@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { SHARE_UI } from '../../config/constants';
 import { SignOutButton } from '../_portal/SignOutButton';
 export function HomeActions({ name }: { readonly name: string | null }) {

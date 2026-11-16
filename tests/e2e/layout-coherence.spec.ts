@@ -47,8 +47,9 @@ test('keeps activity cards separated and aligned with a long heading and a clear
   for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(`/app/${space.organizationId}/activites/${space.activityId}`);
-    await separatedPanels(page.locator('main'));
     const summary = page.locator('.portal-activity-summary');
+    await expect(summary).toBeVisible();
+    await separatedPanels(page.locator('main'));
     await expect(
       summary.getByRole('link', { name: 'Voir les inscrits', exact: true }),
     ).toBeVisible();

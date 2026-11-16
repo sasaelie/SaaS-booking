@@ -5,8 +5,10 @@ import { PLATFORM_BRAND } from '../config/platform-brand';
 import { SessionHistorySync } from './_auth/SessionHistorySync';
 import { SessionExitGuard } from './_auth/SessionExitGuard';
 import { StagingNotice } from './_ui/StagingNotice';
+import { PageNavigationProvider } from './_ui/PageNavigationProvider';
 import './_ui/staging.css';
 import './_ui/participant.css';
+import './manage/participant-ticket.css';
 import './_ui/ice-tokens.css';
 import './_ui/brand.css';
 import './_ui/widget-layout.css';
@@ -32,11 +34,11 @@ import './_portal/administration.css';
 import './_auth/auth.css';
 import './_ui/service.css';
 import './_ui/story-photo.css';
+import './_ui/story-layout.css';
 import './_ui/status-lights.css';
 import './_ui/catalog-cards.css';
 import './_portal/session-details.css';
 import './_portal/portal-alignment.css';
-import './_ui/buttons.css';
 import './_ui/glass-frames.css';
 import './_ui/text-links.css';
 import './_portal/feature-comparison.css';
@@ -44,6 +46,12 @@ import './_ui/modal.css';
 import './_ui/social-glass.css';
 import './_ui/interaction-polish.css';
 import './_ui/participant-polish.css';
+import './_ui/glass-button-tokens.css';
+import './_ui/buttons.css';
+import './_ui/button-interactions.css';
+import './_ui/button-contexts.css';
+import './_ui/button-layout.css';
+import './_ui/button-accessibility.css';
 export const metadata = {
   title: `${PLATFORM_BRAND.NAME} — Réservations`,
   description: 'Réservez votre place à une activité.',
@@ -53,10 +61,12 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
   return (
     <html lang="fr">
       <body>
-        <SessionExitGuard />
-        <SessionHistorySync />
-        <StagingNotice />
-        {children}
+        <PageNavigationProvider>
+          <SessionExitGuard />
+          <SessionHistorySync />
+          <StagingNotice />
+          {children}
+        </PageNavigationProvider>
       </body>
     </html>
   );

@@ -46,7 +46,7 @@ it('rechecks payment before allowing full erasure inside the transaction', async
   expect(booking?.firstName).toBe('Test');
 });
 it('fully anonymizes an unpaid expired old reservation in the scheduled task', async () => {
-  const context = await fixture();
+  const context = await fixture('BANK_TRANSFER');
   const booking = required(await reserve(rawInput(context)));
   await db
     .update(bookings)

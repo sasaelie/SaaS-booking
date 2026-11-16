@@ -9,6 +9,7 @@ import { BOOKING_UI, FORM_LABELS } from '../../config/constants';
 import type { BookingActionState } from '../actions/booking.actions';
 import { IceIcon } from './IceIcon';
 import { BookingBankInstructions } from './BookingBankInstructions';
+import { BookingProof } from './BookingProof';
 export function BookingResult({
   state,
   flow,
@@ -27,6 +28,12 @@ export function BookingResult({
       <p role={state.success ? 'status' : 'alert'}>{state.message}</p>
       <OfflinePayment state={state} flow={flow} />
       <PaymentInstructions state={state} />
+      {state.booking?.selfServiceToken ? (
+        <BookingProof
+          token={state.booking.selfServiceToken}
+          simulationId={flow.data.simulationId}
+        />
+      ) : null}
       {state.booking?.selfServiceToken ? (
         <a
           className="liquid-ice-button ice-result-link"
@@ -48,7 +55,12 @@ function PaymentInstructions({ state }: { readonly state: BookingActionState }) 
   return (
     <>
       {checkout ? (
-        <a className="liquid-ice-button ice-result-link" href={checkout} target="_blank" rel="noopener noreferrer">
+        <a
+          className="liquid-ice-button ice-result-link"
+          href={checkout}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {BOOKING_UI.CONTINUE_PAYMENT}
         </a>
       ) : null}
@@ -57,7 +69,13 @@ function PaymentInstructions({ state }: { readonly state: BookingActionState }) 
   );
 }
 
-function OfflinePayment({ state, flow }: { readonly state: BookingActionState; readonly flow: BookingFlowState }) {
+function OfflinePayment({
+  state,
+  flow,
+}: {
+  readonly state: BookingActionState;
+  readonly flow: BookingFlowState;
+}) {
   const amount = bookingPricing(flow).amount;
   if (
     !state.success ||

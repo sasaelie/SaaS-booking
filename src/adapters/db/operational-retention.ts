@@ -20,6 +20,9 @@ export async function retainOperational(db: DrizzlePgDb, now: Date, dryRun: bool
         (SELECT max(e.created_at) FROM financial_entries e WHERE e.organization_id=b.organization_id AND e.booking_id=b.id)) AS closed_at
       FROM bookings b JOIN sessions s ON s.id=b.session_id AND s.organization_id=b.organization_id
       WHERE b.anonymized_at IS NULL AND NOT b.legal_hold AND NOT b.dispute_open AND s.ends_at<=${cutoff}
+        AND NOT EXISTS(SELECT 1 FROM booking_access_credentials c WHERE c.organization_id=b.organization_id AND c.booking_id=b.id AND c.revoked_at IS NULL AND c.version=b.self_service_version AND c.closed_at IS NULL
+          AND NOT (s.ends_at<=${now} AND EXISTS(SELECT 1 FROM reschedule_vouchers v WHERE v.organization_id=b.organization_id AND v.origin_booking_id=b.id AND v.status IN ('USED_FOR_BOOKING','USED_FOR_EXTERNAL_BENEFIT'))
+            AND NOT EXISTS(SELECT 1 FROM reschedule_vouchers v WHERE v.organization_id=b.organization_id AND v.origin_booking_id=b.id AND v.status IN ('ACTIVE','LOCKED_PENDING_PAYMENT') AND v.expires_at>${now})))
         AND (b.locked_until IS NULL OR b.locked_until<=${now})
         AND COALESCE(b.refund_status,'') NOT IN ('PENDING','MANUAL_PENDING','FAILED')
         AND NOT EXISTS(SELECT 1 FROM reschedule_vouchers v WHERE v.organization_id=b.organization_id AND v.origin_booking_id=b.id AND v.status IN ('ACTIVE','LOCKED_PENDING_PAYMENT') AND v.expires_at>${now})

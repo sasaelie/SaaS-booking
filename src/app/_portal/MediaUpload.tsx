@@ -3,6 +3,7 @@ import { STORY_UI } from '../../config/story';
 import { useId } from 'react';
 import { PORTAL, SETTINGS_UI, PAYMENT_RULES } from '../../config/constants';
 import { useMediaUpload } from './use-media-upload';
+import { MediaPreview } from './MediaPreview';
 interface Props {
   readonly organizationId: string;
   readonly kind: 'logo' | 'background';
@@ -12,19 +13,15 @@ interface Props {
 export function MediaUpload(props: Props) {
   const id = useId();
   const state = useMediaUpload(props.organizationId, props.kind);
+  const existing = state.present ?? props.existing;
+  const src = `/api/branding/${props.organizationId}/${props.kind}?v=${state.revision}`;
   return (
     <div className="portal-panel">
       <h3>{props.kind === 'logo' ? SETTINGS_UI.LOGO : SETTINGS_UI.BACKGROUND}</h3>
       {props.kind === 'background' ? <p className="portal-muted">{STORY_UI.PHOTO_HINT}</p> : null}
-      {props.existing ? (
-        <img
-          className="portal-image-preview"
-          src={`/api/branding/${props.organizationId}/${props.kind}`}
-          alt=""
-        />
-      ) : null}
+      {existing ? <MediaPreview key={src} src={src} pending={state.pending} /> : null}
       <MediaForm id={id} disabled={props.disabled || state.pending} state={state} />
-      {props.existing ? (
+      {existing ? (
         <button
           type="button"
           className="portal-text-button"
@@ -54,7 +51,7 @@ function MediaForm({
   return (
     <form className="portal-form" onSubmit={state.upload}>
       <label className="portal-field" htmlFor={id}>
-        <span>{SETTINGS_UI.MEDIA_HINT}</span>
+        <span className="media-format-hint">{SETTINGS_UI.MEDIA_FORMATS}</span>
         <input
           id={id}
           type="file"

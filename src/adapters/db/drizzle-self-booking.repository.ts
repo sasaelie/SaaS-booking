@@ -8,6 +8,7 @@ import { bookings, organizations, sessions } from './schema';
 import { failure } from '../../lib/errors';
 import { ok } from '../../lib/result';
 import { ERROR_CODES } from '../../config/constants';
+import { hasBookingAccess } from './participant/access';
 const columns = {
   participantHue: organizationBranding.participantHue,
   organizationSlug: organizations.slug,
@@ -25,6 +26,8 @@ export class DrizzleSelfBookingRepository implements SelfBookingRepositoryPort {
   constructor(private readonly db: DrizzlePgDb) {}
   read(payload: SelfCancelTokenPayload) {
     return atomic(this.db, 'SelfBooking', async (tx) => {
+      if (!(await hasBookingAccess(tx, payload, new Date())))
+        return failure(ERROR_CODES.UNAUTHORIZED, 'SelfBooking', 'access');
       const [row] = await tx
         .select(columns)
         .from(bookings)

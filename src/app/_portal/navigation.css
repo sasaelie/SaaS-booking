@@ -17,13 +17,7 @@
   font-weight: 500;
 }
 .portal-nav .portal-nav-links a[aria-current='page'] {
-  background: var(--ice-paper);
-  border-color: var(--ui-text-primary);
-  box-shadow: inset 3px 0 var(--ui-text-primary);
   font-weight: 650;
-}
-.portal-nav .portal-nav-links a:hover {
-  background: var(--ice-paper);
 }
 .portal-nav-utilities {
   border-top: 1px solid var(--ice-line);

@@ -1,15 +1,47 @@
 'use client';
 import { simulationApi } from '../../config/simulation';
-import { useEffect, useState, type FormEvent } from 'react';
-import { UI_MESSAGES } from '../../config/constants';
+import { useState, type FormEvent } from 'react';
+import { UI_MESSAGES, PARTICIPANT } from '../../config/constants';
 import { sendOperation } from './management-response';
 import { useBookingContext } from './use-booking-context';
-export function useManagement(simulationId?: string) {
+import { useManagementToken } from './use-management-token';
+export function useManagement(simulationId?: string, testParticipant = false) {
   const [token, setToken] = useState<string | null>(null);
   const [message, setMessage] = useState('');
+  const details = useBookingContext(
+    token,
+    testParticipant
+      ? `${PARTICIPANT.TEST_API}/context`
+      : simulationId
+        ? simulationApi(simulationId, 'context')
+        : undefined,
+  );
+  const link = useManagementToken(setToken, setMessage, simulationId);
+  const endpoint = testParticipant
+    ? `${PARTICIPANT.TEST_API}/cancel`
+    : simulationId
+      ? simulationApi(simulationId, 'cancel')
+      : undefined;
+  const actions = useManagementActions(token, endpoint, setMessage, details.refresh);
+
+  return {
+    token,
+    message,
+    ...actions,
+    ...details,
+    unavailable: details.unavailable || link.unavailable,
+    refresh: link.unavailable ? link.refresh : details.refresh,
+    cancelled: message === UI_MESSAGES.CANCEL_SUCCESS,
+  };
+}
+
+function useManagementActions(
+  token: string | null,
+  endpoint: string | undefined,
+  setMessage: (message: string) => void,
+  refresh: () => void,
+) {
   const [pending, setPending] = useState(false);
-  const details = useBookingContext(token, simulationId ? simulationApi(simulationId, 'context') : undefined);
-  useManagementToken(setToken, setMessage);
   async function submit(event: FormEvent<HTMLFormElement>, upload: boolean): Promise<void> {
     event.preventDefault();
     if (!token || pending) return;
@@ -17,14 +49,9 @@ export function useManagement(simulationId?: string) {
     form.set('token', token);
     setPending(true);
     try {
-      const result = await sendOperation(
-        form,
-        token,
-        upload,
-        simulationId ? simulationApi(simulationId, 'cancel') : undefined,
-      );
+      const result = await sendOperation(form, token, upload, endpoint);
       setMessage(result.message);
-      if (result.ok) details.refresh();
+      if (result.ok) refresh();
     } catch {
       setMessage(UI_MESSAGES.FAILURE);
     } finally {
@@ -32,24 +59,8 @@ export function useManagement(simulationId?: string) {
     }
   }
   return {
-    token,
-    message,
     pending,
-    ...details,
-    cancelled: message === UI_MESSAGES.CANCEL_SUCCESS,
     cancel: (event: FormEvent<HTMLFormElement>) => submit(event, false),
     upload: (event: FormEvent<HTMLFormElement>) => submit(event, true),
   };
-}
-
-function useManagementToken(setToken: (token: string) => void, setMessage: (message: string) => void) {
-  useEffect(() => {
-    const readToken = () => {
-      setToken(new URLSearchParams(window.location.hash.slice(1)).get('token') ?? '');
-      setMessage('');
-    };
-    readToken();
-    window.addEventListener('hashchange', readToken);
-    return () => window.removeEventListener('hashchange', readToken);
-  }, []);
 }

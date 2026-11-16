@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { COMMERCIAL, PLAN_UI } from '../../config/commercial';
 import { MARKETING_OFFERS as UI } from '../../config/marketing-offers';
 import { PLAN_SELECTION } from '../../config/plan-selection';

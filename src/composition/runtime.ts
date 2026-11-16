@@ -29,7 +29,9 @@ function assemble(env: Extract<ReturnType<typeof readEnvironment>, { ok: true }>
     secret: env.SELF_CANCEL_HMAC_SECRET,
   });
   return {
-    voucherQuote: new QuoteVoucherUseCase(new DrizzleVoucherQuoteRepository(db)),
+    voucherQuote: new QuoteVoucherUseCase(
+      new DrizzleVoucherQuoteRepository(db, { secret: env.SELF_CANCEL_HMAC_SECRET }),
+    ),
     db,
     pool,
     env,
@@ -37,7 +39,7 @@ function assemble(env: Extract<ReturnType<typeof readEnvironment>, { ok: true }>
     runner: new DrizzleJobRunner(db, handler),
     limiter: new DrizzleRateLimit(db),
     createBooking: new CreateBookingUseCase({
-      sessionRepo: new DrizzleSessionRepository(db),
+      sessionRepo: new DrizzleSessionRepository(db, { secret: env.SELF_CANCEL_HMAC_SECRET }),
       paymentGateway: services.gateway,
       appUrl: env.NEXT_PUBLIC_APP_URL,
       secret: env.SELF_CANCEL_HMAC_SECRET,

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { runtime } from '../../../composition/runtime';
 import { administration } from '../../../composition/administration';
 import { INPUT_LIMITS } from '../../../config/constants';
+import { resolveParticipantToken } from '../../../composition/participant';
 const RequestSchema = z.object({
   token: z.string().min(1).max(INPUT_LIMITS.TOKEN_MAX),
 });
@@ -18,7 +19,10 @@ export async function POST(request: Request): Promise<Response> {
     `self-service:${request.headers.get('x-forwarded-for') ?? 'local'}`,
   );
   if (!limit.ok) return Response.json({ success: false }, { status: HTTP_STATUS.RATE_LIMITED });
-  const result = await administration(app.value, '').voucher.cancelByAttendee(input.data);
+  const resolved = await resolveParticipantToken(input.data.token, request);
+  const result = resolved.ok
+    ? await administration(app.value, '').voucher.cancelByAttendee({ token: resolved.value })
+    : resolved;
   return Response.json(
     result.ok ? { success: true, data: result.value } : { success: false, code: result.error.code },
     {

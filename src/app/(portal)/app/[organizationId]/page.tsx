@@ -1,6 +1,6 @@
 import { OverviewMetrics } from '../../../_portal/OverviewMetrics';
 import { DashboardTests } from '../../../_portal/DashboardTests';
-import Link from 'next/link';
+import { AppLink as Link } from '../../../_ui/AppLink';
 import { PORTAL } from '../../../../config/constants';
 import { loadWorkspace, type WorkspacePageProps } from '../../../_portal/load-workspace';
 import { PortalHeading } from '../../../_portal/PortalHeading';

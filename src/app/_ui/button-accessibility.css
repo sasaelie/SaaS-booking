@@ -1,0 +1,65 @@
+/* Native high contrast remains readable without transparency or effects. */
+@media (forced-colors: active) {
+  body
+    :is(
+      button,
+      [role='button'],
+      .liquid-ice-button,
+      .portal-secondary-action,
+      .portal-card-actions a,
+      .social-links a.social-link,
+      .portal-nav-links a,
+      .marketing-preview-switch span,
+      input:is([type='button'], [type='submit'], [type='reset'])
+    ) {
+    background: ButtonFace !important;
+    color: ButtonText !important;
+    border: 1px solid ButtonText !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  body
+    :is(
+      button,
+      [role='button'],
+      .liquid-ice-button,
+      .portal-secondary-action,
+      .portal-card-actions a,
+      .social-links a.social-link,
+      .portal-nav-links a,
+      .marketing-preview-switch span,
+      input:is([type='button'], [type='submit'], [type='reset'])
+    )::before {
+    content: none;
+  }
+  body
+    :is(
+      button,
+      [role='button'],
+      .liquid-ice-button,
+      .portal-secondary-action,
+      .portal-card-actions a,
+      .social-links a.social-link,
+      .portal-nav-links a,
+      .marketing-preview-switch span,
+      input:is([type='button'], [type='submit'], [type='reset'])
+    ):focus-visible {
+    outline-color: Highlight;
+  }
+  body
+    :is(
+      button,
+      [role='button'],
+      .liquid-ice-button,
+      .portal-secondary-action,
+      .portal-card-actions a,
+      .social-links a.social-link,
+      .portal-nav-links a,
+      .marketing-preview-switch span,
+      input:is([type='button'], [type='submit'], [type='reset'])
+    ):is(:disabled, [aria-disabled='true']) {
+    color: GrayText !important;
+  }
+}

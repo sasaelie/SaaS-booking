@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { PORTAL, SAAS } from '../../config/constants';
 export function Pagination({
   page,

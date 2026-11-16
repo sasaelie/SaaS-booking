@@ -3,7 +3,7 @@ import { PauseForm } from '../../../../../_portal/activity/PauseForm';
 import type { PortalOverview } from '../../../../../../core/ports/portal-models';
 import { EditActivityForm } from '../../../../../_portal/activity/EditActivityForm';
 import { AddSessionForm } from '../../../../../_portal/activity/AddSessionForm';
-import Link from 'next/link';
+import { AppLink as Link } from '../../../../../_ui/AppLink';
 import {
   PORTAL,
   ACTIVITY_UI,

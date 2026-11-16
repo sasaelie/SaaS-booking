@@ -38,10 +38,6 @@
 .social-links a.social-link::after {
   content: none;
 }
-.social-links a.social-link:hover {
-  background: var(--social-edge);
-  transform: translateY(-1px);
-}
 .social-links a.social-link:focus-visible {
   outline: 2px solid var(--story-forest);
   outline-offset: 4px;

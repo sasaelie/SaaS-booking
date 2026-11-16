@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { MARKETING_PREVIEW as UI } from '../../config/marketing-preview';
 import { IceIcon } from '../_ui/IceIcon';
 import { DemoPlayback, DemoRegion } from './DemoControls';

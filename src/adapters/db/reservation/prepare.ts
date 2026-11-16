@@ -11,7 +11,9 @@ import type { AtomicSeatReservationInput } from '../../../core/ports/session-rep
 import type { ActivityWithScheduleConfig } from '../../../core/ports/booking-ports';
 import { ERROR_CODES } from '../../../config/constants';
 import { failure } from '../../../lib/errors';
+import { resolveBookingVoucher, type ParticipantCodeOptions } from '../participant/voucher';
 export interface InsertContext {
+  readonly participantCode?: ParticipantCodeOptions;
   readonly activity: ActivityWithScheduleConfig;
   readonly input: AtomicSeatReservationInput;
   readonly now: Date;
@@ -48,16 +50,7 @@ export async function prepareReservation(tx: Transaction, context: InsertContext
     }),
   );
   const projected = required(resolveRequestedSession(activity, data.startsAtIso, now));
-  const voucher = required(
-    await prepareVoucher(
-      tx,
-      activity.organizationId,
-      data.voucherCode,
-      activity.priceCents,
-      activity.currency,
-      now,
-    ),
-  );
+  const voucher = await reservationVoucher(tx, context, data.voucherCode);
   validatePayment(activity, voucher.remaining);
   const session = await lockSession(
     tx,
@@ -82,4 +75,21 @@ function validatePayment(activity: ActivityWithScheduleConfig, remaining: number
         'payment-configuration',
       ),
     );
+}
+
+async function reservationVoucher(tx: Transaction, context: InsertContext, code: string | null) {
+  const { activity, now } = context;
+  const resolved = required(
+    await resolveBookingVoucher(tx, code, activity.organizationId, now, context.participantCode),
+  );
+  return required(
+    await prepareVoucher(
+      tx,
+      activity.organizationId,
+      resolved,
+      activity.priceCents,
+      activity.currency,
+      now,
+    ),
+  );
 }

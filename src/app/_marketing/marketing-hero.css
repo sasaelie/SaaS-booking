@@ -23,12 +23,6 @@
   margin: 30px 0 20px;
 }
 .marketing-hero .portal-landing-actions > a:first-child {
-  background: linear-gradient(145deg, var(--ice-evergreen), var(--ice-evergreen-deep));
-  border-color: var(--ice-evergreen-deep);
-  color: var(--ice-on-dark);
-  box-shadow:
-    inset 0 1px 1px var(--glass-edge-quiet),
-    0 10px 26px -12px var(--interaction-shadow);
   min-height: 54px;
   padding-inline: 24px;
   font-size: 14px;
@@ -38,11 +32,8 @@
   min-height: 54px;
 }
 .marketing-hero .portal-landing-actions > a + a {
-  background: transparent;
-  border: 0;
-  box-shadow: none;
   color: var(--link-ink);
-  padding-inline: 6px;
+  padding-inline: 18px;
 }
 .marketing-hero .landing-session-note {
   margin-bottom: -12px;

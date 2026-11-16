@@ -1,5 +1,6 @@
 import type { EventDetails, SocialLinks } from './event-details';
 import type { StoryTextTone } from '../../config/story';
+import type { StoryLayout } from '../validation/story-layout';
 import type { AudiencePolicy, PaymentMode, BookingStatus } from '../../config/constants';
 import type { OrganizationAccess } from '../domain/subscription-access';
 export interface PortalActor {
@@ -8,6 +9,7 @@ export interface PortalActor {
   readonly email: string;
 }
 export interface OrganizationSummary {
+  readonly storyLayout?: StoryLayout | null;
   readonly socialLinks?: SocialLinks;
   readonly id: string;
   readonly name: string;

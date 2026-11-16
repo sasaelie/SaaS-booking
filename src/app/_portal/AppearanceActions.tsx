@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import { SIMULATION, simulationPath } from '../../config/simulation';
 import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { APPEARANCE as UI } from '../../config/appearance';

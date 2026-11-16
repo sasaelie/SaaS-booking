@@ -1,6 +1,6 @@
 import { SessionInformation } from './SessionInformation';
 import { SessionAttendees } from './SessionAttendees';
-import Link from 'next/link';
+import { AppLink as Link } from '../_ui/AppLink';
 import type { SessionDetails as Details } from '../../core/ports/session-details';
 import { SESSION_UI as UI } from '../../config/session-details';
 import { StatusBadge } from './StatusBadge';

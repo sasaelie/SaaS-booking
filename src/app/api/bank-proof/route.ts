@@ -4,6 +4,7 @@ import { HTTP_STATUS } from '../../../config/constants';
 import { runtime } from '../../../composition/runtime';
 import { administration } from '../../../composition/administration';
 import { PAYMENT_RULES } from '../../../config/constants';
+import { resolveParticipantToken } from '../../../composition/participant';
 export async function POST(request: Request): Promise<Response> {
   const app = runtime();
   if (!app.ok) return Response.json({ success: false }, { status: HTTP_STATUS.UNAVAILABLE });
@@ -25,10 +26,13 @@ export async function POST(request: Request): Promise<Response> {
     `proof:${request.headers.get('x-forwarded-for') ?? 'local'}`,
   );
   if (!limited.ok) return Response.json({ success: false }, { status: HTTP_STATUS.RATE_LIMITED });
-  const result = await administration(app.value, '').bank.submitProof({
-    token,
-    fileBytes: new Uint8Array(await file.arrayBuffer()),
-  });
+  const resolved = await resolveParticipantToken(token, request);
+  const result = resolved.ok
+    ? await administration(app.value, '').bank.submitProof({
+        token: resolved.value,
+        fileBytes: new Uint8Array(await file.arrayBuffer()),
+      })
+    : resolved;
   return Response.json(
     result.ok ? { success: true, data: result.value } : { success: false, code: result.error.code },
     {

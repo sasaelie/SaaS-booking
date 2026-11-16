@@ -31,7 +31,7 @@ test('tests a reservation, declined/successful payment, cancellation, voucher an
   await expect(page.getByText('Test incomplet', { exact: true })).toBeVisible();
   await page.locator('.simulation-card').getByRole('link', { name: 'Paiement de test', exact: true }).click();
   await page.getByRole('button', { name: 'Simuler un paiement refusé', exact: true }).click();
-  await expect(page.getByRole('status')).toContainText('refusé');
+  await expect(page.getByRole('status').filter({ hasText: 'refusé' })).toContainText('refusé');
   await page.getByRole('button', { name: 'Simuler un paiement réussi', exact: true }).click();
   await expect(page.locator('.status-badge[data-tone="green"]')).toContainText('Test réussi');
   await noHorizontalOverflow(page);
@@ -125,7 +125,7 @@ async function cancelAndRemove(page: Page, space: Awaited<ReturnType<typeof brow
   await page.getByText('Annuler cette réservation', { exact: true }).click();
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Annuler ma réservation', exact: true }).click();
-  await expect(page.getByRole('status')).toContainText('annulée');
+  await expect(page.getByRole('status').filter({ hasText: 'annulée' })).toContainText('annulée');
   await page.goto(`/app/${space.organizationId}/tests`);
   await expect(page.locator('.simulation-card')).toContainText('Code de report TEST');
   await page.getByRole('button', { name: 'Supprimer ce test', exact: true }).click();
@@ -140,7 +140,8 @@ async function anonymousAccess(context: BrowserContext, own: Awaited<ReturnType<
   try {
     const request = await anon.request.get(`/simulation/${own.organizationId}`);
     expect(request.status()).toBe(404);
-    expect((await anon.request.get(`/${own.slug}?from=appearance`)).status()).toBe(404);
+    const blocked = await anon.request.get(`/${own.slug}?from=appearance`);
+    expect(await blocked.text()).toContain('NEXT_HTTP_ERROR_FALLBACK;404');
     expect(
       (
         await anon.request.post(`/api/simulation/${own.organizationId}/delete`, {

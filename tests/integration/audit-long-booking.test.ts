@@ -9,7 +9,19 @@ import { verifySelfCancelToken } from '../../src/core/domain/self-service-token'
 import { mailContent } from '../../src/adapters/jobs/mail-content';
 import { required } from '../../src/adapters/db/transaction';
 import { ok } from '../../src/lib/result';
+import { ParticipantAccessRepository } from '../../src/adapters/db/participant/repository';
 const secret = 'long-event-synthetic-test-secret-not-production';
+const paymentGateway = {
+  mode: 'STRIPE' as const,
+  initiatePayment: async () => {
+    throw Error('Must never charge');
+  },
+  refundPayment: async () => {
+    throw Error('Must never refund');
+  },
+  verifyWebhookAndParse: async () => ok(null),
+};
+
 it.each(['response', 'confirmation'] as const)(
   'keeps the %s management link valid until a distant event',
   async (source) => {
@@ -24,16 +36,7 @@ it.each(['response', 'confirmation'] as const)(
         sessionRepo: new DrizzleSessionRepository(db),
         secret,
         appUrl: 'https://example.com',
-        paymentGateway: {
-          mode: 'STRIPE',
-          initiatePayment: async () => {
-            throw Error('Must never charge');
-          },
-          refundPayment: async () => {
-            throw Error('Must never refund');
-          },
-          verifyWebhookAndParse: async () => ok(null),
-        },
+        paymentGateway,
       }).execute({ ...rawInput(context), startsAtIso: startsAt.toISOString() }),
     );
     const content = await mailContent(
@@ -43,13 +46,14 @@ it.each(['response', 'confirmation'] as const)(
       'https://example.com',
       secret,
     );
-    const token =
+    const when = new Date(startsAt.getTime() - 86400000);
+    const valid =
       source === 'response'
-        ? booking.selfServiceToken
-        : decodeURIComponent(content?.text.match(/#token=([^\s]+)/)?.[1] ?? '');
-    expect(
-      (await verifySelfCancelToken(token ?? '', secret, new Date(startsAt.getTime() - 86400000)))
-        .ok,
-    ).toBe(true);
+        ? await verifySelfCancelToken(booking.selfServiceToken ?? '', secret, when)
+        : await new ParticipantAccessRepository(db, secret, 'https://example.com').authorizeCode(
+            decodeURIComponent(content?.text.match(/#code=([^\s]+)/)?.[1] ?? ''),
+            when,
+          );
+    expect(valid.ok).toBe(true);
   },
 );

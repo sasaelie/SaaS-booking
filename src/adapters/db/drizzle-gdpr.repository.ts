@@ -34,6 +34,7 @@ export class DrizzleGdprRepository implements GdprRepositoryPort {
         .where(
           and(
             lt(bookings.createdAt, cutoffDate),
+            sql`NOT EXISTS(SELECT 1 FROM booking_access_credentials c WHERE c.booking_id=${bookings.id} AND c.organization_id=${bookings.organizationId} AND c.closed_at IS NULL AND c.revoked_at IS NULL AND c.version=${bookings.selfServiceVersion})`,
             eq(bookings.amountPaidCents, 0),
             inArray(bookings.status, [
               BOOKING_STATUSES.EXPIRED,
