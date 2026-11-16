@@ -5,7 +5,7 @@ Chaque réservation confirmée dispose d’un code client et d’un QR code. Le 
 ## Parcours
 
 - Le billet apparaît dans le résultat de réservation et dans la page de gestion. Il comporte l’activité, l’organisation, le participant, la séance, le prix réservé, le montant encaissé, la part couverte par un report, l’éventuel reste à régler, le statut, le code et le QR.
-- Le bouton d’impression ouvre l’impression du navigateur, permettant également un enregistrement PDF. Un fichier déjà imprimé reste une copie historique ; le QR permet de consulter le statut actuel.
+- Le bouton « Télécharger le billet PDF » produit un véritable fichier PDF, y compris en simulation. Il ne dépend pas de `window.print()`, qui peut rester sans effet sur mobile. Le téléchargement démarre au clic ; un lien natif reste disponible si le navigateur exige un second geste. Le PDF peut ensuite être imprimé depuis son lecteur. Un fichier enregistré reste une copie historique ; le QR permet de consulter le statut actuel.
 - Le retour de paiement ouvre le suivi. La confirmation reste exclusivement déterminée par le serveur et le fournisseur de paiement ; le retour du navigateur ne confirme jamais la place.
 - La connexion propose Organisateur / Participant. Le code participant n’authentifie pas un organisateur et ne remplace pas sa session.
 - Le dossier permet l’annulation selon les règles existantes, l’accès aux reports, aux contacts publics et aux informations pratiques. L’adresse configurée REMINDER reste cachée jusqu’à 24 heures avant la séance.
@@ -47,6 +47,10 @@ Le voyant d’image passe au vert après la réussite de l’import côté serve
 L’apparence permet de sélectionner une activité d’aperçu et d’ouvrir directement son édition de nom et de prix. Le placement relatif du titre et du tarif est enregistré séparément dans l’identité de l’organisation et appliqué aux encarts et cartes participants. Les poignées utilisent les Pointer Events, avec commandes au clavier et curseurs équivalents ; seul le déplacement des poignées bloque le geste de défilement. Les réservations existantes conservent leur prix et leur nom enregistrés.
 
 ## Vérification et livraison
+
+Le PDF est préparé dans le navigateur à partir du dossier déjà autorisé et affiché. Aucune nouvelle API ni permission de base de données n’est ajoutée. La bibliothèque PDF et la police Unicode locale se chargent uniquement lors du téléchargement ; la licence de la police accompagne son fichier dans `public/fonts`. La mention TEST, les statuts, les montants encaissés, les reports et le reste à régler sont conservés. Une erreur de préparation permet de réessayer ; les URL temporaires de fichier sont libérées quand le billet change ou se ferme.
+
+Le contrôle navigateur clique réellement le bouton et vérifie le fichier téléchargé : format PDF lisible, nom distinguant TEST et réservation réelle, lien de secours utilisable, reprise après indisponibilité de la police. L’essai mobile désactive volontairement `window.print()` pour vérifier que le PDF n’en dépend pas. Ce contrôle complète celui de la mise en page d’impression.
 
 Exécuter `npm run verify`, les tests PostgreSQL et les parcours navigateur. Les migrations ont été testées sur PostgreSQL local ; elles doivent être appliquées au schéma de recette avant d’y déployer cette version. Ne pas déployer le nouveau serveur contre une base encore dépourvue de ces tables.
 

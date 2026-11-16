@@ -1,8 +1,16 @@
 'use client';
 import { useState } from 'react';
 import type { ParticipantTicket } from '../../core/validation/participant';
+import type { SelfBookingContext } from '../../core/validation/self-booking';
 import { PARTICIPANT_UI as UI } from '../../config/constants';
-export function TicketAccess({ ticket }: { readonly ticket: ParticipantTicket }) {
+import { TicketDownload } from './TicketDownload';
+export function TicketAccess({
+  ticket,
+  booking,
+}: {
+  readonly ticket: ParticipantTicket;
+  readonly booking: SelfBookingContext;
+}) {
   const [copied, setCopied] = useState(false);
   async function copy() {
     try {
@@ -28,9 +36,7 @@ export function TicketAccess({ ticket }: { readonly ticket: ParticipantTicket })
         <button type="button" className="liquid-ice-button" onClick={() => void copy()}>
           {copied ? UI.COPIED : UI.COPY}
         </button>
-        <button type="button" className="liquid-ice-button" onClick={() => window.print()}>
-          {UI.PRINT}
-        </button>
+        <TicketDownload key={JSON.stringify(booking)} booking={booking} />
       </div>
     </>
   );

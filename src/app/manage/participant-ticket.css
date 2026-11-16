@@ -64,8 +64,13 @@
   display: grid;
   gap: 12px;
 }
-.ticket-actions button {
+.ticket-actions :is(button, a) {
   min-width: 0;
+}
+.ticket-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .participant-details {
   display: grid;

@@ -1,13 +1,13 @@
 'use client';
 import type { SelfBookingContext } from '../../core/validation/self-booking';
-import { PARTICIPANT_UI as UI, BOOKING_STATUSES, DEFAULTS } from '../../config/constants';
-import { isAdmissionValid } from '../../core/domain/participant-access';
+import { PARTICIPANT_UI as UI, DEFAULTS } from '../../config/constants';
+import { participantTicketStatus } from '../../core/domain/participant-ticket';
 import { TicketAccess } from './TicketAccess';
 import { TicketAmounts } from './TicketAmounts';
 export function ParticipantTicket({ booking }: { readonly booking: SelfBookingContext }) {
   const ticket = booking.ticket;
   if (!ticket) return null;
-  const status = ticketStatus(booking);
+  const status = participantTicketStatus(booking);
   const date = new Intl.DateTimeFormat(DEFAULTS.LOCALE, {
     timeZone: booking.timezone,
     dateStyle: 'full',
@@ -28,27 +28,7 @@ export function ParticipantTicket({ booking }: { readonly booking: SelfBookingCo
       </p>
       <TicketAmounts booking={booking} />
       {ticket.address ? <p className="ticket-address">{ticket.address}</p> : null}
-      <TicketAccess ticket={ticket} />
+      <TicketAccess ticket={ticket} booking={booking} />
     </section>
   );
-}
-function ticketStatus(booking: SelfBookingContext) {
-  const ticket = booking.ticket;
-  const valid = Boolean(
-    ticket &&
-    isAdmissionValid(
-      booking.status,
-      ticket.sessionCancelled,
-      new Date(ticket.endsAtIso),
-      new Date(),
-    ),
-  );
-  const label = valid
-    ? UI.VALID
-    : booking.status.startsWith('CANCELLED') || ticket?.sessionCancelled
-      ? UI.CANCELLED
-      : booking.status !== BOOKING_STATUSES.CONFIRMED
-        ? UI.PENDING
-        : UI.HISTORICAL;
-  return { valid, label };
 }

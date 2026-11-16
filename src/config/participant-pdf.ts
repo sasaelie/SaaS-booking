@@ -1,0 +1,18 @@
+export const PARTICIPANT_PDF = {
+  MIME: 'application/pdf',
+  FILENAME: 'billet-reservation.pdf',
+  TEST_FILENAME: 'billet-reservation-test.pdf',
+  FONT_URL: '/fonts/DejaVuSans.ttf',
+  FONT_TIMEOUT_MS: 20000,
+  PAGE: [595.28, 841.89] as const,
+  MARGIN: 42,
+  SIDES: 2,
+  GAP: 10,
+  LINE_RATIO: 1.5,
+  SMALL: 10,
+  BODY: 12,
+  TITLE: 22,
+  QR_SIZE: 160,
+  RGB: [20 / 255, 61 / 255, 43 / 255] as const,
+  NOTE: 'Le QR code permet de consulter le statut actuel de votre réservation.',
+} as const;
