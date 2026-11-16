@@ -10,7 +10,7 @@
   initial-value: -45deg;
 }
 :root {
-  --glass-button-radius: 1px;
+  --glass-button-radius: 8px;
   --glass-action-gap: 12px;
   --glass-action-height: 52px;
   --glass-action-column: 11rem;
