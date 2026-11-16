@@ -1,3 +1,4 @@
+import { schedulePaymentConfirmation } from '../../../../composition/booking-notifications';
 import { financialWebhook } from '../../../../composition/financial-webhook';
 import { boundedBody } from '../../../../lib/http-body';
 import { HTTP_STATUS } from '../../../../config/constants';
@@ -24,6 +25,7 @@ export async function POST(request: Request): Promise<Response> {
             : HTTP_STATUS.INTERNAL,
       },
     );
+  schedulePaymentConfirmation(result.value, services.value.runner);
   const financial = await financialWebhook(
     services.value,
     body,

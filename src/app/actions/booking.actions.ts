@@ -1,5 +1,6 @@
 'use server';
 import { headers } from 'next/headers';
+import { scheduleBookingConfirmation } from '../../composition/booking-notifications';
 import { runtime } from '../../composition/runtime';
 import {
   BOOKING_STATUSES,
@@ -24,6 +25,12 @@ export async function createBookingAction(raw: unknown): Promise<BookingActionSt
   );
   if (!limit.ok) return { success: false, message: UI_MESSAGES.FAILURE };
   const booked = await result.value.createBooking.execute(raw);
+  if (booked.ok)
+    scheduleBookingConfirmation(
+      booked.value,
+      result.value.runner,
+      result.value.env.SELF_CANCEL_HMAC_SECRET,
+    );
   return booked.ok
     ? { success: true, message: bookingSuccessMessage(booked.value), booking: booked.value }
     : {

@@ -1,3 +1,4 @@
+export type PlanningView = 'week' | 'day' | 'month';
 export interface PlanningSession {
   readonly id: string;
   readonly activityId: string;

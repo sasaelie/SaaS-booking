@@ -1,5 +1,6 @@
 export const PARTICIPANT = {
   CODE_PREFIX: 'CLI',
+  CODE_DISPLAY_ROWS: 4,
   TEST_PREFIX: 'TEST',
   SIGNATURE_BYTES: 16,
   CODE_CONTEXT: 'participant-booking-code-v1',

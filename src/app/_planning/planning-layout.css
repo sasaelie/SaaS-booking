@@ -33,27 +33,7 @@ body .session-planning .planning-controls button {
   font: inherit;
   font-size: 13px;
 }
-.session-planning .planning-days {
-  display: none;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 6px;
-  margin-bottom: 18px;
-}
-body .session-planning .planning-days button {
-  display: grid;
-  justify-items: center;
-  gap: 3px;
-  min-height: 54px;
-  min-width: 0;
-  padding: 7px 2px;
-}
-.session-planning .planning-days small {
-  font-size: 11px;
-}
-.session-planning .planning-days strong {
-  font-size: 15px;
-}
-body .session-planning :is(.planning-days, .planning-modes) button[aria-pressed='true'] {
+body .session-planning .planning-modes button[aria-pressed='true'] {
   --glass-control-fill: color-mix(in srgb, var(--ice-paper) 48%, transparent);
   border-color: var(--planning-line);
   font-weight: 650;
@@ -145,14 +125,6 @@ body .session-planning :is(.planning-days, .planning-modes) button[aria-pressed=
   color: var(--ice-quiet);
   font-size: 13px;
 }
-.session-planning[data-day-view='true'] .planning-days {
-  display: grid;
-}
 .session-planning[data-compact='true'] .planning-modes {
   display: none;
-}
-@container session-planning (max-width: 350px) {
-  .session-planning .planning-days {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
 }

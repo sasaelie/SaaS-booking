@@ -75,7 +75,16 @@ body .session-planning .planning-event {
   text-overflow: ellipsis;
 }
 body .session-planning .planning-event[aria-pressed='true'] {
-  border-color: var(--ui-text-primary);
+  --planning-selected-shadow:
+    var(--glass-button-relief),
+    inset 0 0 24px color-mix(in srgb, var(--planning-light) 24%, transparent),
+    0 0 8px color-mix(in srgb, var(--planning-light) 75%, transparent),
+    0 0 24px color-mix(in srgb, var(--planning-light) 55%, transparent);
+  --glass-button-hover-relief: var(--planning-selected-shadow);
+  --glass-button-active-relief: var(--planning-selected-shadow);
+  border-color: var(--planning-light);
+  background-color: color-mix(in srgb, var(--planning-light) 20%, transparent);
+  box-shadow: var(--planning-selected-shadow);
 }
 body .session-planning .planning-event:is([data-phase='past'], [data-phase='cancelled']) {
   --planning-light: var(--planning-off);
@@ -104,4 +113,29 @@ body .session-planning button.planning-event:disabled {
     transition: none !important;
     animation: none !important;
   }
+}
+
+.session-planning button.planning-event strong {
+  padding-inline-end: 26px;
+}
+.session-planning .planning-selection-mark {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--ice-evergreen-deep);
+  background: color-mix(in srgb, var(--planning-light) 38%, var(--ice-paper));
+  opacity: 0;
+  pointer-events: none;
+}
+.session-planning .planning-selection-mark .ice-icon {
+  width: 16px;
+  height: 16px;
+}
+.session-planning .planning-event[aria-pressed='true'] .planning-selection-mark {
+  opacity: 1;
 }

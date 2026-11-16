@@ -8,6 +8,10 @@ export interface JobHandlerPort {
   execute(type: string, payload: unknown, idempotencyKey: string): Promise<Result<JobEffect>>;
 }
 export interface JobRunnerPort {
+  runConfirmation(
+    organizationId: string,
+    bookingId: string,
+  ): Promise<Result<{ readonly completed: number; readonly deferred: number }>>;
   runCancellationBatch(
     organizationId: string,
     bookingIds: readonly string[],

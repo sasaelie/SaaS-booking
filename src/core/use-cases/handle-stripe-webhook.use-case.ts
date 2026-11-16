@@ -15,15 +15,25 @@ export class HandlePaymentWebhookUseCase {
   async execute(
     body: string,
     signature: string,
-  ): Promise<Result<{ readonly status: string; readonly bookingId: string | null }>> {
+  ): Promise<
+    Result<{
+      readonly status: string;
+      readonly bookingId: string | null;
+      readonly organizationId: string | null;
+    }>
+  > {
     return guardUseCase('handle-stripe-webhook.use-case.ts', 'execute', async () => {
       const parsed = await this.deps.paymentGateway.verifyWebhookAndParse(body, signature);
       if (!parsed.ok) return parsed;
-      if (!parsed.value) return ok({ status: 'IGNORED_EVENT_TYPE', bookingId: null });
-      return this.deps.paymentRepo.confirmPaymentOrDetectCollisionAtomically(
+      if (!parsed.value)
+        return ok({ status: 'IGNORED_EVENT_TYPE', bookingId: null, organizationId: null });
+      const outcome = await this.deps.paymentRepo.confirmPaymentOrDetectCollisionAtomically(
         parsed.value,
         this.deps.nowProvider?.() ?? new Date(),
       );
+      return outcome.ok
+        ? ok({ ...outcome.value, organizationId: parsed.value.organizationId })
+        : outcome;
     });
   }
 }

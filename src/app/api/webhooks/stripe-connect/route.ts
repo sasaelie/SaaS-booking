@@ -1,3 +1,4 @@
+import { schedulePaymentConfirmation } from '../../../../composition/booking-notifications';
 import { financialWebhook } from '../../../../composition/financial-webhook';
 import { boundedBody } from '../../../../lib/http-body';
 import { ERROR_CODES, HTTP_STATUS, JOB_RULES } from '../../../../config/constants';
@@ -13,6 +14,7 @@ export async function POST(request: Request): Promise<Response> {
     new TextDecoder().decode(bytes.value),
     request.headers.get('stripe-signature') ?? '',
   );
+  if (result.ok) schedulePaymentConfirmation(result.value, app.value.runner);
   const financial = result.ok
     ? await financialWebhook(
         app.value,

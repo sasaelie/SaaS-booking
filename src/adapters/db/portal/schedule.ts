@@ -3,7 +3,6 @@ import { readActivity } from '../activity-reader';
 import { publicSchedule } from '../../../core/domain/public-booking-page';
 import type { PortalActivity, PortalSession } from '../../../core/ports/portal-models';
 import { ok, type Result } from '../../../lib/result';
-import { SAAS } from '../../../config/constants';
 export async function workspaceSchedule(
   db: Executor,
   organizationId: string,
@@ -29,9 +28,5 @@ export async function workspaceSchedule(
         availabilityLabel: session.availability.displayLabel,
       });
   }
-  return ok(
-    results
-      .sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime())
-      .slice(0, SAAS.SESSION_LIMIT),
-  );
+  return ok(results.sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime()));
 }
