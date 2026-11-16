@@ -105,9 +105,6 @@
 .ice-primary:disabled {
   opacity: 0.55;
 }
-.ice-primary:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
 .ice-selection-card {
   border: 1px solid rgba(255, 255, 255, 0.85);
   background: rgba(255, 255, 255, 0.35);

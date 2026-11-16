@@ -39,7 +39,6 @@ import './_ui/status-lights.css';
 import './_ui/catalog-cards.css';
 import './_portal/session-details.css';
 import './_portal/portal-alignment.css';
-import './_ui/buttons.css';
 import './_ui/glass-frames.css';
 import './_ui/text-links.css';
 import './_portal/feature-comparison.css';
@@ -47,6 +46,11 @@ import './_ui/modal.css';
 import './_ui/social-glass.css';
 import './_ui/interaction-polish.css';
 import './_ui/participant-polish.css';
+import './_ui/glass-button-tokens.css';
+import './_ui/buttons.css';
+import './_ui/button-interactions.css';
+import './_ui/button-contexts.css';
+import './_ui/button-accessibility.css';
 export const metadata = {
   title: `${PLATFORM_BRAND.NAME} — Réservations`,
   description: 'Réservez votre place à une activité.',

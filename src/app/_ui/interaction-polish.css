@@ -3,18 +3,6 @@
   --link-ink: #1b654b;
   --link-hover: #104d38;
 }
-/* Reserve relief for controls that actually respond to interaction. */
-.liquid-ice-button,
-.portal-secondary-action,
-.portal-menu-toggle,
-.portal-card-actions a,
-.portal-slot-row button {
-  box-shadow:
-    inset 1px 1px 2px var(--ice-paper),
-    inset -1px -1px 2px var(--ice-line),
-    0 2px 0 var(--button-edge),
-    0 9px 24px -11px var(--interaction-shadow);
-}
 a.portal-organization-card,
 .commercial-plan-card,
 .portal-metric-link,

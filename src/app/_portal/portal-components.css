@@ -148,9 +148,6 @@ a.portal-organization-card:hover {
 .portal-button:disabled {
   opacity: 0.55;
 }
-.portal-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
 
 .portal-section-stack {
   display: grid;

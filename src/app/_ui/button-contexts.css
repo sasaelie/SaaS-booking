@@ -1,0 +1,67 @@
+/* Keep the shapes, indicators and anchoring of specialized controls. */
+body :is(.appearance-target, .ice-calendar) button[aria-pressed='true'],
+body .portal-nav .portal-nav-links a[aria-current='page'],
+body .marketing-preview-switch input:checked + span {
+  --glass-control-fill: var(--glass-button-selected);
+  border-color: var(--ui-text-primary);
+  box-shadow:
+    var(--glass-button-relief),
+    inset 0 0 0 1px var(--ui-text-primary);
+  font-weight: 650;
+}
+body .marketing-feature-tile .marketing-feature-trigger {
+  --glass-control-radius: 22px;
+}
+body .story-canvas .story-drag-handle {
+  --glass-control-radius: 10px;
+  /* Scaling must not move the element away from its drag coordinates. */
+  scale: 1;
+  rotate: none;
+}
+body .auth-password .auth-password-toggle {
+  --glass-control-radius: 50%;
+}
+body .ice-calendar .ice-calendar-day {
+  --glass-control-radius: 13px;
+}
+body :is(.portal-text-button, .ice-text-button) {
+  padding-inline: 14px;
+}
+body .ice-progress button {
+  padding: 6px 10px;
+  min-height: 44px;
+}
+body .portal-field input[type='file']::file-selector-button {
+  border: 1px solid var(--glass-button-light);
+  border-radius: var(--glass-button-radius);
+  color: inherit;
+  background: var(--glass-button-surface);
+  box-shadow: var(--glass-button-relief);
+  transition: box-shadow 400ms var(--glass-button-easing);
+}
+@media (hover: hover) and (pointer: fine) {
+  body .portal-field input[type='file']:not(:disabled):hover::file-selector-button {
+    box-shadow: var(--glass-button-hover-relief);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .portal-field input[type='file']::file-selector-button {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  body .portal-field input[type='file']::file-selector-button {
+    border-color: ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+    box-shadow: none;
+  }
+  body :is(.appearance-target, .ice-calendar) button[aria-pressed='true'] {
+    outline: 2px solid Highlight;
+    outline-offset: -3px;
+  }
+}
+/* This label decoration must leave the underlying radio input clickable. */
+body .marketing-preview-switch span {
+  pointer-events: none;
+}

@@ -43,9 +43,6 @@
 }
 .marketing-preview-simulate + .marketing-preview-cta.portal-button {
   margin-top: 10px;
-  background: transparent;
-  border: 0;
-  box-shadow: none;
   color: var(--link-ink);
 }
 .marketing-calendar-preview[data-booked='true'] .marketing-calendar-next {
