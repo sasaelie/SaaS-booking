@@ -20,6 +20,7 @@ export const PARTICIPANT_UI = {
   CODE: 'Votre code de réservation',
   LOGIN: 'Retrouver ma réservation',
   INVALID: 'Code invalide ou accès terminé.',
+  TEST_LOGIN: 'Code TEST inaccessible. Vérifiez le code et votre connexion au compte organisateur concerné.',
   PRIVATE: 'Ce code est personnel : il donne accès à votre réservation.',
   TICKET: 'Votre billet',
   SAVE: 'Enregistrer le billet PDF',

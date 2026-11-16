@@ -38,7 +38,9 @@ La révocation, une demande d’effacement autorisée ou la suppression d’un t
 
 ## Simulation
 
-Les billets portent TEST. Ils utilisent le schéma isolé, la clé dérivée de simulation et le préfixe TEST. Le QR ouvre la gestion de simulation, qui exige toujours l’autorisation de l’organisateur. Un code TEST n’ouvre pas la connexion participant réelle et ne finance pas une réservation réelle. La suppression d’un test invalide son accès par anonymisation et changement de version. Aucun paiement ni courriel réel n’est produit.
+Les billets portent TEST. Ils utilisent le schéma isolé, la clé dérivée de simulation et le préfixe TEST. Le formulaire Participant accepte aussi ces codes lorsque le compte organisateur connecté est autorisé sur l’espace du test. Il ouvre alors la gestion de simulation, avec son bandeau TEST. Un compte différent ou anonyme ne peut pas ouvrir ce dossier.
+
+Cette entrée vérifie l’identité, l’appartenance à l’organisation, la signature du code, sa version, sa révocation et la visibilité du test. Elle utilise un lien de gestion signé dans le fragment, comme les liens de simulation existants, qui reste exploitable après actualisation. Elle ne crée aucun cookie ou droit participant réel. Les codes TEST ne financent jamais de réservation réelle. La suppression d’un test invalide son accès par anonymisation et changement de version. Aucun paiement ni courriel réel n’est produit.
 
 ## Apparence
 

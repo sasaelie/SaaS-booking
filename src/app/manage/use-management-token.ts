@@ -16,8 +16,7 @@ export function useManagementToken(
     let disposed = false;
     const read = () => {
       void managementLink(originalCode, exchange, simulationId).then((result) => {
-        if (disposed) return;
-        if (result.path) window.history.replaceState(window.history.state, '', result.path);
+        if (disposed || applyManagementPath(result.path)) return;
         setToken(result.token);
         setUnavailable(result.token === null);
         setMessage('');
@@ -38,6 +37,15 @@ export function useManagementToken(
     },
   };
 }
+function applyManagementPath(path: string | null) {
+  if (!path) return false;
+  if (new URL(path, window.location.origin).pathname !== window.location.pathname) {
+    window.location.replace(path);
+    return true;
+  }
+  window.history.replaceState(window.history.state, '', path);
+  return false;
+}
 async function managementLink(
   original: { current: string },
   cached: { current: Exchange | null },
@@ -57,7 +65,8 @@ async function managementLink(
     '',
     window.location.pathname + window.location.search,
   );
-  if (simulationId) return { token: code, path: null };
+  const test = code.trim().toUpperCase().startsWith(`${PARTICIPANT.TEST_PREFIX}-`);
+  if (simulationId && !test) return { token: code, path: null };
   try {
     if (cached.current?.code !== code)
       cached.current = { code, result: exchangeParticipantCode(code) };

@@ -2,6 +2,7 @@ import { participant, participantCookie } from '../../../../composition/particip
 import { boundedJson } from '../../../../lib/http-body';
 import { trustedOrigin } from '../../../../lib/trusted-origin';
 import { HTTP_STATUS, PARTICIPANT, TIME } from '../../../../config/constants';
+import { simulationExchange } from './simulation';
 export async function POST(request: Request) {
   const app = participant();
   if (!app.ok) return Response.json({ success: false }, { status: HTTP_STATUS.UNAVAILABLE });
@@ -12,6 +13,8 @@ export async function POST(request: Request) {
   const limited = await app.value.limiter.accept(`participant-exchange:${source}`);
   if (!limited.ok) return Response.json({ success: false }, { status: HTTP_STATUS.RATE_LIMITED });
   const body = await boundedJson(request);
+  const test = await simulationExchange(request.headers, body.ok ? body.value : null);
+  if (test) return test;
   const result = await app.value.access.exchange(
     body.ok ? body.value : null,
     participantCookie(request),
