@@ -22,7 +22,7 @@ export async function exchangeParticipantCode(code: string) {
     const target = parsed.data.simulation;
     return {
       token: target.token,
-      path: `/simulation/${target.organizationId}/gestion#token=${encodeURIComponent(target.token)}`,
+      path: `${PARTICIPANT.TEST_PATH}#token=${encodeURIComponent(target.token)}`,
     };
   }
   return {

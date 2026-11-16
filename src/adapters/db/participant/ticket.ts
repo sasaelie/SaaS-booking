@@ -6,9 +6,8 @@ import type { ParticipantTicket } from '../../../core/validation/participant';
 import type { BookingCredential } from '../../../core/ports/participant-access.port';
 import { participantCode } from '../../participant/code';
 import { QrCodeAdapter } from '../../share/qr-code.adapter';
-import { TIME } from '../../../config/constants';
+import { TIME, PARTICIPANT } from '../../../config/constants';
 import { SOCIAL_NETWORKS } from '../../../config/service';
-import { simulationPath } from '../../../config/simulation';
 interface TicketRow extends BookingCredential, Record<string, unknown> {
   participantName: string;
   endsAt: string;
@@ -34,7 +33,7 @@ export async function readParticipantTicket(
   const row = await readTicketRow(tx, payload);
   if (!row) return null;
   const code = participantCode(row, secret, test);
-  const path = test ? `${simulationPath(payload.organizationId)}/gestion` : '/manage';
+  const path = test ? PARTICIPANT.TEST_PATH : '/manage';
   const qr = required(
     await new QrCodeAdapter().encode(`${appUrl}${path}#code=${encodeURIComponent(code)}`),
   );

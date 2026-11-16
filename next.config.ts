@@ -4,6 +4,15 @@ const config: NextConfig = {
   devIndicators: false,
   agentRules: false,
   logging: { serverFunctions: false, browserToTerminal: false },
+  async redirects() {
+    return [
+      {
+        source: '/simulation/:organizationId/gestion',
+        destination: '/manage?test=1',
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {

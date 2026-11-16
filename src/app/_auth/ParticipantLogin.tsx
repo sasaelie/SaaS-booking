@@ -50,12 +50,7 @@ function useParticipantLogin() {
     try {
       const result = await exchangeParticipantCode(typeof code === 'string' ? code : '');
       if (result) router.push(result.path);
-      else
-        setMessage(
-          String(code).trim().toUpperCase().startsWith(`${PARTICIPANT.TEST_PREFIX}-`)
-            ? UI.TEST_LOGIN
-            : UI.INVALID,
-        );
+      else setMessage(UI.INVALID);
     } catch {
       setMessage(UI_MESSAGES.FAILURE);
     } finally {

@@ -1,10 +1,10 @@
 import { SimulationParticipantExchangeSchema } from '../../../../core/validation/simulation-participant';
 import { simulationParticipantLogin } from '../../../../composition/simulation-participant-login';
 import { HTTP_STATUS, ERROR_CODES } from '../../../../config/constants';
-export async function simulationExchange(headers: Headers, raw: unknown) {
+export async function simulationExchange(raw: unknown) {
   const parsed = SimulationParticipantExchangeSchema.safeParse(raw);
   if (!parsed.success) return null;
-  const app = simulationParticipantLogin(headers);
+  const app = simulationParticipantLogin();
   const result = app.ok ? await app.value.execute(parsed.data) : app;
   const unavailable =
     !result.ok &&

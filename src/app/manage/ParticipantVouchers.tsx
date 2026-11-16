@@ -6,9 +6,11 @@ import { simulationPath } from '../../config/simulation';
 export function ParticipantVouchers({
   booking,
   simulationId,
+  testParticipant = false,
 }: {
   readonly booking: SelfBookingContext;
   readonly simulationId?: string;
+  readonly testParticipant?: boolean;
 }) {
   if (!booking.ticket?.vouchers.length) return null;
   const base = simulationId
@@ -29,7 +31,7 @@ export function ParticipantVouchers({
               }).format(new Date(voucher.expiresAtIso))}
             </span>
             <code>{voucher.code}</code>
-            {voucher.status === 'ACTIVE' ? (
+            {voucher.status === 'ACTIVE' && !testParticipant ? (
               <a href={`${base}/${booking.activityId}#voucher=${encodeURIComponent(voucher.code)}`}>
                 {UI.USE}
               </a>

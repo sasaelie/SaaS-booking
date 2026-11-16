@@ -1,19 +1,28 @@
 'use client';
 import { simulationApi } from '../../config/simulation';
 import { useState, type FormEvent } from 'react';
-import { UI_MESSAGES } from '../../config/constants';
+import { UI_MESSAGES, PARTICIPANT } from '../../config/constants';
 import { sendOperation } from './management-response';
 import { useBookingContext } from './use-booking-context';
 import { useManagementToken } from './use-management-token';
-export function useManagement(simulationId?: string) {
+export function useManagement(simulationId?: string, testParticipant = false) {
   const [token, setToken] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const details = useBookingContext(
     token,
-    simulationId ? simulationApi(simulationId, 'context') : undefined,
+    testParticipant
+      ? `${PARTICIPANT.TEST_API}/context`
+      : simulationId
+        ? simulationApi(simulationId, 'context')
+        : undefined,
   );
   const link = useManagementToken(setToken, setMessage, simulationId);
-  const actions = useManagementActions(token, simulationId, setMessage, details.refresh);
+  const endpoint = testParticipant
+    ? `${PARTICIPANT.TEST_API}/cancel`
+    : simulationId
+      ? simulationApi(simulationId, 'cancel')
+      : undefined;
+  const actions = useManagementActions(token, endpoint, setMessage, details.refresh);
 
   return {
     token,
@@ -28,7 +37,7 @@ export function useManagement(simulationId?: string) {
 
 function useManagementActions(
   token: string | null,
-  simulationId: string | undefined,
+  endpoint: string | undefined,
   setMessage: (message: string) => void,
   refresh: () => void,
 ) {
@@ -40,12 +49,7 @@ function useManagementActions(
     form.set('token', token);
     setPending(true);
     try {
-      const result = await sendOperation(
-        form,
-        token,
-        upload,
-        simulationId ? simulationApi(simulationId, 'cancel') : undefined,
-      );
+      const result = await sendOperation(form, token, upload, endpoint);
       setMessage(result.message);
       if (result.ok) refresh();
     } catch {

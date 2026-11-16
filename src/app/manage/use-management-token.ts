@@ -39,7 +39,13 @@ export function useManagementToken(
 }
 function applyManagementPath(path: string | null) {
   if (!path) return false;
-  if (new URL(path, window.location.origin).pathname !== window.location.pathname) {
+  const target = new URL(path, window.location.origin);
+  const current = new URL(window.location.href);
+  if (
+    target.pathname !== current.pathname ||
+    target.searchParams.get(PARTICIPANT.TEST_QUERY) !==
+      current.searchParams.get(PARTICIPANT.TEST_QUERY)
+  ) {
     window.location.replace(path);
     return true;
   }

@@ -9,4 +9,10 @@ export const SimulationParticipantTargetSchema = z.object({
   organizationId: z.uuid(),
   token: SelfCancelTokenSchema,
 });
+export const SimulationParticipantRequestSchema = z
+  .object({
+    token: SelfCancelTokenSchema,
+  })
+  .strict();
+export const SimulationParticipantOperationSchema = z.enum(['context', 'cancel']);
 export type SimulationParticipantTarget = z.infer<typeof SimulationParticipantTargetSchema>;

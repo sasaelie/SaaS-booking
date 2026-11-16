@@ -9,36 +9,68 @@ import { ProofUpload } from './ProofUpload';
 import type { SelfBookingContext } from '../../core/validation/self-booking';
 import { ParticipantTicket } from './ParticipantTicket';
 import { ParticipantDetails } from './ParticipantDetails';
-export function ManageBooking({ simulationId }: { readonly simulationId?: string } = {}) {
-  const state = useManagement(simulationId);
+export function ManageBooking({
+  simulationId,
+  testParticipant = false,
+}: {
+  readonly simulationId?: string;
+  readonly testParticipant?: boolean;
+} = {}) {
+  const state = useManagement(simulationId, testParticipant);
   const booking = state.context;
-  const back = simulationId
-    ? simulationPath(simulationId)
-    : booking
-      ? `/${booking.organizationSlug}/${booking.activityId}`
-      : '/';
   return (
     <div className="ice-widget-root manage-container">
       {booking?.participantHue != null ? <ColorScene hue={booking.participantHue} /> : null}
-      <Link className="manage-back" href={back}>
-        {booking ? FORM_LABELS.BACK_ACTIVITY : FORM_LABELS.BACK_HOME}
-      </Link>
+      <ManageBack booking={booking} simulationId={simulationId} testParticipant={testParticipant} />
       <section className="ice-cube-shell manage-shell">
         <h1>{FORM_LABELS.MANAGE}</h1>
         {booking ? <BookingSummary booking={booking} /> : null}
         {booking ? <ParticipantTicket booking={booking} /> : null}
-        {booking ? <ParticipantDetails booking={booking} simulationId={simulationId} /> : null}
+        {booking ? (
+          <ParticipantDetails
+            booking={booking}
+            simulationId={simulationId}
+            testParticipant={testParticipant}
+          />
+        ) : null}
         <ContextFeedback state={state} />
         {booking?.hasProof && booking.status === 'PROOF_SUBMITTED' && !state.message ? (
           <p className="manage-note">{FORM_LABELS.PROOF_RECEIVED}</p>
         ) : null}
-        {!simulationId && booking?.canUploadProof && !state.cancelled ? (
+        {!simulationId && !testParticipant && booking?.canUploadProof && !state.cancelled ? (
           <ProofUpload submit={state.upload} pending={state.pending} />
         ) : null}
         {booking?.canCancel && !state.cancelled ? <CancelBooking state={state} /> : null}
         {state.message ? <p role="status">{state.message}</p> : null}
       </section>
     </div>
+  );
+}
+function ManageBack({
+  booking,
+  simulationId,
+  testParticipant,
+}: {
+  readonly booking: SelfBookingContext | null;
+  readonly simulationId?: string;
+  readonly testParticipant: boolean;
+}) {
+  const back = testParticipant
+    ? '/connexion?acces=participant'
+    : simulationId
+      ? simulationPath(simulationId)
+      : booking
+        ? `/${booking.organizationSlug}/${booking.activityId}`
+        : '/';
+  const label = testParticipant
+    ? PARTICIPANT_UI.BACK_LOGIN
+    : booking
+      ? FORM_LABELS.BACK_ACTIVITY
+      : FORM_LABELS.BACK_HOME;
+  return (
+    <Link className="manage-back" href={back}>
+      {label}
+    </Link>
   );
 }
 function BookingSummary({ booking }: { readonly booking: SelfBookingContext }) {

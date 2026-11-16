@@ -11,6 +11,7 @@ import { ParticipantAccessRepository } from '../../src/adapters/db/participant/r
 import { SimulationParticipantLoginRepository } from '../../src/adapters/simulation/participant-login.repository';
 import { SimulationRepository } from '../../src/adapters/simulation/repository';
 import { verifySelfCancelToken } from '../../src/core/domain/self-service-token';
+import { SimulationParticipantUseCase } from '../../src/core/use-cases/simulation-participant.use-case';
 import { required } from '../../src/adapters/db/transaction';
 const secret = 'simulation-login-test-only-secret-at-least-32-characters';
 const target = createDatabase(process.env['TEST_DATABASE_URL'] ?? '', 'public_simulation');
@@ -45,7 +46,7 @@ async function setup() {
     booking,
     ticket,
     app,
-    repository: new SimulationParticipantLoginRepository(target.db, 'public', secret),
+    repository: new SimulationParticipantLoginRepository(target.db, secret),
   };
 }
 async function simulationTicket(organizationId: string, bookingId: string) {
@@ -58,9 +59,9 @@ async function simulationTicket(organizationId: string, bookingId: string) {
   if (!ticket) throw Error('TEST ticket missing');
   return ticket;
 }
-it('opens a valid TEST code for its organizer without creating a real booking or participant session', async () => {
+it('opens a valid TEST code without organizer identity or creating a real booking or participant session', async () => {
   const s = await setup();
-  const result = required(await s.repository.resolve(s.organizer.actor, s.ticket.code, new Date()));
+  const result = required(await s.repository.resolve(s.ticket.code, new Date()));
   expect(result.organizationId).toBe(s.context.organizationId);
   const payload = required(await verifySelfCancelToken(result.token, secret, new Date()));
   expect(payload.bookingId).toBe(s.booking.bookingId);
@@ -80,12 +81,10 @@ it('opens a valid TEST code for its organizer without creating a real booking or
   );
   expect(rows.rows[0]).toEqual({ bookings: '0', sessions: '0' });
 });
-it('rejects a different organizer and a modified signature, and never exchanges TEST into a real session', async () => {
+it('rejects modified codes and keeps TEST access isolated from real participant sessions', async () => {
   const s = await setup();
-  const other = await portalFixture();
-  expect((await s.repository.resolve(other.actor, s.ticket.code, new Date())).ok).toBe(false);
   const changed = s.ticket.code.slice(0, -1) + (s.ticket.code.endsWith('A') ? 'B' : 'A');
-  expect((await s.repository.resolve(s.organizer.actor, changed, new Date())).ok).toBe(false);
+  expect((await s.repository.resolve(changed, new Date())).ok).toBe(false);
   const real = new ParticipantAccessRepository(db, secret, 'http://localhost');
   expect((await real.exchange(s.ticket.code, null, new Date())).ok).toBe(false);
 });
@@ -94,7 +93,7 @@ it('rejects revoked and deleted simulation tickets', async () => {
   await target.db.execute(
     sql`UPDATE booking_access_credentials SET revoked_at=now() WHERE booking_id=${s.booking.bookingId}`,
   );
-  expect((await s.repository.resolve(s.organizer.actor, s.ticket.code, new Date())).ok).toBe(false);
+  expect((await s.repository.resolve(s.ticket.code, new Date())).ok).toBe(false);
   await target.db.execute(
     sql`UPDATE booking_access_credentials SET revoked_at=NULL WHERE booking_id=${s.booking.bookingId}`,
   );
@@ -103,5 +102,31 @@ it('rejects revoked and deleted simulation tickets', async () => {
       s.booking.bookingId,
     ),
   );
-  expect((await s.repository.resolve(s.organizer.actor, s.ticket.code, new Date())).ok).toBe(false);
+  expect((await s.repository.resolve(s.ticket.code, new Date())).ok).toBe(false);
+});
+
+it('allows guest cancellation only in simulation and revokes both code and signed access on deletion', async () => {
+  const s = await setup();
+  const { token } = required(await s.repository.resolve(s.ticket.code, new Date()));
+  const guest = new SimulationParticipantUseCase(s.app.selfBooking, s.app.cancellation);
+  expect((await guest.execute('context', { token })).ok).toBe(true);
+  expect((await guest.execute('payment', { token })).ok).toBe(false);
+  expect((await guest.execute('cancel', { token, bookingId: crypto.randomUUID() })).ok).toBe(false);
+  expect((await guest.execute('cancel', { token })).ok).toBe(true);
+  const result = await target.pool.query('SELECT status FROM bookings WHERE id=$1', [
+    s.booking.bookingId,
+  ]);
+  expect(result.rows[0]?.status).toBe('CANCELLED_BY_ATTENDEE');
+  const real = await pool.query('SELECT id FROM bookings WHERE organization_id=$1', [
+    s.context.organizationId,
+  ]);
+  expect(real.rows).toHaveLength(0);
+  required(
+    await new SimulationRepository(target.db, s.context.organizationId, secret).delete(
+      s.booking.bookingId,
+    ),
+  );
+  expect((await guest.execute('context', { token })).ok).toBe(false);
+  expect((await guest.execute('cancel', { token })).ok).toBe(false);
+  expect((await s.repository.resolve(s.ticket.code, new Date())).ok).toBe(false);
 });

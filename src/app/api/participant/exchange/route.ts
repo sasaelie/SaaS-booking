@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   const limited = await app.value.limiter.accept(`participant-exchange:${source}`);
   if (!limited.ok) return Response.json({ success: false }, { status: HTTP_STATUS.RATE_LIMITED });
   const body = await boundedJson(request);
-  const test = await simulationExchange(request.headers, body.ok ? body.value : null);
+  const test = await simulationExchange(body.ok ? body.value : null);
   if (test) return test;
   const result = await app.value.access.exchange(
     body.ok ? body.value : null,

@@ -13,6 +13,10 @@ export const PARTICIPANT = {
   CODE_MAX: 90,
   POLL_MS: 5000,
   MANAGE_PREFIX: 'participant:',
+  TEST_PATH: '/manage?test=1',
+  TEST_QUERY: 'test',
+  TEST_VALUE: '1',
+  TEST_API: '/api/participant/test',
 } as const;
 export const PARTICIPANT_UI = {
   CLIENT: 'Participant',
@@ -20,7 +24,7 @@ export const PARTICIPANT_UI = {
   CODE: 'Votre code de réservation',
   LOGIN: 'Retrouver ma réservation',
   INVALID: 'Code invalide ou accès terminé.',
-  TEST_LOGIN: 'Code TEST inaccessible. Vérifiez le code et votre connexion au compte organisateur concerné.',
+  BACK_LOGIN: 'Retour à la connexion participant',
   PRIVATE: 'Ce code est personnel : il donne accès à votre réservation.',
   TICKET: 'Votre billet',
   SAVE: 'Enregistrer le billet PDF',

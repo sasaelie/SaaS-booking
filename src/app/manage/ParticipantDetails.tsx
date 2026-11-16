@@ -5,9 +5,11 @@ import { ParticipantVouchers } from './ParticipantVouchers';
 export function ParticipantDetails({
   booking,
   simulationId,
+  testParticipant = false,
 }: {
   readonly booking: SelfBookingContext;
   readonly simulationId?: string;
+  readonly testParticipant?: boolean;
 }) {
   const ticket = booking.ticket;
   if (!ticket) return null;
@@ -21,7 +23,11 @@ export function ParticipantDetails({
         </section>
       ) : null}
       <ParticipantContacts ticket={ticket} />
-      <ParticipantVouchers booking={booking} simulationId={simulationId} />
+      <ParticipantVouchers
+        booking={booking}
+        simulationId={simulationId}
+        testParticipant={testParticipant}
+      />
     </div>
   );
 }
