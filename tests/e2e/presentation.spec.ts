@@ -44,6 +44,7 @@ test('highlights long course titles with readable editorial typography and align
   await uploadPhoto(page, space.organizationId);
   await page.goto(`/${space.slug}`);
   const card = page.locator('.catalog-activity');
+  await expect(card).toBeVisible();
   await expect(card.locator('h2')).toHaveCSS('font-family', /Iowan Old Style/);
   for (const width of [320, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
