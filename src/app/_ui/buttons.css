@@ -28,16 +28,13 @@ body
     input:is([type='button'], [type='submit'], [type='reset'])
   ) {
   border: 1px solid var(--glass-button-light);
-  border-top-color: var(--glass-button-bright);
-  border-right-color: var(--glass-button-dim);
-  border-bottom-color: var(--glass-button-shadow);
   border-radius: var(--glass-button-radius);
   color: inherit;
   background-color: var(--glass-control-fill, transparent);
   --glass-button-reflection: linear-gradient(
     var(--button-shine-angle),
     transparent 0%,
-    var(--glass-button-glint) 40% 50%,
+    var(--glass-button-light) 40% 50%,
     transparent 55%
   );
   background-image: var(--glass-button-reflection), var(--glass-button-surface);
@@ -49,13 +46,14 @@ body
     center;
   background-repeat: no-repeat;
   box-shadow: var(--glass-button-relief);
-  text-shadow: none;
+  text-shadow: 0 0.25em 0.05em var(--glass-button-soft);
   -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
   backdrop-filter: blur(clamp(1px, 0.125em, 4px));
   transition:
-    scale var(--glass-button-press-duration) var(--glass-button-easing),
-    rotate var(--glass-button-press-duration) var(--glass-button-easing),
-    box-shadow var(--glass-button-press-duration) var(--glass-button-easing),
+    scale 400ms var(--glass-button-easing),
+    rotate 400ms var(--glass-button-easing),
+    box-shadow 400ms var(--glass-button-easing),
+    text-shadow 400ms var(--glass-button-easing),
     background-position 500ms var(--glass-button-easing),
     --button-shine-angle 500ms var(--glass-button-easing);
 }
