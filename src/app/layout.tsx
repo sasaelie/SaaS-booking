@@ -52,6 +52,10 @@ import './_ui/button-interactions.css';
 import './_ui/button-contexts.css';
 import './_ui/button-layout.css';
 import './_ui/button-accessibility.css';
+import './_planning/planning-tokens.css';
+import './_planning/planning-layout.css';
+import './_planning/planning-glass.css';
+import './_planning/planning-events.css';
 export const metadata = {
   title: `${PLATFORM_BRAND.NAME} — Réservations`,
   description: 'Réservez votre place à une activité.',

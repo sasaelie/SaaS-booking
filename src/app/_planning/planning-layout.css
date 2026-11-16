@@ -1,0 +1,158 @@
+.session-planning .planning-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.session-planning .planning-period {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.session-planning .planning-period strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+.session-planning .planning-period small {
+  font-size: 11px;
+  color: var(--ice-quiet);
+}
+.session-planning .planning-controls,
+.session-planning .planning-modes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+body .session-planning .planning-controls button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 13px;
+}
+.session-planning .planning-days {
+  display: none;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 18px;
+}
+body .session-planning .planning-days button {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  min-height: 54px;
+  min-width: 0;
+  padding: 7px 2px;
+}
+.session-planning .planning-days small {
+  font-size: 11px;
+}
+.session-planning .planning-days strong {
+  font-size: 15px;
+}
+body .session-planning :is(.planning-days, .planning-modes) button[aria-pressed='true'] {
+  --glass-control-fill: color-mix(in srgb, var(--ice-paper) 48%, transparent);
+  border-color: var(--planning-line);
+  font-weight: 650;
+}
+.session-planning .planning-board {
+  display: grid;
+  grid-template-columns: 42px repeat(var(--planning-days), minmax(0, 1fr));
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+.session-planning .planning-hours {
+  position: relative;
+  padding-top: var(--planning-heading);
+}
+.session-planning .planning-hours > span {
+  position: absolute;
+  inset-inline-start: 0;
+  top: calc(var(--planning-heading) + var(--hour-offset) * var(--planning-hour));
+  font-size: 11px;
+  color: var(--ice-quiet);
+}
+.session-planning .planning-day {
+  min-width: 0;
+}
+.session-planning .planning-day-heading {
+  height: var(--planning-heading);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--ice-quiet);
+  font-size: 11px;
+}
+.session-planning .planning-day-heading strong {
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ui-text-primary);
+  min-width: 34px;
+  min-height: 29px;
+  border-radius: 8px;
+  transition:
+    box-shadow 0.7s ease,
+    background-color 0.7s ease;
+}
+.session-planning .planning-day-heading[data-selected='true'] strong {
+  border-bottom: 2px solid var(--ui-text-primary);
+}
+.session-planning .planning-lane {
+  position: relative;
+  height: calc(var(--planning-duration) * var(--planning-minute) + var(--planning-min-event));
+  border-left: 1px solid var(--planning-line);
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--planning-line) 0 1px,
+    transparent 1px var(--planning-hour)
+  );
+}
+.session-planning .planning-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  font-size: 11px;
+  color: var(--ice-quiet);
+  margin-top: 18px;
+}
+.session-planning .planning-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.session-planning .planning-legend i {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--planning-light);
+  box-shadow: 0 0 7px var(--planning-light);
+}
+.session-planning .planning-legend [data-tone='off'] i {
+  box-shadow: none;
+}
+.session-planning .planning-empty {
+  margin-bottom: 14px;
+  color: var(--ice-quiet);
+  font-size: 13px;
+}
+.session-planning[data-day-view='true'] .planning-days {
+  display: grid;
+}
+.session-planning[data-compact='true'] .planning-modes {
+  display: none;
+}
+@container session-planning (max-width: 350px) {
+  .session-planning .planning-days {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

@@ -133,7 +133,7 @@ test('books a free Liberty activity without a gateway debit and persists the fin
   await expect(
     page.getByRole('link', { name: 'Propulsé par Studio Créatif 360', exact: true }),
   ).toBeVisible();
-  await page.getByRole('radio').first().check();
+  await page.locator('.planning-event:not(:disabled)').first().click();
   await page.getByRole('button', { name: 'Continuer', exact: true }).click();
   await page.getByRole('textbox', { name: 'Prénom', exact: true }).fill('Marie');
   await page.getByRole('textbox', { name: 'Nom', exact: true }).fill('Test');
