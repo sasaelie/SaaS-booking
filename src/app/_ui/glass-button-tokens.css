@@ -10,7 +10,7 @@
   initial-value: -45deg;
 }
 :root {
-  --glass-button-radius: 9999px;
+  --glass-button-radius: 0px;
   --glass-button-easing: cubic-bezier(0.25, 1, 0.5, 1);
   --glass-button-white: var(--ice-paper);
   --glass-button-ink: var(--ui-text-primary);

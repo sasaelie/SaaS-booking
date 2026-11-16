@@ -28,7 +28,7 @@ body
     input:is([type='button'], [type='submit'], [type='reset'])
   ) {
   border: 1px solid var(--glass-button-light);
-  border-radius: var(--glass-control-radius, var(--glass-button-radius));
+  border-radius: var(--glass-button-radius);
   color: inherit;
   background-color: var(--glass-control-fill, transparent);
   --glass-button-reflection: linear-gradient(

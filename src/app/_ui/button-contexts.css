@@ -9,20 +9,10 @@ body .marketing-preview-switch input:checked + span {
     inset 0 0 0 1px var(--ui-text-primary);
   font-weight: 650;
 }
-body .marketing-feature-tile .marketing-feature-trigger {
-  --glass-control-radius: 22px;
-}
 body .story-canvas .story-drag-handle {
-  --glass-control-radius: 10px;
   /* Scaling must not move the element away from its drag coordinates. */
   scale: 1;
   rotate: none;
-}
-body .auth-password .auth-password-toggle {
-  --glass-control-radius: 50%;
-}
-body .ice-calendar .ice-calendar-day {
-  --glass-control-radius: 13px;
 }
 body :is(.portal-text-button, .ice-text-button) {
   padding-inline: 14px;
