@@ -12,12 +12,12 @@
       .marketing-preview-switch span,
       input:is([type='button'], [type='submit'], [type='reset'])
     ):not(:disabled):not([aria-disabled='true']):not(:where(.story-drag-handle)):hover {
-    scale: 0.975;
+    scale: var(--glass-button-hover-scale);
     background-position:
-      25% 50%,
+      12% 50%,
       center;
     box-shadow: var(--glass-button-hover-relief);
-    text-shadow: 0.025em 0.025em 0.025em var(--glass-button-text);
+    text-shadow: none;
   }
   body
     :is(
@@ -31,7 +31,7 @@
       .marketing-preview-switch span,
       input:is([type='button'], [type='submit'], [type='reset'])
     ):not(:disabled):not([aria-disabled='true']):not(:where(.story-drag-handle)):hover::before {
-    --button-rim-angle: -125deg;
+    --button-rim-angle: -105deg;
   }
 }
 body
@@ -47,13 +47,13 @@ body
     input:is([type='button'], [type='submit'], [type='reset'])
   ):not(:disabled):not([aria-disabled='true']):not(:where(.story-drag-handle)):active {
   --button-shine-angle: -15deg;
-  scale: 0.95;
-  rotate: x 25deg;
+  scale: var(--glass-button-press-scale);
+  rotate: x var(--glass-button-press-tilt);
   background-position:
-    50% 15%,
+    25% 50%,
     center;
   box-shadow: var(--glass-button-active-relief);
-  text-shadow: 0.025em 0.25em 0.05em var(--glass-button-text);
+  text-shadow: none;
 }
 body
   :is(

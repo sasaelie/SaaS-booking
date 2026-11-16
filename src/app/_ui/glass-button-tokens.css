@@ -22,7 +22,16 @@
   --glass-button-soft: color-mix(in srgb, var(--glass-button-ink) 10%, transparent);
   --glass-button-shadow: color-mix(in srgb, var(--glass-button-ink) 20%, transparent);
   --glass-button-pressed: color-mix(in srgb, var(--glass-button-ink) 25%, transparent);
-  --glass-button-rim: color-mix(in srgb, var(--glass-button-ink) 50%, transparent);
+  --glass-button-rim: color-mix(in srgb, var(--glass-button-ink) 22%, transparent);
+  --glass-button-glint: color-mix(in srgb, var(--glass-button-white) 24%, transparent);
+  --glass-button-primary: color-mix(in srgb, var(--glass-button-ink) 9%, transparent);
+  --glass-button-hover-scale: 0.99;
+  --glass-button-press-scale: 0.985;
+  --glass-button-press-tilt: 4deg;
+  --glass-button-press-duration: 180ms;
+  --glass-action-gap: 12px;
+  --glass-action-height: 52px;
+  --glass-action-column: 11rem;
   --glass-button-text: color-mix(in srgb, var(--glass-button-ink) 12%, transparent);
   --glass-button-selected: color-mix(in srgb, var(--glass-button-ink) 12%, transparent);
   --glass-button-surface: linear-gradient(
@@ -32,19 +41,12 @@
     var(--glass-button-faint)
   );
   --glass-button-relief:
-    inset 0 0.125em 0.125em var(--glass-button-dim),
-    inset 0 -0.125em 0.125em var(--glass-button-light),
-    0 0.25em 0.125em -0.125em var(--glass-button-shadow),
-    inset 0 0 0.1em 0.25em var(--glass-button-fill), 0 10px 22px -14px var(--glass-button-pressed);
+    inset 0 1px 0 var(--glass-button-bright), inset 0 -1px 0 var(--glass-button-dim),
+    0 1px 2px var(--glass-button-dim), 0 8px 20px -10px var(--glass-button-shadow);
   --glass-button-hover-relief:
-    inset 0 0.125em 0.125em var(--glass-button-dim),
-    inset 0 -0.125em 0.125em var(--glass-button-light),
-    0 0.15em 0.05em -0.1em var(--glass-button-pressed),
-    inset 0 0 0.05em 0.1em var(--glass-button-light), 0 7px 16px -12px var(--glass-button-pressed);
+    inset 0 1px 0 var(--glass-button-bright), inset 0 -1px 0 var(--glass-button-dim),
+    0 2px 3px var(--glass-button-dim), 0 12px 26px -12px var(--glass-button-shadow);
   --glass-button-active-relief:
-    inset 0 0.125em 0.125em var(--glass-button-dim),
-    inset 0 -0.125em 0.125em var(--glass-button-light),
-    0 0.125em 0.125em -0.125em var(--glass-button-shadow),
-    inset 0 0 0.1em 0.25em var(--glass-button-fill), 0 0.225em 0.05em var(--glass-button-dim),
-    0 0.25em 0 var(--glass-button-bright), inset 0 0.25em 0.05em var(--glass-button-text);
+    inset 0 1px 3px var(--glass-button-shadow), inset 0 -1px 0 var(--glass-button-light),
+    0 2px 6px -3px var(--glass-button-shadow);
 }
