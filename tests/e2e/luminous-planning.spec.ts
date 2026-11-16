@@ -8,6 +8,7 @@ import {
 } from './portal-fixtures';
 import { localDay } from '../../src/app/_ui/calendar-dates';
 import { shiftDay } from '../../src/app/_planning/planning-dates';
+import { localDayAndTimeToUtc } from '../../src/core/domain/timezone';
 import { activityTone } from '../../src/app/_planning/planning-sessions';
 test.afterAll(closeBrowserDatabase);
 test('uses real sessions, keeps their identity as lights switch off and moves the current-day glow at midnight', async ({
@@ -38,10 +39,10 @@ test('uses real sessions, keeps their identity as lights switch off and moves th
     .toBe('none');
   await expect(page.getByRole('button', { name: 'Continuer', exact: true })).toBeDisabled();
   await passMidnight(page, space.date);
-  await expect(calendar.locator('.planning-days [aria-current="date"]')).toHaveAttribute(
-    'data-day',
-    shiftDay(today, 1),
-  );
+  const tomorrow = shiftDay(today, 1);
+  if (await calendar.locator(`[data-day="${tomorrow}"]`).count())
+    await expectCurrentDay(page, tomorrow);
+  else await expect(calendar.locator('.planning-days [aria-current="date"]')).toHaveCount(0);
   await page.screenshot({ path: info.outputPath('participant-day-lights.png'), fullPage: true });
 });
 test('opens actual organizer session management and uses the same glass on narrow and wide layouts', async ({
@@ -66,9 +67,11 @@ test('opens actual organizer session management and uses the same glass on narro
 });
 
 async function passMidnight(page: Page, date: Date) {
-  const midnight = new Date(date);
-  midnight.setUTCHours(22, 59, 59, 0);
-  await page.clock.setSystemTime(midnight);
+  const tomorrow = new Date(
+    `${shiftDay(localDay(date.toISOString(), 'Europe/Brussels'), 1)}T12:00:00Z`,
+  );
+  const midnight = localTime(tomorrow, '00:00');
+  await page.clock.setSystemTime(new Date(midnight.getTime() - 1000));
   await page.clock.fastForward(31_000);
 }
 
@@ -82,9 +85,9 @@ test('shows the continuation of an overnight Sunday session in the following wee
   page,
 }) => {
   const space = await browserSpace();
-  const startsAt = new Date(space.date);
-  startsAt.setUTCDate(startsAt.getUTCDate() + ((7 - startsAt.getUTCDay()) % 7));
-  startsAt.setUTCHours(22, 30, 0, 0);
+  const sunday = new Date(space.date);
+  sunday.setUTCDate(sunday.getUTCDate() + ((7 - sunday.getUTCDay()) % 7));
+  const startsAt = localTime(sunday, '23:30');
   const endsAt = new Date(startsAt.getTime() + 90 * 60_000);
   await browserDatabase().query(
     'UPDATE sessions SET starts_at=$1,ends_at=$2 WHERE activity_id=$3',
@@ -102,3 +105,15 @@ test('shows the continuation of an overnight Sunday session in the following wee
   await expect(page.locator('input[name="startsAtIso"]')).toHaveValue(startsAt.toISOString());
   await noHorizontalOverflow(page);
 });
+
+function localTime(date: Date, time: string): Date {
+  const result = localDayAndTimeToUtc(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    time,
+    'Europe/Brussels',
+  );
+  if (!result.ok) throw Error('Valid test date required');
+  return result.value;
+}
