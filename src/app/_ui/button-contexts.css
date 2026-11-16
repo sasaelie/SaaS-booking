@@ -55,3 +55,7 @@ body .portal-field input[type='file']::file-selector-button {
 body .marketing-preview-switch span {
   pointer-events: none;
 }
+/* Photo caption tones do not change the reservation action's foreground. */
+body .ice-catalog-card .catalog-booking-action > .portal-button {
+  color: var(--story-forest);
+}

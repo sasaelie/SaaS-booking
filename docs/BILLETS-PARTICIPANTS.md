@@ -28,7 +28,7 @@ La révocation, une demande d’effacement autorisée ou la suppression d’un t
 - Un déclencheur invoker crée l’identifiant d’accès dans la transaction de confirmation : gratuit, sans paiement, validation bancaire ou fournisseur. L’unicité par réservation rend cette émission idempotente. La migration reprend les confirmations conservées sans envoyer d’e-mails.
 - Le code est une capacité signée : UUID aléatoire et signature HMAC-SHA-256 de 128 bits liant l’organisation, la réservation, la version et le contexte. Il est reconstitué sur le serveur, ce qui évite de stocker le secret utilisable, même chiffré, dans les tables. Cette dérivation remplace le stockage chiffré envisagé dans le plan initial.
 - La clé serveur existante `SELF_CANCEL_HMAC_SECRET` est utilisée avec un contexte cryptographique distinct. Sa rotation invalide aussi ces codes ; elle doit donc être coordonnée avec leur réémission. Aucun secret supplémentaire n’est exposé au navigateur.
-- Le QR contient le code dans le fragment. Celui-ci est effacé avant l’échange POST. Une session opaque HttpOnly, SameSite=Strict, Secure et `__Host-` en HTTPS est ensuite utilisée ; seule son empreinte est conservée en base.
+- Pour les réservations réelles, le QR contient le code dans le fragment. Celui-ci est effacé avant l’échange POST. Une session opaque HttpOnly, SameSite=Strict, Secure et `__Host-` en HTTPS est ensuite utilisée ; seule son empreinte est conservée en base.
 - Une indisponibilité temporaire pendant cet échange propose de réessayer avec le code conservé uniquement en mémoire, sans nouveau scan. Elle n’est pas présentée comme un code invalide. Un changement de dossier efface l’ancien contexte affiché avant de charger le nouveau.
 - Plusieurs autorisations de réservation peuvent coexister dans le même navigateur ; chaque requête recontrôle le dossier demandé. Le code ne révèle pas les autres réservations d’une même adresse e-mail.
 - Contrôle d’origine et limitation des essais à l’échange. Les réponses privées sont non stockables. Les routes de gestion restent non indexables et protégées contre l’encadrement.
@@ -38,9 +38,11 @@ La révocation, une demande d’effacement autorisée ou la suppression d’un t
 
 ## Simulation
 
-Les billets portent TEST. Ils utilisent le schéma isolé, la clé dérivée de simulation et le préfixe TEST. Le formulaire Participant accepte aussi ces codes lorsque le compte organisateur connecté est autorisé sur l’espace du test. Il ouvre alors la gestion de simulation, avec son bandeau TEST. Un compte différent ou anonyme ne peut pas ouvrir ce dossier.
+Les billets portent TEST. Ils utilisent le schéma isolé, la clé dérivée de simulation et le préfixe TEST. Après déconnexion de l’organisateur, le formulaire Participant accepte le code TEST et ouvre uniquement son dossier simulé sur `/manage?test=1`, avec le bandeau TEST. Cet accès ne crée ni ne restaure une session organisateur.
 
-Cette entrée vérifie l’identité, l’appartenance à l’organisation, la signature du code, sa version, sa révocation et la visibilité du test. Elle utilise un lien de gestion signé dans le fragment, comme les liens de simulation existants, qui reste exploitable après actualisation. Elle ne crée aucun cookie ou droit participant réel. Les codes TEST ne financent jamais de réservation réelle. La suppression d’un test invalide son accès par anonymisation et changement de version. Aucun paiement ni courriel réel n’est produit.
+Le code est vérifié par signature, organisation, réservation, version et état d’accès. Il est échangé contre un lien de gestion signé dans le fragment, utilisable après actualisation. Chaque lecture et annulation recontrôle le dossier dans le schéma de simulation. Les anciens liens `/simulation/{organisation}/gestion` redirigent vers cette entrée ; les autres pages et opérations organisateur restent privées.
+
+L’entrée participant TEST autorise seulement la consultation et l’annulation de sa réservation simulée. Elle applique le contrôle d’origine, la limitation des essais et l’absence de cache. Elle ne crée aucun cookie participant réel. Les codes et liens TEST ne donnent accès ni aux dossiers réels, ni aux paiements simulés, ni à la liste ou à la suppression des tests. Les reports TEST ne financent jamais de réservation réelle. La suppression d’un test invalide son accès par anonymisation et changement de version. Aucun paiement ni courriel réel n’est produit.
 
 ## Apparence
 
