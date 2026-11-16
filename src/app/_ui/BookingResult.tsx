@@ -22,9 +22,10 @@ export function BookingResult({
     if (state) ref.current?.focus();
   }, [state]);
   if (!state) return null;
+  const Heading = state.success ? 'h1' : 'h2';
   return (
     <div ref={ref} tabIndex={-1} className="ice-result" data-success={state.success}>
-      <h2>{resultTitle(state)}</h2>
+      <Heading>{resultTitle(state)}</Heading>
       <p role={state.success ? 'status' : 'alert'}>{state.message}</p>
       <OfflinePayment state={state} flow={flow} />
       <PaymentInstructions state={state} />
@@ -36,7 +37,7 @@ export function BookingResult({
       ) : null}
       {state.booking?.selfServiceToken ? (
         <a
-          className="liquid-ice-button ice-result-link"
+          className="ice-result-link ticket-manage-link"
           href={`${flow.data.simulationId ? simulationPath(flow.data.simulationId) + '/gestion' : '/manage'}#token=${encodeURIComponent(state.booking.selfServiceToken)}`}
           target="_blank"
           rel="noopener noreferrer"

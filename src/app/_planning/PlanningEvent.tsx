@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { IceIcon } from '../_ui/IceIcon';
 import { PLANNING } from '../../config/planning';
 import { AppLink } from '../_ui/AppLink';
 import { dayLabel, localDay, timeLabel } from '../_ui/calendar-dates';
@@ -35,7 +36,7 @@ export function PlanningEvent({ row, timezone, now, rangeStart, selected, onSele
       {...common}
       className="planning-event"
       type="button"
-      aria-pressed={selected === session.startsAt}
+      aria-pressed={selected === session.startsAt && phase === 'future' && session.isBookable}
       disabled={!session.isBookable || phase !== 'future'}
       onClick={() => onSelect?.(session.startsAt)}
     >
@@ -57,6 +58,9 @@ function EventContent({
   return (
     <>
       <i className="planning-event-light" aria-hidden="true" />
+      <span className="planning-selection-mark" aria-hidden="true">
+        <IceIcon name="check" />
+      </span>
       <strong>{name}</strong>
       <span className="planning-event-meta">
         <span>{times}</span>

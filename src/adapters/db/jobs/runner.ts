@@ -1,5 +1,5 @@
 import { scheduleReminders } from './reminders';
-import { type CancellationScope } from './job-filter';
+import { type NotificationScope } from './job-filter';
 import { sql, eq, and, isNull } from 'drizzle-orm';
 import { outboxJobs } from '../schema';
 import { atomic, type Transaction } from '../transaction';
@@ -78,7 +78,7 @@ async function finishJob(
   await deferJob(tx, job, result.error.code);
   return 'deferred';
 }
-async function runOne(db: DrizzlePgDb, handler: JobHandlerPort, scope?: CancellationScope) {
+async function runOne(db: DrizzlePgDb, handler: JobHandlerPort, scope?: NotificationScope) {
   const claimed = await claimJob(db, scope);
   if (!claimed.ok) return claimed;
   if (!claimed.value) return ok('empty' as const);
@@ -98,12 +98,15 @@ export class DrizzleJobRunner implements JobRunnerPort {
     if (!scheduled.ok) return scheduled;
     return this.drain(JOB_RULES.BATCH_SIZE);
   }
+  runConfirmation(organizationId: string, bookingId: string) {
+    return this.drain(1, { organizationId, bookingIds: [bookingId], type: JOB_TYPES.CONFIRMATION });
+  }
   runCancellationBatch(organizationId: string, bookingIds: readonly string[]) {
     return bookingIds.length
-      ? this.drain(bookingIds.length, { organizationId, bookingIds })
+      ? this.drain(bookingIds.length, { organizationId, bookingIds, type: JOB_TYPES.CANCELLATION })
       : Promise.resolve(ok({ completed: 0, deferred: 0 }));
   }
-  private async drain(limit: number, scope?: CancellationScope) {
+  private async drain(limit: number, scope?: NotificationScope) {
     let completed = 0;
     let deferred = 0;
     for (let count = 0; count < limit; count++) {

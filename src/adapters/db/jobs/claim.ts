@@ -2,14 +2,14 @@ import { sql, eq } from 'drizzle-orm';
 import { outboxJobs } from '../schema';
 import { rows, atomic } from '../transaction';
 import type { DrizzlePgDb } from '../client';
-import { cancellationScope, type CancellationScope } from './job-filter';
+import { notificationScope, type NotificationScope } from './job-filter';
 import { JOB_RULES, JOB_TYPES, TIME } from '../../../config/constants';
 import { ok } from '../../../lib/result';
-export function claimJob(db: DrizzlePgDb, scope?: CancellationScope) {
+export function claimJob(db: DrizzlePgDb, scope?: NotificationScope) {
   return atomic(db, 'Jobs', async (tx) => {
     const [candidate] = await rows<{ id: string }>(
       tx,
-      sql`SELECT id FROM outbox_jobs WHERE completed_at IS NULL AND available_at<=now() ${cancellationScope(scope)}
+      sql`SELECT id FROM outbox_jobs WHERE completed_at IS NULL AND available_at<=now() ${notificationScope(scope)}
         ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 1`,
     );
     if (!candidate) return ok(null);

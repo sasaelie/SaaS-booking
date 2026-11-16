@@ -24,7 +24,7 @@ export function ManageBooking({
       <ManageBack booking={booking} simulationId={simulationId} testParticipant={testParticipant} />
       <section className="ice-cube-shell manage-shell">
         <h1>{FORM_LABELS.MANAGE}</h1>
-        {booking ? <BookingSummary booking={booking} /> : null}
+        {booking && !booking.ticket ? <BookingSummary booking={booking} /> : null}
         {booking ? <ParticipantTicket booking={booking} /> : null}
         {booking ? (
           <ParticipantDetails
