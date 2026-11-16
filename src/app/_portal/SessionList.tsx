@@ -1,8 +1,6 @@
 import type { PortalSession } from '../../core/ports/portal-models';
-import { AppLink as Link } from '../_ui/AppLink';
-import { SESSION_UI } from '../../config/session-details';
+import { SessionPlanning } from '../_planning/SessionPlanning';
 import { PORTAL, BOOKING_UI } from '../../config/constants';
-import { portalDate } from './date-label';
 import { AdminOperation } from './AdminOperation';
 export function SessionList({
   sessions,
@@ -15,50 +13,20 @@ export function SessionList({
 }) {
   if (!sessions.length) return <p className="portal-muted">{PORTAL.NO_SESSIONS}</p>;
   return (
-    <div className="portal-list">
-      {sessions.map((session) => (
-        <SessionCard
-          key={`${session.activityId}-${session.startsAt.toISOString()}`}
-          session={session}
-          timezone={timezone}
-          organizationId={organizationId}
-        />
-      ))}
-    </div>
-  );
-}
-
-function SessionCard({
-  session,
-  timezone,
-  organizationId,
-}: {
-  readonly session: PortalSession;
-  readonly timezone: string;
-  readonly organizationId: string;
-}) {
-  return (
-    <article
-      className="portal-panel"
-      key={`${session.activityId}-${session.startsAt.toISOString()}`}
-    >
-      <Link
-        className="portal-session-link"
-        href={`/app/${organizationId}/seances/${session.activityId}?${new URLSearchParams({ startsAt: session.startsAt.toISOString() })}`}
-      >
-        <div className="portal-session-row">
-          <div>
-            <h3>{session.activityName}</h3>
-            <p>{portalDate(session.startsAt, timezone)}</p>
-          </div>
-          <span className="portal-badge">
-            {session.availabilityLabel} {BOOKING_UI.PLACES}
-          </span>
-        </div>
-        <span className="portal-session-open">{SESSION_UI.OPEN} →</span>
-      </Link>
-      <SessionCancellation session={session} organizationId={organizationId} />
-    </article>
+    <SessionPlanning
+      timezone={timezone}
+      sessions={sessions.map((session) => ({
+        id: `${session.activityId}-${session.startsAt.toISOString()}`,
+        activityId: session.activityId,
+        name: session.activityName,
+        startsAt: session.startsAt.toISOString(),
+        endsAt: session.endsAt.toISOString(),
+        availability: `${session.availabilityLabel} ${BOOKING_UI.PLACES}`,
+        isBookable: false,
+        isCancelled: session.isCancelled,
+        href: `/app/${organizationId}/seances/${session.activityId}?${new URLSearchParams({ startsAt: session.startsAt.toISOString() })}`,
+      }))}
+    />
   );
 }
 

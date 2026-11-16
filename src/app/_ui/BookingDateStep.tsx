@@ -21,6 +21,8 @@ export function BookingDateStep({ flow }: { readonly flow: BookingFlowState }) {
         <p className="portal-notice">{ACTIVITY_UI.PUBLIC_BOOKING_CLOSED}</p>
       ) : null}
       <BookingSlots
+        activityId={flow.data.activityId}
+        activityName={flow.data.activityName}
         slots={flow.data.slots}
         timezone={flow.data.timezone}
         selected={flow.form.selectedIso}

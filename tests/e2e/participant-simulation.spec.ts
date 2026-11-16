@@ -131,7 +131,7 @@ async function cancelAndRemove(page: Page, space: Awaited<ReturnType<typeof brow
   await page.getByRole('button', { name: 'Supprimer ce test', exact: true }).click();
   await expect(page.locator('.simulation-card')).toHaveCount(0);
   await page.goto(`/simulation/${space.organizationId}/activite/${space.activityId}`);
-  await expect(page.locator('.ice-times')).toContainText('8 / 8');
+  await expect(page.locator('.session-planning')).toContainText('8 / 8');
 }
 
 async function anonymousAccess(context: BrowserContext, own: Awaited<ReturnType<typeof browserSpace>>) {

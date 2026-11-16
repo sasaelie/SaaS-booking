@@ -1,0 +1,107 @@
+body .session-planning .planning-event {
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--event-top) * var(--planning-minute) + 4px);
+  left: calc(var(--event-column) * 100% / var(--event-columns) + 4px);
+  width: calc(100% / var(--event-columns) - 8px);
+  height: calc(var(--event-duration) * var(--planning-minute) - 8px);
+  min-height: var(--planning-min-event);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 5px;
+  margin: 0;
+  padding: 9px 8px 9px 13px;
+  border: 1px solid var(--glass-button-bright);
+  border-radius: var(--glass-button-radius);
+  color: var(--ui-text-primary);
+  text-decoration: none;
+  background-color: transparent;
+  background-image: var(--glass-button-reflection, none), var(--glass-button-surface);
+  text-align: left;
+  font: inherit;
+  text-shadow: none;
+  box-shadow:
+    var(--glass-button-relief),
+    inset 0 0 12px color-mix(in srgb, var(--planning-light) 8%, transparent),
+    0 0 13px -3px color-mix(in srgb, var(--planning-light) 42%, transparent);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  transition:
+    box-shadow 0.8s ease,
+    background-color 0.8s ease;
+  scale: 1;
+  rotate: none;
+}
+.session-planning .planning-event-light {
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 3px;
+  pointer-events: none;
+  background: var(--planning-light);
+  box-shadow:
+    0 0 4px var(--planning-light),
+    0 0 10px var(--planning-light),
+    0 0 18px color-mix(in srgb, var(--planning-light) 40%, transparent);
+  transition:
+    background-color 0.8s ease,
+    box-shadow 0.8s ease;
+}
+.session-planning .planning-event strong {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 650;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.session-planning .planning-event-meta {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 3px 6px;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--ice-quiet);
+}
+.session-planning .planning-event-meta > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body .session-planning .planning-event[aria-pressed='true'] {
+  border-color: var(--ui-text-primary);
+}
+body .session-planning .planning-event:is([data-phase='past'], [data-phase='cancelled']) {
+  --planning-light: var(--planning-off);
+  box-shadow:
+    inset 0 1px 2px var(--glass-button-bright),
+    0 3px 4px -3px var(--glass-button-soft);
+}
+.session-planning
+  .planning-event:is([data-phase='past'], [data-phase='cancelled'])
+  .planning-event-light {
+  box-shadow: none;
+}
+body .session-planning button.planning-event:disabled {
+  opacity: 1;
+  color: var(--ui-text-primary);
+  cursor: default;
+  filter: none;
+}
+.session-planning[data-day-view='false'] .planning-event-meta > span:last-child {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .session-planning *,
+  .session-planning *::before,
+  .session-planning *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

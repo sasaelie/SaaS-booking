@@ -14,16 +14,16 @@ async function mockVoucherQuote(route: Route) {
     body: JSON.stringify(valid ? { remainingToPayCents: 0 } : { error: 'invalid' }),
   });
 }
-test('supports month navigation, keyboard selection and preserved contact details on mobile', async ({
+test('supports week navigation, keyboard selection and preserved contact details on mobile', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const issues: string[] = [];
   page.on('pageerror', (error) => issues.push(error.message));
   await openBooking(page);
-  const next = page.getByRole('button', { name: 'Mois suivant', exact: true });
+  const next = page.getByRole('button', { name: 'Semaine suivante', exact: true });
   if (await next.isEnabled()) await next.click();
-  const day = page.locator('.ice-calendar-day:not(:disabled)').last();
+  const day = page.locator('.planning-event:not(:disabled)').last();
   await day.focus();
   await day.press('Enter');
   const selection = await page.locator('input[name="startsAtIso"]').inputValue();

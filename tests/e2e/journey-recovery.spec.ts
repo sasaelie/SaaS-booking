@@ -44,9 +44,13 @@ test('recovers from a real last-seat collision without losing contacts or creati
     page.getByRole('button', { name: 'Confirmer ma place', exact: true }),
   ).toBeDisabled();
   await page.getByRole('button', { name: 'Modifier la séance', exact: true }).click();
-  const next = page.getByRole('button', { name: 'Mois suivant', exact: true });
+  const next = page.getByRole('button', { name: 'Semaine suivante', exact: true });
   if (await next.isEnabled()) await next.click();
-  await page.locator('.ice-calendar-day:not(:disabled)').last().click();
+  await page
+    .locator('.planning-days button')
+    .filter({ hasText: String(new Date(space.date.getTime() + 86400000).getUTCDate()) })
+    .click();
+  await page.locator('.planning-event:not(:disabled)').last().click();
   await page.getByRole('button', { name: 'Continuer', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'Adresse e-mail', exact: true })).toHaveValue(
     email,

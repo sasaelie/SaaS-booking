@@ -1,0 +1,93 @@
+.session-planning .planning-frame {
+  isolation: isolate;
+  position: relative;
+  padding: 16px 12px 10px;
+  border: 1px solid var(--glass-button-light);
+  border-radius: 22px;
+  background: var(--glass-button-surface);
+  box-shadow:
+    var(--glass-button-relief),
+    0 18px 30px -20px var(--glass-button-shadow);
+  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+}
+.session-planning .planning-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0.5px;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+  mix-blend-mode: screen;
+  background: linear-gradient(
+      -45deg,
+      transparent 0%,
+      var(--glass-button-light) 40% 50%,
+      transparent 55%
+    )
+    0% 50% / 200% 200% no-repeat;
+  transition: background-position 500ms var(--glass-button-easing);
+}
+@supports (mask-composite: exclude) or (-webkit-mask-composite: xor) {
+  .session-planning .planning-frame::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    padding: 1px;
+    border-radius: inherit;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      conic-gradient(
+        from var(--button-rim-angle) at 50% 50%,
+        var(--glass-button-rim),
+        transparent 5% 40%,
+        var(--glass-button-rim) 50%,
+        transparent 60% 95%,
+        var(--glass-button-rim)
+      ),
+      linear-gradient(var(--glass-button-light), var(--glass-button-light));
+    -webkit-mask:
+      linear-gradient(var(--ice-paper) 0 0) content-box,
+      linear-gradient(var(--ice-paper) 0 0);
+    mask:
+      linear-gradient(var(--ice-paper) 0 0) content-box,
+      linear-gradient(var(--ice-paper) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: --button-rim-angle 500ms ease;
+  }
+}
+body .session-planning .planning-days button[aria-current='date'] {
+  border-color: color-mix(in srgb, var(--planning-green) 70%, transparent);
+  background-color: color-mix(in srgb, var(--planning-green) 10%, transparent);
+  box-shadow:
+    var(--glass-button-relief),
+    inset 0 0 10px color-mix(in srgb, var(--planning-green) 13%, transparent),
+    0 0 6px color-mix(in srgb, var(--planning-green) 45%, transparent),
+    0 0 18px color-mix(in srgb, var(--planning-green) 32%, transparent);
+}
+.session-planning .planning-day-heading[aria-current='date'] strong {
+  background: linear-gradient(
+    -75deg,
+    color-mix(in srgb, var(--planning-green) 10%, transparent),
+    var(--glass-button-bright),
+    color-mix(in srgb, var(--planning-green) 15%, transparent)
+  );
+  box-shadow:
+    inset 0 1px 1px var(--ice-paper),
+    0 0 5px color-mix(in srgb, var(--planning-green) 65%, transparent),
+    0 0 15px color-mix(in srgb, var(--planning-green) 35%, transparent);
+}
+.session-planning[data-compact='true'] .planning-frame {
+  padding: 14px 8px 8px;
+  border-radius: 18px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .session-planning .planning-frame:hover::before {
+    --button-rim-angle: -125deg;
+  }
+  .session-planning .planning-frame:hover::after {
+    background-position: 25% 50%;
+  }
+}

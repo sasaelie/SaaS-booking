@@ -1,0 +1,30 @@
+:root {
+  --planning-amber: #ffaf53;
+  --planning-green: #35d28a;
+  --planning-blue: #55bdf6;
+  --planning-off: #a1afa7;
+}
+.session-planning {
+  --planning-minute: 1.2px;
+  --planning-hour: 72px;
+  --planning-heading: 54px;
+  --planning-min-event: 64px;
+  --planning-line: color-mix(in srgb, var(--ui-text-primary) 11%, transparent);
+  container: session-planning / inline-size;
+  min-width: 0;
+  color: var(--ui-text-primary);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.session-planning [data-tone='amber'] {
+  --planning-light: var(--planning-amber);
+}
+.session-planning [data-tone='green'] {
+  --planning-light: var(--planning-green);
+}
+.session-planning [data-tone='blue'] {
+  --planning-light: var(--planning-blue);
+}
+.session-planning [data-tone='off'] {
+  --planning-light: var(--planning-off);
+}
