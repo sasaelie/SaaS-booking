@@ -64,7 +64,7 @@ test('issues a printable ticket and exchanges the QR secret for a booking-scoped
   expect(cookie?.sameSite).toBe('Strict');
   await page.screenshot({ path: info.outputPath('billet-mobile.png'), fullPage: true });
   await page.emulateMedia({ media: 'print' });
-  await expect(page.getByRole('button', { name: 'Télécharger le billet PDF' })).toBeHidden();
+  await expect(page.getByRole('link', { name: 'Enregistrer le billet PDF' })).toBeHidden();
   await page.pdf({ path: info.outputPath('billet-participant.pdf'), format: 'A4' });
 });
 test('finds a reservation through the participant tab without creating an organizer session', async ({

@@ -17,8 +17,12 @@ async function confirm(page: Page, path: string) {
   await expect(page.locator('.inline-booking-proof .ticket-qr')).toBeVisible();
 }
 async function checkDownload(page: Page, filename: string) {
+  const save = page.getByRole('link', { name: 'Enregistrer le billet PDF', exact: true });
+  await expect(save).toBeVisible();
+  const preparedUrl = await save.getAttribute('href');
+  expect(preparedUrl).toMatch(/^blob:/);
   const pending = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Télécharger le billet PDF', exact: true }).click();
+  await save.click();
   const download = await pending;
   expect(download.suggestedFilename()).toBe(filename);
   expect(await download.failure()).toBeNull();
@@ -27,18 +31,25 @@ async function checkDownload(page: Page, filename: string) {
   const data = await readFile(path);
   expect(data.subarray(0, 5).toString()).toBe('%PDF-');
   expect((await PDFDocument.load(data)).getPageCount()).toBe(1);
-  await expect(page.getByRole('link', { name: 'Télécharger le PDF', exact: true })).toHaveAttribute(
-    'download',
-    filename,
-  );
+  await expect(save).toHaveAttribute('download', filename);
   const retry = page.waitForEvent('download');
-  await page.getByRole('link', { name: 'Télécharger le PDF', exact: true }).click();
-  expect(await (await retry).failure()).toBeNull();
+  await save.click();
+  const savedAgain = await retry;
+  expect(await savedAgain.failure()).toBeNull();
+  const sameFile = await savedAgain.path();
+  if (!sameFile) throw Error('Saved PDF missing');
+  expect(await readFile(sameFile)).toEqual(data);
+  await expect(save).toHaveAttribute('href', preparedUrl ?? '');
 }
-test('downloads a real simulation PDF on mobile without calling browser printing', async ({
+test('saves the same prepared simulation PDF only on request, without printing or regenerating', async ({
   page,
 }) => {
   const space = await browserSpace();
+  const events = { downloads: 0, fonts: 0 };
+  page.on('download', () => events.downloads++);
+  page.on('request', (request) => {
+    if (request.url().endsWith('/fonts/DejaVuSans.ttf')) events.fonts++;
+  });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.addInitScript(() => {
     window.print = () => {
@@ -47,7 +58,14 @@ test('downloads a real simulation PDF on mobile without calling browser printing
   });
   await login(page, space);
   await confirm(page, `/simulation/${space.organizationId}/activite/${space.activityId}`);
+  await expect(
+    page.getByRole('link', { name: 'Enregistrer le billet PDF', exact: true }),
+  ).toBeVisible();
+  expect(events.downloads).toBe(0);
+  const fontsBeforeSaving = events.fonts;
   await checkDownload(page, 'billet-reservation-test.pdf');
+  expect(events.fonts).toBe(fontsBeforeSaving);
+  expect(events.downloads).toBe(2);
 });
 test('downloads from the private participant page and allows retry after a temporary font failure', async ({
   page,
@@ -55,13 +73,16 @@ test('downloads from the private participant page and allows retry after a tempo
   const space = await browserSpace();
   await confirm(page, `/${space.slug}/${space.activityId}`);
   const code = await page.locator('.inline-booking-proof textarea').inputValue();
+  await page.route('**/fonts/DejaVuSans.ttf', (route) => route.fulfill({ status: 503 }));
   await page.goto(`/manage#code=${encodeURIComponent(code)}`);
   await expect(page.locator('.ticket-qr')).toBeVisible();
-  await page.route('**/fonts/DejaVuSans.ttf', (route) => route.fulfill({ status: 503 }));
-  await page.getByRole('button', { name: 'Télécharger le billet PDF', exact: true }).click();
   await expect(
     page.getByText('Impossible de préparer le PDF. Réessayez.', { exact: true }),
   ).toBeVisible();
   await page.unroute('**/fonts/DejaVuSans.ttf');
+  await page
+    .locator('.ticket-actions')
+    .getByRole('button', { name: 'Réessayer', exact: true })
+    .click();
   await checkDownload(page, 'billet-reservation.pdf');
 });

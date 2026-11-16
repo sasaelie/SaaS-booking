@@ -1,37 +1,35 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { SelfBookingContext } from '../../core/validation/self-booking';
 import { PARTICIPANT_PDF as PDF } from '../../config/participant-pdf';
-import { PARTICIPANT_UI as UI } from '../../config/constants';
-import { useMutation } from '../_portal/use-mutation';
+import { prepareTicketFile } from './prepare-ticket-file';
 export function useTicketDownload(booking: SelfBookingContext) {
-  const state = useMutation();
-  const [url, setUrl] = useState<string | null>(null);
-  const filename = booking.ticket?.isSimulation ? PDF.TEST_FILENAME : PDF.FILENAME;
-  useEffect(
-    () => () => {
-      if (url) URL.revokeObjectURL(url);
-    },
-    [url],
-  );
-  function prepare() {
-    return state.run(async () => {
-      const { participantTicketPdf } = await import('../../composition/participant-ticket-pdf');
-      const result = await participantTicketPdf().execute(booking);
-      if (!result.ok) {
-        state.setMessage(UI.PDF_ERROR);
+  const snapshot = useRef(booking);
+  const [attempt, setAttempt] = useState(0);
+  const [file, setFile] = useState<{ url: string | null; error: boolean }>({
+    url: null,
+    error: false,
+  });
+  useEffect(() => {
+    let cancelled = false;
+    let resource: string | null = null;
+    void prepareTicketFile(snapshot.current).then((url) => {
+      if (cancelled) {
+        if (url) URL.revokeObjectURL(url);
         return;
       }
-      const file = new Blob([new Uint8Array(result.value).buffer], { type: PDF.MIME });
-      const next = URL.createObjectURL(file);
-      setUrl(next);
-      const link = document.createElement('a');
-      link.href = next;
-      link.download = filename;
-      document.body.append(link);
-      link.click();
-      link.remove();
+      resource = url;
+      setFile({ url, error: !url });
     });
+    return () => {
+      cancelled = true;
+      if (resource) URL.revokeObjectURL(resource);
+    };
+  }, [attempt]);
+  function retry() {
+    setFile({ url: null, error: false });
+    setAttempt((value) => value + 1);
   }
-  return { url, filename, prepare, pending: state.pending, message: state.message };
+  const filename = booking.ticket?.isSimulation ? PDF.TEST_FILENAME : PDF.FILENAME;
+  return { ...file, filename, retry, pending: !file.url && !file.error };
 }
