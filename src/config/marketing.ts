@@ -9,7 +9,7 @@ export const MARKETING = {
   HERO_FIRST: 'Vos réservations en ligne.',
   HERO_SECOND: 'Du temps pour ce qui compte.',
   HERO_DESCRIPTION:
-    'Publiez vos activités, partagez votre lien et retrouvez vos réservations au même endroit. Vos participants choisissent leur séance, sans créer de compte.',
+    'Publiez vos activités et partagez votre lien. Vos participants réservent leur séance, sans créer de compte.',
   NAV_LABEL: 'Navigation principale',
   ACCOUNT_LABEL: 'Accès au compte',
   NAV: [

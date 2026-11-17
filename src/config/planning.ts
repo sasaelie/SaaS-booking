@@ -14,6 +14,7 @@ export const PLANNING = {
   WEEK: 'Semaine',
   DAY: 'Journée',
   MONTH: 'Mois',
+  FULL_DAY: 'Afficher les 24 heures',
   MONTH_PREVIEW_LIMIT: 2,
   PREVIOUS_MONTH: 'Mois précédent',
   NEXT_MONTH: 'Mois suivant',

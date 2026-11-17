@@ -8,7 +8,7 @@ export function PlatformOperationCards({
   readonly entries: readonly PlatformOperation[];
 }) {
   return (
-    <div className="portal-list">
+    <div className="portal-list portal-panel portal-record-list">
       {entries.map((entry) => (
         <article key={entry.id} className="portal-panel administration-entry">
           <div className="administration-entry-heading">

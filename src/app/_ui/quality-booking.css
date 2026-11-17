@@ -1,0 +1,91 @@
+.ice-booking-shell:has(.ice-booking-flow[data-step='details']) {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 780px;
+  margin-inline: auto;
+}
+.ice-booking-shell:has(.ice-booking-flow[data-step='details']) > .ice-story {
+  display: none;
+}
+.ice-widget-root:has(.ice-booking-flow[data-step='details']) > #participant-terms {
+  display: none;
+}
+.booking-context {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ice-line);
+}
+.booking-context-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+.booking-context-heading h1 {
+  font:
+    400 24px/1.25 Georgia,
+    serif;
+  margin: 0;
+}
+.booking-context-heading strong {
+  font-size: 20px;
+  white-space: nowrap;
+}
+.booking-context .ice-text-button {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  min-height: 44px;
+  padding: 8px 14px;
+  max-width: none;
+  width: max-content;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.booking-context-information > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+.booking-context-information .event-information {
+  padding: 12px 0 0;
+  background: none;
+  margin: 0;
+}
+.ice-booking-flow[data-step='details'] .ice-progress {
+  margin-bottom: 20px;
+}
+.ice-terms > .event-information {
+  padding: 0;
+  margin: 0;
+  background: none;
+}
+.ice-terms > .event-information > summary {
+  min-height: 44px;
+  font-size: 13px;
+}
+.ice-booking-flow .ice-check,
+.ice-booking-flow .ice-payment-note,
+.ice-booking-flow .ice-field small {
+  font-size: 12px;
+}
+.ice-booking-flow .ice-terms-text {
+  background: none;
+  border-left: 2px solid var(--ice-line);
+  border-radius: 0;
+  padding: 0 0 0 16px;
+}
+.ice-widget-root > .event-information {
+  background: none;
+  border-top: 1px solid var(--ice-line);
+  border-radius: 0;
+  padding: 16px 0;
+}
+@media (max-width: 380px) {
+  .ice-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

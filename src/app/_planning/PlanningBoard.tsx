@@ -2,7 +2,8 @@ import { useEffect, type CSSProperties } from 'react';
 import { CALENDAR_UI } from '../../config/constants';
 import { PLANNING } from '../../config/planning';
 import { dateNumber, weekdayLabel } from './planning-dates';
-import { positionSessions, timelineRange } from './planning-sessions';
+import { positionSessions } from './planning-sessions';
+import { planningRange } from './planning-range';
 import { PlanningEvent } from './PlanningEvent';
 import type { PlanningProps } from './types';
 import type { PlanningState } from './use-planning';
@@ -14,7 +15,7 @@ export function PlanningBoard({ state, ...props }: BoardProps) {
         ?.querySelector<HTMLElement>('.planning-day-heading[data-selected="true"]')
         ?.focus();
   }, [state.view, state.container]);
-  const range = timelineRange(state.sessions, props.timezone);
+  const range = planningRange(state.sessions, props.timezone, state.visibleDays, state.fullDay);
   const style = {
     '--planning-days': state.visibleDays.length,
     '--planning-duration': range.end - range.start,

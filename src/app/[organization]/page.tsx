@@ -6,6 +6,7 @@ import { notFound, redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import { simulation } from '../../composition/simulation';
 import { simulationPath } from '../../config/simulation';
+import { INTERFACE_QUALITY as UI } from '../../config/interface-quality';
 export const dynamic = 'force-dynamic';
 export default async function Page({
   params,
@@ -20,14 +21,14 @@ export default async function Page({
   if (!service.ok)
     return (
       <main>
-        <PortalError />
+        <PortalError href="/" label={UI.HOME} />
       </main>
     );
   const data = await service.value.execute(organization);
   if (!data.ok)
     return (
       <main>
-        <PortalError />
+        <PortalError href="/" label={UI.HOME} />
       </main>
     );
   if (from === 'appearance') {
@@ -37,7 +38,11 @@ export default async function Page({
   }
   return (
     <main className="participant-page">
-      <ParticipantNavigation organizationId={data.value.organizationId} slug={organization} catalog />
+      <ParticipantNavigation
+        organizationId={data.value.organizationId}
+        slug={organization}
+        catalog
+      />
       <CatalogContent data={data.value} />
     </main>
   );

@@ -60,6 +60,9 @@ import './_planning/planning-days.css';
 import './_planning/planning-month.css';
 import './_planning/planning-events.css';
 import './manage/ticket-layout.css';
+import './_ui/quality-layout.css';
+import './_ui/quality-booking.css';
+import './_portal/quality-workspace.css';
 export const metadata = {
   title: `${PLATFORM_BRAND.NAME} — Réservations`,
   description: 'Réservez votre place à une activité.',

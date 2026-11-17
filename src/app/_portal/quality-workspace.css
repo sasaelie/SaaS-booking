@@ -1,0 +1,127 @@
+.dashboard-overview .portal-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  padding: 16px 0;
+  margin: 0;
+  border: 1px solid var(--glass-edge-light);
+  border-radius: 18px;
+  background: var(--glass-fill);
+  box-shadow: var(--glass-frame-shadow);
+}
+.dashboard-overview .portal-metric {
+  padding: 8px 20px;
+  border: 0;
+  border-right: 1px solid var(--ice-line);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform: none;
+  gap: 8px;
+}
+.dashboard-overview .portal-metric:last-child {
+  border-right: 0;
+}
+.dashboard-overview .portal-metric::before {
+  display: none;
+}
+.dashboard-overview .portal-metric span {
+  font-size: 12px;
+}
+.dashboard-overview .portal-metric strong {
+  font-size: 28px;
+}
+.dashboard-overview [data-attention='true'] strong {
+  font-weight: 600;
+}
+.dashboard-tests {
+  padding: 20px 0 0;
+  border-top: 1px solid var(--ice-line);
+  margin: 0;
+}
+.appearance-editor {
+  max-width: none;
+}
+.appearance-editor .appearance-workspace {
+  grid-template-columns: minmax(240px, 0.85fr) minmax(280px, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+.appearance-controls {
+  display: grid;
+  gap: 20px;
+}
+.appearance-controls > p {
+  margin: 0;
+}
+.appearance-controls .appearance-footer {
+  margin-top: 0;
+}
+.appearance-editor .appearance-preview {
+  min-width: 0;
+}
+.appearance-media {
+  margin-top: 0;
+}
+.appearance-media > .portal-cards {
+  margin-top: 20px;
+}
+.appearance-media .portal-cards > .portal-panel {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.appearance-media .portal-cards > .portal-panel::before {
+  display: none;
+}
+body .appearance-editor .story-canvas .story-drag-handle {
+  border: 0;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  text-shadow: var(--story-caption-shadow, none);
+  outline-offset: 6px;
+}
+body .appearance-editor .story-canvas .story-drag-handle::before {
+  display: none;
+}
+.story-drag-grip {
+  position: absolute;
+  right: 100%;
+  top: 0;
+  margin-right: 5px;
+  font: 18px/1.5 sans-serif;
+  opacity: 0.65;
+}
+.story-drag-handle:is(:hover, :focus-visible) {
+  outline: 1px dashed currentColor;
+}
+.appearance-editor .story-placement-controls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.story-placement-controls > :is(legend, p, button) {
+  grid-column: 1 / -1;
+}
+@media (max-width: 1100px) {
+  .appearance-editor .appearance-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .dashboard-overview .portal-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 8px;
+  }
+  .dashboard-overview .portal-metric {
+    padding: 12px;
+  }
+  .dashboard-overview .portal-metric:nth-child(even) {
+    border-right: 0;
+  }
+  .dashboard-overview .portal-metric:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--ice-line);
+  }
+}

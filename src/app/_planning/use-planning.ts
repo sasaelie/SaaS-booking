@@ -11,6 +11,7 @@ export function usePlanning(props: PlanningProps) {
   const first = props.selected || props.sessions[0]?.startsAt || '';
   const [day, setDay] = useState(() => (first ? localDay(first, props.timezone) : ''));
   const [view, setView] = useState<PlanningView>('week');
+  const [fullDay, setFullDay] = useState(false);
   const { compact, container } = usePlanningContainer();
   const now = usePlanningClock();
   const byDay = useMemo(
@@ -26,6 +27,8 @@ export function usePlanning(props: PlanningProps) {
     setDay,
     view,
     setView,
+    fullDay,
+    setFullDay,
     compact,
     container,
     now,

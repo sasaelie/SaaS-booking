@@ -14,15 +14,15 @@ export function SharePanel({
   const organization = data.organization;
   const url = `${appUrl}/${organization.slug}`;
   return (
-    <div className="portal-list">
-      <section className="portal-panel">
+    <div className="portal-list portal-panel portal-task-sections">
+      <section>
         <h2>{SHARE_UI.DIRECT}</h2>
         <p className="portal-muted">{SHARE_UI.DIRECT_HINT}</p>
         <CopyCode value={url} />
       </section>
       {canUsePro(organization.access, new Date()) ? (
         <>
-          <section className="portal-panel">
+          <section>
             <h2>{SHARE_UI.QR}</h2>
             <p className="portal-muted">{SHARE_UI.QR_HINT}</p>
             <a
@@ -52,7 +52,7 @@ function WebsiteSharing({
 }) {
   const organization = data.organization;
   return (
-    <section className="portal-panel">
+    <section>
       <h2>{SHARE_UI.WEBSITE}</h2>
       <p className="portal-muted">{SHARE_UI.WEBSITE_HINT}</p>
       {!data.activities.some((activity) => activity.isActive) ? (

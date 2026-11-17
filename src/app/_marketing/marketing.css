@@ -9,6 +9,7 @@
 @import './marketing-demo.css';
 @import './marketing-story.css';
 @import './marketing-feature-tiles.css';
+@import './quality-marketing.css';
 
 .marketing-root {
   color: var(--ui-text-primary);

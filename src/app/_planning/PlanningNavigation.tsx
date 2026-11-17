@@ -21,6 +21,16 @@ export function PlanningNavigation({
         </div>
         <PlanningControls state={state} />
       </div>
+      {state.view !== 'month' ? (
+        <label className="planning-hours-option">
+          <input
+            type="checkbox"
+            checked={state.fullDay}
+            onChange={(event) => state.setFullDay(event.target.checked)}
+          />
+          {PLANNING.FULL_DAY}
+        </label>
+      ) : null}
       {state.view !== 'month' ? <PlanningDays state={state} /> : null}
     </>
   );

@@ -7,7 +7,7 @@ export function OverviewMetrics({ data }: { readonly data: PortalOverview }) {
   const base = `/app/${data.organization.id}`;
   const only = data.activities.length === 1 ? data.activities[0] : undefined;
   return (
-    <section aria-label={PORTAL.HOME}>
+    <section className="dashboard-overview" aria-label={PORTAL.HOME}>
       <div className="portal-metrics">
         <PortalMetric
           label={PORTAL.ACTIVITY_COUNT}

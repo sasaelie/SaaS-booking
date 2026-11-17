@@ -8,7 +8,7 @@ export async function DashboardTests({ id }: { readonly id: string }) {
   const result = app.ok ? await app.value.tests.count() : null;
   const count = result?.ok ? result.value : null;
   return (
-    <aside className="dashboard-tests portal-panel">
+    <aside className="dashboard-tests">
       <div>
         <h2>
           {DASHBOARD.TESTS}

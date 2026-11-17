@@ -16,9 +16,8 @@ export function AppearanceEditor({
 }) {
   const state = useAppearance(organization);
   return (
-    <section className="portal-panel appearance-editor">
+    <section className="appearance-editor">
       <AppearanceControls state={state} organization={organization} activities={activities} />
-      <AppearanceActions state={state} organization={organization} />
     </section>
   );
 }
@@ -50,7 +49,7 @@ function TargetSwitch({
 }
 function AppearancePreview({ hue, name }: { readonly hue: number; readonly name: string }) {
   return (
-    <div className="appearance-preview" aria-label={UI.PREVIEW}>
+    <div className="appearance-preview" role="region" aria-label={UI.PREVIEW}>
       <ColorScene hue={hue} />
       <span className="appearance-preview-label">{UI.ORGANIZER_LABEL}</span>
       <div className="ice-cube-shell appearance-sample">
@@ -72,15 +71,13 @@ function AppearanceControls({
   readonly activities: readonly PortalActivity[];
 }) {
   return (
-    <fieldset disabled={state.pending || organization.role !== MEMBER_ROLES.OWNER}>
-      <TargetSwitch value={state.target} change={state.setTarget} />
-      <p className="portal-muted">{UI.NOTE}</p>
-      <ColorRange state={state} />
+    <fieldset
+      className="appearance-workspace"
+      disabled={state.pending || organization.role !== MEMBER_ROLES.OWNER}
+    >
+      <AppearanceSettings state={state} organization={organization} />
       {state.target === 'participant' ? (
-        <StoryTextChoices value={state.storyTextTone} change={state.changeTone} />
-      ) : null}
-      {state.target === 'participant' ? (
-        <div className="appearance-preview" aria-label={UI.PREVIEW}>
+        <div className="appearance-preview" role="region" aria-label={UI.PREVIEW}>
           <ColorScene hue={state.hue} />
           <AppearanceActivityPreview
             organization={organization}
@@ -92,6 +89,26 @@ function AppearanceControls({
         <AppearancePreview hue={state.hue} name={organization.name} />
       )}
     </fieldset>
+  );
+}
+
+function AppearanceSettings({
+  state,
+  organization,
+}: {
+  readonly state: ReturnType<typeof useAppearance>;
+  readonly organization: OrganizationSummary;
+}) {
+  return (
+    <div className="portal-panel appearance-controls">
+      <TargetSwitch value={state.target} change={state.setTarget} />
+      <p className="portal-muted">{UI.NOTE}</p>
+      <ColorRange state={state} />
+      {state.target === 'participant' ? (
+        <StoryTextChoices value={state.storyTextTone} change={state.changeTone} />
+      ) : null}
+      <AppearanceActions state={state} organization={organization} />
+    </div>
   );
 }
 

@@ -18,7 +18,7 @@ export function StoryLayoutEditor({
   const drag = useStoryDrag(value, change);
   return (
     <div className="story-layout-editor">
-      <div className="story-canvas" aria-label={UI.TITLE}>
+      <div className="story-canvas" role="group" aria-label={UI.TITLE}>
         {(['title', 'price'] as const).map((key) => (
           <button
             key={key}
@@ -33,7 +33,9 @@ export function StoryLayoutEditor({
             onLostPointerCapture={drag.stop}
             onKeyDown={(e) => drag.keyboard(e, key)}
           >
-            <span aria-hidden="true">⠿ </span>
+            <span className="story-drag-grip" aria-hidden="true">
+              ⠿
+            </span>
             {key === 'title' ? title : price}
           </button>
         ))}

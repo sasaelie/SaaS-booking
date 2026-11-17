@@ -7,7 +7,7 @@ export function PlatformHistoryCards({
   readonly entries: readonly PlatformAuditEvent[];
 }) {
   return (
-    <div className="portal-list">
+    <div className="portal-list portal-panel portal-record-list">
       {entries.map((entry) => (
         <article key={entry.id} className="portal-panel administration-entry">
           <strong>{ADMIN_ACTIONS[entry.action] ?? ADMIN.UNKNOWN_ACTION}</strong>

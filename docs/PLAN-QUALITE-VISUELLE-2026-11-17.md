@@ -50,7 +50,7 @@ Les lots 1 et 2 apportent le bénéfice le plus direct. Le lot 0 évite de repar
 
 ## Règles d’exécution
 
-- Produire un avant/après du pilote avant d’étendre un changement commun à toutes les pages. Le premier pilote proposé est **la page Réservations sur mobile**, car il expose navigation, filtres, actions et cadres imbriqués.
+- Produire des avant/après pour toutes les familles. Après le pilote Réservations, le propriétaire a demandé l’application de l’ensemble du plan en une livraison globale ; ne pas ajouter de nouvelle attente d’approbation entre ces groupes de travail.
 - Comparer les variantes utilitaires discrètes au verre actuel ; ne pas imposer une suppression du verre à tous les boutons.
 - Préférer des composants et variantes explicites à une règle CSS qui transforme tous les liens ou tous les boutons selon leur position dans le DOM.
 - Garder les données, la sécurité et la logique métier hors des modifications purement visuelles ; préserver les états de paiement, de report, d’annulation et de capacité.
@@ -79,4 +79,4 @@ Le propriétaire doit fournir les informations publiques encore provisoires. Un 
 
 À la fin de cette phase : rapport, référentiel, matrice de couverture et captures disponibles ; **aucune modification de l’interface ni déploiement effectué**. Les variantes et lots ci-dessus restent à mettre en œuvre après revue du plan.
 
-Après validation du plan, un premier pilote applique les dispositions communes à la navigation, aux réservations et aux réglages. Voir [le bilan du premier lot](QUALITE-VISUELLE-LOT-1.md). Les autres lots restent distincts ; le pilote ne vaut pas refonte terminée de tout le site.
+Après le [premier pilote](QUALITE-VISUELLE-LOT-1.md), la demande a été étendue explicitement à toutes les interfaces. L’ensemble des groupes du plan est maintenant repris dans la [mise en cohérence globale](QUALITE-VISUELLE-GLOBALE.md), avec sa propre couverture et ses preuves. Les seules réserves indiquées concernent les informations publiques réelles et les vérifications nécessitant un appareil ou un usage non disponible dans l’environnement local.

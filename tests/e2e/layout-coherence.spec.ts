@@ -60,24 +60,27 @@ test('keeps activity cards separated and aligned with a long heading and a clear
     await page.screenshot({ path: info.outputPath(`after-activity-${width}.png`), fullPage: true });
   }
 });
-test('uses equal entry buttons and adequate compact and secondary touch targets', async ({
+test('distinguishes the primary entry from login and keeps adequate secondary touch targets', async ({
   page,
 }) => {
   const space = await browserSpace();
   for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
-    const sizes = await page
-      .locator('.portal-landing-actions > a')
-      .evaluateAll((links) =>
-        links.map((el) => ({
-          height: el.getBoundingClientRect().height,
-          radius: getComputedStyle(el).borderRadius,
-        })),
-      );
+    const sizes = await page.locator('.portal-landing-actions > a').evaluateAll((links) =>
+      links.map((el) => ({
+        height: el.getBoundingClientRect().height,
+        radius: getComputedStyle(el).borderRadius,
+      })),
+    );
     expect(sizes).toHaveLength(2);
-    expect(sizes[0]?.height).toBe(sizes[1]?.height);
-    expect(sizes[0]?.radius).toBe(sizes[1]?.radius);
+    expect(sizes.every((size) => size.height >= 44)).toBe(true);
+    await expect(page.locator('.portal-landing-actions > a').first()).toHaveClass(
+      /liquid-ice-button/,
+    );
+    await expect(page.locator('.portal-landing-actions > a').last()).not.toHaveClass(
+      /liquid-ice-button/,
+    );
   }
   await login(page, space);
   await page.goto(`/app/${space.organizationId}/activites/${space.activityId}`);

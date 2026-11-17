@@ -15,7 +15,11 @@ export function PortalMetric({
     </>
   );
   return href ? (
-    <Link className="portal-panel portal-metric portal-metric-link" href={href}>
+    <Link
+      className="portal-panel portal-metric portal-metric-link"
+      href={href}
+      data-attention={value > 0}
+    >
       {content}
     </Link>
   ) : (
