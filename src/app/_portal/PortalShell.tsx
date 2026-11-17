@@ -1,11 +1,9 @@
 import { PortalReturn } from './PortalReturn';
 import { PortalScene } from './PortalScene';
-import { AppLink as Link } from '../_ui/AppLink';
 import type { ReactNode } from 'react';
 import type { PortalActor, OrganizationSummary } from '../../core/ports/portal-models';
-import { PORTAL } from '../../config/constants';
 import { PortalNav } from './PortalNav';
-import { SignOutButton } from './SignOutButton';
+import { PortalAccount, PortalBrand } from './PortalIdentity';
 export function PortalShell({
   actor,
   organizations,
@@ -21,16 +19,12 @@ export function PortalShell({
     <div className="portal-root">
       <PortalScene organizations={organizations} />
       <aside className="portal-sidebar">
-        <Link href="/app" className="portal-brand">
-          <span className="ice-brand-mark" aria-hidden="true" />
-          {PORTAL.PRODUCT}
-        </Link>
-        <PortalNav organizations={organizations} operator={operator} />
-        <div className="portal-account">
-          <strong>{actor.name}</strong>
-          <span>{actor.email}</span>
-          <SignOutButton />
-        </div>
+        <PortalNav
+          organizations={organizations}
+          operator={operator}
+          brand={<PortalBrand />}
+          account={<PortalAccount actor={actor} />}
+        />
       </aside>
       <main className="portal-main">
         <PortalReturn organizationIds={organizations.map((organization) => organization.id)} />

@@ -10,7 +10,7 @@ export function ParticipantRecovery({
 }) {
   const { code, pending, failed, recover } = useParticipantRecovery(organizationId, bookingId);
   return (
-    <section className="portal-panel">
+    <section className="portal-booking-section">
       <h3>{UI.TICKET}</h3>
       {code ? (
         <>

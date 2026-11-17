@@ -30,6 +30,7 @@ import './_portal/portal-forms.css';
 import './_portal/portal-media.css';
 import './_portal/portal-responsive.css';
 import './_portal/navigation.css';
+import './_portal/booking-layout.css';
 import './_portal/administration.css';
 import './_auth/auth.css';
 import './_ui/service.css';

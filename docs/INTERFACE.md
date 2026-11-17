@@ -1,10 +1,12 @@
 # Interface Liquid Ice
 
-La page de réservation utilise un panneau d’activité vert sapin et une surface translucide. Les boutons communs ont une forme rectangulaire aux coins arrondis, une surface mate et un relief doux. Les rayons, couleurs et effets restent définis dans les feuilles CSS. Le rendu ne nécessite aucune police distante ni bibliothèque de composants supplémentaire.
+La page de réservation utilise un panneau d’activité vert sapin et une surface translucide. Les boutons communs ont une surface de verre claire avec reflet, relief et coins de 8 px. Les rayons, couleurs et effets restent définis dans les feuilles CSS. Le rendu ne nécessite aucune police distante ni bibliothèque de composants supplémentaire.
+
+Les décisions les plus récentes sont rassemblées dans le [référentiel visuel du 17 novembre](NORMES-VISUELLES-2026-11-17.md). Les captures et résultats ci-dessous documentent aussi des étapes historiques ; ils ne remplacent pas ces validations.
 
 ## Parcours
 
-1. Un calendrier mensuel affiche les jours ouverts dans le fuseau de l’organisateur. Le client choisit un jour puis un horaire, avec le compteur de places disponibles.
+1. Le planning propose une journée ou un mois, et une semaine lorsque la largeur le permet, dans le fuseau de l’organisateur. Le client choisit un jour puis une séance, avec le compteur de places disponibles.
 2. Le récapitulatif conserve la date et l’horaire. Le client remplit ses coordonnées, vérifie son éventuel report puis accepte les conditions et l’attestation.
 3. Le serveur valide le prix, les conditions et la capacité avant de réserver. Le mode sans paiement en ligne n’est pas présenté comme un encaissement. Les paiements par carte et virement disposent de libellés distincts ; une séance gratuite ou couverte par un report demande une confirmation sans paiement.
 
@@ -14,7 +16,7 @@ La vérification du report n’en consomme pas la valeur : le montant affiché p
 
 ## Accessibilité et adaptations
 
-Les champs ont des libellés associés et des aides reliées. Les jours du calendrier et les commandes restent des boutons natifs ; les horaires utilisent des radios et les consentements des cases natives. Le focus rejoint le titre de l’étape après navigation, puis le résultat après soumission. Le parcours mobile testé ne déborde pas horizontalement. Les préférences de réduction des animations sont respectées.
+Les champs ont des libellés associés et des aides reliées. Les jours et séances du planning utilisent des boutons natifs avec indication de sélection ; les consentements restent des cases natives. Le focus rejoint le titre de l’étape après navigation, puis le résultat après soumission. Les préférences de réduction des animations sont respectées.
 
 Les composants et fonctions TypeScript gardent les limites de taille du projet. Les styles sont répartis entre scène, composition, calendrier, champs, report, paiement et résultat, avec moins de 200 lignes par feuille CSS.
 
@@ -42,11 +44,11 @@ Captures du build de production local dans Chromium, avec des données fictives.
 
 Les consoles réutilisent la palette, les boutons, les espacements et les composants accessibles du parcours participant, avec des surfaces lisibles et une navigation mobile repliable. [Captures et parcours vérifiés](SAAS-VERIFICATION.md).
 
-## Boutons à relief doux — novembre 2026
+## Historique des boutons à relief doux — remplacé par le verre validé
 
-`ice-tokens.css` définit les couleurs et le rayon commun de 16 pixels ; `buttons.css` applique le style aux actions principales, secondaires, au menu mobile, aux réseaux sociaux, à la navigation du calendrier et au retrait d’un créneau. Les commandes avec texte conservent une largeur adaptée à leur libellé. Les actions secondaires ont une ombre plus discrète.
+Cette étape utilisait un rayon de 16 pixels et une surface mate. Le style actuel est défini par `glass-button-tokens.css` et `buttons.css` : verre clair, reflet et rayon de 8 px. Le jeton historique `--button-radius` suit maintenant le rayon du verre.
 
-Le bouton capsule et sa bande de reflet sont retirés. Les couleurs utilisent les variables existantes : ivoire, teinte douce et texte vert sapin. Le focus reste visible, la pression enfonce légèrement la surface et les commandes désactivées perdent leur relief. Les transitions sont supprimées lorsque la réduction des animations est demandée.
+Le bouton capsule a été retiré ; le reflet a ensuite été rétabli suivant la validation du propriétaire. Les couleurs utilisent les variables existantes : ivoire, teinte douce et texte vert sapin. Le focus reste visible et les transitions sont supprimées lorsque la réduction des animations est demandée.
 
 Les badges d’état, les témoins lumineux, les champs, les liens de retour et les sélecteurs conservent leur fonction visuelle distincte. La personnalisation de l’apparence reste disponible.
 

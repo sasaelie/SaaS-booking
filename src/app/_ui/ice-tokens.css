@@ -9,7 +9,7 @@
   --ice-shell-radius: 34px;
   --ice-shell-padding: 16px;
   --ice-pebble-radius: 18px;
-  --button-radius: 16px;
+  --button-radius: var(--glass-button-radius, 8px);
   --button-surface-top: color-mix(in srgb, var(--ice-paper) 88%, var(--ice-mist));
   --button-surface-bottom: color-mix(in srgb, var(--ice-paper) 58%, var(--ice-mist));
   --button-edge: color-mix(in srgb, var(--ui-text-primary) 16%, var(--ice-mist));

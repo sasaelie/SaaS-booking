@@ -18,7 +18,7 @@ export function ManualVoucherForm({ booking, organizationId, timezone }: Props) 
   const eligible = booking.canIssueVoucher === true;
   if (!eligible && !booking.vouchers?.length) return null;
   return (
-    <section className="portal-panel">
+    <section className="portal-booking-section">
       <h3>{SERVICE.CODES}</h3>
       <VoucherHistory booking={booking} timezone={timezone} />
       {eligible ? (

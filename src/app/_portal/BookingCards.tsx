@@ -5,6 +5,7 @@ import { PORTAL, BOOKING_STATUS_LABELS } from '../../config/constants';
 import { formatMoney } from '../_ui/format-money';
 import { portalDate } from './date-label';
 import { BookingManagement } from './BookingManagement';
+import { IceIcon } from '../_ui/IceIcon';
 interface BookingCardProps {
   readonly booking: PortalBooking;
   readonly organizationId: string;
@@ -64,7 +65,10 @@ function BookingSummary({ booking, timezone }: Pick<BookingCardProps, 'booking' 
           {booking.firstName} {booking.lastName}
         </strong>
         <small>{booking.activityName}</small>
-        <small>{PORTAL.VIEW_DETAILS}</small>
+        <small className="portal-booking-toggle">
+          {PORTAL.VIEW_DETAILS}
+          <IceIcon name="next" />
+        </small>
       </div>
       <div>
         <strong>{portalDate(booking.startsAt, timezone)}</strong>

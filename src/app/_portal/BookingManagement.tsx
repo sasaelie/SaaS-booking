@@ -13,7 +13,7 @@ interface Props {
 export function BookingManagement({ booking, organizationId, timezone }: Props) {
   const base = { organizationId, bookingId: booking.id };
   return (
-    <div className="portal-action-grid">
+    <div className="portal-booking-actions">
       {['CONFIRMED', 'CANCELLED_BY_ATTENDEE', 'CANCELLED_BY_ORGANIZER'].includes(booking.status) ? (
         <ParticipantRecovery organizationId={organizationId} bookingId={booking.id} />
       ) : null}
@@ -23,7 +23,7 @@ export function BookingManagement({ booking, organizationId, timezone }: Props) 
         <BankReview base={base} hasProof={booking.hasProof} />
       ) : null}
       {booking.status === BOOKING_STATUSES.CONFIRMED ? (
-        <section className="portal-panel">
+        <section className="portal-booking-section portal-booking-cancellation">
           <h3>{PORTAL.CANCEL_ATTENDEE}</h3>
           <AdminOperation
             command={{ ...base, action: 'cancel', adminOverride: false }}
@@ -55,7 +55,7 @@ function BankReview({
   readonly hasProof: boolean;
 }) {
   return (
-    <section className="portal-panel portal-review-actions">
+    <section className="portal-booking-section portal-review-actions">
       <h3>{PORTAL.BANK_REVIEW}</h3>
       {hasProof ? (
         <AdminOperation command={{ ...base, action: 'view-proof' }} label={PORTAL.VIEW_PROOF} />

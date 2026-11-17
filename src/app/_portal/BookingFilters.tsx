@@ -14,7 +14,7 @@ export function BookingFilters({
   readonly activities?: readonly { readonly id: string; readonly name: string }[];
 }) {
   return (
-    <form className="portal-filters" method="get">
+    <form className="portal-filters portal-booking-filters" method="get">
       <PortalSelect label={PORTAL.ACTIVITY} name="activityId" defaultValue={activityId}>
         <option value="">{PORTAL.ALL_ACTIVITIES}</option>
         {activities.map((activity) => (
