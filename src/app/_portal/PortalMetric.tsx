@@ -1,4 +1,4 @@
-import { AppLink as Link } from '../_ui/AppLink';
+import { PressableLink as Link } from '../_ui/PressableLink';
 export function PortalMetric({
   label,
   value,
@@ -16,7 +16,7 @@ export function PortalMetric({
   );
   return href ? (
     <Link
-      className="portal-panel portal-metric portal-metric-link"
+      className="portal-panel portal-metric portal-metric-link liquid-ice-button"
       href={href}
       data-attention={value > 0}
     >

@@ -45,7 +45,10 @@ body
     .portal-nav-links a,
     .marketing-preview-switch span,
     input:is([type='button'], [type='submit'], [type='reset'])
-  ):not(:disabled):not([aria-disabled='true']):not(:where(.story-drag-handle)):active {
+  ):not(:disabled):not([aria-disabled='true']):not(:where(.story-drag-handle)):is(
+    :active,
+    [data-pointer-pressed='true']
+  ) {
   --button-shine-angle: -15deg;
   scale: 0.95;
   rotate: x 25deg;
@@ -66,7 +69,7 @@ body
     .portal-nav-links a,
     .marketing-preview-switch span,
     input:is([type='button'], [type='submit'], [type='reset'])
-  ):active::before {
+  ):is(:active, [data-pointer-pressed='true'])::before {
   --button-rim-angle: -75deg;
 }
 body

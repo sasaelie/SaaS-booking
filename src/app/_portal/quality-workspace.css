@@ -25,6 +25,12 @@
 .dashboard-overview .portal-metric::before {
   display: none;
 }
+body .dashboard-overview .portal-metric-link:is(:active, [data-pointer-pressed='true']) {
+  border-radius: var(--glass-button-radius);
+  background-image: var(--glass-button-reflection), var(--glass-button-surface);
+  box-shadow: var(--glass-button-active-relief);
+  transition-duration: 80ms;
+}
 .dashboard-overview .portal-metric span {
   font-size: 12px;
 }
