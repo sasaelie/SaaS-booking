@@ -1,6 +1,7 @@
 import { isValidIban } from '../domain/iban';
 import { z } from 'zod';
 import { SocialLinksSchema } from './event-details';
+import { ADMIN_WORKSPACE } from '../../config/administration-workspace';
 import {
   ORGANIZATION_KINDS,
   BRAND_THEMES,
@@ -61,4 +62,29 @@ export const BookingFilterSchema = z.object({
   search: z.string().trim().max(SAAS.SEARCH_MAX).default(''),
   status: z.string().max(INPUT_LIMITS.KEY_MAX).default(''),
 });
-export const PlatformFilterSchema = BookingFilterSchema.omit({ status: true, activityId: true });
+export const PlatformFilterSchema = BookingFilterSchema.omit({
+  status: true,
+  activityId: true,
+}).extend({
+  page: z.coerce.number().int().min(1).max(ADMIN_WORKSPACE.PAGE_MAX).default(1),
+  pageSize: z.coerce
+    .number()
+    .refine((value) => ADMIN_WORKSPACE.PAGE_SIZES.some((size) => size === value))
+    .default(ADMIN_WORKSPACE.PAGE_SIZES[0]),
+  status: z
+    .enum([
+      '',
+      'ACTIVE',
+      'COMPLIMENTARY',
+      'PAST_DUE',
+      'SUSPENDED',
+      'EXPIRED',
+      'INACTIVE',
+      'PENDING',
+      'RETRY',
+    ])
+    .default(''),
+  plan: z.enum(['', 'LIBERTE', 'PRO']).default(''),
+  sort: z.enum(['name', 'newest', 'oldest', 'expiry', 'priority']).default('name'),
+  type: z.string().trim().max(INPUT_LIMITS.KEY_MAX).default(''),
+});

@@ -9,7 +9,7 @@ export function PlatformHistoryCards({
   return (
     <div className="portal-list portal-panel portal-record-list">
       {entries.map((entry) => (
-        <article key={entry.id} className="portal-panel administration-entry">
+        <article key={entry.id} className="administration-entry administration-compact-row">
           <strong>{ADMIN_ACTIONS[entry.action] ?? ADMIN.UNKNOWN_ACTION}</strong>
           <dl>
             <dt>{ADMIN.ORGANIZATION}</dt>

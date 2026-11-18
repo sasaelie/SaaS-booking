@@ -7,7 +7,7 @@ import { ManageActivityUseCase } from '../core/use-cases/portal/manage-activity.
 import { ShareUseCase } from '../core/use-cases/portal/share.use-case';
 import { QrCodeAdapter } from '../adapters/share/qr-code.adapter';
 import 'server-only';
-import { runtime } from './runtime';
+import { runtime, type Runtime } from './runtime';
 import { authentication } from './authentication';
 import { subscriptions } from './subscriptions';
 import { DrizzlePortalRepository } from '../adapters/db/drizzle-portal.repository';
@@ -23,6 +23,10 @@ import { administration } from './administration';
 import { ok } from '../lib/result';
 import { FinancialUseCase } from '../core/use-cases/portal/financial.use-case';
 import { DrizzleFinancialRepository } from '../adapters/db/drizzle-financial.repository';
+import { DrizzlePlatformReportingRepository } from '../adapters/db/drizzle-platform-reporting.repository';
+import { PlatformReportingUseCase } from '../core/use-cases/portal/platform-reporting.use-case';
+import { PlatformExportAdapter } from '../adapters/accounting/platform-export.adapter';
+import { platformBilling } from './platform-billing';
 export function portal(headers: Headers) {
   const app = runtime();
   if (!app.ok) return app;
@@ -33,6 +37,7 @@ export function portal(headers: Headers) {
   const authorization = new MembershipAuthorizationAdapter(identity, repository);
   const admin = administration(app.value, '', authorization);
   return ok({
+    ...platformReports(app.value, identity),
     financial: new FinancialUseCase(
       identity,
       new DrizzleFinancialRepository(app.value.db),
@@ -42,7 +47,12 @@ export function portal(headers: Headers) {
     pause: new LocalPauseUseCase(identity, repository, admin.pause),
     session: new PortalSessionUseCase(identity),
     connect: new ConnectUseCase(identity, connectGateway(app.value)),
-    share: new ShareUseCase(identity, repository, new QrCodeAdapter(), app.value.env.NEXT_PUBLIC_APP_URL),
+    share: new ShareUseCase(
+      identity,
+      repository,
+      new QrCodeAdapter(),
+      app.value.env.NEXT_PUBLIC_APP_URL,
+    ),
     organizations: new OrganizationsUseCase(identity, repository),
     activities: new ActivitiesUseCase(identity, repository),
     management: new ManageActivityUseCase(identity, repository),
@@ -54,3 +64,14 @@ export function portal(headers: Headers) {
   });
 }
 export type PortalServices = Extract<ReturnType<typeof portal>, { ok: true }>['value'];
+
+function platformReports(app: Runtime, identity: SessionIdentityAdapter) {
+  return {
+    billing: platformBilling(app, identity),
+    reporting: new PlatformReportingUseCase(
+      identity,
+      new DrizzlePlatformReportingRepository(app.db),
+      new PlatformExportAdapter(),
+    ),
+  };
+}

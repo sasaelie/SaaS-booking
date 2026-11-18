@@ -17,12 +17,15 @@ export interface PlatformAuditEvent {
   readonly createdAt: Date;
 }
 export interface PlatformOperationsPage {
+  readonly pendingCount?: number;
+  readonly pageSize?: number;
   readonly entries: readonly PlatformOperation[];
   readonly total: number;
   readonly failedCount: number;
   readonly page: number;
 }
 export interface PlatformHistoryPage {
+  readonly pageSize?: number;
   readonly entries: readonly PlatformAuditEvent[];
   readonly total: number;
   readonly page: number;

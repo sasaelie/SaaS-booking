@@ -8,7 +8,7 @@
   background: var(--glass-fill);
   box-shadow: var(--glass-frame-shadow);
 }
-.dashboard-overview .portal-metric {
+body .dashboard-overview .portal-metrics .portal-metric {
   padding: 8px 20px;
   border: 0;
   border-right: 1px solid var(--ice-line);
@@ -19,10 +19,10 @@
   transform: none;
   gap: 8px;
 }
-.dashboard-overview .portal-metric:last-child {
+body .dashboard-overview .portal-metrics .portal-metric:last-child {
   border-right: 0;
 }
-.dashboard-overview .portal-metric::before {
+body .dashboard-overview .portal-metrics .portal-metric::before {
   display: none;
 }
 body .dashboard-overview .portal-metric-link:is(:active, [data-pointer-pressed='true']) {
@@ -121,13 +121,13 @@ body .appearance-editor .story-canvas .story-drag-handle::before {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: 8px;
   }
-  .dashboard-overview .portal-metric {
+  body .dashboard-overview .portal-metrics .portal-metric {
     padding: 12px;
   }
-  .dashboard-overview .portal-metric:nth-child(even) {
+  body .dashboard-overview .portal-metrics .portal-metric:nth-child(even) {
     border-right: 0;
   }
-  .dashboard-overview .portal-metric:nth-child(-n + 2) {
+  body .dashboard-overview .portal-metrics .portal-metric:nth-child(-n + 2) {
     border-bottom: 1px solid var(--ice-line);
   }
 }

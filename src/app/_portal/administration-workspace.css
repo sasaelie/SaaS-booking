@@ -1,0 +1,144 @@
+.administration-navigation {
+  min-width: 0;
+  margin-bottom: 0;
+}
+.administration-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 4px 4px 12px;
+  scrollbar-width: thin;
+}
+body .administration-tabs a {
+  flex: none;
+  min-height: 44px;
+  font-size: 13px;
+  padding: 10px 14px;
+  white-space: nowrap;
+}
+.administration-organizations {
+  display: block;
+  padding-block: 0;
+}
+.administration-compact-row {
+  gap: 8px;
+  padding-block: 18px;
+  border-bottom: 1px solid var(--ice-line);
+}
+.administration-compact-row:last-child {
+  border-bottom: 0;
+}
+.administration-compact-row h2 {
+  font-size: 17px;
+  line-height: 1.5;
+}
+.administration-row-meta {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.administration-compact-row > .portal-details {
+  padding-top: 0;
+  border-top: 0;
+}
+.administration-compact-row :is(.portal-details, .administration-row-details) > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 12px;
+}
+.administration-compact-row details[open] > summary {
+  margin-bottom: 12px;
+}
+.administration-row-details dl {
+  margin-bottom: 12px;
+}
+.portal-record-list:has(.administration-compact-row) {
+  gap: 0;
+}
+.administration-row-details > summary::after,
+.administration-filter-more > summary::after {
+  content: '›';
+  margin-left: 8px;
+  font-size: 18px;
+}
+.administration-row-details[open] > summary::after,
+.administration-filter-more[open] > summary::after {
+  transform: rotate(90deg);
+}
+.administration-search {
+  display: grid;
+  gap: 12px;
+}
+.administration-search-primary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 16px;
+}
+.administration-filter-more > summary {
+  min-height: 44px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+.administration-search-more {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 12px;
+}
+.administration-pagination {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.administration-pagination > div {
+  display: flex;
+  gap: 12px;
+}
+.administration-pagination a {
+  padding: 10px 14px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+}
+.dashboard-overview .administration-operation-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.administration-entry .status-badge {
+  font-size: 11px;
+}
+@media (max-width: 760px) {
+  .administration-search-primary {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+  }
+  .administration-search-primary > .portal-field:first-child {
+    grid-column: 1 / -1;
+  }
+  .administration-search-primary > button {
+    min-width: 88px;
+  }
+  .administration-search-more {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .administration-compact-row {
+    padding-block: 16px;
+  }
+}
+
+body .administration-tabs a[aria-current='page'] {
+  --glass-control-fill: color-mix(in srgb, var(--status-green) 9%, transparent);
+  border-color: color-mix(in srgb, var(--status-green) 65%, var(--glass-button-light));
+  box-shadow:
+    var(--glass-button-relief),
+    0 0 12px color-mix(in srgb, var(--status-green) 20%, transparent);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 2px;
+}

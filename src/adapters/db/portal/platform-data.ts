@@ -1,9 +1,16 @@
-import { asc, eq, sql, type SQL } from 'drizzle-orm';
+import { eq, sql, type SQL } from 'drizzle-orm';
 import { organizations } from '../schema';
 import { organizationAccess } from '../schema/saas';
 import type { Transaction } from '../transaction';
 import { SAAS } from '../../../config/constants';
-export function platformOrganizationRows(tx: Transaction, search: SQL | undefined, page: number) {
+import type { PlatformFilter } from '../../../core/ports/portal-inputs';
+import { platformOrderBy } from './platform-filters';
+export function platformOrganizationRows(
+  tx: Transaction,
+  search: SQL | undefined,
+  page: number,
+  filter: PlatformFilter,
+) {
   return tx
     .select({
       organization: organizations,
@@ -17,21 +24,21 @@ export function platformOrganizationRows(tx: Transaction, search: SQL | undefine
     .from(organizations)
     .innerJoin(organizationAccess, eq(organizationAccess.organizationId, organizations.id))
     .where(search)
-    .orderBy(asc(organizations.name))
-    .limit(SAAS.PAGE_SIZE)
-    .offset((page - 1) * SAAS.PAGE_SIZE);
+    .orderBy(...platformOrderBy(filter.sort))
+    .limit(filter.pageSize ?? SAAS.PAGE_SIZE)
+    .offset((page - 1) * (filter.pageSize ?? SAAS.PAGE_SIZE));
 }
 export async function platformCounts(tx: Transaction, search: SQL | undefined) {
   const [counts] = await tx
     .select({
-      total: sql<number>`count(*)::int`,
-      activeCount: sql<number>`count(*) FILTER(WHERE NOT ${organizationAccess.complimentary} AND ${organizationAccess.suspendedAt} IS NULL AND ${organizationAccess.status}='ACTIVE' AND ${organizationAccess.currentPeriodEnd}>now())::int`,
+      total: sql<number>`count(*) FILTER(WHERE ${search ?? sql`true`})::int`,
+      organizationCount: sql<number>`count(*)::int`,
+      activeCount: sql<number>`count(*) FILTER(WHERE NOT ${organizationAccess.complimentary} AND ${organizationAccess.status}='ACTIVE' AND ${organizationAccess.currentPeriodEnd}>now())::int`,
       complimentaryCount: sql<number>`count(*) FILTER(WHERE ${organizationAccess.complimentary})::int`,
       pastDueCount: sql<number>`count(*) FILTER(WHERE ${organizationAccess.status}='PAST_DUE')::int`,
       deferredJobs: sql<number>`(SELECT count(*)::int FROM outbox_jobs WHERE completed_at IS NULL AND attempts>0)`,
     })
     .from(organizations)
-    .innerJoin(organizationAccess, eq(organizationAccess.organizationId, organizations.id))
-    .where(search);
+    .innerJoin(organizationAccess, eq(organizationAccess.organizationId, organizations.id));
   return counts;
 }

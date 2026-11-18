@@ -15,7 +15,7 @@ export function PlatformCostForm({ data }: { readonly data: PlatformOverview }) 
           <PortalSelect label="Espace concerné" name="costOrganizationId" required>
             {data.organizations.map((o) => (
               <option key={o.id} value={o.id}>
-                {o.name}
+                {o.name} /{o.slug}
               </option>
             ))}
           </PortalSelect>

@@ -122,6 +122,9 @@ export interface PlatformOrganization {
   readonly bookingCount: number;
 }
 export interface PlatformOverview {
+  readonly organizationCount?: number;
+  readonly page?: number;
+  readonly pageSize?: number;
   readonly financial?: {
     readonly bookingVolumeCents: number;
     readonly commissionGrossCents: number;

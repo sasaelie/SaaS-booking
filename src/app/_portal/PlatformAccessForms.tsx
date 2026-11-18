@@ -1,14 +1,17 @@
 import type { PlatformOrganization } from '../../core/ports/portal-models';
 import { PLATFORM_UI, PORTAL } from '../../config/constants';
 import { PortalForm } from './PortalForm';
+import type { ReactNode } from 'react';
 interface Props {
   readonly organization: PlatformOrganization;
+  readonly children?: ReactNode;
 }
-export function PlatformAccessForms({ organization }: Props) {
+export function PlatformAccessForms({ organization, children }: Props) {
   return (
     <details className="portal-details">
       <summary>{PLATFORM_UI.MANAGE_ACCESS}</summary>
       <div className="portal-list">
+        {children}
         <p className="portal-muted">{PLATFORM_UI.GRANT_NOTE}</p>
         <PortalForm
           action="grant-access"

@@ -52,6 +52,11 @@ export interface BookingFilter {
 export interface PlatformFilter {
   readonly page: number;
   readonly search: string;
+  readonly pageSize?: number;
+  readonly status?: string;
+  readonly plan?: string;
+  readonly sort?: string;
+  readonly type?: string;
 }
 
 export type UpdateActivityInput = Omit<CreateActivityInput, 'schedule'> & {

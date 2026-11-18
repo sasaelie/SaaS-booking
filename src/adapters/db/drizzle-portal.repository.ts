@@ -2,7 +2,8 @@ import { issueManualVoucher } from './portal/manual-voucher';
 import { portalSessionDetails } from './portal/session-details';
 import type { SessionDetailsInput } from '../../core/validation/session-details';
 import type { ManualVoucherInput } from '../../core/validation/manual-voucher';
-import { platformHistory, platformOperations } from './portal/platform-monitoring';
+import { platformHistory } from './portal/platform-monitoring';
+import { platformOperations } from './portal/platform-operations';
 import type { AppearanceInput } from '../../core/validation/appearance';
 import {
   updateActivity,

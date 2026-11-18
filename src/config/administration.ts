@@ -32,6 +32,9 @@ export const ADMIN = {
   FAILED_COUNT: 'Traitements à réessayer',
 } as const;
 export const ADMIN_ACTIONS: Readonly<Record<string, string>> = {
+  PLATFORM_BILLING_UPDATED: 'Paramétrage de facturation mis à jour',
+  PLATFORM_INVOICE_ISSUED: 'Facture de commission émise',
+  PLATFORM_CREDIT_ISSUED: 'Avoir de commission émis',
   ACCESS_GRANTED: 'Accès offert accordé',
   ACCESS_REVOKED: 'Accès offert retiré',
   SUSPENDED: 'Nouvelles réservations suspendues',
@@ -44,6 +47,8 @@ export const ADMIN_ACTIONS: Readonly<Record<string, string>> = {
   MANUAL_REFUND_RECORDED: 'Remboursement bancaire enregistré par l’organisateur',
 };
 export const ADMIN_JOBS: Readonly<Record<string, string>> = {
+  FINANCIAL_RECONCILE: 'Rapprochement d’un paiement',
+  FINANCIAL_PAYOUT: 'Vérification d’un versement',
   CONFIRMATION: 'Confirmation de réservation',
   REMINDER: 'Rappel de séance',
   EVENT_UPDATE: 'Mise à jour des informations pratiques',

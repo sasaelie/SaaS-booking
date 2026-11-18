@@ -1,9 +1,12 @@
 'use client';
-import { AppLink as Link } from '../_ui/AppLink';
+import { PressableLink as Link } from '../_ui/PressableLink';
 import { usePathname } from 'next/navigation';
 import { ADMIN } from '../../config/administration';
+import { ADMIN_WORKSPACE } from '../../config/administration-workspace';
 const tabs = [
   ['/plateforme', ADMIN.OVERVIEW],
+  ['/plateforme/finances', ADMIN_WORKSPACE.FINANCE],
+  ['/plateforme/utilisation', ADMIN_WORKSPACE.USAGE],
   ['/plateforme/operations', ADMIN.OPERATIONS],
   ['/plateforme/historique', ADMIN.HISTORY],
 ] as const;
@@ -23,7 +26,14 @@ export function AdministrationNav() {
       </Link>
       <nav className="administration-tabs" aria-label={ADMIN.TITLE}>
         {tabs.map(([href, label]) => (
-          <Link key={href} href={href} aria-current={path === href ? 'page' : undefined}>
+          <Link
+            className="liquid-ice-button"
+            key={href}
+            href={href}
+            aria-current={
+              (href === '/plateforme' ? path === href : path.startsWith(href)) ? 'page' : undefined
+            }
+          >
             {label}
           </Link>
         ))}

@@ -1,5 +1,4 @@
-import { eq, ilike, or, sql } from 'drizzle-orm';
-import { organizations } from '../schema';
+import { eq, sql } from 'drizzle-orm';
 import { organizationAccess, platformAudit } from '../schema/saas';
 import { rows, type Transaction } from '../transaction';
 import type { PortalActor } from '../../../core/ports/portal-models';
@@ -10,20 +9,19 @@ import { failure } from '../../../lib/errors';
 import { ERROR_CODES } from '../../../config/constants';
 import { platformOrganizationRows, platformCounts } from './platform-data';
 import { platformFinance } from '../platform-finance';
+import { platformWhere } from './platform-filters';
+import { SAAS } from '../../../config/constants';
 export async function platformOverview(
   tx: Transaction,
   actor: PortalActor,
   filter: PlatformFilter,
 ) {
   await requireOperator(tx, actor);
-  const search = filter.search
-    ? or(
-        ilike(organizations.name, `%${filter.search}%`),
-        ilike(organizations.slug, `%${filter.search}%`),
-      )
-    : undefined;
-  const list = await platformOrganizationRows(tx, search, filter.page);
+  const search = platformWhere(filter);
   const counts = await platformCounts(tx, search);
+  const pageSize = filter.pageSize ?? SAAS.PAGE_SIZE;
+  const page = Math.min(filter.page, Math.max(1, Math.ceil((counts?.total ?? 0) / pageSize)));
+  const list = await platformOrganizationRows(tx, search, page, filter);
   return ok({
     financial: await platformFinance(tx),
     organizations: list.map(({ organization, access, ...other }) => ({
@@ -32,6 +30,9 @@ export async function platformOverview(
       ...other,
     })),
     total: counts?.total ?? 0,
+    organizationCount: counts?.organizationCount ?? 0,
+    page,
+    pageSize,
     activeCount: counts?.activeCount ?? 0,
     complimentaryCount: counts?.complimentaryCount ?? 0,
     pastDueCount: counts?.pastDueCount ?? 0,

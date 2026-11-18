@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 const config: NextConfig = {
   poweredByHeader: false,
+  outputFileTracingIncludes: { '/api/plateforme/billing': ['./public/fonts/DejaVuSans.ttf'] },
   devIndicators: false,
   agentRules: false,
   logging: { serverFunctions: false, browserToTerminal: false },

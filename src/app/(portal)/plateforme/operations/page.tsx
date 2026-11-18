@@ -5,14 +5,15 @@ import { PLATFORM_UI } from '../../../../config/constants';
 import { PortalHeading } from '../../../_portal/PortalHeading';
 import { PortalError } from '../../../_portal/PortalError';
 import { PortalEmpty } from '../../../_portal/PortalEmpty';
-import { PortalMetric } from '../../../_portal/PortalMetric';
+import { PlatformOperationMetrics } from '../../../_portal/PlatformOperationMetrics';
 import { AdministrationSearch } from '../../../_portal/AdministrationSearch';
 import { PlatformOperationCards } from '../../../_portal/PlatformOperationCards';
-import { Pagination } from '../../../_portal/Pagination';
+import { AdministrationPagination } from '../../../_portal/AdministrationPagination';
+import type { AdministrationSearchParams } from '../../../../config/administration-workspace';
 export default async function Page({
   searchParams,
 }: {
-  readonly searchParams: Promise<{ page?: string; search?: string }>;
+  readonly searchParams: Promise<AdministrationSearchParams>;
 }) {
   const filter = await searchParams;
   const services = portal(new Headers(await headers()));
@@ -22,21 +23,18 @@ export default async function Page({
   return (
     <>
       <PortalHeading title={ADMIN.OPERATIONS} description={ADMIN.OPERATIONS_HINT} />
-      <div className="portal-metrics">
-        <PortalMetric label={ADMIN.PENDING_COUNT} value={data.total} />
-        <PortalMetric label={ADMIN.FAILED_COUNT} value={data.failedCount} />
-      </div>
-      <AdministrationSearch search={filter.search} />
+      <PlatformOperationMetrics data={data} filter={filter} />
+      <AdministrationSearch filter={filter} mode="operations" />
       {data.entries.length ? (
         <PlatformOperationCards entries={data.entries} />
       ) : (
         <PortalEmpty title={ADMIN.EMPTY_OPERATIONS} />
       )}
-      <Pagination
+      <AdministrationPagination
         page={data.page}
         total={data.total}
         path="/plateforme/operations"
-        search={filter.search}
+        filter={filter}
       />
     </>
   );

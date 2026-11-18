@@ -15,6 +15,8 @@ test('presses dashboard actions without turning the grouped counters into separa
   await page.goto(`/app/${space.organizationId}`);
   const counters = page.locator('.dashboard-overview .portal-metric-link');
   await expect(counters).toHaveCount(4);
+  await expect(counters.first()).toHaveCSS('box-shadow', 'none');
+  await expect(counters.first()).toHaveCSS('border-top-left-radius', '0px');
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
     for (const action of [
