@@ -90,9 +90,9 @@ async function checkIsolatedAccess(page: Page, id: string, token: string) {
     {
       url: `/api/simulation/${id}/payment`,
       data: { bookingId: crypto.randomUUID(), success: true },
-      status: 403,
+      status: 401,
     },
-    { url: `/api/simulation/${id}/delete`, data: { bookingId: crypto.randomUUID() }, status: 403 },
+    { url: `/api/simulation/${id}/delete`, data: { bookingId: crypto.randomUUID() }, status: 401 },
     { url: '/api/participant/test/payment', data: { token }, status: 400 },
     { url: '/api/participant/test/context', data: { token: token + 'modified' }, status: 401 },
   ];

@@ -26,6 +26,8 @@ import { DrizzleFinancialRepository } from '../adapters/db/drizzle-financial.rep
 import { DrizzlePlatformReportingRepository } from '../adapters/db/drizzle-platform-reporting.repository';
 import { PlatformReportingUseCase } from '../core/use-cases/portal/platform-reporting.use-case';
 import { PlatformExportAdapter } from '../adapters/accounting/platform-export.adapter';
+import { PlatformSettingsUseCase } from '../core/use-cases/portal/platform-settings.use-case';
+import { DrizzlePlatformSettingsRepository } from '../adapters/db/drizzle-platform-settings.repository';
 import { platformBilling } from './platform-billing';
 export function portal(headers: Headers) {
   const app = runtime();
@@ -67,6 +69,7 @@ export type PortalServices = Extract<ReturnType<typeof portal>, { ok: true }>['v
 
 function platformReports(app: Runtime, identity: SessionIdentityAdapter) {
   return {
+    settings: new PlatformSettingsUseCase(identity, new DrizzlePlatformSettingsRepository(app.db)),
     billing: platformBilling(app, identity),
     reporting: new PlatformReportingUseCase(
       identity,

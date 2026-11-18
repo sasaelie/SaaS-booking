@@ -26,7 +26,6 @@ const config: NextConfig = {
       {
         source: '/manage',
         headers: [
-          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'Cache-Control', value: 'private, no-store' },
         ],

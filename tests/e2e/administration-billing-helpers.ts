@@ -45,6 +45,9 @@ export async function verifyCreditProtection(
   input: unknown,
   previousCount: number,
 ) {
+  await expect(
+    browserDatabase().query('DELETE FROM platform_documents WHERE id=$1', [originalId]),
+  ).rejects.toThrow('immutable');
   const extra = await browserDatabase().query(
     "INSERT INTO financial_entries(organization_id,booking_id,source_key,kind,amount_cents) VALUES($1,$2,$3,'ADJUSTMENT',200) RETURNING id",
     [space.organizationId, space.bookingId, `commission-refund:${crypto.randomUUID()}`],
@@ -65,18 +68,7 @@ export async function verifyCreditProtection(
     [space.organizationId],
   );
   expect(after.rows[0].count).toBe(previousCount + 1);
-  await browserDatabase().query('DELETE FROM platform_operators WHERE user_id=$1', [
-    space.actor.id,
-  ]);
-  expect((await page.request.get(`/api/plateforme/documents?id=${originalId}`)).ok()).toBe(false);
-  expect(
-    (
-      await page.request.post('/api/plateforme/billing', {
-        headers: { Origin: new URL(page.url()).origin },
-        data: { action: 'issue', input },
-      })
-    ).ok(),
-  ).toBe(false);
+  await verifyRevokedOperator(page, originalId, input);
 }
 
 export async function assertRepeatedIssue(page: Page, input: unknown) {
@@ -124,4 +116,23 @@ export async function saveIssuerThroughApi(page: Page) {
     data: { action: 'settings', input: issuer },
   });
   expect(response.ok()).toBe(true);
+}
+
+async function verifyRevokedOperator(page: Page, originalId: string, input: unknown) {
+  await browserDatabase().query('DELETE FROM platform_operators WHERE user_id=$1', [
+    (
+      await browserDatabase().query('SELECT issued_by FROM platform_documents WHERE id=$1', [
+        originalId,
+      ])
+    ).rows[0].issued_by,
+  ]);
+  expect((await page.request.get(`/api/plateforme/documents?id=${originalId}`)).ok()).toBe(false);
+  expect(
+    (
+      await page.request.post('/api/plateforme/billing', {
+        headers: { Origin: new URL(page.url()).origin },
+        data: { action: 'issue', input },
+      })
+    ).ok(),
+  ).toBe(false);
 }

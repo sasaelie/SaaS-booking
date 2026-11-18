@@ -23,14 +23,14 @@ test('aligns and styles the credit and cost fields consistently at four widths',
     await alignedFields(credit);
     await noHorizontalOverflow(page);
     await page.screenshot({ path: info.outputPath(`after-billing-${width}.png`), fullPage: true });
-    await page.goto(`/plateforme?search=${space.slug}`);
+    await page.goto(`/plateforme/finances?view=ajustements&search=${space.slug}`);
     await page.getByText('Rapprocher un coût exceptionnel réel', { exact: true }).click();
     const cost = page
       .locator('form')
       .filter({ has: page.getByRole('button', { name: 'Enregistrer le coût', exact: true }) });
     await alignedFields(cost);
     await expect(page.getByLabel('Espace concerné', { exact: true })).toBeVisible();
-    await separatedPanels(page.locator('main'));
+    await expect(page.locator('main .portal-panel')).toHaveCount(1);
     await noHorizontalOverflow(page);
     await page.screenshot({ path: info.outputPath(`after-cost-${width}.png`), fullPage: true });
   }

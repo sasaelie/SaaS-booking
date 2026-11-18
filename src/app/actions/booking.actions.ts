@@ -1,4 +1,5 @@
 'use server';
+import { clientSource } from '../../lib/client-source';
 import { headers } from 'next/headers';
 import { scheduleBookingConfirmation } from '../../composition/booking-notifications';
 import { runtime } from '../../composition/runtime';
@@ -20,9 +21,7 @@ export async function createBookingAction(raw: unknown): Promise<BookingActionSt
   const result = runtime();
   if (!result.ok) return { success: false, message: UI_MESSAGES.UNAVAILABLE };
   const requestHeaders = await headers();
-  const limit = await result.value.limiter.accept(
-    requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local',
-  );
+  const limit = await result.value.limiter.accept(clientSource(requestHeaders));
   if (!limit.ok) return { success: false, message: UI_MESSAGES.FAILURE };
   const booked = await result.value.createBooking.execute(raw);
   if (booked.ok)

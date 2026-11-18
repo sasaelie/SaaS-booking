@@ -1,6 +1,7 @@
 import { PressableLink as Link } from '../_ui/PressableLink';
 import type { PlatformReportFilter } from '../../core/validation/platform-reporting';
 import { PLATFORM_REPORTING as UI } from '../../config/platform-reporting';
+import { AdministrationTabStrip } from './AdministrationTabStrip';
 import { reportQuery } from './platform-report-links';
 const views = [
   ['journal', UI.JOURNAL],
@@ -11,7 +12,11 @@ const views = [
 ] as const;
 export function PlatformFinanceNavigation({ filter }: { readonly filter: PlatformReportFilter }) {
   return (
-    <nav className="administration-tabs administration-finance-tabs" aria-label={UI.FINANCE_HINT}>
+    <AdministrationTabStrip
+      className="administration-finance-tabs"
+      label={UI.FINANCE_HINT}
+      activeKey={filter.view}
+    >
       {views.map(([view, label]) => (
         <Link
           className="liquid-ice-button"
@@ -22,6 +27,6 @@ export function PlatformFinanceNavigation({ filter }: { readonly filter: Platfor
           {label}
         </Link>
       ))}
-    </nav>
+    </AdministrationTabStrip>
   );
 }

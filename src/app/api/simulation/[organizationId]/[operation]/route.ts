@@ -1,3 +1,6 @@
+import { runtime } from '../../../../../composition/runtime';
+import { portalMutationError } from '../../../../../composition/portal-mutation';
+import { trustedOrigin } from '../../../../../lib/trusted-origin';
 import { simulation } from '../../../../../composition/simulation';
 import { boundedJson } from '../../../../../lib/http-body';
 import { HTTP_STATUS } from '../../../../../config/constants';
@@ -10,6 +13,12 @@ export async function POST(
   request: Request,
   { params }: { readonly params: Promise<{ organizationId: string; operation: string }> },
 ) {
+  const services = runtime();
+  if (!services.ok) return Response.json({ success: false }, { status: HTTP_STATUS.UNAVAILABLE });
+  if (!trustedOrigin(request, services.value.env.NEXT_PUBLIC_APP_URL))
+    return Response.json({ success: false }, { status: HTTP_STATUS.FORBIDDEN });
+  const denied = await portalMutationError(request.headers);
+  if (denied) return denied;
   const { organizationId, operation } = await params;
   const app = await simulation(request.headers, organizationId);
   if (!app.ok) return Response.json({ success: false }, { status: HTTP_STATUS.FORBIDDEN });

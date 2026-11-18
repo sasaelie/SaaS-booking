@@ -32,6 +32,10 @@ export const ADMIN = {
   FAILED_COUNT: 'Traitements à réessayer',
 } as const;
 export const ADMIN_ACTIONS: Readonly<Record<string, string>> = {
+  PLATFORM_PROFILE_DRAFT_SAVED: 'Coordonnées publiques préparées',
+  PLATFORM_PROFILE_PUBLISHED: 'Coordonnées publiques publiées',
+  PLATFORM_PROFILE_UNPUBLISHED: 'Coordonnées retirées de la publication',
+  PLATFORM_PEPPOL_PREPARED: 'Préparation Peppol enregistrée',
   PLATFORM_BILLING_UPDATED: 'Paramétrage de facturation mis à jour',
   PLATFORM_INVOICE_ISSUED: 'Facture de commission émise',
   PLATFORM_CREDIT_ISSUED: 'Avoir de commission émis',

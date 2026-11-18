@@ -1,0 +1,53 @@
+.platform-settings-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.platform-settings-workspace h2,
+.platform-peppol-preparation h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+.platform-settings-preview {
+  position: sticky;
+  top: 24px;
+}
+.platform-settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.platform-settings-preview > .status-badge {
+  margin-bottom: 16px;
+}
+.platform-public-contact dl {
+  display: grid;
+  gap: 16px;
+  margin: 20px 0;
+}
+.platform-public-contact dl > div {
+  display: grid;
+  gap: 4px;
+}
+.platform-public-contact dt {
+  color: var(--ice-quiet);
+  font-size: 12px;
+}
+.platform-public-contact dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+.platform-peppol-preparation {
+  max-width: 800px;
+}
+@media (max-width: 1000px) {
+  .platform-settings-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .platform-settings-preview {
+    position: static;
+  }
+}

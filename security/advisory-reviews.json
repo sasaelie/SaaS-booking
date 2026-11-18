@@ -1,0 +1,9 @@
+[
+  {
+    "advisory": "GHSA-fc5q-39xc-vjpf",
+    "reviewedOn": "2026-11-18",
+    "expires": "2026-12-02",
+    "reason": "Aucune version corrigee publiee par picomatch. Motifs de fichiers internes aux outils de compilation et tests ; aucun motif utilisateur transmis a ces outils. Recontrole du graphe deploye et revue obligatoire a echeance.",
+    "scope": "build-only"
+  }
+]

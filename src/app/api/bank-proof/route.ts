@@ -1,3 +1,4 @@
+import { clientSource } from '../../../lib/client-source';
 import { boundedForm } from '../../../lib/http-body';
 import { HTTP_LIMITS } from '../../../config/constants';
 import { HTTP_STATUS } from '../../../config/constants';
@@ -22,9 +23,7 @@ export async function POST(request: Request): Promise<Response> {
     file.size > PAYMENT_RULES.MAX_PROOF_FILE_SIZE_BYTES
   )
     return Response.json({ success: false }, { status: HTTP_STATUS.BAD_REQUEST });
-  const limited = await app.value.limiter.accept(
-    `proof:${request.headers.get('x-forwarded-for') ?? 'local'}`,
-  );
+  const limited = await app.value.limiter.accept(`proof:${clientSource(request.headers)}`);
   if (!limited.ok) return Response.json({ success: false }, { status: HTTP_STATUS.RATE_LIMITED });
   const resolved = await resolveParticipantToken(token, request);
   const result = resolved.ok

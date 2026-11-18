@@ -1,12 +1,11 @@
+import { clientSource } from '../../../lib/client-source';
 import { boundedJson } from '../../../lib/http-body';
 import { runtime } from '../../../composition/runtime';
 import { HTTP_STATUS } from '../../../config/constants';
 export async function POST(request: Request): Promise<Response> {
   const app = runtime();
   if (!app.ok) return Response.json({ success: false }, { status: HTTP_STATUS.UNAVAILABLE });
-  const limit = await app.value.limiter.accept(
-    `voucher:${request.headers.get('x-forwarded-for') ?? 'local'}`,
-  );
+  const limit = await app.value.limiter.accept(`voucher:${clientSource(request.headers)}`);
   if (!limit.ok) return Response.json({ success: false }, { status: HTTP_STATUS.RATE_LIMITED });
   const body = await boundedJson(request);
   if (!body.ok) return Response.json({ success: false }, { status: HTTP_STATUS.BAD_REQUEST });
