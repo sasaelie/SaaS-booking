@@ -2,6 +2,8 @@ import { runtime } from '../../../../composition/runtime';
 import { UI_MESSAGES } from '../../../../config/constants';
 import { IceBookingWidget } from '../../../_ui/IceBookingWidget';
 import { EmbedHeightReporter } from '../../../_ui/EmbedHeightReporter';
+import { AppLink } from '../../../_ui/AppLink';
+import { PARTICIPANT_NAV } from '../../../../config/participant-navigation';
 export const dynamic = 'force-dynamic';
 export default async function Page({
   params,
@@ -30,6 +32,13 @@ export default async function Page({
     );
   return (
     <main className="booking-embed">
+      {result.ok ? (
+        <div className="participant-navigation">
+          <AppLink href={`/embed/${route.organization}`}>
+            ← {PARTICIPANT_NAV.RETURN_ACTIVITIES}
+          </AppLink>
+        </div>
+      ) : null}
       {result.ok ? <IceBookingWidget data={result.value} /> : <p>{UI_MESSAGES.UNAVAILABLE}</p>}
       <EmbedHeightReporter />
     </main>

@@ -3,9 +3,9 @@ export function widgetSource() {
   return `(()=>{
  const script=document.currentScript;if(!script)return;
  const organization=script.dataset.organization,activity=script.dataset.activity;
- if(!organization||!activity||!/^[a-z0-9-]+$/.test(organization)||!/^[a-f0-9-]{36}$/.test(activity))return;
+ if(!organization||!/^[a-z0-9-]+$/.test(organization)||(activity!==undefined&&!/^[a-f0-9-]{36}$/.test(activity)))return;
  const origin=new URL(script.src).origin;
- const frame=document.createElement('iframe');frame.src=origin+'/embed/'+organization+'/'+activity;
+ const frame=document.createElement('iframe');frame.src=origin+'/embed/'+organization+(activity?'/'+activity:'');
  frame.title=${JSON.stringify(SHARE_UI.IFRAME_TITLE)};frame.referrerPolicy='no-referrer';frame.loading='lazy';
  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
  frame.style.cssText='display:block;width:100%;border:0;height:${EMBED.INITIAL_HEIGHT}px;';

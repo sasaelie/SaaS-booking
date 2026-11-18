@@ -3,12 +3,13 @@ import { useEffect } from 'react';
 import { EMBED } from '../../config/constants';
 export function EmbedHeightReporter() {
   useEffect(() => {
-    const element = document.querySelector('.booking-embed');
-    if (!element) return;
+    const element = document.body;
     function report() {
-      if (!element) return;
       window.parent.postMessage(
-        { type: EMBED.RESIZE_TYPE, height: Math.ceil(element.getBoundingClientRect().height) },
+        {
+          type: EMBED.RESIZE_TYPE,
+          height: Math.max(EMBED.MIN_HEIGHT, Math.ceil(element.getBoundingClientRect().height)),
+        },
         '*',
       );
     }

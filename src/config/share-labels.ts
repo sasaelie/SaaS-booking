@@ -10,6 +10,9 @@ export const SHARE_UI = {
   QR_HINT: 'Téléchargez une image haute définition pour vos affiches et flyers.',
   DOWNLOAD_QR: 'Télécharger le QR code',
   WEBSITE: 'Sur votre site',
+  EMBED_CATALOG: 'Tous vos cours sur votre site',
+  EMBED_CATALOG_HINT:
+    'Copiez ce code une seule fois. Vos activités publiées apparaissent automatiquement ; le visiteur choisit son cours puis son créneau sans quitter votre page.',
   INLINE: 'Formulaire intégré',
   FLOATING: 'Bouton flottant',
   WEBSITE_HINT:
@@ -36,6 +39,7 @@ export const SHARE_UI = {
   CATALOG_OPEN: 'Choisir une séance',
 } as const;
 export const EMBED = {
+  CATALOG_VERSION: 1,
   RESIZE_TYPE: 'booking-widget:resize',
   MIN_HEIGHT: 320,
   MAX_HEIGHT: 6000,

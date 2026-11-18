@@ -2,7 +2,7 @@ import { canUsePro } from '../../core/domain/commercial';
 import { PLAN_UI } from '../../config/commercial';
 import { AppLink as Link } from '../_ui/AppLink';
 import type { PortalOverview } from '../../core/ports/portal-models';
-import { SHARE_UI } from '../../config/constants';
+import { SHARE_UI, EMBED } from '../../config/constants';
 import { CopyCode } from './CopyCode';
 export function SharePanel({
   data,
@@ -55,6 +55,11 @@ function WebsiteSharing({
     <section>
       <h2>{SHARE_UI.WEBSITE}</h2>
       <p className="portal-muted">{SHARE_UI.WEBSITE_HINT}</p>
+      <h3>{SHARE_UI.EMBED_CATALOG}</h3>
+      <p className="portal-muted">{SHARE_UI.EMBED_CATALOG_HINT}</p>
+      <CopyCode
+        value={`<script src="${appUrl}/widget.js?v=${EMBED.CATALOG_VERSION}" data-organization="${organization.slug}" data-mode="inline" defer></script>`}
+      />
       {!data.activities.some((activity) => activity.isActive) ? (
         <p>{SHARE_UI.NO_ACTIVITY}</p>
       ) : null}
