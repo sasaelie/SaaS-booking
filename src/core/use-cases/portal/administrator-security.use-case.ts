@@ -14,6 +14,7 @@ export class AdministratorSecurityUseCase {
     private readonly repository: AdministratorSecurityRepositoryPort,
     private readonly password: PasswordProofPort,
     private readonly limiter: RateLimitPort,
+    private readonly emailLimiter?: RateLimitPort,
   ) {}
   read() {
     return withPortalActor(this.identity, 'AdministratorSecurity', (actor) =>
@@ -32,6 +33,12 @@ export class AdministratorSecurityUseCase {
       if ('password' in parsed.data) {
         const proof = await this.password.verify(parsed.data.password);
         if (!proof.ok) return proof;
+      }
+      if (parsed.data.action === 'email-send' || parsed.data.action === 'email-prepare') {
+        const emailAccepted = await (this.emailLimiter ?? this.limiter).accept(
+          `administrator-mail:${actor.id}`,
+        );
+        if (!emailAccepted.ok) return emailAccepted;
       }
       return this.repository.mutate(actor, parsed.data);
     });

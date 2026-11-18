@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ADMIN_SECURITY as C } from '../../config/administrator-security';
 import { SAAS } from '../../config/constants';
+import { AdministratorCodeCommands } from './administrator-codes';
 const encoded = (max: number) =>
   z
     .string()
@@ -53,6 +54,7 @@ export const RecoveryCodeSchema = z
   .pipe(z.string().regex(/^[A-F0-9]{32}$/));
 const password = z.string().min(1).max(SAAS.AUTH_MAX_PASSWORD);
 export const AdministratorSecurityCommandSchema = z.discriminatedUnion('action', [
+  ...AdministratorCodeCommands,
   z
     .object({
       action: z.literal('register-options'),

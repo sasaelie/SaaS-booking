@@ -48,3 +48,61 @@
   gap: 16px;
   align-items: center;
 }
+.administrator-method-selector {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-block: 24px;
+}
+.administrator-method-selector button {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  padding: 14px 8px;
+}
+.administrator-method-selector button[aria-selected='true'] {
+  outline: 1px solid var(--ui-text-primary);
+  outline-offset: 2px;
+}
+.administrator-method-selector small {
+  font-weight: 400;
+  font-size: 10px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+.administrator-method-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ui-text-muted);
+}
+.administrator-method-dot[data-ready='true'] {
+  background: var(--status-green);
+  box-shadow: 0 0 8px var(--status-green);
+}
+.administrator-method-content h2 {
+  font-size: 18px;
+  margin-top: 0;
+}
+.administrator-method-content {
+  padding-block: 8px 24px;
+}
+.administrator-manual-key {
+  display: grid;
+  gap: 16px;
+}
+.administrator-manual-key dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+.administrator-manual-key dt {
+  color: var(--ui-text-secondary);
+  font-size: 12px;
+}
+.administrator-manual-key code {
+  user-select: all;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}

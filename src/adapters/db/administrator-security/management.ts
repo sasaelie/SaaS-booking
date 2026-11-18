@@ -8,11 +8,15 @@ import type { Transaction } from '../transaction';
 import { consumeRecovery, replaceRecovery, validateRecovery } from './recovery';
 import { requireFreshVerification, markVerified, securityAccess } from './access';
 import { readCredentials, auditSecurity } from './credentials';
+import { hasCodeFactor } from './code-state';
+import type { AdministratorCodeCommand } from '../../../core/validation/administrator-codes';
 type Command = Exclude<
   AdministratorSecurityCommand,
-  {
-    action: 'register-options' | 'register-finish' | 'authenticate-options' | 'authenticate-finish';
-  }
+  | AdministratorCodeCommand
+  | {
+      action:
+        'register-options' | 'register-finish' | 'authenticate-options' | 'authenticate-finish';
+    }
 >;
 export async function manageSecurity(tx: Transaction, actor: PortalActor, command: Command) {
   const state = await securityAccess(tx, actor);
@@ -26,7 +30,10 @@ export async function manageSecurity(tx: Transaction, actor: PortalActor, comman
   }
   await requireFreshVerification(tx, actor);
   if (command.action === 'activate') {
-    if (state.enabled || !(await readCredentials(tx, actor)).length)
+    if (
+      state.enabled ||
+      (!(await readCredentials(tx, actor)).length && !(await hasCodeFactor(tx, actor)))
+    )
       return failure(ERROR_CODES.CONFLICT, 'AdministratorSecurity', 'activation');
     await validateRecovery(tx, actor, command.code);
     await tx.execute(
@@ -61,7 +68,10 @@ async function removeSecurity(
 ) {
   if (command.action === 'remove') {
     const keys = await readCredentials(tx, actor);
-    if (!keys.some((k) => k.id === command.credentialId) || (enabled && keys.length <= 1))
+    if (
+      !keys.some((k) => k.id === command.credentialId) ||
+      (enabled && keys.length <= 1 && !(await hasCodeFactor(tx, actor)))
+    )
       return failure(ERROR_CODES.CONFLICT, 'AdministratorSecurity', 'lastCredential');
     await tx.execute(
       sql`DELETE FROM administrator_passkeys WHERE credential_id=${command.credentialId} AND user_id=${actor.id}`,
@@ -77,6 +87,8 @@ async function removeSecurity(
     'administrator_recovery_codes',
     'administrator_verified_sessions',
     'administrator_challenges',
+    'administrator_code_challenges',
+    'administrator_code_factors',
   ])
     await tx.execute(sql`DELETE FROM ${sql.identifier(table)} WHERE user_id=${actor.id}`);
   await tx.execute(

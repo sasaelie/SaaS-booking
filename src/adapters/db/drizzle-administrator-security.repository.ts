@@ -14,10 +14,16 @@ import { manageSecurity } from './administrator-security/management';
 import { ok } from '../../lib/result';
 import type { Result } from '../../lib/result';
 import type { AdministratorSecurityReply } from '../../core/ports/administrator-security';
+import type { AdministratorCodesRepositoryPort } from '../../core/ports/administrator-codes';
+import { isAdministratorCodeCommand } from '../../core/validation/administrator-codes';
+import { codeFactorState } from './administrator-security/code-state';
+import { failure } from '../../lib/errors';
+import { ERROR_CODES } from '../../config/constants';
 export class DrizzleAdministratorSecurityRepository implements AdministratorSecurityRepositoryPort {
   constructor(
     private readonly db: DrizzlePgDb,
     private readonly gateway: PasskeyGatewayPort,
+    private readonly codes?: AdministratorCodesRepositoryPort,
   ) {}
   read(actor: PortalActor) {
     return atomic(this.db, 'AdministratorSecurity', async (tx) => {
@@ -29,7 +35,11 @@ export class DrizzleAdministratorSecurityRepository implements AdministratorSecu
         sql`SELECT count(*)::int AS count FROM administrator_recovery_codes WHERE user_id=${actor.id}`,
       );
       return ok({
+        contextKey: actor.sessionId ?? actor.id,
         ...access,
+        ...(await codeFactorState(tx, actor)),
+        emailAvailable: this.codes?.mailAvailable ?? false,
+        emailAddress: actor.email,
         credentials: credentials.map(({ id, label, createdAt }) => ({ id, label, createdAt })),
         recoveryRemaining: count?.count ?? 0,
       });
@@ -39,6 +49,13 @@ export class DrizzleAdministratorSecurityRepository implements AdministratorSecu
     actor: PortalActor,
     command: AdministratorSecurityCommand,
   ): Promise<Result<AdministratorSecurityReply>> {
+    if (isAdministratorCodeCommand(command))
+      return (
+        this.codes?.mutate(actor, command) ??
+        Promise.resolve(
+          failure(ERROR_CODES.CONFIGURATION_ERROR, 'AdministratorCodes', 'configuration'),
+        )
+      );
     return atomic(this.db, 'AdministratorSecurity', async (tx) => {
       await requireSecuritySession(tx, actor);
       await tx.execute(

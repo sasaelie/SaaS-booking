@@ -3,7 +3,7 @@ export const ADMIN_SECURITY = {
   API: '/api/compte/securite',
   TITLE: 'Sécurité de mon accès administrateur',
   MENU: 'Sécurité de mon compte',
-  INTRO: 'Protégez votre administration depuis cet appareil, sans QR code à scanner.',
+  INTRO: 'Protégez votre administration avec la méthode qui vous convient, depuis votre téléphone.',
   DEVICE:
     'Votre téléphone choisit la méthode disponible : reconnaissance du visage, empreinte ou code de déverrouillage. Vos données biométriques restent sur votre appareil.',
   ORIGIN_NOTE:
@@ -35,13 +35,13 @@ export const ADMIN_SECURITY = {
     'Votre administration sera de nouveau accessible avec votre seul mot de passe. Confirmez cette action avec une vérification récente et votre mot de passe.',
   CANCEL: 'Annuler',
   BACK: 'Retour à l’administration',
-  MANAGE: 'Gérer mes appareils',
+  MANAGE: 'Gérer mes méthodes',
   ACTIVE: 'Protection activée',
   PENDING: 'Activation à terminer',
   INACTIVE: 'Protection non activée',
-  VERIFIED: 'Appareil vérifié pour cette session',
-  REQUIRED: 'Vérifiez votre appareil pour ouvrir l’administration.',
-  FRESH: 'Pour modifier la protection, vérifiez à nouveau votre appareil puis réessayez.',
+  VERIFIED: 'Vérification confirmée pour cette session',
+  REQUIRED: 'Confirmez une méthode configurée pour ouvrir l’administration.',
+  FRESH: 'Pour modifier la protection, confirmez à nouveau une méthode configurée puis réessayez.',
   UNSUPPORTED:
     'La validation sur cet appareil n’est pas disponible dans ce navigateur. Essayez un navigateur compatible ou utilisez un code de secours si la protection est déjà activée.',
   ERROR:
@@ -52,9 +52,9 @@ export const ADMIN_SECURITY = {
   RECOVERY_COUNT: 'Codes de secours restants',
   KEY_LIST: 'Appareils autorisés',
   MANAGE_NOTE:
-    'Une vérification récente et votre mot de passe sont nécessaires pour ajouter ou retirer un appareil et renouveler vos codes.',
+    'Une vérification récente et votre mot de passe sont nécessaires pour ajouter ou retirer une méthode et renouveler vos codes.',
   LAST_KEY:
-    'Ajoutez un autre appareil avant de retirer le dernier, ou désactivez explicitement la protection.',
+    'Conservez une autre méthode confirmée avant de retirer la dernière, ou désactivez explicitement la protection.',
   RP_NAME: 'Studio Créatif 360',
   KEY_MAX: 5,
   TRANSPORT_MAX: 7,

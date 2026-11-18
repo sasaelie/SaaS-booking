@@ -35,3 +35,10 @@ export async function validateRecovery(tx: Transaction, actor: PortalActor, code
   if (!found.length)
     required(failure(ERROR_CODES.UNAUTHORIZED, 'AdministratorSecurity', 'recoveryConfirmation'));
 }
+export async function ensureRecovery(tx: Transaction, actor: PortalActor) {
+  const found = await rows(
+    tx,
+    sql`SELECT 1 FROM administrator_recovery_codes WHERE user_id=${actor.id} LIMIT 1`,
+  );
+  return found.length ? {} : { recoveryCodes: await replaceRecovery(tx, actor) };
+}

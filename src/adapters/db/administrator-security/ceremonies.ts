@@ -9,7 +9,7 @@ import { ok } from '../../../lib/result';
 import { rows, required, type Transaction } from '../transaction';
 import { markVerified, requireFreshVerification, securityAccess } from './access';
 import { readCredentials, auditSecurity } from './credentials';
-import { replaceRecovery } from './recovery';
+import { ensureRecovery } from './recovery';
 type OptionsCommand = Extract<
   AdministratorSecurityCommand,
   { action: 'register-options' | 'authenticate-options' }
@@ -62,7 +62,7 @@ export async function finishCeremony(
       VALUES(${credential.id},${actor.id},${credential.publicKey},${credential.counter},${JSON.stringify(credential.transports)}::jsonb,${challenge.label})`);
     await markVerified(tx, actor);
     await auditSecurity(tx, actor, 'ADMINISTRATOR_PASSKEY_ADDED');
-    return ok(keys.length ? {} : { recoveryCodes: await replaceRecovery(tx, actor) });
+    return ok(await ensureRecovery(tx, actor));
   }
   const credential = keys.find((key) => key.id === command.response.id);
   if (!credential)

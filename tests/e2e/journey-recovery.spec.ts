@@ -39,7 +39,7 @@ test('recovers from a real last-seat collision without losing contacts or creati
   await completeContact(page, email);
   await reserveAuditSeat(space);
   await page.getByRole('button', { name: 'Confirmer ma place', exact: true }).click();
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByRole('main').getByRole('alert')).toBeVisible();
   await expect(
     page.getByRole('button', { name: 'Confirmer ma place', exact: true }),
   ).toBeDisabled();

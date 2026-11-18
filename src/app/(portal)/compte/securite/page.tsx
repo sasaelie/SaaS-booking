@@ -11,7 +11,7 @@ export default async function SecurityPage() {
     <section className="administrator-security">
       <h1>{C.TITLE}</h1>
       <p className="portal-intro">{C.INTRO}</p>
-      <AdministratorSecurity state={result.value} />
+      <AdministratorSecurity key={result.value.contextKey} state={result.value} />
     </section>
   );
 }

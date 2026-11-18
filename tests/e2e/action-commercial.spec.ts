@@ -67,7 +67,7 @@ test('consumes a course-exchange voucher once through the Pro form and refuses a
       .rows[0].status,
   ).toBe('USED_FOR_EXTERNAL_BENEFIT');
   await page.getByRole('button', { name: 'Valider le report', exact: true }).click();
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByRole('main').getByRole('alert')).toBeVisible();
 });
 test('records one real exceptional cost through the administrator form', async ({ page }) => {
   const space = await browserSpace();

@@ -6,6 +6,12 @@ import type {
   PasskeyAuthentication,
 } from '../validation/administrator-security';
 export interface AdministratorSecurityState {
+  readonly contextKey?: string;
+  readonly totpEnabled?: boolean;
+  readonly emailEnabled?: boolean;
+  readonly emailAvailable?: boolean;
+  readonly emailNextSendAt?: string | null;
+  readonly emailAddress?: string;
   readonly enabled: boolean;
   readonly verified: boolean;
   readonly fresh: boolean;
@@ -17,6 +23,9 @@ export interface AdministratorSecurityState {
   }[];
 }
 export interface AdministratorSecurityReply {
+  readonly totpSecret?: string;
+  readonly emailSent?: boolean;
+  readonly emailNextSendAt?: string;
   readonly options?: Record<string, unknown>;
   readonly recoveryCodes?: readonly string[];
 }

@@ -17,13 +17,27 @@ type Control = {
   refresh: () => void;
   setCodes: (codes: readonly string[]) => void;
   setCeremony: (ceremony: Ceremony | null) => void;
+  setTotpSecret: (secret: string | null) => void;
+  setEmailState: (state: { sent: boolean; next: string | null }) => void;
 };
 export function useDeviceSecurity() {
   const mutation = useMutation(),
     router = useRouter();
   const [codes, setCodes] = useState<readonly string[]>([]),
     [ceremony, setCeremony] = useState<Ceremony | null>(null);
-  const control = { mutation, refresh: () => router.refresh(), setCodes, setCeremony };
+  const [totpSecret, setTotpSecret] = useState<string | null>(null),
+    [emailState, setEmailState] = useState<{ sent: boolean; next: string | null }>({
+      sent: false,
+      next: null,
+    });
+  const control = {
+    mutation,
+    refresh: () => router.refresh(),
+    setCodes,
+    setCeremony,
+    setTotpSecret,
+    setEmailState,
+  };
   function execute(raw: unknown) {
     const parsed = AdministratorSecurityCommandSchema.safeParse(raw);
     if (!parsed.success) {
@@ -35,6 +49,8 @@ export function useDeviceSecurity() {
   return {
     ...mutation,
     codes,
+    totpSecret,
+    emailState,
     ceremony,
     execute,
     confirmDevice: () => {
@@ -64,6 +80,21 @@ async function dispatch(command: AdministratorSecurityCommand, control: Control)
     return;
   }
   if (data.recoveryCodes) control.setCodes(data.recoveryCodes);
+  if (data.totpSecret) control.setTotpSecret(data.totpSecret);
+  if (data.emailSent) control.setEmailState({ sent: true, next: data.emailNextSendAt ?? null });
+  if (
+    command.action === 'totp-confirm' ||
+    command.action === 'disable' ||
+    command.action === 'activate'
+  )
+    control.setTotpSecret(null);
+  if (
+    command.action === 'email-confirm' ||
+    command.action === 'email-verify' ||
+    command.action === 'disable' ||
+    command.action === 'activate'
+  )
+    control.setEmailState({ sent: false, next: null });
   if (command.action === 'activate' || command.action === 'disable') control.setCodes([]);
   control.mutation.setMessage(C.SUCCESS);
   control.mutation.setSuccess(true);
