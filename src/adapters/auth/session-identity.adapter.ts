@@ -17,7 +17,12 @@ export class SessionIdentityAdapter implements PortalIdentityPort {
       if (!session) return failure(ERROR_CODES.UNAUTHORIZED, 'Authentication', 'session');
       if (!session.user.emailVerified)
         return failure(ERROR_CODES.EMAIL_NOT_VERIFIED, 'Authentication', 'verified');
-      return ok({ id: session.user.id, name: session.user.name, email: session.user.email });
+      return ok({
+        id: session.user.id,
+        name: session.user.name,
+        email: session.user.email,
+        sessionId: session.session.id,
+      });
     } catch {
       return failure(ERROR_CODES.UNAUTHORIZED, 'Authentication', 'session');
     }

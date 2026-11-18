@@ -4,6 +4,7 @@ import type { StoryLayout } from '../validation/story-layout';
 import type { AudiencePolicy, PaymentMode, BookingStatus } from '../../config/constants';
 import type { OrganizationAccess } from '../domain/subscription-access';
 export interface PortalActor {
+  readonly sessionId?: string;
   readonly id: string;
   readonly name: string;
   readonly email: string;

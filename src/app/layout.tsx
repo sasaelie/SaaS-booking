@@ -67,6 +67,7 @@ import './_portal/administration-workspace.css';
 import './_portal/administration-finance.css';
 import './_portal/administration-usage.css';
 import './_portal/platform-settings/platform-settings.css';
+import './_portal/administrator-security/administrator-security.css';
 export const dynamic = 'force-dynamic';
 export const metadata = {
   title: `${PLATFORM_BRAND.NAME} — Réservations`,

@@ -1,0 +1,50 @@
+.administrator-security {
+  max-width: 820px;
+}
+.administrator-security-panel > .status-badge {
+  margin-bottom: 16px;
+}
+.administrator-security-panel > p {
+  max-width: 68ch;
+}
+.administrator-security-panel > .portal-form {
+  margin-top: 28px;
+}
+.administrator-device-prompt,
+.administrator-recovery-codes {
+  margin-block: 24px;
+  padding-block: 20px;
+  border-block: 1px solid var(--ice-line);
+}
+.administrator-recovery-codes ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  margin-block: 24px;
+}
+.administrator-recovery-codes code {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.administrator-device-list {
+  list-style: none;
+  padding: 0;
+}
+.administrator-device-list > li {
+  border-bottom: 1px solid var(--ice-line);
+  padding-block: 20px;
+}
+.administrator-password-command {
+  margin-block: 24px;
+}
+.administrator-device-list .administrator-password-command {
+  margin-bottom: 0;
+}
+.administrator-security .portal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}

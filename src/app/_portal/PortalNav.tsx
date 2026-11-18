@@ -1,6 +1,7 @@
 'use client';
 import { SIMULATION } from '../../config/simulation';
 import { ADMIN } from '../../config/administration';
+import { ADMIN_SECURITY } from '../../config/administrator-security';
 import { SESSION_UI } from '../../config/session-details';
 import { AppLink as Link } from '../_ui/AppLink';
 import { useState, type KeyboardEvent, type ReactNode } from 'react';
@@ -72,9 +73,20 @@ function PortalUtilities({
       </Link>
       <Link href="/app/nouveau">{PORTAL.CREATE_ORGANIZATION}</Link>
       {operator ? (
-        <Link href="/plateforme" aria-current={path.startsWith('/plateforme') ? 'page' : undefined}>
-          {ADMIN.TITLE}
-        </Link>
+        <>
+          <Link
+            href="/plateforme"
+            aria-current={path.startsWith('/plateforme') ? 'page' : undefined}
+          >
+            {ADMIN.TITLE}
+          </Link>
+          <Link
+            href={ADMIN_SECURITY.PATH}
+            aria-current={path === ADMIN_SECURITY.PATH ? 'page' : undefined}
+          >
+            {ADMIN_SECURITY.MENU}
+          </Link>
+        </>
       ) : null}
     </div>
   );
@@ -140,6 +152,7 @@ function MobileBar({
 }
 
 function navigationTitle(selected: OrganizationSummary | undefined, path: string) {
+  if (path === ADMIN_SECURITY.PATH) return ADMIN_SECURITY.MENU;
   if (selected && path.startsWith(`/app/${selected.id}/seances/`)) return SESSION_UI.TITLE;
   if (path.startsWith('/plateforme')) return ADMIN.TITLE;
   const section = selected

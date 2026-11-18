@@ -8,6 +8,7 @@ it('refreshes account entries and private navigation when returning through hist
     '/app',
     '/app/space/activites',
     '/plateforme/operations',
+    '/compte/securite',
   ])
     expect(isSessionNavigationPath(path)).toBe(true);
   expect(isSessionEntryPath('/')).toBe(true);

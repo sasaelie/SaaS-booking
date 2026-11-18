@@ -29,6 +29,7 @@ import { PlatformExportAdapter } from '../adapters/accounting/platform-export.ad
 import { PlatformSettingsUseCase } from '../core/use-cases/portal/platform-settings.use-case';
 import { DrizzlePlatformSettingsRepository } from '../adapters/db/drizzle-platform-settings.repository';
 import { platformBilling } from './platform-billing';
+import { administratorSecurity } from './administrator-security';
 export function portal(headers: Headers) {
   const app = runtime();
   if (!app.ok) return app;
@@ -39,6 +40,7 @@ export function portal(headers: Headers) {
   const authorization = new MembershipAuthorizationAdapter(identity, repository);
   const admin = administration(app.value, '', authorization);
   return ok({
+    security: administratorSecurity(app.value, auth.value, identity, headers),
     ...platformReports(app.value, identity),
     financial: new FinancialUseCase(
       identity,

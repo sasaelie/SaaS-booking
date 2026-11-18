@@ -3,6 +3,7 @@ import { rows, required, type Transaction, type Executor } from '../transaction'
 import { failure } from '../../../lib/errors';
 import { ERROR_CODES, MEMBER_ROLES } from '../../../config/constants';
 import type { PortalActor } from '../../../core/ports/portal-models';
+import { requireAdministratorVerification } from '../administrator-security/access';
 export async function requireMembership(
   tx: Transaction,
   actor: PortalActor,
@@ -30,4 +31,5 @@ export async function requireOperator(tx: Transaction, actor: PortalActor) {
     sql`SELECT user_id FROM platform_operators WHERE user_id=${actor.id} FOR SHARE`,
   );
   if (!operator) required(failure(ERROR_CODES.UNAUTHORIZED, 'Platform', 'operator'));
+  await requireAdministratorVerification(tx, actor);
 }
