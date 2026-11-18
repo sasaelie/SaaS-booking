@@ -48,4 +48,6 @@ Les tests unitaires couvrent la validation, les options WebAuthn obligatoires et
 
 Les essais Chromium emploient un authentificateur virtuel CTAP2 avec vérification de l’utilisateur : véritable inscription cryptographique, assertion, connexion ultérieure, export bloqué puis autorisé, récupération dans un navigateur neuf, codes enregistrés, origine falsifiée et charge rejouée refusées. Les identités et bases sont locales et fictives. La recette distante est vérifiée sans enrôler le compte réel.
 
+Les essais WebAuthn utilisent `localhost` comme nom de domaine local, y compris dans GitHub Actions ; une adresse IP de boucle locale n’est pas un RP ID de domaine pour ces cérémonies. La connexion PostgreSQL de test conserve son adresse `127.0.0.1` et sa base isolée.
+
 Sources : [SimpleWebAuthn serveur](https://simplewebauthn.dev/docs/packages/server), [SimpleWebAuthn navigateur](https://simplewebauthn.dev/docs/packages/browser).

@@ -25,7 +25,8 @@ jobs:
       STORAGE_BACKEND: postgres
       STAGING_BROWSER_TEST: 'true'
       NEXT_TELEMETRY_DISABLED: '1'
-      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      BOOKING_TEST_BASE_URL: http://localhost:3000
       BETTER_AUTH_SECRET: ci-auth-only-independent-secret-for-ephemeral-database-not-production
       SELF_CANCEL_HMAC_SECRET: ci-test-only-secret-for-ephemeral-database-not-production
     steps:
