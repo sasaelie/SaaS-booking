@@ -40,7 +40,18 @@ export async function activateDevice(page: Page) {
 }
 export async function verifyDevice(page: Page) {
   await page.getByRole('button', { name: C.VERIFY, exact: true }).click();
+  const verification = page.waitForResponse((response) => {
+    if (!response.url().endsWith(C.API) || response.request().method() !== 'POST') return false;
+    const data: unknown = response.request().postDataJSON();
+    return (
+      typeof data === 'object' &&
+      data !== null &&
+      'action' in data &&
+      data.action === 'authenticate-finish'
+    );
+  });
   await page.getByRole('button', { name: C.CONFIRM_DEVICE, exact: true }).click();
+  expect((await verification).ok()).toBe(true);
   await expect(page.getByRole('link', { name: C.BACK, exact: true })).toBeVisible();
 }
 export async function securityPost(page: Page, data: unknown, origin = new URL(page.url()).origin) {
