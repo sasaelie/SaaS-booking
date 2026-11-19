@@ -1,3 +1,4 @@
+import { showPlanningDay } from './planning-fixtures';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { browserSpace, closeBrowserDatabase, login } from './portal-fixtures';
 test.use({ viewport: { width: 390, height: 900 }, hasTouch: true, isMobile: true });
@@ -15,6 +16,7 @@ test('shows the pressed glass and course illumination with an actual touch point
     await counter.tap();
     await expect(page).toHaveURL(new RegExp(`/activites/${space.activityId}$`));
     await page.goBack();
+    await showPlanningDay(page);
     const course = page.locator('.portal-session-link');
     await course.tap();
     await expect(course.locator('.planning-link-pending:not([hidden])')).toHaveCount(1);

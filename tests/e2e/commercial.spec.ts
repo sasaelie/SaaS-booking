@@ -1,3 +1,4 @@
+import { showPlanningDay } from './planning-fixtures';
 import { expect, test, type Page } from '@playwright/test';
 import {
   browserSpace,
@@ -133,6 +134,7 @@ test('books a free Liberty activity without a gateway debit and persists the fin
   await expect(
     page.getByRole('link', { name: 'Propulsé par Studio Créatif 360', exact: true }),
   ).toBeVisible();
+  await showPlanningDay(page);
   await page.locator('.planning-event:not(:disabled)').first().click();
   await page.getByRole('button', { name: 'Continuer', exact: true }).click();
   await page.getByRole('textbox', { name: 'Prénom', exact: true }).fill('Marie');

@@ -1,3 +1,4 @@
+import { showPlanningDay } from './planning-fixtures';
 import { expect, test, type Page } from '@playwright/test';
 import {
   browserSpace,
@@ -18,6 +19,7 @@ test('uses real sessions, keeps their identity as lights switch off and moves th
   await page.clock.install({ time: new Date(space.date.getTime() - 60_000) });
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto(`/${space.slug}/${space.activityId}`);
+  await showPlanningDay(page);
   const calendar = page.locator('.session-planning');
   const event = calendar.locator('.planning-event');
   await expect(event).toHaveCount(1);
@@ -51,6 +53,7 @@ test('opens actual organizer session management and uses the same glass on narro
   const space = await browserSpace();
   await login(page, space);
   await page.goto(`/app/${space.organizationId}`);
+  await showPlanningDay(page);
   const calendar = page.locator('.session-planning');
   for (const width of [320, 390, 1024, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
@@ -95,6 +98,7 @@ test('shows the continuation of an overnight Sunday session in the following wee
   );
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto(`/${space.slug}/${space.activityId}`);
+  await showPlanningDay(page);
   const event = page.locator('.planning-event');
   await expect(event).toHaveCount(1);
   await page.getByRole('button', { name: 'Semaine suivante', exact: true }).click();

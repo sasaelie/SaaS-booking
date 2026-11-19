@@ -5,6 +5,7 @@ import { usePlanning } from './use-planning';
 import { PlanningNavigation } from './PlanningNavigation';
 import { PlanningBoard } from './PlanningBoard';
 import { PlanningMonth } from './PlanningMonth';
+import { PlanningWeek } from './PlanningWeek';
 import { activityTone } from './planning-sessions';
 import type { PlanningProps } from './types';
 export function SessionPlanning(props: PlanningProps) {
@@ -21,7 +22,7 @@ export function SessionPlanning(props: PlanningProps) {
       aria-label={PLANNING.VIEW}
       data-compact={state.compact}
       data-view={state.view}
-      data-day-view={state.view !== 'month' && (state.compact || state.view === 'day')}
+      data-day-view={state.view === 'day'}
     >
       <PlanningNavigation state={state} timezone={props.timezone} />
       {!state.sessions.length ? (
@@ -30,12 +31,9 @@ export function SessionPlanning(props: PlanningProps) {
         </p>
       ) : null}
       {state.view === 'month' ? (
-        <PlanningMonth
-          state={state}
-          timezone={props.timezone}
-          selected={props.selected}
-          onSelect={props.onSelect}
-        />
+        <PlanningMonth state={state} timezone={props.timezone} />
+      ) : state.view === 'week' && state.compact ? (
+        <PlanningWeek state={state} timezone={props.timezone} />
       ) : (
         <PlanningBoard {...props} state={state} onSelect={select} />
       )}

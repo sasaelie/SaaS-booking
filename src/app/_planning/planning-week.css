@@ -1,0 +1,138 @@
+.session-planning .planning-week {
+  position: relative;
+  z-index: 1;
+}
+body .session-planning button.planning-open-day {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: var(--glass-button-radius);
+  background: none;
+  box-shadow: none;
+  text-shadow: none;
+  color: inherit;
+  font: inherit;
+}
+body .session-planning button.planning-open-day::before {
+  display: none;
+}
+body .session-planning button.planning-week-day {
+  --glass-button-hover-relief: none;
+  --glass-button-active-relief: none;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 12px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 14px 4px;
+  border: 0;
+  border-bottom: 1px solid var(--planning-line);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  text-align: left;
+  text-shadow: none;
+  text-decoration: none;
+  font: inherit;
+  color: inherit;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+body .session-planning button.planning-week-day:last-child {
+  border-bottom: 0;
+}
+body .session-planning button.planning-week-day::before {
+  display: none;
+}
+body .session-planning button.planning-week-day:is(:hover, :active) {
+  scale: 1;
+  rotate: none;
+  text-shadow: none;
+  background-color: var(--ice-soft-fill);
+}
+.session-planning .planning-week-date {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+}
+.session-planning .planning-week-date small {
+  color: var(--ice-quiet);
+  font-size: 11px;
+}
+.session-planning .planning-week-date strong {
+  display: grid;
+  place-items: center;
+  min-width: 32px;
+  min-height: 30px;
+  font-weight: 500;
+  font-size: 20px;
+  border-bottom: 2px solid transparent;
+  border-radius: var(--glass-button-radius);
+}
+.session-planning .planning-week-day[aria-pressed='true'] .planning-week-date strong {
+  border-bottom-color: var(--ui-text-primary);
+}
+.session-planning .planning-week-day[aria-current='date'] .planning-week-date strong {
+  background: color-mix(in srgb, var(--planning-green) 12%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--planning-green) 55%, transparent);
+}
+.session-planning .planning-week-summary {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.session-planning .planning-week-session {
+  display: grid;
+  grid-template-columns: 3px minmax(0, 1fr);
+  gap: 9px;
+}
+.session-planning .planning-week-session i {
+  border-radius: 3px;
+  background: var(--planning-light);
+  box-shadow: 0 0 7px var(--planning-light);
+}
+.session-planning .planning-week-session strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.session-planning .planning-week-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--ice-quiet);
+}
+.session-planning .planning-week-meta > span {
+  white-space: nowrap;
+}
+.session-planning .planning-week-session:is([data-phase='past'], [data-phase='cancelled']) {
+  --planning-light: var(--planning-off);
+}
+.session-planning .planning-week-session:is([data-phase='past'], [data-phase='cancelled']) i {
+  box-shadow: none;
+}
+.session-planning :is(.planning-week-empty, .planning-week-more, .planning-week-arrow) {
+  color: var(--ice-quiet);
+  font-size: 12px;
+}
+.session-planning .planning-week-arrow {
+  font-size: 21px;
+}
+body .session-planning button.planning-week-day:focus-visible {
+  outline-offset: -3px;
+}
+@media (forced-colors: active) {
+  .session-planning .planning-week-day[aria-current='date'] .planning-week-date strong {
+    outline: 1px solid Highlight;
+  }
+}

@@ -1,15 +1,12 @@
 import { PLANNING } from '../../config/planning';
-import { dayLabel, localDay, monthLabel, monthOf, timeLabel } from '../_ui/calendar-dates';
+import { dayLabel, monthLabel, monthOf, timeLabel } from '../_ui/calendar-dates';
 import { dateNumber, weekdayLabel, weekDays } from './planning-dates';
 import { planningMonthDays } from './planning-period';
 import { activityTone, sessionPhase } from './planning-sessions';
-import type { PlanningProps, PlanningSession } from './types';
+import type { PlanningSession } from './types';
 import type { PlanningState } from './use-planning';
-type MonthProps = { readonly state: PlanningState; readonly timezone: string } & Pick<
-  PlanningProps,
-  'selected' | 'onSelect'
->;
-export function PlanningMonth({ state, timezone, selected, onSelect }: MonthProps) {
+type MonthProps = { readonly state: PlanningState; readonly timezone: string };
+export function PlanningMonth({ state, timezone }: MonthProps) {
   return (
     <div className="planning-frame">
       <div className="planning-month-weekdays" aria-hidden="true">
@@ -20,14 +17,7 @@ export function PlanningMonth({ state, timezone, selected, onSelect }: MonthProp
       <div className="planning-month" role="group" aria-label={monthLabel(monthOf(state.day))}>
         {planningMonthDays(state.day).map((day, index) =>
           day ? (
-            <MonthDay
-              key={day}
-              state={state}
-              timezone={timezone}
-              day={day}
-              selected={selected}
-              onSelect={onSelect}
-            />
+            <MonthDay key={day} state={state} timezone={timezone} day={day} />
           ) : (
             <span className="planning-month-blank" key={index} aria-hidden="true" />
           ),
@@ -39,13 +29,7 @@ export function PlanningMonth({ state, timezone, selected, onSelect }: MonthProp
 function sessionCount(count: number) {
   return `${count} ${count === 1 ? PLANNING.SESSION : PLANNING.SESSIONS}`;
 }
-function MonthDay({
-  state,
-  timezone,
-  day,
-  selected,
-  onSelect,
-}: MonthProps & { readonly day: string }) {
+function MonthDay({ state, timezone, day }: MonthProps & { readonly day: string }) {
   const sessions = state.byDay.get(day) ?? [];
   return (
     <button
@@ -55,11 +39,7 @@ function MonthDay({
       aria-current={day === state.today ? 'date' : undefined}
       aria-pressed={day === state.day}
       aria-label={`${dayLabel(day)}, ${sessionCount(sessions.length)}`}
-      onClick={() => {
-        if (selected && localDay(selected, timezone) !== day) onSelect?.('');
-        state.setDay(day);
-        state.setView('day');
-      }}
+      onClick={() => state.openDay(day)}
     >
       <strong className="planning-month-date">{dateNumber(day)}</strong>
       {sessions.length ? (

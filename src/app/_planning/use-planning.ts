@@ -22,9 +22,15 @@ export function usePlanning(props: PlanningProps) {
   function move(direction: number) {
     setDay(movePlanningPeriod(day, direction, view, props.sessions, props.timezone, byDay));
   }
+  function openDay(date: string) {
+    if (props.selected && localDay(props.selected, props.timezone) !== date) props.onSelect?.('');
+    setDay(date);
+    setView('day');
+  }
   return {
     day,
     setDay,
+    openDay,
     view,
     setView,
     fullDay,
@@ -35,7 +41,7 @@ export function usePlanning(props: PlanningProps) {
     today: currentDay(now, props.timezone),
     ...period,
     byDay,
-    visibleDays: compact || view === 'day' ? [day] : period.days,
+    visibleDays: view === 'day' ? [day] : period.days,
     move,
   };
 }

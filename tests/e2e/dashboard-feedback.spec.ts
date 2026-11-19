@@ -1,3 +1,4 @@
+import { showPlanningDay } from './planning-fixtures';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import {
   browserSpace,
@@ -43,6 +44,7 @@ test('lights only the organizer course being opened, retains its color while loa
   const navigation = await holdSessionNavigation(page);
   try {
     await page.goto(`/app/${space.organizationId}`);
+    await showPlanningDay(page);
     const courses = page.locator('.portal-session-link');
     await expect(courses).toHaveCount(2);
     const chosen = courses.last(),
@@ -59,6 +61,7 @@ test('lights only the organizer course being opened, retains its color while loa
     await expect(page).toHaveURL(/\/seances\//);
     await expect(page.locator('.portal-session-details')).toBeVisible();
     await page.goBack();
+    await showPlanningDay(page);
     await expect(page.locator('.planning-link-pending:not([hidden])')).toHaveCount(0);
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.keyboard.press('Tab');

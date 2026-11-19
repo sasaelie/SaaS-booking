@@ -1,3 +1,4 @@
+import { showPlanningDay } from './planning-fixtures';
 import { expect, test, type Page } from '@playwright/test';
 import {
   browserSpace,
@@ -35,6 +36,7 @@ test('makes a chosen time slot unmistakable, keeps its category color on hover a
   const space = await twoChoices();
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto(`/${space.slug}/${space.activityId}`);
+  await showPlanningDay(page);
   const choices = page.locator('.planning-event'),
     first = choices.first(),
     second = choices.last();

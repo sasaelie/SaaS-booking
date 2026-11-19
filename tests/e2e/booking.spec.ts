@@ -1,3 +1,4 @@
+import { showPlanningDay } from './planning-fixtures';
 import { expect, test } from '@playwright/test';
 import { Pool } from 'pg';
 const url = process.env['TEST_DATABASE_URL'];
@@ -15,6 +16,7 @@ test('books through the browser and persists exactly one unpaid confirmation', a
   const email = `browser-${crypto.randomUUID()}@example.com`;
   await page.goto(path);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Couture');
+  await showPlanningDay(page);
   await page.locator('.planning-event:not(:disabled)').first().click();
   await page.getByRole('button', { name: 'Continuer', exact: true }).click();
   await page.getByRole('textbox', { name: 'Prénom', exact: true }).fill('Marie');

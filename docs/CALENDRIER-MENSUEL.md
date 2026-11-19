@@ -3,7 +3,7 @@
 Le calendrier partagé par les organisateurs et les participants propose désormais une vue « Mois ».
 
 - Sur ordinateur : boutons « Semaine », « Journée » et « Mois ».
-- Sur mobile : menu « Journée » ou « Mois » ; la semaine reste représentée par la bande de sept jours dans la vue détaillée.
+- Sur mobile : menu « Semaine », « Journée » ou « Mois ». Depuis le 19 novembre, la semaine dispose d’un aperçu compact des sept jours, décrit dans [le calendrier hebdomadaire](CALENDRIER-HEBDOMADAIRE.md).
 - Les flèches parcourent les mois en respectant les bornes des séances disponibles.
 - Une grille continue, du lundi au dimanche, conserve la surface de verre et les couleurs d’activité. Le jour actuel reste éclairé indépendamment du mois consulté.
 - Sur ordinateur, chaque jour montre jusqu’à deux aperçus et le nombre total de séances ; sur mobile, il montre les repères de couleur et le nombre. Toutes les séances restent accessibles en ouvrant la journée.

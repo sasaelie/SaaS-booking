@@ -60,6 +60,7 @@ import './_planning/planning-layout.css';
 import './_planning/planning-glass.css';
 import './_planning/planning-days.css';
 import './_planning/planning-month.css';
+import './_planning/planning-week.css';
 import './_planning/planning-events.css';
 import './manage/ticket-layout.css';
 import './_ui/quality-layout.css';

@@ -6,9 +6,13 @@ export function PlanningViews({ state }: { readonly state: PlanningState }) {
       <select
         className="planning-mobile-view"
         aria-label={PLANNING.VIEW}
-        value={state.view === 'month' ? 'month' : 'day'}
-        onChange={(event) => state.setView(event.target.value === 'month' ? 'month' : 'day')}
+        value={state.view}
+        onChange={(event) => {
+          const view = event.target.value;
+          if (view === 'week' || view === 'day' || view === 'month') state.setView(view);
+        }}
       >
+        <option value="week">{PLANNING.WEEK}</option>
         <option value="day">{PLANNING.DAY}</option>
         <option value="month">{PLANNING.MONTH}</option>
       </select>
