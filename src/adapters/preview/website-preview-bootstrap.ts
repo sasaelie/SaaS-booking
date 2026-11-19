@@ -6,7 +6,9 @@ export function websitePreviewBootstrap() {
  function headerHeight(){if(header)document.documentElement.style.setProperty('--site-header-height',header.getBoundingClientRect().height+'px');}
  if(header){new ResizeObserver(headerHeight).observe(header);headerHeight();}
  window.addEventListener('message',event=>{
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow||event.data?.type!==${JSON.stringify(EMBED.RESIZE_TYPE)})return;
+  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(event.data?.type===${JSON.stringify(EMBED.RETURN_TYPE)}){window.scrollTo(0,0);header?.querySelector('a')?.focus({preventScroll:true});return;}
+  if(event.data?.type!==${JSON.stringify(EMBED.RESIZE_TYPE)})return;
   const height=event.data.height;if(typeof height==='number'&&Number.isFinite(height)&&height>=${EMBED.MIN_HEIGHT}&&height<=${EMBED.MAX_HEIGHT})frame.style.height=Math.ceil(height)+'px';
  });
  if(trigger&&dialog){

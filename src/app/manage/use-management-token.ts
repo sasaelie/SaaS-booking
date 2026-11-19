@@ -7,12 +7,14 @@ export function useManagementToken(
   setToken: (token: string | null) => void,
   setMessage: (message: string) => void,
   simulationId?: string,
+  initialToken?: string,
 ) {
   const originalCode = useRef('');
   const exchange = useRef<Exchange | null>(null);
   const [unavailable, setUnavailable] = useState(false);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
+    if (initialToken) return;
     let disposed = false;
     const read = () => {
       void managementLink(originalCode, exchange, simulationId).then((result) => {
@@ -28,7 +30,7 @@ export function useManagementToken(
       disposed = true;
       window.removeEventListener('hashchange', read);
     };
-  }, [setToken, setMessage, simulationId, attempt]);
+  }, [setToken, setMessage, simulationId, initialToken, attempt]);
   return {
     unavailable,
     refresh: () => {

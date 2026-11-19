@@ -7,6 +7,12 @@ import { EventInformation } from './EventInformation';
 import { BOOKING_UI } from '../../config/constants';
 export function BookingFlow({ flow }: { readonly flow: BookingFlowState }) {
   const data = flow.data;
+  if (flow.form.state?.success)
+    return (
+      <section className="ice-booking-flow" data-step="result">
+        <BookingResult state={flow.form.state} flow={flow} />
+      </section>
+    );
   return (
     <form
       className="ice-booking-flow"

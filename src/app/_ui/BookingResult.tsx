@@ -1,21 +1,62 @@
-import { simulationPath } from '../../config/simulation';
 import type { BookingFlowState } from './use-booking-flow';
 import { PAYMENT_MODES, BOOKING_STATUSES } from '../../config/constants';
 import { PARTICIPANT_NAV } from '../../config/participant-navigation';
 import { formatMoney } from './format-money';
 import { bookingPricing } from './booking-pricing';
-import { useEffect, useRef } from 'react';
-import { BOOKING_UI, FORM_LABELS } from '../../config/constants';
+import { useEffect, useRef, useState } from 'react';
+import { BOOKING_UI } from '../../config/constants';
 import type { BookingActionState } from '../actions/booking.actions';
-import { IceIcon } from './IceIcon';
 import { BookingBankInstructions } from './BookingBankInstructions';
 import { BookingProof } from './BookingProof';
+import { BookingResultActions } from './BookingResultActions';
+import { UI_MESSAGES } from '../../config/constants';
+import { EmbeddedBookingManagement } from './EmbeddedBookingManagement';
 export function BookingResult({
   state,
   flow,
 }: {
   readonly state: BookingActionState | null;
   readonly flow: BookingFlowState;
+}) {
+  const [managing, setManaging] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
+  const token = state?.booking?.selfServiceToken;
+  if (flow.embedded && managing && token)
+    return (
+      <EmbeddedBookingManagement
+        simulationId={flow.data.simulationId}
+        token={token}
+        onBack={(booking) => {
+          setCancelled(booking?.status === BOOKING_STATUSES.CANCELLED_BY_ATTENDEE);
+          setManaging(false);
+        }}
+      />
+    );
+  const result =
+    cancelled && state?.booking
+      ? {
+          ...state,
+          message: UI_MESSAGES.CANCEL_SUCCESS,
+          booking: { ...state.booking, status: BOOKING_STATUSES.CANCELLED_BY_ATTENDEE },
+        }
+      : state;
+  return (
+    <ResultContent
+      state={result}
+      flow={flow}
+      onManage={flow.embedded ? () => setManaging(true) : undefined}
+    />
+  );
+}
+
+function ResultContent({
+  state,
+  flow,
+  onManage,
+}: {
+  readonly state: BookingActionState | null;
+  readonly flow: BookingFlowState;
+  readonly onManage?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -35,17 +76,7 @@ export function BookingResult({
           simulationId={flow.data.simulationId}
         />
       ) : null}
-      {state.booking?.selfServiceToken ? (
-        <a
-          className="ice-result-link ticket-manage-link"
-          href={`${flow.data.simulationId ? simulationPath(flow.data.simulationId) + '/gestion' : '/manage'}#token=${encodeURIComponent(state.booking.selfServiceToken)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {FORM_LABELS.MANAGE}
-          <IceIcon name="arrow" />
-        </a>
-      ) : null}
+      <BookingResultActions state={state} flow={flow} onManage={onManage} />
     </div>
   );
 }
@@ -96,6 +127,8 @@ function OfflinePayment({
 }
 
 function resultTitle(state: BookingActionState) {
+  if (state.booking?.status === BOOKING_STATUSES.CANCELLED_BY_ATTENDEE)
+    return UI_MESSAGES.CANCEL_SUCCESS;
   if (!state.success) return BOOKING_UI.ERROR_TITLE;
   if (state.booking?.checkoutUrl) return BOOKING_UI.CHECKOUT_TITLE;
   return state.booking?.bankInstructions ? BOOKING_UI.BANK_TITLE : BOOKING_UI.SUCCESS_TITLE;

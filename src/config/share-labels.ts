@@ -39,8 +39,11 @@ export const SHARE_UI = {
   CATALOG_OPEN: 'Choisir une séance',
 } as const;
 export const EMBED = {
-  CATALOG_VERSION: 1,
+  CATALOG_VERSION: 2,
   RESIZE_TYPE: 'booking-widget:resize',
+  RETURN_TYPE: 'booking-widget:return',
+  RETURN_SITE: 'Terminer et revenir au site',
+  RETURN_TICKET: 'Retour à mon billet',
   MIN_HEIGHT: 320,
   MAX_HEIGHT: 6000,
   INITIAL_HEIGHT: 1000,

@@ -19,3 +19,11 @@ body:has(.website-preview-embed) > .staging-notice {
 .simulation-embedded-notice .simulation-shortcuts {
   font-size: 12px;
 }
+.embedded-manage-shell {
+  padding: 0;
+}
+.embedded-site-return {
+  display: block;
+  margin: 24px auto 0;
+  min-height: 44px;
+}

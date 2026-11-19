@@ -10,8 +10,14 @@ import { BookingHeader } from './BookingHeader';
 import { BookingFlow } from './BookingFlow';
 import { PlatformSignature } from './PlatformSignature';
 import { useBookingFlow } from './use-booking-flow';
-export function IceBookingWidget({ data }: { readonly data: BookingPageData }) {
-  const flow = useBookingFlow(data);
+export function IceBookingWidget({
+  data,
+  embedded = false,
+}: {
+  readonly data: BookingPageData;
+  readonly embedded?: boolean;
+}) {
+  const flow = useBookingFlow(data, embedded);
   const color = /^#[0-9a-f]{6}$/i.test(data.primaryTextColor)
     ? data.primaryTextColor
     : DEFAULTS.TEXT_COLOR;

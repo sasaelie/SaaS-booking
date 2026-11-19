@@ -3,10 +3,12 @@
 Dans l’espace organisateur, **Partager → Sur votre site → Tous vos cours sur votre site** fournit un seul code à copier dans un bloc HTML autorisé par l’hébergeur. Il utilise l’adresse de l’application et le lien de l’organisation déjà enregistrés ; aucun identifiant d’activité n’est à renseigner.
 
 ```html
-<script src="https://reservation.example/widget.js?v=1" data-organization="votre-atelier" data-mode="inline" defer></script>
+<script src="https://reservation.example/widget.js?v=2" data-organization="votre-atelier" data-mode="inline" defer></script>
 ```
 
 Le visiteur voit le catalogue, choisit un cours puis un créneau et remplit les coordonnées dans la même page du site. Il peut revenir au catalogue depuis le formulaire. Les cours publiés sont relus lors du chargement du catalogue : publier ou archiver une activité ne demande pas de remplacer le code d’installation.
+
+Après confirmation, **Gérer ma réservation** ouvre la gestion dans le même encart, sans nouvel onglet et sans passer par la connexion participant. **Retour à mon billet** conserve le code existant ; une annulation reste affichée comme annulée. **Terminer et revenir au site** ferme la fenêtre flottante ou ramène en haut du site sans effacer le billet. Le site hôte ne reçoit qu’un message de retour sans données personnelles ; il vérifie l’origine et la fenêtre émettrice. Aucun lien de retour externe fourni par l’utilisateur n’est suivi. Les liens autonomes et les QR codes conservent leur accès participant habituel.
 
 Les anciennes installations ciblant une activité restent compatibles avec `data-activity`. Le mode flottant reste disponible. Le paramètre de version du nouveau code évite de reprendre un ancien script en cache qui exigeait obligatoirement une activité.
 

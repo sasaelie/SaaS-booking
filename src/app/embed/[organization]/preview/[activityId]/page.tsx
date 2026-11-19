@@ -23,7 +23,10 @@ export default async function Page({
       >
         {SIMULATION.RETURN_ACTIVITIES}
       </AppLink>
-      <IceBookingWidget data={{ ...data.value, simulationId: app.value.organization.id }} />
+      <IceBookingWidget
+        data={{ ...data.value, simulationId: app.value.organization.id }}
+        embedded
+      />
     </>
   );
 }

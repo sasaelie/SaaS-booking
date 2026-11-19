@@ -9,7 +9,10 @@ export function widgetSource() {
  frame.title=${JSON.stringify(SHARE_UI.IFRAME_TITLE)};frame.referrerPolicy='no-referrer';frame.loading='lazy';
  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-popups-to-escape-sandbox');
  frame.style.cssText='display:block;width:100%;border:0;height:${EMBED.INITIAL_HEIGHT}px;';
- function resize(event){if(event.origin!==origin||event.source!==frame.contentWindow||event.data?.type!==${JSON.stringify(EMBED.RESIZE_TYPE)})return;
+ let finish=()=>{window.scrollTo(0,0);document.querySelector('header a,header button')?.focus({preventScroll:true});};
+ function resize(event){if(event.origin!==origin||event.source!==frame.contentWindow)return;
+ if(event.data?.type===${JSON.stringify(EMBED.RETURN_TYPE)}){finish();return;}
+ if(event.data?.type!==${JSON.stringify(EMBED.RESIZE_TYPE)})return;
  const height=event.data.height;if(typeof height==='number'&&Number.isFinite(height)&&height>=${EMBED.MIN_HEIGHT}&&height<=${EMBED.MAX_HEIGHT})frame.style.height=Math.ceil(height)+'px';}
  window.addEventListener('message',resize);
  if(script.dataset.mode!=='floating'){script.insertAdjacentElement('afterend',frame);return;}
@@ -20,6 +23,7 @@ export function widgetSource() {
  const close=document.createElement('button');close.type='button';close.textContent=${JSON.stringify(SHARE_UI.CLOSE)};
  close.style.cssText='display:block;margin:0 0 8px auto;border:0;background:transparent;padding:10px;font:14px system-ui;cursor:pointer';
  close.onclick=()=>dialog.close();dialog.append(close,frame);document.body.append(open,dialog);
+ finish=()=>{dialog.close();open.focus();};
  open.onclick=()=>{dialog.showModal();frame.loading='eager';};
 })();`;
 }

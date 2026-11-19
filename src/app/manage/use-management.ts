@@ -5,8 +5,12 @@ import { UI_MESSAGES, PARTICIPANT } from '../../config/constants';
 import { sendOperation } from './management-response';
 import { useBookingContext } from './use-booking-context';
 import { useManagementToken } from './use-management-token';
-export function useManagement(simulationId?: string, testParticipant = false) {
-  const [token, setToken] = useState<string | null>(null);
+export function useManagement(
+  simulationId?: string,
+  testParticipant = false,
+  initialToken?: string,
+) {
+  const [token, setToken] = useState<string | null>(initialToken ?? null);
   const [message, setMessage] = useState('');
   const details = useBookingContext(
     token,
@@ -16,7 +20,7 @@ export function useManagement(simulationId?: string, testParticipant = false) {
         ? simulationApi(simulationId, 'context')
         : undefined,
   );
-  const link = useManagementToken(setToken, setMessage, simulationId);
+  const link = useManagementToken(setToken, setMessage, simulationId, initialToken);
   const endpoint = testParticipant
     ? `${PARTICIPANT.TEST_API}/cancel`
     : simulationId
