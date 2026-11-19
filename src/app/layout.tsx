@@ -27,6 +27,7 @@ import './_portal/portal-layout.css';
 import './_portal/portal-components.css';
 import './_portal/portal-details.css';
 import './_portal/portal-forms.css';
+import './_portal/sharing.css';
 import './_portal/portal-media.css';
 import './_portal/portal-responsive.css';
 import './_portal/navigation.css';

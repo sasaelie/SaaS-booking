@@ -57,7 +57,7 @@ test('copies the actual booking link and downloads PDF, PNG and accounting files
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await login(page, space);
   await page.goto(`/app/${space.organizationId}/partager`);
-  await page.getByRole('button', { name: 'Copier', exact: true }).first().click();
+  await page.getByRole('button', { name: 'Copier le lien', exact: true }).click();
   await expect(page.getByRole('status')).toContainText(/copié/i);
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(new URL(page.url()).origin + '/' + space.slug);
   const pdfPromise = page.waitForEvent('download');
@@ -65,6 +65,8 @@ test('copies the actual booking link and downloads PDF, PNG and accounting files
   const pdf = await pdfPromise;
   expect(pdf.suggestedFilename()).toMatch(/\.pdf$/);
   expect(await pdf.failure()).toBeNull();
+  await page.getByRole('tab', { name: 'Sur mon site', exact: true }).click();
+  await page.getByText('Options par activité', { exact: true }).click();
   await page.getByText('Initiation à la céramique', { exact: true }).click();
   const pngPromise = page.waitForEvent('download');
   await page.locator(`a[href*="activityId=${space.activityId}"]`).click();

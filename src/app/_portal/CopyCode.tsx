@@ -1,7 +1,13 @@
 'use client';
 import { useState } from 'react';
 import { SHARE_UI } from '../../config/constants';
-export function CopyCode({ value }: { readonly value: string }) {
+export function CopyCode({
+  value,
+  buttonLabel = SHARE_UI.COPY,
+}: {
+  readonly value: string;
+  readonly buttonLabel?: string;
+}) {
   const [message, setMessage] = useState('');
   async function copy() {
     try {
@@ -15,7 +21,7 @@ export function CopyCode({ value }: { readonly value: string }) {
     <div className="portal-list">
       <code className="portal-share-code">{value}</code>
       <button type="button" className="liquid-ice-button portal-button" onClick={copy}>
-        {SHARE_UI.COPY}
+        {buttonLabel}
       </button>
       {message ? (
         <p role="status" className="portal-muted">

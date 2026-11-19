@@ -1,123 +1,76 @@
 import { canUsePro } from '../../core/domain/commercial';
 import { PLAN_UI } from '../../config/commercial';
-import { AppLink as Link } from '../_ui/AppLink';
+import { SHARE_UI } from '../../config/constants';
 import type { PortalOverview } from '../../core/ports/portal-models';
-import { SHARE_UI, EMBED } from '../../config/constants';
+import { AppLink as Link } from '../_ui/AppLink';
 import { CopyCode } from './CopyCode';
-import { WEBSITE_PREVIEW as W } from '../../config/website-preview';
-export function SharePanel({
-  data,
-  appUrl,
-}: {
-  readonly data: PortalOverview;
-  readonly appUrl: string;
-}) {
-  const organization = data.organization;
-  const url = `${appUrl}/${organization.slug}`;
+import { SharingModes } from './SharingModes';
+import { WebsiteSharing } from './WebsiteSharing';
+type Props = { readonly data: PortalOverview; readonly appUrl: string };
+export function SharePanel({ data, appUrl }: Props) {
+  const pro = canUsePro(data.organization.access, new Date());
   return (
-    <div className="portal-list portal-panel portal-task-sections">
-      <section>
-        <h2>{SHARE_UI.DIRECT}</h2>
-        <p className="portal-muted">{SHARE_UI.DIRECT_HINT}</p>
-        <CopyCode value={url} />
-      </section>
-      {canUsePro(organization.access, new Date()) ? (
-        <>
-          <section>
-            <h2>{SHARE_UI.QR}</h2>
-            <p className="portal-muted">{SHARE_UI.QR_HINT}</p>
-            <a
-              className="liquid-ice-button portal-button"
-              href={`/api/portal/qr?organizationId=${organization.id}&format=pdf`}
-            >
-              {SHARE_UI.DOWNLOAD_QR}
-            </a>
-          </section>
-          <WebsiteSharing data={data} appUrl={appUrl} />
-        </>
-      ) : (
+    <div className="portal-list portal-panel portal-task-sections sharing-panel">
+      <SharingModes
+        social={<SocialSharing data={data} appUrl={appUrl} />}
+        website={
+          pro ? (
+            <WebsiteSharing data={data} appUrl={appUrl} />
+          ) : (
+            <section className="sharing-content">
+              <h2>{SHARE_UI.WEBSITE}</h2>
+              <p>
+                {PLAN_UI.PRO_REQUIRED}{' '}
+                <Link href={`/app/${data.organization.id}/abonnement`}>Studio Pro</Link>
+              </p>
+            </section>
+          )
+        }
+      />
+      <details className="portal-details sharing-members">
+        <summary>{SHARE_UI.MEMBERS}</summary>
         <p>
-          {PLAN_UI.PRO_REQUIRED} <Link href={`/app/${organization.id}/abonnement`}>Studio Pro</Link>
+          <strong>{SHARE_UI.MEMBERS_STATUS}</strong>
         </p>
-      )}
+        <p>{SHARE_UI.MEMBERS_NOTE}</p>
+        <p className="portal-muted">{SHARE_UI.MEMBERS_LINK_NOTE}</p>
+      </details>
     </div>
   );
 }
-
-function WebsiteSharing({
-  data,
-  appUrl,
-}: {
-  readonly data: PortalOverview;
-  readonly appUrl: string;
-}) {
-  const organization = data.organization;
+function SocialSharing({ data, appUrl }: Props) {
+  const organization = data.organization,
+    url = `${appUrl}/${organization.slug}`;
   return (
-    <section>
-      <h2>{SHARE_UI.WEBSITE}</h2>
-      <PrivatePreviewLink slug={organization.slug} />
-      <p className="portal-muted">{SHARE_UI.WEBSITE_HINT}</p>
-      <h3>{SHARE_UI.EMBED_CATALOG}</h3>
-      <p className="portal-muted">{SHARE_UI.EMBED_CATALOG_HINT}</p>
-      <CopyCode
-        value={`<script src="${appUrl}/widget.js?v=${EMBED.CATALOG_VERSION}" data-organization="${organization.slug}" data-mode="inline" defer></script>`}
-      />
-      {!data.activities.some((activity) => activity.isActive) ? (
-        <p>{SHARE_UI.NO_ACTIVITY}</p>
-      ) : null}
-      {data.activities
-        .filter((activity) => activity.isActive)
-        .map((activity) => (
-          <ActivityEmbed
-            key={activity.id}
-            activity={activity}
-            organization={organization}
-            appUrl={appUrl}
-          />
+    <section className="sharing-content">
+      <h2>{SHARE_UI.DIRECT}</h2>
+      <p>{SHARE_UI.SOCIAL_HINT}</p>
+      <ol className="sharing-steps">
+        {SHARE_UI.SOCIAL_STEPS.map((step) => (
+          <li key={step}>{step}</li>
         ))}
-      <p className="portal-muted">{SHARE_UI.WEBSITE_NOTE}</p>
+      </ol>
+      <CopyCode value={url} buttonLabel={SHARE_UI.COPY_LINK} />
+      <Link className="home-secondary-link" href={url} target="_blank" rel="noopener noreferrer">
+        {SHARE_UI.OPEN_PAGE}
+      </Link>
+      {canUsePro(organization.access, new Date()) ? (
+        <SocialQr organizationId={organization.id} />
+      ) : null}
     </section>
   );
 }
-
-function ActivityEmbed({
-  activity,
-  organization,
-  appUrl,
-}: {
-  readonly activity: PortalOverview['activities'][number];
-  readonly organization: PortalOverview['organization'];
-  readonly appUrl: string;
-}) {
+function SocialQr({ organizationId }: { readonly organizationId: string }) {
   return (
-    <details className="portal-details">
-      <summary>{activity.name}</summary>
-      <div className="portal-list">
-        <h3>{SHARE_UI.INLINE}</h3>
-        <CopyCode
-          value={`<script src="${appUrl}/widget.js" data-organization="${organization.slug}" data-activity="${activity.id}" data-mode="inline" defer></script>`}
-        />
-        <h3>{SHARE_UI.FLOATING}</h3>
-        <CopyCode
-          value={`<script src="${appUrl}/widget.js" data-organization="${organization.slug}" data-activity="${activity.id}" data-mode="floating" defer></script>`}
-        />
-        <a href={`/api/portal/qr?organizationId=${organization.id}&activityId=${activity.id}`}>
-          {SHARE_UI.DOWNLOAD_QR}
-        </a>
-      </div>
-    </details>
+    <div className="sharing-qr">
+      <h3>{SHARE_UI.QR}</h3>
+      <p className="portal-muted">{SHARE_UI.QR_HINT}</p>
+      <a
+        className="liquid-ice-button portal-button"
+        href={`/api/portal/qr?organizationId=${organizationId}&format=pdf`}
+      >
+        {SHARE_UI.DOWNLOAD_QR}
+      </a>
+    </div>
   );
-}
-
-function PrivatePreviewLink({ slug }: { readonly slug: string }) {
-  return slug === W.SLUG && process.env['APP_ENVIRONMENT'] === W.MODE ? (
-    <Link
-      href={W.PATH}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="portal-secondary-action"
-    >
-      {W.LINK}
-    </Link>
-  ) : null;
 }

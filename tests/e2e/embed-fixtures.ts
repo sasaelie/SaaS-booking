@@ -28,6 +28,7 @@ export async function externalWebsite(
 }
 export async function completeEmbeddedBooking(page: Page) {
   const frame = page.frameLocator('iframe');
+  await assertEmbedFits(page);
   await frame.getByRole('button', { name: 'Continuer', exact: true }).click();
   await frame.getByRole('textbox', { name: 'Prénom', exact: true }).fill('Marie');
   await frame.getByRole('textbox', { name: 'Nom', exact: true }).fill('Essai');
@@ -40,6 +41,10 @@ export async function completeEmbeddedBooking(page: Page) {
 }
 
 export async function assertEmbedFits(page: Page) {
+  if (await page.locator('iframe').evaluate((element) => Boolean(element.closest('dialog')))) {
+    await assertFloatingViewport(page);
+    return;
+  }
   await expect
     .poll(async () => {
       const outer = await page.locator('iframe').evaluate((e) => e.getBoundingClientRect().height);
@@ -49,6 +54,32 @@ export async function assertEmbedFits(page: Page) {
         .evaluate((e) => e.getBoundingClientRect().height);
       return Math.abs(outer - Math.max(EMBED.MIN_HEIGHT, Math.ceil(inner))) <= 1;
     })
+    .toBe(true);
+}
+async function assertFloatingViewport(page: Page) {
+  await expect
+    .poll(() =>
+      page.locator('dialog').evaluate((dialog) => {
+        if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return false;
+        const frame = dialog.querySelector('iframe')?.getBoundingClientRect();
+        const close = dialog.querySelector('button')?.getBoundingClientRect();
+        const bounds = dialog.getBoundingClientRect();
+        return Boolean(
+          frame &&
+          close &&
+          frame.height > 0 &&
+          close.height >= 44 &&
+          bounds.top >= 0 &&
+          bounds.bottom <= window.innerHeight &&
+          frame.top >= bounds.top &&
+          frame.bottom <= bounds.bottom &&
+          close.top >= bounds.top &&
+          close.bottom <= bounds.bottom &&
+          close.bottom <= frame.top &&
+          dialog.scrollHeight <= dialog.clientHeight + 1,
+        );
+      }),
+    )
     .toBe(true);
 }
 

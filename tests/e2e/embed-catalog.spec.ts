@@ -112,15 +112,17 @@ test('gives the organizer a single install code for all courses while preserving
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await login(page, space);
   await page.goto(`/app/${space.organizationId}/partager`);
+  await page.getByRole('tab', { name: SHARE_UI.WEBSITE_MODE, exact: true }).click();
   const section = page
     .locator('section')
     .filter({ has: page.getByRole('heading', { name: SHARE_UI.WEBSITE, exact: true }) });
-  await section.getByRole('button', { name: SHARE_UI.COPY, exact: true }).first().click();
+  await section.getByRole('button', { name: SHARE_UI.COPY_INSTALL, exact: true }).click();
   const script = await page.evaluate(() => navigator.clipboard.readText());
   expect(script).toContain(`data-organization="${space.slug}"`);
   expect(script).not.toContain('data-activity');
   expect(script).toContain(`/widget.js?v=${EMBED.CATALOG_VERSION}`);
   expect(script).not.toMatch(/bypass|_vercel_share|token|secret/i);
+  await page.getByRole('tab', { name: SHARE_UI.SOCIAL_MODE, exact: true }).click();
   await expect(page.locator('.portal-share-code').first()).toContainText('/' + space.slug);
 });
 

@@ -1,9 +1,13 @@
 # Catalogue de cours intégré sur un site
 
+Dans **Partager**, deux onglets distinguent les parcours : **Sur mes réseaux sociaux** fournit le lien autonome et, en Pro, le QR code ; **Sur mon site** guide l’installation du calendrier dans la page ou du bouton flottant pour tous les cours. Les options d’intégration et QR par activité restent accessibles dans une section repliable. Les deux parcours utilisent le même moteur, sans compte participant obligatoire. Les règles Pro et les protections de recette restent vérifiées côté serveur.
+
+L’aide sur les espaces membres indique explicitement que le raccordement n’est pas disponible. Il n’existe actuellement aucun réglage permettant de rendre une réservation réservée aux membres. Une future intégration devra conserver les comptes sur le site organisateur, faire vérifier côté serveur une autorisation signée et temporaire liée à l’organisation, puis refuser l’accès sans preuve valable. Masquer un bouton ou conserver une URL secrète ne remplace pas cette vérification. Aucun compte membre, secret de raccordement ou mécanisme de facturation supplémentaire n’est créé dans cette étape.
+
 Dans l’espace organisateur, **Partager → Sur votre site → Tous vos cours sur votre site** fournit un seul code à copier dans un bloc HTML autorisé par l’hébergeur. Il utilise l’adresse de l’application et le lien de l’organisation déjà enregistrés ; aucun identifiant d’activité n’est à renseigner.
 
 ```html
-<script src="https://reservation.example/widget.js?v=2" data-organization="votre-atelier" data-mode="inline" defer></script>
+<script src="https://reservation.example/widget.js?v=3" data-organization="votre-atelier" data-mode="inline" defer></script>
 ```
 
 Le visiteur voit le catalogue, choisit un cours puis un créneau et remplit les coordonnées dans la même page du site. Il peut revenir au catalogue depuis le formulaire. Les cours publiés sont relus lors du chargement du catalogue : publier ou archiver une activité ne demande pas de remplacer le code d’installation.
@@ -11,6 +15,8 @@ Le visiteur voit le catalogue, choisit un cours puis un créneau et remplit les 
 Après confirmation, **Gérer ma réservation** ouvre la gestion dans le même encart, sans nouvel onglet et sans passer par la connexion participant. **Retour à mon billet** conserve le code existant ; une annulation reste affichée comme annulée. **Terminer et revenir au site** ferme la fenêtre flottante ou ramène en haut du site sans effacer le billet. Le site hôte ne reçoit qu’un message de retour sans données personnelles ; il vérifie l’origine et la fenêtre émettrice. Aucun lien de retour externe fourni par l’utilisateur n’est suivi. Les liens autonomes et les QR codes conservent leur accès participant habituel.
 
 Les anciennes installations ciblant une activité restent compatibles avec `data-activity`. Le mode flottant reste disponible. Le paramètre de version du nouveau code évite de reprendre un ancien script en cache qui exigeait obligatoirement une activité.
+
+Le mode flottant utilise une hauteur stable adaptée à l’écran : le contenu défile dans le calendrier et le bouton de fermeture reste visible. Seul le mode dans la page adapte sa hauteur à tout le document. Les messages de retour restent filtrés par origine et fenêtre source dans les deux modes.
 
 ## Règles conservées
 
