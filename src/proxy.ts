@@ -6,6 +6,7 @@ import { isSessionNavigationPath } from './lib/session-navigation';
 import { SESSION_NAVIGATION } from './config/session-navigation';
 import { PUBLIC_SITE } from './config/public-site';
 import { publicSiteSettings, isMarketingPath, isPublicSearchPath } from './lib/public-site';
+import { isWebsitePreviewFrame } from './config/website-preview';
 export function proxy(request: NextRequest) {
   const nonce = randomBytes(SECURITY.NONCE_BYTES).toString('base64');
   const policy = contentSecurityPolicy(
@@ -27,7 +28,9 @@ export function proxy(request: NextRequest) {
     isMarketingPath(request.nextUrl.pathname)
   )
     response.headers.set('Cache-Control', SESSION_NAVIGATION.NO_STORE);
-  if (!request.nextUrl.pathname.startsWith('/embed/'))
+  if (isWebsitePreviewFrame(request.nextUrl.pathname))
+    response.headers.set('X-Frame-Options', 'SAMEORIGIN');
+  else if (!request.nextUrl.pathname.startsWith('/embed/'))
     response.headers.set('X-Frame-Options', 'DENY');
   if (request.nextUrl.pathname.startsWith('/api/'))
     response.headers.set('Cache-Control', 'private, no-store');

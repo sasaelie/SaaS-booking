@@ -7,7 +7,7 @@ export function widgetSource() {
  const origin=new URL(script.src).origin;
  const frame=document.createElement('iframe');frame.src=origin+'/embed/'+organization+(activity?'/'+activity:'');
  frame.title=${JSON.stringify(SHARE_UI.IFRAME_TITLE)};frame.referrerPolicy='no-referrer';frame.loading='lazy';
- frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
+ frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-popups-to-escape-sandbox');
  frame.style.cssText='display:block;width:100%;border:0;height:${EMBED.INITIAL_HEIGHT}px;';
  function resize(event){if(event.origin!==origin||event.source!==frame.contentWindow||event.data?.type!==${JSON.stringify(EMBED.RESIZE_TYPE)})return;
  const height=event.data.height;if(typeof height==='number'&&Number.isFinite(height)&&height>=${EMBED.MIN_HEIGHT}&&height<=${EMBED.MAX_HEIGHT})frame.style.height=Math.ceil(height)+'px';}

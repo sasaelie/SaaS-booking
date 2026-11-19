@@ -1,3 +1,4 @@
+import { isWebsitePreviewFrame } from '../config/website-preview';
 export function contentSecurityPolicy(
   nonce: string,
   path: string,
@@ -21,6 +22,7 @@ export function contentSecurityPolicy(
   ].join('; ');
 }
 function frameAncestors(path: string, appUrl: string) {
+  if (isWebsitePreviewFrame(path)) return "'self'";
   if (!path.startsWith('/embed/')) return "'none'";
   try {
     const local = ['localhost', '127.0.0.1'].includes(new URL(appUrl).hostname);

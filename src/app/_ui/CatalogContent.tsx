@@ -3,6 +3,7 @@ import type { PublicCatalog } from '../../core/ports/public-catalog.port';
 import { SHARE_UI, AUDIENCE_LABELS } from '../../config/constants';
 import { PLAN_UI } from '../../config/commercial';
 import { simulationPath } from '../../config/simulation';
+import { websitePreviewPath } from '../../config/website-preview';
 import { StoryPanel } from './StoryPanel';
 import { ColorScene } from './ColorScene';
 import { BookingBrand } from './BookingBrand';
@@ -93,7 +94,9 @@ function CatalogCard({ data, activity, simulationId, embedded }: CatalogCardProp
           className="liquid-ice-button portal-button"
           href={
             simulationId
-              ? `${simulationPath(simulationId)}/activite/${activity.id}`
+              ? embedded
+                ? websitePreviewPath(data.slug, activity.id)
+                : `${simulationPath(simulationId)}/activite/${activity.id}`
               : `${embedded ? '/embed' : ''}/${data.slug}/${activity.id}`
           }
         >

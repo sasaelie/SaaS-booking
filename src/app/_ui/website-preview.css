@@ -1,0 +1,21 @@
+body:has(.website-preview-embed) > .staging-notice {
+  display: none;
+}
+.simulation-embedded-notice {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ice-line);
+}
+.simulation-embedded-notice strong {
+  font-size: 13px;
+}
+.simulation-embedded-notice > p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.simulation-embedded-notice .simulation-shortcuts {
+  font-size: 12px;
+}

@@ -24,6 +24,7 @@ export const PUBLIC_SITE = {
     '/manage',
     '/booking-result',
     '/embed',
+    '/apercu-site',
   ],
   ASSET_PATHS: ['/icon.svg', '/opengraph-image'],
   NO_INDEX: 'noindex, nofollow',

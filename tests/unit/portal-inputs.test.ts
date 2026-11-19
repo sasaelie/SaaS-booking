@@ -2,14 +2,16 @@ import { expect, it } from 'vitest';
 import { CreateOrganizationSchema } from '../../src/core/validation/portal-organization';
 import { CreateActivitySchema } from '../../src/core/validation/portal-activity';
 it('rejects reserved public URLs and unknown timezones before persistence', () => {
-  expect(
-    CreateOrganizationSchema.safeParse({
-      name: 'Club',
-      slug: 'admin',
-      kind: 'CLUB',
-      timezone: 'Europe/Brussels',
-    }).success,
-  ).toBe(false);
+  for (const slug of ['admin', 'apercu-site']) {
+    expect(
+      CreateOrganizationSchema.safeParse({
+        name: 'Club',
+        slug,
+        kind: 'CLUB',
+        timezone: 'Europe/Brussels',
+      }).success,
+    ).toBe(false);
+  }
   expect(
     CreateOrganizationSchema.safeParse({
       name: 'Club',

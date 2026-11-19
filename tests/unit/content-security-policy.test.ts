@@ -1,5 +1,14 @@
 import { expect, it } from 'vitest';
 import { contentSecurityPolicy } from '../../src/lib/content-security-policy';
+it('restricts the private website simulation to its own origin while leaving public embeds available', () => {
+  for (const path of [
+    '/embed/studiocreatif360/preview',
+    '/embed/studiocreatif360/preview/activity',
+  ])
+    expect(contentSecurityPolicy('nonce', path, 'https://example.invalid', false)).toMatch(
+      /frame-ancestors 'self'$/,
+    );
+});
 it('allows only nonced scripts in production and refuses objects, injected handlers and untrusted framing', () => {
   const policy = contentSecurityPolicy(
     'example-random-nonce',

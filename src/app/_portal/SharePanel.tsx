@@ -4,6 +4,7 @@ import { AppLink as Link } from '../_ui/AppLink';
 import type { PortalOverview } from '../../core/ports/portal-models';
 import { SHARE_UI, EMBED } from '../../config/constants';
 import { CopyCode } from './CopyCode';
+import { WEBSITE_PREVIEW as W } from '../../config/website-preview';
 export function SharePanel({
   data,
   appUrl,
@@ -54,6 +55,7 @@ function WebsiteSharing({
   return (
     <section>
       <h2>{SHARE_UI.WEBSITE}</h2>
+      <PrivatePreviewLink slug={organization.slug} />
       <p className="portal-muted">{SHARE_UI.WEBSITE_HINT}</p>
       <h3>{SHARE_UI.EMBED_CATALOG}</h3>
       <p className="portal-muted">{SHARE_UI.EMBED_CATALOG_HINT}</p>
@@ -105,4 +107,17 @@ function ActivityEmbed({
       </div>
     </details>
   );
+}
+
+function PrivatePreviewLink({ slug }: { readonly slug: string }) {
+  return slug === W.SLUG && process.env['APP_ENVIRONMENT'] === W.MODE ? (
+    <Link
+      href={W.PATH}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="portal-secondary-action"
+    >
+      {W.LINK}
+    </Link>
+  ) : null;
 }

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { browserSpace, closeBrowserDatabase } from './portal-fixtures';
-import { externalWebsite, completeEmbeddedBooking } from './embed-fixtures';
+import { externalWebsite, completeEmbeddedBooking, saveEmbeddedTicket } from './embed-fixtures';
 test.afterAll(async () => {
   await closeBrowserDatabase();
 });
@@ -30,6 +30,7 @@ test('embeds the real reservation flow on a different origin and resizes without
     await expect(
       frame.getByRole('status').filter({ hasText: 'Votre place est réservée.' }),
     ).toBeVisible();
+    await saveEmbeddedTicket(page);
     await page.screenshot({ path: info.outputPath('external-website-mobile.png'), fullPage: true });
   } finally {
     await site.close();

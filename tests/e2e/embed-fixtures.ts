@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { readFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import { expect, type Page } from '@playwright/test';
 import { EMBED } from '../../src/config/constants';
@@ -46,7 +47,21 @@ export async function assertEmbedFits(page: Page) {
         .frameLocator('iframe')
         .locator('body')
         .evaluate((e) => e.getBoundingClientRect().height);
-      return outer >= Math.ceil(inner);
+      return Math.abs(outer - Math.max(EMBED.MIN_HEIGHT, Math.ceil(inner))) <= 1;
     })
     .toBe(true);
+}
+
+export async function saveEmbeddedTicket(page: Page, filename = 'billet-reservation.pdf') {
+  const link = page
+    .frameLocator('iframe')
+    .getByRole('link', { name: 'Enregistrer le billet PDF', exact: true });
+  await expect(link).toBeVisible();
+  const event = page.waitForEvent('download');
+  await link.click();
+  const download = await event;
+  expect(download.suggestedFilename()).toBe(filename);
+  const path = await download.path();
+  if (!path) throw Error('Saved ticket missing');
+  expect((await readFile(path)).subarray(0, 4).toString()).toBe('%PDF');
 }
