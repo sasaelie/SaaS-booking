@@ -38,3 +38,6 @@ Utilise exclusivement ces identifiants anglais dans le code, les tables et les f
 Pour chaque fonctionnalité, respecte cet ordre strict :
 1. Schéma Zod (`validation`) -> 2. Contrat (`port`) -> 3. Test unitaire (`Vitest`) -> 4. Cœur métier (`use-case`) -> 5. Adaptateur -> 6. UI.
 Avant de considérer une tâche terminée, exécute `npm run verify` (`tsc --noEmit && eslint . && vitest run`). Si un seul contrôle échoue, corrige-le immédiatement avant de poursuivre.
+
+## 6. MÉMOIRE — FINITION AVANT LANCEMENT
+Lorsque l’utilisateur demande « fais la finition », lire [le plan de finition](docs/PLAN-FINITION-LANCEMENT.md), revérifier l’état réel du projet, puis décomposer et traiter ses étapes avec vérification après chaque modification. Cette mémoire ne demande pas d’activer les paiements réels ou de lancer les opérations dès maintenant.
