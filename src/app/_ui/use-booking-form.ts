@@ -36,6 +36,7 @@ export function useBookingForm(data: BookingPageData) {
     refresh: router.refresh,
   };
   return {
+    ready: now !== null,
     selectedIso,
     setSelected: chooseSession,
     pending,

@@ -6,6 +6,35 @@ import {
 } from '../e2e/embed-fixtures';
 import { SHARE_UI, EMBED, FORM_LABELS } from '../../src/config/constants';
 const slug = process.env['PUBLIC_TEST_ORGANIZATION_SLUG'] ?? 'studio-demo';
+test('calendar commands stay disabled until JavaScript initializes the selected session', async ({
+  page,
+}) => {
+  let release: () => void = () => {};
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route('**/_next/static/**/*.js', async (route) => {
+    await gate;
+    await route.continue();
+  });
+  try {
+    const activity = await page.request.get(`/embed/${slug}`);
+    const href = (await activity.text()).match(
+      new RegExp(`href="(/embed/${slug}/[0-9a-f-]{36})"`),
+    )?.[1];
+    expect(href).toBeTruthy();
+    if (!href) throw Error('Published activity required');
+    await page.goto(href, { waitUntil: 'commit' });
+    const next = page.getByRole('button', { name: 'Continuer', exact: true });
+    await expect(next).toBeDisabled();
+    release();
+    await expect(next).toBeEnabled();
+    await next.click();
+    await expect(page.getByRole('textbox', { name: 'Prénom', exact: true })).toBeVisible();
+  } finally {
+    release();
+  }
+});
 for (const mode of ['inline', 'floating'] as const) {
   test(`anonymous public TEST booking stays in the host site (${mode})`, async ({
     page,

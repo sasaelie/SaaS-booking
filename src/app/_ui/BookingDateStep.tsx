@@ -8,7 +8,7 @@ export function BookingDateStep({ flow }: { readonly flow: BookingFlowState }) {
     <fieldset
       className="ice-step"
       hidden={flow.details || flow.form.state?.success}
-      disabled={flow.details || flow.form.pending || flow.form.state?.success}
+      disabled={!flow.form.ready || flow.details || flow.form.pending || flow.form.state?.success}
     >
       <legend className="ice-sr-only">{BOOKING_UI.STEP_SESSION}</legend>
       <div className="ice-step-heading">
