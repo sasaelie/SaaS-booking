@@ -6,6 +6,8 @@ export const PUBLIC_TEST = {
     'Cette recette est privée : son lien et son code ne peuvent pas être installés sur un site public. Utilisez l’aperçu privé en attendant la publication.',
   SHARING_NOTICE:
     'Installation publique de TEST : les réservations sont fictives et séparées de votre espace organisateur.',
+  PAYMENT_NOTE: 'Simulation : tarif de la séance conservé, aucun paiement réel à effectuer.',
+  AMOUNT_LABEL: 'Montant simulé',
   FIRST_NAME: 'Participant',
   LAST_NAME: 'TEST',
   EMAIL: 'participant@example.invalid',

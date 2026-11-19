@@ -1,5 +1,6 @@
 import { BOOKING_UI, FORM_LABELS, PAYMENT_MODES, type PaymentMode } from '../../config/constants';
 import type { BookingFlowState } from './use-booking-flow';
+import { PUBLIC_TEST } from '../../config/public-test';
 function actionLabel(mode: PaymentMode, amount: number): string {
   if (amount === 0 || mode === PAYMENT_MODES.NONE) return BOOKING_UI.CONFIRM;
   return mode === PAYMENT_MODES.STRIPE ? BOOKING_UI.PAY : BOOKING_UI.BANK_BOOK;
@@ -21,8 +22,9 @@ export function bookingPricing(flow: BookingFlowState) {
     amount,
     discount: flow.data.priceCents - amount,
     label: flow.form.pending ? FORM_LABELS.SUBMITTING : actionLabel(flow.data.paymentMode, amount),
-    note:
-      !flow.data.paymentReady && amount > 0
+    note: flow.data.publicTest
+      ? PUBLIC_TEST.PAYMENT_NOTE
+      : !flow.data.paymentReady && amount > 0
         ? BOOKING_UI.PAYMENT_NOT_READY
         : paymentNote(flow.data.paymentMode, amount, flow.quote.remaining === 0),
     totalLabel: totalLabel(flow.data.paymentMode, amount),

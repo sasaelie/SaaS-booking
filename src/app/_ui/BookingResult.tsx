@@ -11,6 +11,7 @@ import { BookingProof } from './BookingProof';
 import { BookingResultActions } from './BookingResultActions';
 import { UI_MESSAGES } from '../../config/constants';
 import { EmbeddedBookingManagement } from './EmbeddedBookingManagement';
+import { PUBLIC_TEST } from '../../config/public-test';
 export function BookingResult({
   state,
   flow,
@@ -118,9 +119,10 @@ function OfflinePayment({
     return null;
   return (
     <aside className="ice-bank-instructions">
-      <p>{PARTICIPANT_NAV.NOT_PAID}</p>
+      <p>{flow.data.publicTest ? PUBLIC_TEST.PAYMENT_NOTE : PARTICIPANT_NAV.NOT_PAID}</p>
       <strong>
-        {PARTICIPANT_NAV.OFFLINE_DUE} : {formatMoney(amount, flow.data.currency)}
+        {flow.data.publicTest ? PUBLIC_TEST.AMOUNT_LABEL : PARTICIPANT_NAV.OFFLINE_DUE} :{' '}
+        {formatMoney(amount, flow.data.currency)}
       </strong>
     </aside>
   );

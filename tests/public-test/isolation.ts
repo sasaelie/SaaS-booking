@@ -82,16 +82,12 @@ async function publication() {
         [row.id],
       )
     ).rows[0];
-    assert.deepEqual(copy, { name: 'Publication de test', price_cents: 0, payment_mode: 'NONE' });
-    await admin.query('UPDATE public.activities SET is_active=false WHERE id=$1', [row.id]);
-    assert.equal(
-      (
-        await admin.query('SELECT is_active FROM booking_public_test.activities WHERE id=$1', [
-          row.id,
-        ])
-      ).rows[0].is_active,
-      false,
-    );
+    assert.deepEqual(copy, {
+      name: 'Publication de test',
+      price_cents: 9999,
+      payment_mode: 'NONE',
+    });
+    await updatePublishedActivity(row.id);
     assert.equal(
       (await admin.query('SELECT count(*)::int AS count FROM public.bookings')).rows[0].count,
       before.rows[0].count,
@@ -99,4 +95,18 @@ async function publication() {
   } finally {
     await admin.query('ROLLBACK');
   }
+}
+async function updatePublishedActivity(id: string) {
+  await admin.query('UPDATE public.activities SET price_cents=2500 WHERE id=$1', [id]);
+  assert.equal(
+    (await admin.query('SELECT price_cents FROM booking_public_test.activities WHERE id=$1', [id]))
+      .rows[0].price_cents,
+    2500,
+  );
+  await admin.query('UPDATE public.activities SET is_active=false WHERE id=$1', [id]);
+  assert.equal(
+    (await admin.query('SELECT is_active FROM booking_public_test.activities WHERE id=$1', [id]))
+      .rows[0].is_active,
+    false,
+  );
 }

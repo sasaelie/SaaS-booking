@@ -48,7 +48,7 @@ function assemble(env: Extract<ReturnType<typeof readEnvironment>, { ok: true }>
       appUrl: env.NEXT_PUBLIC_APP_URL,
       secret: env.SELF_CANCEL_HMAC_SECRET,
     }),
-    bookingPage: new GetBookingPageUseCase(new DrizzleActivityRepository(db)),
+    bookingPage: new GetBookingPageUseCase(new DrizzleActivityRepository(db), code.test),
     webhook: new HandlePaymentWebhookUseCase({
       paymentGateway: services.gateway,
       paymentRepo: new DrizzlePaymentRepository(db),

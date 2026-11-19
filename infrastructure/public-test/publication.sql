@@ -15,11 +15,11 @@ BEGIN
  INSERT INTO booking_public_test.activities(id,organization_id,name,description,price_cents,currency,
    audience_policy,require_phone,payment_mode,booking_window_weeks,notice_hours_for_voucher,
    voucher_validity_months,is_active,address,practical_info,participation_terms)
-  SELECT id,organization_id,name,description,0,currency,audience_policy,require_phone,'NONE',
+  SELECT id,organization_id,name,description,price_cents,currency,audience_policy,require_phone,'NONE',
    booking_window_weeks,notice_hours_for_voucher,voucher_validity_months,is_active,
    'Lieu fictif — démonstration TEST','Aucune participation réelle.','Réservation fictive de TEST.'
   FROM __SOURCE_SCHEMA__.activities WHERE organization_id=tenant AND is_active
-  ON CONFLICT(id) DO UPDATE SET name=excluded.name,description=excluded.description,
+  ON CONFLICT(id) DO UPDATE SET name=excluded.name,description=excluded.description,price_cents=excluded.price_cents,
    currency=excluded.currency,audience_policy=excluded.audience_policy,require_phone=excluded.require_phone,
    booking_window_weeks=excluded.booking_window_weeks,notice_hours_for_voucher=excluded.notice_hours_for_voucher,
    voucher_validity_months=excluded.voucher_validity_months,is_active=true;
