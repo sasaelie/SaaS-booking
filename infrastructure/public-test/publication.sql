@@ -9,18 +9,21 @@ BEGIN
   SELECT id,name,public_slug,timezone,primary_text_color,kind FROM __SOURCE_SCHEMA__.organizations WHERE id=tenant
   ON CONFLICT(id) DO UPDATE SET name=excluded.name,slug=excluded.slug,timezone=excluded.timezone,
    primary_text_color=excluded.primary_text_color,kind=excluded.kind;
+ UPDATE booking_public_test.organizations SET merchant_account_id='acct_simulation',stripe_ready=true,
+  uses_platform_payments=false,bank_iban='TEST — NE PAS EFFECTUER DE VIREMENT',
+  bank_account_name='Simulation sans paiement' WHERE id=tenant;
  INSERT INTO booking_public_test.organization_access(organization_id,complimentary,status,suspended_at)
   VALUES(tenant,true,'ACTIVE',CASE WHEN active THEN NULL ELSE now() END)
   ON CONFLICT(organization_id) DO UPDATE SET suspended_at=excluded.suspended_at;
  INSERT INTO booking_public_test.activities(id,organization_id,name,description,price_cents,currency,
    audience_policy,require_phone,payment_mode,booking_window_weeks,notice_hours_for_voucher,
    voucher_validity_months,is_active,address,practical_info,participation_terms)
-  SELECT id,organization_id,name,description,price_cents,currency,audience_policy,require_phone,'NONE',
+  SELECT id,organization_id,name,description,price_cents,currency,audience_policy,require_phone,payment_mode,
    booking_window_weeks,notice_hours_for_voucher,voucher_validity_months,is_active,
    'Lieu fictif — démonstration TEST','Aucune participation réelle.','Réservation fictive de TEST.'
   FROM __SOURCE_SCHEMA__.activities WHERE organization_id=tenant AND is_active
   ON CONFLICT(id) DO UPDATE SET name=excluded.name,description=excluded.description,price_cents=excluded.price_cents,
-   currency=excluded.currency,audience_policy=excluded.audience_policy,require_phone=excluded.require_phone,
+   currency=excluded.currency,payment_mode=excluded.payment_mode,audience_policy=excluded.audience_policy,require_phone=excluded.require_phone,
    booking_window_weeks=excluded.booking_window_weeks,notice_hours_for_voucher=excluded.notice_hours_for_voucher,
    voucher_validity_months=excluded.voucher_validity_months,is_active=true;
  UPDATE booking_public_test.activities a SET is_active=false WHERE organization_id=tenant AND NOT EXISTS

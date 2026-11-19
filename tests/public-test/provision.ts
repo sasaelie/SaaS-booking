@@ -17,7 +17,7 @@ try {
   await pool.query(
     "DO $$ BEGIN IF NOT EXISTS(SELECT FROM pg_roles WHERE rolname='anon') THEN CREATE ROLE anon; END IF; IF NOT EXISTS(SELECT FROM pg_roles WHERE rolname='authenticated') THEN CREATE ROLE authenticated; END IF; END $$;",
   );
-  for (const name of ['isolation', 'publication']) {
+  for (const name of ['isolation', 'payments', 'publication']) {
     const sql = (await readFile(`infrastructure/public-test/${name}.sql`, 'utf8')).replaceAll(
       '__SOURCE_SCHEMA__',
       'public',
@@ -29,6 +29,10 @@ try {
     [organizationId, slug],
   );
   await pool.query('SELECT booking_public_test.publish_configuration()');
+  await pool.query('UPDATE public.activities SET payment_mode=$1 WHERE organization_id=$2', [
+    'STRIPE',
+    organizationId,
+  ]);
   const password = randomBytes(32).toString('hex');
   await pool.query(`ALTER ROLE booking_public_test_service PASSWORD '${password}'`);
   url.username = 'booking_public_test_service';

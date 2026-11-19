@@ -4,7 +4,13 @@ import {
   completeEmbeddedBooking,
   saveEmbeddedTicket,
 } from '../e2e/embed-fixtures';
-import { SHARE_UI, EMBED, FORM_LABELS, PARTICIPANT_UI } from '../../src/config/constants';
+import {
+  SHARE_UI,
+  EMBED,
+  FORM_LABELS,
+  PARTICIPANT_UI,
+  BOOKING_UI,
+} from '../../src/config/constants';
 import { PUBLIC_TEST } from '../../src/config/public-test';
 const slug = process.env['PUBLIC_TEST_ORGANIZATION_SLUG'] ?? 'studio-demo';
 test('calendar commands stay disabled until JavaScript initializes the selected session', async ({
@@ -55,12 +61,13 @@ for (const mode of ['inline', 'floating'] as const) {
       await expect(frame.locator('.catalog-price').first()).toContainText('20,00');
       await frame.getByRole('link', { name: SHARE_UI.CATALOG_OPEN }).first().click();
       await expect(frame.getByRole('heading', { level: 1 })).toHaveText(selectedName ?? '');
-      await completeEmbeddedBooking(page);
+      await completeEmbeddedBooking(page, BOOKING_UI.PAY);
       await expect(frame.locator('.participant-ticket')).toBeVisible();
       await expect(frame.locator('.participant-ticket h2')).toHaveText(selectedName ?? '');
       await expect(frame.locator('.ticket-money>div').first()).toContainText('20,00');
-      await expect(frame.locator('.ice-bank-instructions')).toContainText(PUBLIC_TEST.PAYMENT_NOTE);
-      await expect(frame.locator('.ticket-money')).toContainText(PARTICIPANT_UI.DUE_TEST);
+      await expect(frame.getByRole('status').first()).toHaveText(PUBLIC_TEST.PAYMENT_SUCCESS);
+      await expect(frame.locator('.ticket-money>div').nth(1)).toContainText('20,00');
+      await expect(frame.locator('.ticket-money')).not.toContainText(PARTICIPANT_UI.DUE_TEST);
       const code = await frame.locator('.ticket-code textarea').inputValue();
       expect(code?.replaceAll(/\s/g, '')).toMatch(/^TEST-/);
       await saveEmbeddedTicket(page, 'billet-reservation-test.pdf');

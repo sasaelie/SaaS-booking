@@ -26,7 +26,7 @@ export async function externalWebsite(
       }),
   };
 }
-export async function completeEmbeddedBooking(page: Page) {
+export async function completeEmbeddedBooking(page: Page, submitLabel = 'Confirmer ma place') {
   const frame = page.frameLocator('iframe');
   await assertEmbedFits(page);
   await frame.getByRole('button', { name: 'Continuer', exact: true }).click();
@@ -39,7 +39,7 @@ export async function completeEmbeddedBooking(page: Page) {
   if (await phone.count()) await phone.fill('+32470000000');
   await frame.getByRole('checkbox', { name: /Je certifie/ }).check();
   await frame.getByRole('checkbox', { name: /J’ai lu et j’accepte/ }).check();
-  await frame.getByRole('button', { name: 'Confirmer ma place', exact: true }).click();
+  await frame.getByRole('button', { name: submitLabel, exact: true }).click();
 }
 
 export async function assertEmbedFits(page: Page) {

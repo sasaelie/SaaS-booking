@@ -7,6 +7,7 @@ export const PUBLIC_TEST = {
   SHARING_NOTICE:
     'Installation publique de TEST : les réservations sont fictives et séparées de votre espace organisateur.',
   PAYMENT_NOTE: 'Simulation : tarif de la séance conservé, aucun paiement réel à effectuer.',
+  PAYMENT_SUCCESS: 'Paiement de test réussi — aucun montant débité.',
   AMOUNT_LABEL: 'Montant simulé',
   FIRST_NAME: 'Participant',
   LAST_NAME: 'TEST',

@@ -6,9 +6,12 @@ import { StripePaymentAdapter } from '../adapters/payments/stripe-payment.adapte
 import { S3ProofStorageAdapter } from '../adapters/storage/s3-proof.adapter';
 import { unavailablePayment, unavailableStorage } from './unavailable';
 import { paymentsEnabled } from '../config/staging';
+import { publicTestEnabled } from '../config/public-test';
+import { SimulationPaymentAdapter } from '../adapters/simulation/payment.adapter';
 export function providers(env: Environment) {
-  const gateway =
-    paymentsEnabled(env) && env.STRIPE_SECRET_KEY && env.STRIPE_WEBHOOK_SECRET
+  const gateway = publicTestEnabled(env)
+    ? new SimulationPaymentAdapter(true)
+    : paymentsEnabled(env) && env.STRIPE_SECRET_KEY && env.STRIPE_WEBHOOK_SECRET
       ? new StripePaymentAdapter(new Stripe(env.STRIPE_SECRET_KEY), env.STRIPE_WEBHOOK_SECRET)
       : unavailablePayment;
   const storage =

@@ -11,7 +11,7 @@ import {
   type ErrorCode,
 } from '../../config/constants';
 import type { CreateBookingOutput } from '../../core/use-cases/create-booking.use-case';
-import { publicTestEnabled } from '../../config/public-test';
+import { PUBLIC_TEST, publicTestEnabled } from '../../config/public-test';
 import { publicTestBooking } from '../../core/validation/public-test';
 export interface BookingActionState {
   readonly success: boolean;
@@ -37,7 +37,13 @@ export async function createBookingAction(raw: unknown): Promise<BookingActionSt
       result.value.env.SELF_CANCEL_HMAC_SECRET,
     );
   return booked.ok
-    ? { success: true, message: bookingSuccessMessage(booked.value), booking: booked.value }
+    ? {
+        success: true,
+        message: booked.value.paymentSimulated
+          ? PUBLIC_TEST.PAYMENT_SUCCESS
+          : bookingSuccessMessage(booked.value),
+        booking: booked.value,
+      }
     : {
         success: false,
         message: bookingFailureMessage(booked.error.code),

@@ -68,12 +68,12 @@ async function publication() {
     const before = await admin.query('SELECT count(*)::int AS count FROM public.bookings');
     const row = (
       await admin.query(
-        'SELECT id,organization_id FROM booking_public_test.activities WHERE is_active LIMIT 1',
+        'SELECT id,organization_id FROM booking_public_test.activities WHERE is_active AND organization_id=(SELECT organization_id FROM booking_public_test.publication) LIMIT 1',
       )
     ).rows[0];
     assert.ok(row);
     await admin.query(
-      "UPDATE public.activities SET name='Publication de test',price_cents=9999 WHERE id=$1",
+      "UPDATE public.activities SET name='Publication de test',price_cents=9999,payment_mode='NONE' WHERE id=$1",
       [row.id],
     );
     const copy = (
@@ -97,11 +97,18 @@ async function publication() {
   }
 }
 async function updatePublishedActivity(id: string) {
-  await admin.query('UPDATE public.activities SET price_cents=2500 WHERE id=$1', [id]);
-  assert.equal(
-    (await admin.query('SELECT price_cents FROM booking_public_test.activities WHERE id=$1', [id]))
-      .rows[0].price_cents,
-    2500,
+  await admin.query(
+    "UPDATE public.activities SET price_cents=2500,payment_mode='STRIPE' WHERE id=$1",
+    [id],
+  );
+  assert.deepEqual(
+    (
+      await admin.query(
+        'SELECT price_cents,payment_mode FROM booking_public_test.activities WHERE id=$1',
+        [id],
+      )
+    ).rows[0],
+    { price_cents: 2500, payment_mode: 'STRIPE' },
   );
   await admin.query('UPDATE public.activities SET is_active=false WHERE id=$1', [id]);
   assert.equal(
