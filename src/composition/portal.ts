@@ -56,6 +56,7 @@ export function portal(headers: Headers) {
       repository,
       new QrCodeAdapter(),
       app.value.env.NEXT_PUBLIC_APP_URL,
+      publicationSettings(app.value),
     ),
     organizations: new OrganizationsUseCase(identity, repository),
     activities: new ActivitiesUseCase(identity, repository),
@@ -68,6 +69,12 @@ export function portal(headers: Headers) {
   });
 }
 export type PortalServices = Extract<ReturnType<typeof portal>, { ok: true }>['value'];
+function publicationSettings(app: Runtime) {
+  return {
+    PUBLIC_BOOKING_URL: app.env.PUBLIC_BOOKING_URL,
+    PUBLIC_BOOKING_ORGANIZATION_ID: app.env.PUBLIC_BOOKING_ORGANIZATION_ID,
+  };
+}
 
 function platformReports(app: Runtime, identity: SessionIdentityAdapter) {
   return {

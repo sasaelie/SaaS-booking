@@ -6,13 +6,19 @@ import { PARTICIPANT_UI as UI, UI_MESSAGES, PARTICIPANT } from '../../config/con
 import { exchangeParticipantCode } from '../manage/participant-exchange';
 import type { PlanIntent } from '../../core/validation/plan-selection';
 import { AuthTabs } from './AuthTabs';
-export function ParticipantLogin({ plan }: { readonly plan: PlanIntent | null }) {
+export function ParticipantLogin({
+  plan,
+  participantOnly = false,
+}: {
+  readonly plan: PlanIntent | null;
+  readonly participantOnly?: boolean;
+}) {
   const form = useParticipantLogin();
   return (
     <main className="portal-auth">
       <Link href="/">Retour à l’accueil</Link>
       <section className="ice-cube-shell portal-auth-card">
-        <AuthTabs plan={plan} client />
+        {!participantOnly ? <AuthTabs plan={plan} client /> : null}
         <h1>{UI.LOGIN}</h1>
         <p>{UI.PRIVATE}</p>
         <form className="portal-form" onSubmit={form.submit} aria-busy={form.pending}>

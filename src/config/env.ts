@@ -4,12 +4,22 @@ import { failure } from '../lib/errors';
 import { ok, type Result } from '../lib/result';
 import { DatabaseSchema, supportsSessionLocks } from './database';
 import { STAGING } from './staging';
+import { validatePublicTestEnvironment } from './public-test-env';
+import { publicBookingOrigin } from './booking-publication';
 const optionalSecret = z.string().min(INPUT_LIMITS.SECRET_MIN).optional();
 export const EnvironmentSchema = z
   .object({
     APP_ENVIRONMENT: z.enum(['production', 'staging']).optional(),
     PAYMENTS_ENABLED: z.enum(['true', 'false']).optional(),
     OPERATIONAL_PURGE_ENABLED: z.enum(['true', 'false']).optional(),
+    PUBLIC_TEST_MODE: z.enum(['true', 'false']).optional(),
+    PUBLIC_TEST_ORGANIZATION_ID: z.uuid().optional(),
+    PUBLIC_TEST_ORGANIZATION_SLUG: z
+      .string()
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+      .optional(),
+    PUBLIC_BOOKING_URL: z.url().refine(publicBookingOrigin).optional(),
+    PUBLIC_BOOKING_ORGANIZATION_ID: z.uuid().optional(),
     DATABASE_URL: z
       .url()
       .refine((value) => value.startsWith('postgres') && supportsSessionLocks(value)),
@@ -39,7 +49,17 @@ export const EnvironmentSchema = z
     STORAGE_ACCESS_KEY_ID: z.string().optional(),
     STORAGE_SECRET_ACCESS_KEY: z.string().optional(),
   })
+  .superRefine(validatePublicTestEnvironment)
   .superRefine((environment, context) => {
+    if (
+      Boolean(environment.PUBLIC_BOOKING_URL) !==
+      Boolean(environment.PUBLIC_BOOKING_ORGANIZATION_ID)
+    )
+      context.addIssue({
+        code: 'custom',
+        path: ['PUBLIC_BOOKING_URL'],
+        message: 'Public booking URL requires a matching organization',
+      });
     if (environment.STORAGE_BACKEND === 'postgres' && environment.APP_ENVIRONMENT !== STAGING.MODE)
       context.addIssue({
         code: 'custom',

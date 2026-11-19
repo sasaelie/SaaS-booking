@@ -23,7 +23,7 @@ export async function insertReservation(tx: Transaction, context: InsertContext)
   if (!inserted) throw Error('Insertion missing');
   await initializeFinancial(tx, inserted);
   await issueRemainder(tx, id, inserted.organizationId);
-  if (inserted.status === BOOKING_STATUSES.CONFIRMED)
+  if (inserted.status === BOOKING_STATUSES.CONFIRMED && !context.participantCode?.skipNotifications)
     await enqueue(tx, inserted.organizationId, JOB_TYPES.CONFIRMATION, `confirmation:${id}`, {
       bookingId: id,
     });

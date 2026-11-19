@@ -7,6 +7,7 @@ import type { PortalRepositoryPort } from '../../ports/portal-repository.port';
 import type { QrCodePort } from '../../ports/public-catalog.port';
 import { withPortalActor } from './actor';
 import { canUsePro } from '../../domain/commercial';
+import { bookingPublication } from '../../../config/booking-publication';
 const ShareSchema = z.object({
   organizationId: z.uuid(),
   activityId: z.uuid().optional(),
@@ -18,6 +19,10 @@ export class ShareUseCase {
     private readonly repository: PortalRepositoryPort,
     private readonly qr: QrCodePort,
     private readonly appUrl: string,
+    private readonly publication?: {
+      readonly PUBLIC_BOOKING_URL?: string;
+      readonly PUBLIC_BOOKING_ORGANIZATION_ID?: string;
+    },
   ) {}
   qrCode(raw: unknown) {
     return withPortalActor(this.identity, 'Share', async (actor) => {
@@ -32,7 +37,11 @@ export class ShareUseCase {
         !overview.value.activities.some((activity) => activity.id === parsed.data.activityId)
       )
         return failure(ERROR_CODES.NOT_FOUND, 'Share', 'activity');
-      const url = `${this.appUrl}/${overview.value.organization.slug}${parsed.data.activityId ? `/${parsed.data.activityId}` : ''}`;
+      const target = bookingPublication(parsed.data.organizationId, {
+        NEXT_PUBLIC_APP_URL: this.appUrl,
+        ...this.publication,
+      });
+      const url = `${target.appUrl}/${overview.value.organization.slug}${parsed.data.activityId ? `/${parsed.data.activityId}` : ''}`;
       const image = await this.qr.encode(url, parsed.data.format);
       return image.ok ? ok(image.value) : image;
     });

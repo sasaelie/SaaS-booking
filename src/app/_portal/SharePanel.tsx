@@ -6,11 +6,21 @@ import { AppLink as Link } from '../_ui/AppLink';
 import { CopyCode } from './CopyCode';
 import { SharingModes } from './SharingModes';
 import { WebsiteSharing } from './WebsiteSharing';
-type Props = { readonly data: PortalOverview; readonly appUrl: string };
-export function SharePanel({ data, appUrl }: Props) {
+import { PUBLIC_TEST } from '../../config/public-test';
+import { STAGING } from '../../config/staging';
+type Props = {
+  readonly data: PortalOverview;
+  readonly appUrl: string;
+  readonly published?: boolean;
+};
+export function SharePanel({ data, appUrl, published = false }: Props) {
   const pro = canUsePro(data.organization.access, new Date());
+  const privatePreview = process.env['APP_ENVIRONMENT'] === STAGING.MODE && !published;
   return (
     <div className="portal-list portal-panel portal-task-sections sharing-panel">
+      {privatePreview || published ? (
+        <p role="note">{published ? PUBLIC_TEST.SHARING_NOTICE : PUBLIC_TEST.PRIVATE_NOTICE}</p>
+      ) : null}
       <SharingModes
         social={<SocialSharing data={data} appUrl={appUrl} />}
         website={

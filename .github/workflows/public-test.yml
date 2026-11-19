@@ -1,0 +1,58 @@
+name: Public TEST isolation
+on: [push, pull_request]
+permissions:
+  contents: read
+concurrency:
+  group: public-test-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  public-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: public_test_ephemeral_only
+          POSTGRES_DB: booking_test
+        ports: ['5432:5432']
+        options: --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:public_test_ephemeral_only@127.0.0.1:5432/booking_test
+      TEST_DATABASE_URL: postgresql://postgres:public_test_ephemeral_only@127.0.0.1:5432/booking_test
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run db:migrate
+      - run: ALLOW_DEMO_SEED=true npm run db:seed
+      - name: Prepare isolated schema and restricted login
+        run: node --import tsx tests/public-test/provision.ts
+      - name: Check database isolation and schedule publication
+        run: |
+          source /tmp/booking-public-test-env.sh
+          node --import tsx tests/public-test/isolation.ts
+          node --import tsx tests/public-test/schedule-publication.ts
+      - name: Build the public TEST artifact
+        run: |
+          source /tmp/booking-public-test-env.sh
+          npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Verify anonymous embedded booking and participant access
+        run: |
+          source /tmp/booking-public-test-env.sh
+          npx playwright test --config playwright.public-test.config.ts
+          node --import tsx tests/public-test/isolation.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: public-test-verification
+          path: |
+            test-results/
+            qa-results/public-test-browser.json

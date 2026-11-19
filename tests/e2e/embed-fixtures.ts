@@ -35,6 +35,8 @@ export async function completeEmbeddedBooking(page: Page) {
   await frame
     .getByRole('textbox', { name: 'Adresse e-mail', exact: true })
     .fill(`embed-${crypto.randomUUID()}@example.com`);
+  const phone = frame.getByRole('textbox', { name: /Téléphone/ });
+  if (await phone.count()) await phone.fill('+32470000000');
   await frame.getByRole('checkbox', { name: /Je certifie/ }).check();
   await frame.getByRole('checkbox', { name: /J’ai lu et j’accepte/ }).check();
   await frame.getByRole('button', { name: 'Confirmer ma place', exact: true }).click();
