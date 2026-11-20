@@ -3,7 +3,7 @@
 ## 1. IDENTITÉ ET ARCHITECTURE DU PROJET
 Tu développes un **Moteur de Réservation Générique SaaS-Ready** en **Architecture Hexagonale stricte (Ports & Adapters)**.
 - **Stack :** Next.js (App Router), TypeScript (`strict: true`, `noUncheckedIndexedAccess: true`), PostgreSQL (UE), Drizzle ORM, Zod, Stripe, Resend, Vitest.
-- **Design System :** Crystal Ice Block & Liquid Meniscus (`src/app/_ui/ice-tokens.css`). Zéro couleur hexadécimale en dur dans les composants (utiliser les variables CSS).
+- **Design System :** Liquid Glass, selon le prototype validé le 20 novembre 2026 : palette violet, cyan et orange par défaut, personnalisation organisateur prioritaire, surfaces légères de 22 px, boutons de 8 px, navigation plate et actions hiérarchisées. Jetons dans `src/app/_ui/ice-tokens.css`, dispositions partagées dans `src/app/_ui/liquid/`. Éviter les cadres imbriqués et les rangées de gros boutons secondaires. Zéro couleur hexadécimale en dur dans les composants (utiliser les variables CSS).
 
 ## 2. GLOSSAIRE UNIQUE (INTERDICTION D'INVENTER DES SYNONYMES)
 Utilise exclusivement ces identifiants anglais dans le code, les tables et les fichiers :

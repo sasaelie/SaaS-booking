@@ -1,10 +1,11 @@
 export const APPEARANCE = {
   MIN: 0,
   MAX: 359,
-  ORGANIZER: 140,
-  PARTICIPANT: 290,
+  ORGANIZER: 255,
+  PARTICIPANT: 255,
   TITLE: 'Apparence',
-  INTRO: 'Une couleur, deux interfaces. Le verre et la lisibilité restent préservés.',
+  INTRO:
+    'Votre palette, deux interfaces. Personnalisez les couleurs et vérifiez le résultat en direct.',
   ORGANIZER_LABEL: 'Organisateur',
   PARTICIPANT_LABEL: 'Participants',
   COLOR: 'Couleur du dégradé',
@@ -17,5 +18,5 @@ export const APPEARANCE = {
   MEDIA: 'Logo et photo de présentation',
   BACK: 'Retour',
   SETTINGS: 'Réglages',
-  NOTE: 'La base ivoire reste fixe. Faites glisser le curseur pour changer le dégradé.',
+  NOTE: 'Violet, bleu et orange par défaut. Le curseur permet de choisir votre propre couleur.',
 } as const;

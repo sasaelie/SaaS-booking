@@ -1,0 +1,140 @@
+/* Visual hierarchy follows action semantics; no change to handlers or destinations. */
+.liquid-ui :is(.portal-button, .ice-primary) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 11px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.45;
+  text-decoration: none;
+  color: var(--ice-paper);
+  background: linear-gradient(
+    125deg,
+    color-mix(in srgb, var(--liquid-accent) 90%, white),
+    var(--liquid-accent)
+  );
+  border-color: rgb(255 255 255 / 0.6);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.4),
+    0 8px 20px -12px var(--liquid-accent);
+}
+.liquid-ui
+  :is(
+    .portal-secondary-action,
+    .portal-card-actions a:not(.portal-button),
+    .portal-text-button,
+    .ice-text-button,
+    .home-secondary-link,
+    .ticket-manage-link
+  ) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  color: var(--liquid-accent);
+  text-shadow: none;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+.liquid-ui
+  :is(.portal-secondary-action, .portal-text-button, .ice-text-button, .ticket-manage-link):hover {
+  background: color-mix(in srgb, var(--liquid-accent) 7%, transparent);
+}
+.liquid-ui
+  :is(
+    .portal-card-actions,
+    .portal-dialog-actions,
+    .ticket-actions,
+    .appearance-actions,
+    .portal-landing-actions,
+    .portal-row-actions
+  ) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+}
+.liquid-ui
+  :is(
+    .portal-card-actions,
+    .portal-dialog-actions,
+    .ticket-actions,
+    .appearance-actions,
+    .portal-landing-actions
+  )
+  > :is(a, button) {
+  width: auto;
+  min-width: 0;
+  min-height: 44px;
+  flex: 0 1 auto;
+}
+.liquid-ui .appearance-actions > .portal-button {
+  grid-column: auto;
+}
+.liquid-ui .portal-heading > .portal-button {
+  width: auto;
+  min-width: 0;
+}
+.liquid-ui .portal-form-fields > .portal-button {
+  width: auto;
+  justify-self: start;
+}
+.liquid-ui .portal-auth-card .portal-form-fields > .portal-button {
+  width: 100%;
+}
+.liquid-ui :is(.auth-tabs, .appearance-target) {
+  display: flex;
+  padding: 4px;
+  gap: 4px;
+  border: 0;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.3);
+}
+.liquid-ui .appearance-target button {
+  flex: 1;
+  background: none;
+  box-shadow: none;
+}
+.liquid-ui .appearance-target button[aria-pressed='true'] {
+  color: var(--liquid-accent);
+  background: var(--liquid-rim);
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgb(26 23 48 / 0.06);
+}
+.liquid-ui :is(.portal-button, .liquid-ice-button) a {
+  text-decoration: none;
+}
+.liquid-ui .social-links a.social-link {
+  background: rgb(255 255 255 / 0.3);
+  border: 1px solid var(--liquid-rim);
+  border-radius: 8px;
+  box-shadow: none;
+}
+.liquid-ui .portal-button[aria-disabled='true'],
+.liquid-ui .portal-button:disabled {
+  background: var(--liquid-accent);
+}
+@media (max-width: 600px) {
+  .liquid-ui .ice-action-bar {
+    gap: 10px;
+  }
+  .liquid-ui .ice-action-bar > .ice-primary,
+  .liquid-ui .ticket-actions > .liquid-ice-button {
+    width: 100%;
+  }
+  .liquid-ui .portal-dialog-actions {
+    justify-content: flex-end;
+  }
+}

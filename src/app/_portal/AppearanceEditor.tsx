@@ -47,7 +47,7 @@ function TargetSwitch({
     </div>
   );
 }
-function AppearancePreview({ hue, name }: { readonly hue: number; readonly name: string }) {
+function AppearancePreview({ hue, name }: { readonly hue: number | null; readonly name: string }) {
   return (
     <div className="appearance-preview" role="region" aria-label={UI.PREVIEW}>
       <ColorScene hue={hue} />
@@ -75,10 +75,10 @@ function AppearanceControls({
       className="appearance-workspace"
       disabled={state.pending || organization.role !== MEMBER_ROLES.OWNER}
     >
-      <AppearanceSettings state={state} organization={organization} />
+      <AppearanceSettings state={state} />
       {state.target === 'participant' ? (
         <div className="appearance-preview" role="region" aria-label={UI.PREVIEW}>
-          <ColorScene hue={state.hue} />
+          <ColorScene hue={state.customHue} />
           <AppearanceActivityPreview
             organization={organization}
             activities={activities}
@@ -86,28 +86,22 @@ function AppearanceControls({
           />
         </div>
       ) : (
-        <AppearancePreview hue={state.hue} name={organization.name} />
+        <AppearancePreview hue={state.customHue} name={organization.name} />
       )}
+      <AppearanceActions state={state} organization={organization} />
     </fieldset>
   );
 }
 
-function AppearanceSettings({
-  state,
-  organization,
-}: {
-  readonly state: ReturnType<typeof useAppearance>;
-  readonly organization: OrganizationSummary;
-}) {
+function AppearanceSettings({ state }: { readonly state: ReturnType<typeof useAppearance> }) {
   return (
-    <div className="portal-panel appearance-controls">
+    <div className="appearance-controls">
       <TargetSwitch value={state.target} change={state.setTarget} />
       <p className="portal-muted">{UI.NOTE}</p>
       <ColorRange state={state} />
       {state.target === 'participant' ? (
         <StoryTextChoices value={state.storyTextTone} change={state.changeTone} />
       ) : null}
-      <AppearanceActions state={state} organization={organization} />
     </div>
   );
 }

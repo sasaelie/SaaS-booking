@@ -45,7 +45,7 @@ async function touchPress(page: Page, counter: Locator, screenshot: string) {
       type: 'touchStart',
       touchPoints: [{ x: box.x + box.width / 2, y: box.y + box.height / 2 }],
     });
-    await expect(counter).toHaveCSS('scale', '0.95');
+    await expect(counter).toHaveCSS('scale', '0.98');
     expect(await counter.evaluate((e) => getComputedStyle(e).boxShadow)).not.toBe('none');
     await counter.screenshot({ path: screenshot });
     await client.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });

@@ -1,0 +1,170 @@
+/* App navigation and settings: one plate, lightweight rows and restrained actions. */
+.liquid-ui .portal-root {
+  gap: 32px;
+}
+.liquid-ui .portal-sidebar {
+  padding: 22px 14px;
+}
+.liquid-ui .portal-nav .portal-nav-links a {
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  box-shadow: none;
+  color: var(--ice-quiet);
+  text-decoration: none;
+  font-size: 13px;
+}
+.liquid-ui .portal-nav .portal-nav-links a:hover {
+  background: color-mix(in srgb, var(--liquid-ink) 6%, transparent);
+  color: var(--liquid-ink);
+}
+.liquid-ui .portal-nav .portal-nav-links a[aria-current='page'] {
+  color: var(--ice-paper);
+  background: var(--liquid-accent);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.4),
+    0 6px 16px -10px var(--liquid-accent);
+}
+.liquid-ui .portal-nav-utilities {
+  margin-top: 18px;
+  padding-top: 16px;
+}
+.liquid-ui .portal-nav .portal-brand {
+  padding-inline: 8px;
+}
+.liquid-ui .portal-account {
+  padding-top: 24px;
+}
+.liquid-ui .portal-mobile-bar .portal-menu-toggle {
+  border: 0;
+  background: rgb(255 255 255 / 0.35);
+  box-shadow: none;
+}
+.liquid-ui .portal-back {
+  color: var(--liquid-accent);
+  text-decoration: none;
+}
+.liquid-ui .administration-tabs {
+  gap: 4px;
+  padding: 4px;
+  border-bottom: 1px solid var(--ice-line);
+}
+.liquid-ui .administration-tabs a {
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--ice-quiet);
+  text-decoration: none;
+  padding: 10px 14px;
+}
+.liquid-ui .administration-tabs a[aria-current='page'] {
+  background: var(--liquid-surface);
+  color: var(--liquid-accent);
+  box-shadow: inset 0 -2px 0 var(--liquid-accent);
+  text-decoration: none;
+}
+.liquid-ui .dashboard-overview .portal-metrics {
+  border-radius: 22px;
+  background: var(--liquid-surface);
+  box-shadow: var(--liquid-shadow);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  backdrop-filter: var(--liquid-blur);
+}
+.liquid-ui .dashboard-overview .portal-metrics .portal-metric {
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+.liquid-ui .dashboard-overview .portal-metric strong {
+  font-size: 32px;
+  font-weight: 600;
+}
+.liquid-ui .settings-workspace {
+  background: var(--liquid-surface);
+  border: 1px solid var(--liquid-rim);
+  border-radius: 22px;
+  box-shadow: var(--liquid-shadow);
+  padding: 28px;
+  -webkit-backdrop-filter: var(--liquid-blur);
+  backdrop-filter: var(--liquid-blur);
+}
+.liquid-ui .settings-workspace > .portal-panel {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.liquid-ui .settings-workspace > .portal-panel + .portal-panel {
+  padding-top: 28px;
+  border-top: 1px solid var(--ice-line);
+}
+.liquid-ui .appearance-workspace > .appearance-footer {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+.liquid-ui .appearance-controls {
+  gap: 24px;
+}
+.liquid-ui .appearance-preview {
+  border-radius: 16px;
+  border: 1px solid var(--liquid-rim);
+  padding: 22px;
+}
+.liquid-ui .appearance-media {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 20px;
+  margin-top: 24px;
+}
+.liquid-ui .appearance-media > summary {
+  min-height: 44px;
+}
+.liquid-ui .appearance-media .portal-panel {
+  padding: 0;
+}
+.liquid-ui .appearance-label input {
+  height: 12px;
+  margin-block: 12px;
+}
+.liquid-ui .appearance-label input::-webkit-slider-thumb {
+  width: 26px;
+  height: 26px;
+  border-width: 2px;
+}
+.liquid-ui .appearance-label input::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-width: 2px;
+}
+.liquid-ui .portal-form-grid {
+  gap: 24px;
+}
+.liquid-ui .portal-share-code {
+  border-radius: 10px;
+  border: 1px solid var(--ice-line);
+  background: rgb(255 255 255 / 0.45);
+}
+.liquid-ui .administration-export-actions > a {
+  padding-inline: 6px;
+}
+.liquid-ui .administration-usage-chart > span {
+  background: linear-gradient(180deg, var(--liquid-violet), var(--liquid-accent));
+  box-shadow: none;
+}
+@media (max-width: 760px) {
+  .liquid-ui .portal-root {
+    gap: 20px;
+  }
+  .liquid-ui .portal-sidebar {
+    min-height: 0;
+    padding: 10px 14px;
+  }
+  .liquid-ui .settings-workspace {
+    padding: 22px 18px;
+  }
+  .liquid-ui .appearance-preview {
+    padding: 16px;
+  }
+}

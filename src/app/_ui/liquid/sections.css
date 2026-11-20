@@ -1,0 +1,69 @@
+/* Disclosure rows and segmented navigation are lighter than primary commands. */
+.liquid-ui details.portal-panel {
+  border: 0;
+  border-top: 1px solid var(--ice-line);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  padding: 18px 0;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.liquid-ui details.portal-panel > summary {
+  min-height: 44px;
+  align-content: center;
+}
+.liquid-ui :is(.sharing-mode-tabs, .administrator-method-selector, .planning-modes) {
+  padding: 4px;
+  gap: 4px;
+  border: 0;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.3);
+}
+.liquid-ui :is(.sharing-mode-tabs, .administrator-method-selector, .planning-modes) button {
+  color: var(--ice-quiet);
+  border: 0;
+  background: none;
+  box-shadow: none;
+  outline: none;
+  padding: 10px 12px;
+}
+.liquid-ui :is(.sharing-mode-tabs, .administrator-method-selector) button[aria-selected='true'],
+.liquid-ui .planning-modes button[aria-pressed='true'] {
+  background: var(--liquid-rim);
+  color: var(--liquid-accent);
+  box-shadow: 0 2px 8px rgb(26 23 48 / 0.06);
+}
+.liquid-ui
+  :is(.sharing-mode-tabs, .administrator-method-selector, .planning-modes)
+  button:focus-visible {
+  outline: 2px solid var(--liquid-accent);
+  outline-offset: 2px;
+}
+.liquid-ui .ice-progress button {
+  background: none;
+  box-shadow: none;
+  border: 0;
+  padding-inline: 0;
+}
+.liquid-ui .platform-settings-actions {
+  gap: 12px 20px;
+}
+.liquid-ui :is(.ice-step-heading h2, .appearance-story-preview .ice-story h2) {
+  font-family: inherit;
+  font-weight: 600;
+}
+.liquid-ui {
+  --activity-title-font: 'Segoe UI', system-ui, sans-serif;
+}
+.liquid-ui .portal-heading .portal-button {
+  justify-self: start;
+}
+.liquid-ui .portal-panel.portal-activity-summary {
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .liquid-ui .portal-heading > .portal-button {
+    padding-inline: 16px;
+  }
+}

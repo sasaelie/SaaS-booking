@@ -71,6 +71,11 @@ import './_portal/administration-finance.css';
 import './_portal/administration-usage.css';
 import './_portal/platform-settings/platform-settings.css';
 import './_portal/administrator-security/administrator-security.css';
+import './_ui/liquid/layout.css';
+import './_ui/liquid/actions.css';
+import './_ui/liquid/workspace.css';
+import './_ui/liquid/public.css';
+import './_ui/liquid/sections.css';
 export const dynamic = 'force-dynamic';
 export const metadata = {
   title: `${PLATFORM_BRAND.NAME} — Réservations`,
@@ -80,7 +85,7 @@ export const metadata = {
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (
     <html lang="fr">
-      <body>
+      <body className="liquid-ui">
         <PageNavigationProvider>
           <SessionExitGuard />
           <SessionHistorySync />

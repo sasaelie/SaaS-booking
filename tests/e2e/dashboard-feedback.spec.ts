@@ -100,7 +100,7 @@ async function expectPressed(page: Page, action: Locator, reduced = false) {
   const initial = await action.evaluate((e) => getComputedStyle(e).boxShadow);
   await page.mouse.down();
   try {
-    await expect(action).toHaveCSS('scale', reduced ? '1' : '0.95');
+    await expect(action).toHaveCSS('scale', reduced ? '1' : '0.98');
     await expect
       .poll(() => action.evaluate((e) => getComputedStyle(e).boxShadow))
       .not.toBe(initial);

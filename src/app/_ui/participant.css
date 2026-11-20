@@ -1,15 +1,9 @@
-:root {
-  --participant-scene: #f1e8f0;
-  --participant-mauve: #dac8de;
-  --participant-light: #fff5ef;
-}
+/* Participant pages inherit the shared default palette; BrandBackdrop owns customization. */
 body:has(.participant-page) {
-  background: var(--participant-scene);
+  background: var(--liquid-scene);
 }
 body:has(.participant-page)::before {
-  background:
-    radial-gradient(ellipse at 8% 80%, var(--participant-mauve), transparent 60%),
-    radial-gradient(ellipse at 90% 10%, var(--participant-light), transparent 60%);
+  background: var(--liquid-background);
 }
 .manage-container {
   max-width: 640px;

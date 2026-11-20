@@ -1,10 +1,11 @@
 import type { CSSProperties } from 'react';
-export function ColorScene({ hue }: { readonly hue: number }) {
+export function ColorScene({ hue }: { readonly hue: number | null }) {
   return (
     <div
       className="color-scene"
       aria-hidden="true"
-      style={{ '--appearance-hue': hue } as CSSProperties}
+      data-default={hue === null || undefined}
+      style={hue === null ? undefined : ({ '--appearance-hue': hue } as CSSProperties)}
     />
   );
 }

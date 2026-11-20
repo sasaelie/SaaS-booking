@@ -27,7 +27,7 @@ export async function alignedFields(container: Locator) {
     expect(Math.abs(field.x - field.fieldX)).toBeLessThan(1);
     expect(Math.abs(field.x - field.labelX)).toBeLessThan(1);
     expect(Math.abs(field.width - field.fieldWidth)).toBeLessThan(1);
-    expect(field.radius).toBeGreaterThanOrEqual(12);
+    expect(field.radius).toBeGreaterThanOrEqual(8);
   }
 }
 export async function separatedPanels(container: Locator) {

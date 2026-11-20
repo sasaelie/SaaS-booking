@@ -17,7 +17,7 @@ export default async function Page({ params }: WorkspacePageProps) {
   return (
     <>
       <PortalHeading title={APPEARANCE.SETTINGS} description={SETTINGS_UI.INTRO} />
-      <div className="portal-section-stack">
+      <div className="portal-section-stack settings-workspace">
         <OrganizationSettings organization={organization} />
         <ConnectSettings
           organization={organization}

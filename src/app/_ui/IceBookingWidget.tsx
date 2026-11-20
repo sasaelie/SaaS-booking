@@ -21,7 +21,9 @@ export function IceBookingWidget({
   const color = /^#[0-9a-f]{6}$/i.test(data.primaryTextColor)
     ? data.primaryTextColor
     : DEFAULTS.TEXT_COLOR;
-  const style = { '--ui-text-primary': color } as CSSProperties;
+  const style = {
+    '--ui-text-primary': color === DEFAULTS.TEXT_COLOR ? 'var(--liquid-ink)' : color,
+  } as CSSProperties;
   return (
     <div className="ice-widget-root ice-booking-page ice-branded-page" style={style}>
       <BrandBackdrop brand={data.brand} />

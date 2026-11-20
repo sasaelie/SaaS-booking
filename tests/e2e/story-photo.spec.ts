@@ -18,7 +18,7 @@ test('confines the uploaded photo and each text color to the activity presentati
     await page.goto(`/${space.slug}/${space.activityId}`);
     await expect(page.locator('.ice-story')).toHaveCSS('color', color);
     await expect(page.locator('.ice-brand-scene img')).toHaveCount(0);
-    await expect(page.locator('.ice-widget-root')).toHaveCSS('color', 'rgb(20, 61, 43)');
+    await expect(page.locator('.ice-widget-root')).toHaveCSS('color', 'rgb(26, 23, 48)');
     for (const width of [390, 1280]) {
       await page.setViewportSize({ width, height: 900 });
       await expect
@@ -87,7 +87,7 @@ async function checkCatalog(page: Page, slug: string, color: string) {
     await noHorizontalOverflow(page);
     await expect(card.getByRole('link', { name: 'Choisir une séance' })).toHaveCSS(
       'color',
-      'rgb(20, 61, 43)',
+      'rgb(255, 255, 255)',
     );
   }
 }
