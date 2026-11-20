@@ -28,13 +28,14 @@ Le socle commun est centralisé dans les jetons et les styles partagés ; les ad
 - Même palette par défaut pour les participants ; photos, texte blanc/noir/vert sapin et positionnement personnalisés conservés.
 - En-tête et pied de page publics en verre ; typographie système et boutons de 8 px. Les liens secondaires restent sans soulignement et sans relief.
 - Pression discrète des commandes, sélection lumineuse des événements et diodes métier conservées ; mouvement réduit et contraste renforcé pris en compte.
+- Bouton flottant et fenêtre du script d’installation harmonisés séparément : ces styles sont injectés dans le site hôte et ne peuvent pas hériter de la feuille CSS de l’application.
 - Aucun changement de schéma, de migration, d'API, de couche métier, de paiement ou de service de messagerie.
 
 ## Contrôles
 
 - `npm run verify` : TypeScript, ESLint et 235 tests unitaires réussis.
 - `npm run build` : compilation de production réussie.
-- 74 scénarios navigateur distincts couvrant navigation, apparence, réservations, calendrier, intégration, billets/PDF, administration, facturation et publication. Sept ont été réexécutés après le dernier ajustement de contraste et la mise à jour des attentes de couleur de l'ancienne interface ; ils passent tous. Quatre tests de réservation ont ensuite été réexécutés après l’allègement du bloc d’informations pratiques.
+- 74 scénarios navigateur distincts couvrant navigation, apparence, réservations, calendrier, intégration, billets/PDF, administration, facturation et publication. Sept ont été réexécutés après le dernier ajustement de contraste et la mise à jour des attentes de couleur de l'ancienne interface ; ils passent tous. Quatre tests de réservation ont ensuite été réexécutés après l’allègement du bloc d’informations pratiques, puis six tests d’intégration de site après l’harmonisation du bouton flottant.
 - Les attentes de palette du test photo ont été adaptées : texte de l'interface violet sombre, texte du bouton blanc sur violet ; les trois tons de légende et l'isolation de la photo restent vérifiés.
 - Les essais de pression utilisent désormais 0,98 et les champs acceptent le rayon de la nouvelle présentation ; les assertions sur les destinations, les dimensions tactiles, le clavier et les opérations restent actives.
 

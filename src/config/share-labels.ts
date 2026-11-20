@@ -84,9 +84,9 @@ export const EMBED = {
 };
 
 export const EMBED_COLORS = {
-  PAPER: '#f4faf6',
-  INK: '#143d2b',
-  SHADOW: '#143d2b33',
-  SCENE: '#e8eee6',
-  LIGHT: '#ffffff',
+  PAPER: 'rgba(255,255,255,0.55)',
+  INK: '#1a1730',
+  SHADOW: '#1a17303d',
+  SCENE: '#dfe6f5',
+  LIGHT: '#ffffffcc',
 } as const;
