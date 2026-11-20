@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { MARKETING } from '../../config/marketing';
+import { MARKETING_MEDIA } from '../../config/marketing-media';
 import { publicSiteSettings } from '../../lib/public-site';
 export function publicMetadata(title: string, description: string, path = '/'): Metadata {
   const { indexable, baseUrl, applicationUrl } = publicSiteSettings();
@@ -18,7 +19,8 @@ export function publicMetadata(title: string, description: string, path = '/'): 
       title,
       description,
       url,
+      images: [{ url: '/opengraph-image', ...MARKETING_MEDIA.SIZE, alt: MARKETING.DESCRIPTION }],
     },
-    twitter: { card: 'summary_large_image', title, description },
+    twitter: { card: 'summary_large_image', title, description, images: ['/opengraph-image'] },
   };
 }

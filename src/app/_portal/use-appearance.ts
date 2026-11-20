@@ -63,7 +63,7 @@ function appearanceChanges(
     },
     reset: () => {
       setColors({
-        storyLayout: null,
+        storyLayout: colors.storyLayout,
         storyTextTone: 'WHITE',
         organizerHue: null,
         participantHue: null,

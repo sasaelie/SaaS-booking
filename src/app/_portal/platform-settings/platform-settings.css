@@ -9,6 +9,9 @@
   margin-top: 0;
   font-size: 18px;
 }
+.platform-settings-workspace .portal-form-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
 .platform-settings-preview {
   position: sticky;
   top: 24px;

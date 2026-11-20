@@ -3,6 +3,7 @@ export const STORY_LAYOUT = {
   MAX: 100,
   STEP: 1,
   KEY_STEP: 2,
+  LONG_TITLE_LENGTH: 60,
   DEFAULT: { title: { x: 0, y: 15 }, price: { x: 0, y: 95 } },
   TITLE: 'Position du titre et du tarif',
   HINT: 'Déplacez les poignées dans l’encart. Les flèches du clavier et les curseurs permettent aussi un placement précis.',
