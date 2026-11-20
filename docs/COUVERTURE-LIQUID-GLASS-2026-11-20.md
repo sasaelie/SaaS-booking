@@ -1,6 +1,6 @@
 # Couverture visuelle Liquid Glass
 
-46 routes recensées, 60 états représentatifs, 252 captures. Mobile 390 px et ordinateur 1440 px pour chaque état ; 320 et 768 px supplémentaires sur les étapes de réservation. Aucun débordement horizontal relevé dans ces captures. Données locales fictives uniquement.
+46 routes recensées, 60 états représentatifs, 252 captures de référence. Mobile 390 px et ordinateur 1440 px pour chaque état ; 320 et 768 px supplémentaires sur les étapes de réservation. Aucun débordement horizontal relevé dans ces captures. Données locales fictives uniquement.
 
 30 contrôles Axe (15 écrans, deux largeurs) sans violation détectée après stabilisation de la démonstration. Les contrastes sur photos et surfaces transparentes restent partiellement à vérifier visuellement ; cela ne constitue pas une certification d’accessibilité.
 
@@ -58,3 +58,5 @@ Comparaison des contrôles sur sept écrans, en mobile et ordinateur : aucune de
 Les écrans de retour de paiement et de réinitialisation du mot de passe sont ici montrés sans jeton valide. La simulation de gestion utilise volontairement la même page /manage. La route de sécurité est montrée avant activation d’une méthode. Les différents facteurs d’authentification n’ont pas été réimplémentés.
 
 Preuves locales : `/workspace/artifacts/liquid-app-final/manifest.json`, `accessibility.json`, `control-preservation.json`, `browser-initial.json`, `browser-final.json` et `unit.json`. La galerie `index.html` ouvre les captures à leur taille réelle.
+
+Vérifications complémentaires : méthodes de sécurité sans chevauchement à quatre largeurs (`security-layout.json`) et onze scénarios de sécurité existants réussis, incluant les trois méthodes et la récupération.

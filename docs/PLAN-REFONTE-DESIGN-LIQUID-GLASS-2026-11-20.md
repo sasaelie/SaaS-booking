@@ -44,3 +44,9 @@ Le socle commun est centralisé dans les jetons et les styles partagés ; les ad
 Les captures utilisent des données locales fictives et des états représentatifs. Elles ne prouvent pas la livraison réelle des e-mails, un paiement réel, la conformité de toute photo importée, ni tous les états possibles de chaque rôle. La finition de lancement reste celle du plan dédié. Les contrôles de contraste des surfaces transparentes et des photos comportent aussi des vérifications visuelles ; un scan automatique ne suffit pas à lui seul.
 
 La matrice des 46 routes et les limites des contrôles figurent dans [la couverture détaillée](COUVERTURE-LIQUID-GLASS-2026-11-20.md).
+
+## Revue finale des petits écrans
+
+La revue des 60 états a fait apparaître un chevauchement entre les noms des méthodes de sécurité et leurs statuts. Les trois choix utilisent maintenant une disposition verticale interne ; leurs libellés restent lisibles à 320, 390, 768 et 1440 px. Les onze tests existants des méthodes biométrie, application et e-mail passent, portant la vérification à 85 scénarios navigateur distincts. Les cérémonies WebAuthn sont exécutées sur `localhost`, conformément au guide de sécurité du projet ; le premier passage sur l'IP de boucle locale est conservé dans les preuves.
+
+Les captures de paiement simulé ont été reprises après disparition de l'indicateur de chargement. La correction des styles du bouton flottant a aussi été contrôlée par les six tests existants de réservation et d'ouverture/fermeture sur site externe.

@@ -67,3 +67,21 @@
     padding-inline: 16px;
   }
 }
+
+/* Method labels and their status stay stacked inside each compact security tab. */
+.liquid-ui .administrator-method-selector button {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 6px;
+  padding: 12px 8px;
+  text-align: center;
+}
+.liquid-ui .administrator-method-selector small {
+  white-space: normal;
+}
+@media (max-width: 480px) {
+  .liquid-ui .administrator-method-selector button {
+    font-size: 12px;
+  }
+}
