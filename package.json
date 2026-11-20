@@ -48,7 +48,7 @@
     "@axe-core/playwright": "4.14.0",
     "@next/eslint-plugin-next": "16.4.5",
     "@playwright/test": "1.65.0",
-    "@types/node": "24.19.2",
+    "@types/node": "26.6.6",
     "@types/pg": "8.23.1",
     "@types/qrcode": "1.5.6",
     "@types/react": "19.3.0",
