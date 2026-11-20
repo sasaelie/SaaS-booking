@@ -1,14 +1,15 @@
 import { expect, test } from '@playwright/test';
 import { noHorizontalOverflow } from './portal-fixtures';
-test('keeps the opaque header across the full viewport while the page scrolls beneath it', async ({
+test('keeps the glass header across the full viewport while the page scrolls beneath it', async ({
   page,
 }, info) => {
   for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
     const header = page.getByRole('banner');
-    await expect(header).toHaveCSS('background-color', /^rgb\(/);
-    await expect(header).toHaveCSS('backdrop-filter', 'none');
+    await expect(header).toHaveCSS('background-color', /^rgba\(.+,\s*0\.[1-9]\d*\)$/);
+    await expect(header).toHaveCSS('backdrop-filter', /blur\(/);
+    await expect(header).toHaveCSS('border-radius', '0px');
     await expect(header).not.toHaveCSS('box-shadow', 'none');
     expect((await header.boundingBox())?.x).toBe(0);
     expect((await header.boundingBox())?.width).toBe(width);
@@ -17,7 +18,7 @@ test('keeps the opaque header across the full viewport while the page scrolls be
     await noHorizontalOverflow(page);
     if (width === 390)
       await page.screenshot({
-        path: info.outputPath('footer-and-opaque-header.png'),
+        path: info.outputPath('footer-and-glass-header.png'),
         fullPage: true,
       });
   }

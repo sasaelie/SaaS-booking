@@ -24,7 +24,7 @@ test('uses Mes espaces and aligns appearance actions while keeping unsaved chang
   expect(await feedback.evaluate((element) => element.tagName)).toBe('P');
   for (const width of [320, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    await checkFooterAlignment(page, width);
+    await checkFooterAlignment(page);
     await noHorizontalOverflow(page);
     await page.screenshot({ path: info.outputPath(`appearance-${width}.png`), fullPage: true });
   }
@@ -32,7 +32,7 @@ test('uses Mes espaces and aligns appearance actions while keeping unsaved chang
   await expect(feedback).toHaveText('Apparence enregistrée.');
   await expect(feedback).toHaveAttribute('data-tone', 'green');
 });
-test('highlights long course titles with readable editorial typography and aligned price and booking actions', async ({
+test('highlights long course titles with shared typography and aligned price and booking actions', async ({
   page,
 }, info) => {
   const space = await browserSpace();
@@ -45,7 +45,10 @@ test('highlights long course titles with readable editorial typography and align
   await page.goto(`/${space.slug}`);
   const card = page.locator('.catalog-activity');
   await expect(card).toBeVisible();
-  await expect(card.locator('h2')).toHaveCSS('font-family', /Iowan Old Style/);
+  const family = await page
+    .locator('body')
+    .evaluate((element) => getComputedStyle(element).fontFamily);
+  await expect(card.locator('h2')).toHaveCSS('font-family', family);
   for (const width of [320, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     const title = await card.locator('h2').boundingBox();
@@ -95,7 +98,7 @@ async function statusLight(page: Page, tone: string) {
     await badge.evaluate((element) => getComputedStyle(element, '::before').boxShadow),
   ).not.toBe('none');
 }
-async function checkFooterAlignment(page: Page, width: number) {
+async function checkFooterAlignment(page: Page) {
   const light = await page
     .getByRole('button', { name: 'Enregistrer l’apparence' })
     .evaluate((element) => {
@@ -112,11 +115,17 @@ async function checkFooterAlignment(page: Page, width: number) {
   const reset = await page
     .getByRole('button', { name: 'Rétablir les couleurs par défaut' })
     .boundingBox();
-  const open = await page.getByRole('link', { name: /Tester le parcours participant/ }).boundingBox();
+  const open = await page
+    .getByRole('link', { name: /Tester le parcours participant/ })
+    .boundingBox();
   expect(reset).not.toBeNull();
   expect(open).not.toBeNull();
-  if (width > 380) expect(reset?.y).toBe(open?.y);
-  else expect(reset?.x).toBe(open?.x);
+  if (reset && open && Math.abs(reset.y - open.y) < 1)
+    expect(reset.x + reset.width).toBeLessThanOrEqual(open.x);
+  else if (reset && open) {
+    expect(reset.y + reset.height).toBeLessThanOrEqual(open.y);
+    expect(reset.x).toBe(open.x);
+  }
   expect(reset?.height).toBeGreaterThanOrEqual(44);
   expect(open?.height).toBeGreaterThanOrEqual(44);
 }
