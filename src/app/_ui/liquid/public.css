@@ -82,18 +82,19 @@
   letter-spacing: -0.045em;
 }
 .liquid-ui .marketing-root .marketing-header {
-  top: 12px;
-  width: min(1160px, calc(100% - 32px));
-  margin: 16px auto 0;
-  border: 1px solid var(--liquid-rim);
-  border-radius: 22px;
+  top: 0;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--liquid-rim);
+  border-radius: 0;
   background: var(--liquid-surface);
-  box-shadow: var(--liquid-shadow);
+  box-shadow: 0 12px 28px -12px color-mix(in srgb, var(--liquid-ink) 28%, transparent);
   -webkit-backdrop-filter: var(--liquid-blur);
   backdrop-filter: var(--liquid-blur);
 }
 .liquid-ui .marketing-root .marketing-header-inner {
-  width: 100%;
+  width: min(1160px, 100%);
   min-height: 76px;
   padding-inline: 22px;
 }
@@ -146,11 +147,12 @@
   background: rgb(255 255 255 / 0.3);
   border-radius: 0 10px 10px 0;
 }
+.liquid-ui .marketing-root :is(.marketing-main, section[id]) {
+  scroll-margin-top: var(--marketing-header-clearance, 110px);
+}
 @media (max-width: 760px) {
-  .liquid-ui .marketing-root .marketing-header {
-    top: 8px;
-    width: calc(100% - 24px);
-    margin-top: 12px;
+  .liquid-ui .marketing-root {
+    --marketing-header-clearance: 200px;
   }
   .liquid-ui .marketing-root .marketing-header-inner {
     min-height: 70px;
