@@ -1,0 +1,178 @@
+/* Public pages and the embedded journey use the same glass, not stacked frames. */
+.liquid-ui .color-scene {
+  background:
+    radial-gradient(ellipse at 12% 10%, hsl(var(--appearance-hue) 65% 70% / 0.4), transparent 64%),
+    radial-gradient(
+      ellipse at 12% 90%,
+      hsl(calc(var(--appearance-hue) - 75) 60% 68% / 0.36),
+      transparent 64%
+    ),
+    radial-gradient(
+      ellipse at 98% 50%,
+      hsl(calc(var(--appearance-hue) + 95) 65% 74% / 0.38),
+      transparent 64%
+    ),
+    var(--liquid-scene);
+}
+.liquid-ui .color-scene[data-default='true'] {
+  background: var(--liquid-background);
+}
+.liquid-ui .session-planning .planning-frame {
+  background: var(--liquid-surface);
+  border-color: var(--liquid-rim);
+  box-shadow: var(--liquid-shadow);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  backdrop-filter: var(--liquid-blur);
+}
+.liquid-ui .session-planning .planning-frame::before,
+.liquid-ui .session-planning .planning-frame::after {
+  content: none;
+}
+.liquid-ui .ice-booking-shell .planning-frame {
+  background: rgb(255 255 255 / 0.18);
+  border: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.liquid-ui .ice-booking-shell {
+  background: var(--liquid-surface);
+  box-shadow: var(--liquid-shadow);
+  padding: 28px;
+  gap: 28px;
+}
+.liquid-ui .ice-booking-shell .event-information {
+  background: none;
+  padding: 0;
+}
+.liquid-ui .ice-booking-flow {
+  min-width: 0;
+}
+.liquid-ui .ticket-proof .ticket-frame {
+  background: none;
+  box-shadow: none;
+  border: 0;
+}
+.liquid-ui .ticket-proof .ticket-code-value {
+  background: none;
+  border: 0;
+  padding-inline: 0;
+}
+.liquid-ui .ice-result-link {
+  text-decoration: none;
+}
+.liquid-ui .ice-terms {
+  background: none;
+  box-shadow: none;
+  border: 0;
+  border-top: 1px solid var(--ice-line);
+  border-radius: 0;
+}
+.liquid-ui .ice-catalog-card .catalog-booking-action > .portal-button {
+  color: var(--ice-paper);
+}
+.liquid-ui .marketing-root {
+  color: var(--liquid-ink);
+}
+.liquid-ui .marketing-root :is(h1, h2, h3) {
+  font-family: inherit;
+  font-weight: 650;
+}
+.liquid-ui .marketing-root h1 {
+  letter-spacing: -0.045em;
+}
+.liquid-ui .marketing-root .marketing-header {
+  top: 0;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--liquid-rim);
+  border-radius: 0;
+  background: var(--liquid-surface);
+  box-shadow: 0 12px 28px -12px color-mix(in srgb, var(--liquid-ink) 28%, transparent);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  backdrop-filter: var(--liquid-blur);
+}
+.liquid-ui .marketing-root .marketing-header-inner {
+  width: min(1160px, 100%);
+  min-height: 76px;
+  padding-inline: 22px;
+}
+.liquid-ui .marketing-root .marketing-brand-mark {
+  color: var(--liquid-accent);
+  background: rgb(255 255 255 / 0.35);
+  box-shadow: none;
+  border: 0;
+}
+.liquid-ui .marketing-root .marketing-nav a {
+  text-decoration: none;
+}
+.liquid-ui .marketing-root .marketing-hero .portal-landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+}
+.liquid-ui .marketing-root .marketing-hero .portal-landing-actions > :is(a, button) {
+  width: auto;
+  min-height: 46px;
+  justify-content: center;
+}
+.liquid-ui .marketing-root .marketing-footer {
+  background: var(--liquid-surface);
+  color: var(--liquid-ink);
+  border: 1px solid var(--liquid-rim);
+  border-radius: 22px;
+  box-shadow: var(--liquid-shadow);
+  width: min(1160px, calc(100% - 32px));
+  margin: 24px auto 16px;
+  padding: 32px;
+  -webkit-backdrop-filter: var(--liquid-blur);
+  backdrop-filter: var(--liquid-blur);
+}
+.liquid-ui .marketing-root .marketing-footer :is(.marketing-brand, .marketing-text-link, nav > a) {
+  color: var(--liquid-ink);
+}
+.liquid-ui .marketing-root .marketing-footer .marketing-container {
+  width: 100%;
+  padding: 0;
+}
+.liquid-ui .marketing-root .marketing-footer-bottom {
+  border-color: var(--ice-line);
+}
+.liquid-ui .marketing-root .marketing-footer-grid {
+  gap: 32px;
+}
+.liquid-ui .marketing-root .marketing-document-notice {
+  background: rgb(255 255 255 / 0.3);
+  border-radius: 0 10px 10px 0;
+}
+.liquid-ui .marketing-root :is(.marketing-main, section[id]) {
+  scroll-margin-top: var(--marketing-header-clearance, 110px);
+}
+@media (max-width: 760px) {
+  .liquid-ui .marketing-root {
+    --marketing-header-clearance: 200px;
+  }
+  .liquid-ui .marketing-root .marketing-header-inner {
+    min-height: 70px;
+    padding-inline: 14px;
+    gap: 12px;
+  }
+  .liquid-ui .marketing-root .marketing-footer {
+    padding: 24px 20px;
+    width: calc(100% - 24px);
+  }
+  .liquid-ui .ice-booking-shell {
+    padding: 20px 16px;
+    gap: 22px;
+  }
+}
+@media (max-width: 380px) {
+  .liquid-ui .marketing-root .marketing-brand {
+    font-size: 14px;
+  }
+  .liquid-ui .marketing-root .marketing-account-link {
+    font-size: 12px;
+  }
+}

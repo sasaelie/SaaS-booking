@@ -1,9 +1,10 @@
 'use client';
 import { SIMULATION } from '../../config/simulation';
 import { ADMIN } from '../../config/administration';
+import { ADMIN_SECURITY } from '../../config/administrator-security';
 import { SESSION_UI } from '../../config/session-details';
 import { AppLink as Link } from '../_ui/AppLink';
-import { useState, type KeyboardEvent } from 'react';
+import { useState, type KeyboardEvent, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { PORTAL } from '../../config/constants';
 import { APPEARANCE } from '../../config/appearance';
@@ -21,13 +22,13 @@ const sections = [
   ['/reglages', APPEARANCE.SETTINGS, 'calendar'],
   ['/abonnement', PORTAL.BILLING, 'lock'],
 ] as const;
-export function PortalNav({
-  organizations,
-  operator,
-}: {
+interface Props {
   readonly organizations: readonly OrganizationSummary[];
   readonly operator: boolean;
-}) {
+  readonly brand: ReactNode;
+  readonly account: ReactNode;
+}
+export function PortalNav({ organizations, operator, brand, account }: Props) {
   const path = usePathname();
   const [expanded, setExpanded] = useState(false);
   const selected = organizations.find((org) => path.startsWith(`/app/${org.id}`));
@@ -38,6 +39,9 @@ export function PortalNav({
       aria-label={PORTAL.ORGANIZER}
       data-expanded={expanded}
       onKeyDown={(event) => closeOnEscape(event, expanded, () => setExpanded(false))}
+      onClick={(event) => {
+        if (event.target instanceof Element && event.target.closest('a')) setExpanded(false);
+      }}
     >
       <MobileBar
         selected={selected}
@@ -46,20 +50,22 @@ export function PortalNav({
         expanded={expanded}
         toggle={() => setExpanded(!expanded)}
       />
-      <div
-        id="organizer-navigation"
-        className="portal-nav-links"
-        onClick={(event) => {
-          if (event.target instanceof Element && event.target.closest('a')) setExpanded(false);
-        }}
-      >
+      {brand}
+      <div id="organizer-navigation" className="portal-nav-links">
         {selected ? <OrganizationNav selected={selected} path={path} /> : null}
         <PortalUtilities operator={operator} path={path} />
+        {account}
       </div>
     </nav>
   );
 }
-function PortalUtilities({ operator, path }: { readonly operator: boolean; readonly path: string }) {
+function PortalUtilities({
+  operator,
+  path,
+}: {
+  readonly operator: boolean;
+  readonly path: string;
+}) {
   return (
     <div className="portal-nav-utilities">
       <Link href="/app" aria-current={path === '/app' ? 'page' : undefined}>
@@ -67,14 +73,31 @@ function PortalUtilities({ operator, path }: { readonly operator: boolean; reado
       </Link>
       <Link href="/app/nouveau">{PORTAL.CREATE_ORGANIZATION}</Link>
       {operator ? (
-        <Link href="/plateforme" aria-current={path.startsWith('/plateforme') ? 'page' : undefined}>
-          {ADMIN.TITLE}
-        </Link>
+        <>
+          <Link
+            href="/plateforme"
+            aria-current={path.startsWith('/plateforme') ? 'page' : undefined}
+          >
+            {ADMIN.TITLE}
+          </Link>
+          <Link
+            href={ADMIN_SECURITY.PATH}
+            aria-current={path === ADMIN_SECURITY.PATH ? 'page' : undefined}
+          >
+            {ADMIN_SECURITY.MENU}
+          </Link>
+        </>
       ) : null}
     </div>
   );
 }
-function OrganizationNav({ selected, path }: { readonly selected: OrganizationSummary; readonly path: string }) {
+function OrganizationNav({
+  selected,
+  path,
+}: {
+  readonly selected: OrganizationSummary;
+  readonly path: string;
+}) {
   return (
     <div className="portal-nav-sections">
       <p className="portal-nav-organization">{selected.name}</p>
@@ -129,6 +152,7 @@ function MobileBar({
 }
 
 function navigationTitle(selected: OrganizationSummary | undefined, path: string) {
+  if (path === ADMIN_SECURITY.PATH) return ADMIN_SECURITY.MENU;
   if (selected && path.startsWith(`/app/${selected.id}/seances/`)) return SESSION_UI.TITLE;
   if (path.startsWith('/plateforme')) return ADMIN.TITLE;
   const section = selected

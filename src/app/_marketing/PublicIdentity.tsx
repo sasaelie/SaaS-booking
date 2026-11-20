@@ -1,7 +1,9 @@
 import { PUBLIC_DOCUMENT_UI as UI } from '../../config/public-documents';
-import { publicProfile } from '../../lib/public-profile';
-export function PublicIdentity() {
-  const profile = publicProfile();
+import { publicPlatformProfile } from '../../composition/public-platform-profile';
+import { PublicProfileDetails } from './PublicProfileDetails';
+import type { PlatformPublicProfile } from '../../core/validation/platform-settings';
+export async function PublicIdentity() {
+  const profile = await publicPlatformProfile();
   const fields = [
     [UI.LEGAL_NAME, profile.name],
     [UI.ADDRESS, profile.address],
@@ -16,7 +18,7 @@ export function PublicIdentity() {
         {fields.map(([label, value]) => (
           <IdentityRow key={label} label={label} value={value} />
         ))}
-        <ContactRows />
+        <ContactRows profile={profile} />
       </dl>
     </section>
   );
@@ -40,15 +42,15 @@ function IdentityRow({
           </a>
         ) : (
           <span className={value ? undefined : 'marketing-missing-value'}>
-            {value ?? UI.TO_COMPLETE}
+            {value || UI.TO_COMPLETE}
           </span>
         )}
       </dd>
     </div>
   );
 }
-function ContactRows() {
-  const { email, phone } = publicProfile();
+function ContactRows({ profile }: { readonly profile: PlatformPublicProfile }) {
+  const { email, phone } = profile;
   return (
     <>
       <IdentityRow label={UI.EMAIL} value={email} href={email ? `mailto:${email}` : undefined} />
@@ -56,10 +58,7 @@ function ContactRows() {
     </>
   );
 }
-export function PublicContactDetails() {
-  return (
-    <dl>
-      <ContactRows />
-    </dl>
-  );
+export async function PublicContactDetails() {
+  const profile = await publicPlatformProfile();
+  return <PublicProfileDetails profile={profile} emptyMessage={UI.CONTACT_PENDING} />;
 }

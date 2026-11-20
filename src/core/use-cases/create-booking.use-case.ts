@@ -20,7 +20,7 @@ export type CreateBookingOutput = Pick<
   | 'lockedUntil'
   | 'availabilityAfterBooking'
   | 'checkoutUrl'
-> & { readonly selfServiceToken?: string };
+> & { readonly selfServiceToken?: string; readonly paymentSimulated?: boolean };
 export interface CreateBookingUseCaseDeps {
   readonly sessionRepo: SessionRepositoryPort;
   readonly paymentGateway: PaymentGatewayPort;

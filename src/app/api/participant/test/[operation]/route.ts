@@ -1,3 +1,4 @@
+import { clientSource } from '../../../../../lib/client-source';
 import { simulationParticipant } from '../../../../../composition/simulation-participant';
 import { trustedOrigin } from '../../../../../lib/trusted-origin';
 import { boundedJson } from '../../../../../lib/http-body';
@@ -10,7 +11,7 @@ export async function POST(
   if (!app.ok) return respond({ success: false }, HTTP_STATUS.UNAVAILABLE);
   if (!trustedOrigin(request, app.value.appUrl))
     return respond({ success: false }, HTTP_STATUS.FORBIDDEN);
-  const source = request.headers.get('x-vercel-forwarded-for') ?? 'local';
+  const source = clientSource(request.headers);
   const limited = await app.value.limiter.accept(`participant-test:${source}`);
   if (!limited.ok) return respond({ success: false }, HTTP_STATUS.RATE_LIMITED);
   const body = await boundedJson(request);

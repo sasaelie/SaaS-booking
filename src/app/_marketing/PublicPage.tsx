@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { headers } from 'next/headers';
 import { currentVisitor } from '../../composition/current-visitor';
 import { PUBLIC_DOCUMENT_UI as UI } from '../../config/public-documents';
-import { publicSiteSettings } from '../../lib/public-site';
+import { publicPlatformProfile } from '../../composition/public-platform-profile';
 import { IceIcon } from '../_ui/IceIcon';
 import { MarketingHeader } from './MarketingHeader';
 import { MarketingFooter } from './MarketingFooter';
@@ -41,8 +41,16 @@ export async function PublicPage({
     </div>
   );
 }
-function PublicationNotice() {
-  return !publicSiteSettings().identity ? (
+async function PublicationNotice() {
+  const profile = await publicPlatformProfile();
+  const complete =
+    profile.name &&
+    profile.address &&
+    profile.businessNumber &&
+    profile.taxStatus &&
+    profile.email &&
+    profile.phone;
+  return !complete ? (
     <p className="marketing-document-notice" role="note">
       {UI.INCOMPLETE}
     </p>

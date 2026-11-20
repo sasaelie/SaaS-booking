@@ -1,6 +1,6 @@
 # Cadres et photos — version A
 
-Cette étape reprend le design approuvé : contours lumineux, arrondis de 22 px pour les cadres, relief doux et ombres diffuses communes. L’en-tête est regroupé dans un cadre flottant discret. Sa surface conserve assez d’opacité pour lire la navigation lorsqu’elle passe au-dessus d’une photo pendant le défilement.
+Cette étape historique utilisait des contours lumineux, des cadres de 22 px, un relief doux et un en-tête flottant. Ce dernier a été remplacé après validation par un **en-tête opaque, pleine largeur et fixe au défilement, avec ombre**. Voir le [référentiel actuel](../NORMES-VISUELLES-2026-11-17.md) avant toute modification.
 
 La fenêtre de démonstration, les bénéfices, les offres et les autres panneaux utilisent les mêmes règles de verre. La photo de chaque activité est protégée par un voile sombre progressif, sans tache claire. Les images changent avec les onglets et les exemples restent fictifs.
 

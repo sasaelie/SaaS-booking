@@ -91,3 +91,28 @@ test('keeps one mobile return on administration home and returns subpages to adm
   await page.getByRole('link', { name: 'Retour à mes espaces', exact: true }).click();
   await expect(page).toHaveURL('/app');
 });
+
+test('keeps mobile account controls in the menu and signs out from there', async ({ page }) => {
+  const space = await browserSpace();
+  await login(page, space);
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.goto(`/app/${space.organizationId}/reservations`);
+  const signOut = page.getByRole('button', { name: 'Se déconnecter', exact: true });
+  const menu = page.getByRole('button', { name: 'Menu', exact: true });
+  await expect(signOut).toBeHidden();
+  await menu.click();
+  await expect(signOut).toBeVisible();
+  await expect(page.getByText(space.actor.email, { exact: true })).toBeVisible();
+  await signOut.press('Escape');
+  await expect(menu).toBeFocused();
+  await expect(signOut).toBeHidden();
+  await menu.click();
+  await page.locator('.portal-brand').click();
+  await expect(page).toHaveURL('/app');
+  await expect(signOut).toBeHidden();
+  await page.goto(`/app/${space.organizationId}/reservations`);
+  await menu.click();
+  await signOut.click();
+  await expect(page).toHaveURL(/\/connexion$/);
+  expect(await (await page.request.get('/api/auth/get-session')).json()).toBeNull();
+});

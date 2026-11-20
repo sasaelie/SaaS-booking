@@ -1,10 +1,12 @@
 import { AppLink as Link } from '../_ui/AppLink';
 import { MARKETING as UI } from '../../config/marketing';
-import { publicSiteSettings } from '../../lib/public-site';
+import { publicPlatformProfile } from '../../composition/public-platform-profile';
+import { SocialLinks } from '../_ui/SocialLinks';
 import { MarketingBrand } from './MarketingHeader';
 import { IceIcon } from '../_ui/IceIcon';
-export function MarketingFooter() {
-  const { identity, email } = publicSiteSettings();
+export async function MarketingFooter() {
+  const profile = await publicPlatformProfile();
+  const { email, phone } = profile;
   return (
     <footer className="marketing-footer">
       <div className="marketing-container">
@@ -18,6 +20,13 @@ export function MarketingFooter() {
                 <IceIcon name="arrow" />
               </a>
             ) : null}
+            {phone ? (
+              <a className="marketing-text-link" href={`tel:${phone}`}>
+                {phone}
+                <IceIcon name="arrow" />
+              </a>
+            ) : null}
+            <SocialLinks links={profile.socialLinks} />
           </div>
           <FooterNavigation />
         </div>
@@ -25,10 +34,8 @@ export function MarketingFooter() {
           <p>
             © {new Date().getUTCFullYear()} {UI.BRAND}. {UI.FOOTER_RIGHTS}
           </p>
-          {identity ? (
-            <p>
-              {identity.PUBLIC_LEGAL_NAME} · {identity.PUBLIC_BUSINESS_NUMBER}
-            </p>
+          {profile.name ? (
+            <p>{[profile.name, profile.businessNumber].filter(Boolean).join(' · ')}</p>
           ) : null}
         </div>
       </div>

@@ -11,6 +11,7 @@ export function usePlanning(props: PlanningProps) {
   const first = props.selected || props.sessions[0]?.startsAt || '';
   const [day, setDay] = useState(() => (first ? localDay(first, props.timezone) : ''));
   const [view, setView] = useState<PlanningView>('week');
+  const [fullDay, setFullDay] = useState(false);
   const { compact, container } = usePlanningContainer();
   const now = usePlanningClock();
   const byDay = useMemo(
@@ -21,18 +22,26 @@ export function usePlanning(props: PlanningProps) {
   function move(direction: number) {
     setDay(movePlanningPeriod(day, direction, view, props.sessions, props.timezone, byDay));
   }
+  function openDay(date: string) {
+    if (props.selected && localDay(props.selected, props.timezone) !== date) props.onSelect?.('');
+    setDay(date);
+    setView('day');
+  }
   return {
     day,
     setDay,
+    openDay,
     view,
     setView,
+    fullDay,
+    setFullDay,
     compact,
     container,
     now,
     today: currentDay(now, props.timezone),
     ...period,
     byDay,
-    visibleDays: compact || view === 'day' ? [day] : period.days,
+    visibleDays: view === 'day' ? [day] : period.days,
     move,
   };
 }

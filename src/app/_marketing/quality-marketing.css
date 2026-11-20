@@ -1,0 +1,79 @@
+.marketing-root .marketing-hero .portal-landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.marketing-root .marketing-hero .portal-landing-actions > a {
+  width: auto;
+}
+.marketing-hero .portal-landing-actions > .home-secondary-link {
+  min-height: 44px;
+  padding: 0;
+}
+.marketing-demo-actions .ice-icon {
+  width: 14px;
+  height: 14px;
+}
+.marketing-reassurance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+@media (max-width: 760px) {
+  .marketing-hero {
+    padding-block: 24px 40px;
+    gap: 24px;
+  }
+  .marketing-root .marketing-hero h1 {
+    font-size: clamp(2rem, 8vw, 2.6rem);
+    line-height: 1.12;
+    max-width: 18ch;
+    margin-block: 14px;
+  }
+  .marketing-hero .marketing-intro {
+    font-size: 15px;
+    line-height: 1.65;
+    margin-block: 14px;
+  }
+  .marketing-hero .portal-landing-actions {
+    margin-block: 18px 12px;
+  }
+  .marketing-hero .portal-landing-actions > a:first-child {
+    width: auto;
+    max-width: 100%;
+    min-height: 48px;
+    font-size: 13px;
+  }
+  .marketing-reassurance {
+    font-size: 11px;
+    gap: 6px 12px;
+    margin-block: 12px;
+  }
+  .marketing-hero-copy > .marketing-text-link {
+    margin-top: 0;
+    font-size: 13px;
+  }
+  .marketing-footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 16px;
+  }
+  .marketing-footer-grid > div {
+    grid-column: 1 / -1;
+  }
+  .marketing-footer nav {
+    padding-top: 12px;
+  }
+  .marketing-footer nav > a {
+    padding-block: 6px;
+    font-size: 12px;
+    gap: 6px;
+  }
+  .marketing-footer-grid > div > p {
+    margin-block: 12px 0;
+  }
+  .marketing-footer-bottom {
+    margin-top: 20px;
+    padding-top: 16px;
+  }
+}

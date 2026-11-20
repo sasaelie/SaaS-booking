@@ -36,6 +36,7 @@ export const SAAS = {
   RESERVED_SLUGS: [
     'api',
     'app',
+    'apercu-site',
     'admin',
     'embed',
     'manage',

@@ -25,10 +25,10 @@ export function participantTicketAmounts(booking: SelfBookingContext) {
       : 0;
   const amounts: { label: string; value: number }[] = [
     { label: UI.PRICE, value: ticket.unitPriceCents },
-    { label: UI.PAID, value: ticket.amountPaidCents },
+    { label: ticket.isSimulation ? UI.PAID_TEST : UI.PAID, value: ticket.amountPaidCents },
   ];
   if (ticket.voucherDiscountCents > 0)
     amounts.push({ label: UI.COVERED, value: ticket.voucherDiscountCents });
-  if (due > 0) amounts.push({ label: UI.DUE, value: due });
+  if (due > 0) amounts.push({ label: ticket.isSimulation ? UI.DUE_TEST : UI.DUE, value: due });
   return amounts;
 }

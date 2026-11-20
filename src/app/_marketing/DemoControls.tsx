@@ -3,6 +3,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { MARKETING_PREVIEW as UI } from '../../config/marketing-preview';
 import { useMarketingDemo } from './MarketingDemo';
 import { MARKETING_DEMO } from '../../config/marketing-demo';
+import { IceIcon } from '../_ui/IceIcon';
 const fadeTimings = {
   '--demo-fade-out': `${MARKETING_DEMO.FADE_OUT_MS}ms`,
   '--demo-fade-in': `${MARKETING_DEMO.FADE_IN_MS}ms`,
@@ -51,7 +52,7 @@ export function DemoPlayback() {
         data-demo-playback=""
         onClick={() => dispatch({ type: state.playing ? 'pause' : 'play' })}
       >
-        <span aria-hidden="true">{state.playing ? 'Ⅱ' : '▷'}</span>
+        <IceIcon name={state.playing ? 'pause' : 'play'} />
         {state.playing ? UI.PAUSE : UI.PLAY}
       </button>
     </div>

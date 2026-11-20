@@ -12,7 +12,10 @@ const PublicRequestSchema = z.object({
   activityId: z.uuid(),
 });
 export class GetBookingPageUseCase {
-  constructor(private readonly repository: PublicActivityRepositoryPort) {}
+  constructor(
+    private readonly repository: PublicActivityRepositoryPort,
+    private readonly publicTest = false,
+  ) {}
   async execute(raw: unknown) {
     return guardUseCase('get-booking-page.use-case.ts', 'execute', async () => {
       const parsed = PublicRequestSchema.safeParse(raw);
@@ -29,7 +32,12 @@ export class GetBookingPageUseCase {
       });
       if (!terms.ok) return terms;
       const schedule = publicSchedule(activity, new Date());
-      return schedule.ok ? ok(publicBookingPage(activity, terms.value, schedule.value)) : schedule;
+      return schedule.ok
+        ? ok({
+            ...publicBookingPage(activity, terms.value, schedule.value),
+            publicTest: this.publicTest,
+          })
+        : schedule;
     });
   }
 }

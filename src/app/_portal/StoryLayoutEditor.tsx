@@ -14,18 +14,18 @@ export function StoryLayoutEditor({
   readonly title: string;
   readonly price: string;
 }) {
-  const value = layout ?? UI.DEFAULT;
-  const drag = useStoryDrag(value, change);
+  const drag = useStoryDrag(layout ?? UI.DEFAULT, change);
   return (
     <div className="story-layout-editor">
-      <div className="story-canvas" aria-label={UI.TITLE}>
+      <div className="story-canvas" role="group" aria-label={UI.TITLE}>
         {(['title', 'price'] as const).map((key) => (
           <button
             key={key}
             type="button"
             className={`story-positioned story-drag-handle story-positioned-${key}`}
+            data-long-title={key === 'title' && title.length >= UI.LONG_TITLE_LENGTH}
             aria-label={key === 'title' ? UI.TITLE_HANDLE : UI.PRICE_HANDLE}
-            style={storyPosition(value[key])}
+            style={storyPosition((layout ?? UI.DEFAULT)[key])}
             onPointerDown={(e) => drag.start(e, key)}
             onPointerMove={drag.move}
             onPointerUp={drag.stop}
@@ -33,7 +33,9 @@ export function StoryLayoutEditor({
             onLostPointerCapture={drag.stop}
             onKeyDown={(e) => drag.keyboard(e, key)}
           >
-            <span aria-hidden="true">⠿ </span>
+            <span className="story-drag-grip" aria-hidden="true">
+              ⠿
+            </span>
             {key === 'title' ? title : price}
           </button>
         ))}

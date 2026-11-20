@@ -7,11 +7,12 @@ import { PortalError } from '../../../_portal/PortalError';
 import { PortalEmpty } from '../../../_portal/PortalEmpty';
 import { AdministrationSearch } from '../../../_portal/AdministrationSearch';
 import { PlatformHistoryCards } from '../../../_portal/PlatformHistoryCards';
-import { Pagination } from '../../../_portal/Pagination';
+import { AdministrationPagination } from '../../../_portal/AdministrationPagination';
+import type { AdministrationSearchParams } from '../../../../config/administration-workspace';
 export default async function Page({
   searchParams,
 }: {
-  readonly searchParams: Promise<{ page?: string; search?: string }>;
+  readonly searchParams: Promise<AdministrationSearchParams>;
 }) {
   const filter = await searchParams;
   const services = portal(new Headers(await headers()));
@@ -21,17 +22,17 @@ export default async function Page({
   return (
     <>
       <PortalHeading title={ADMIN.HISTORY} description={ADMIN.HISTORY_HINT} />
-      <AdministrationSearch search={filter.search} />
+      <AdministrationSearch filter={filter} mode="history" />
       {data.entries.length ? (
         <PlatformHistoryCards entries={data.entries} />
       ) : (
         <PortalEmpty title={ADMIN.EMPTY_HISTORY} />
       )}
-      <Pagination
+      <AdministrationPagination
         page={data.page}
         total={data.total}
         path="/plateforme/historique"
-        search={filter.search}
+        filter={filter}
       />
     </>
   );

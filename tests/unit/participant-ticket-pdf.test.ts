@@ -9,6 +9,19 @@ import {
   participantTicketAmounts,
   participantTicketStatus,
 } from '../../src/core/domain/participant-ticket';
+import { PARTICIPANT_UI } from '../../src/config/constants';
+it('keeps the configured tariff in TEST tickets without presenting simulated amounts as real payment', async () => {
+  const booking = await ticketDocument();
+  const amounts = participantTicketAmounts(booking);
+  expect(amounts).toContainEqual({ label: PARTICIPANT_UI.PRICE, value: 2500 });
+  expect(amounts).toContainEqual({ label: PARTICIPANT_UI.PAID_TEST, value: 1000 });
+  expect(amounts).toContainEqual({ label: PARTICIPANT_UI.DUE_TEST, value: 1000 });
+  booking.ticket.isSimulation = false;
+  expect(participantTicketAmounts(booking)).toContainEqual({
+    label: PARTICIPANT_UI.DUE,
+    value: 1000,
+  });
+});
 it('does not render pending or missing ticket data', async () => {
   const render = vi.fn(async () => ok(new Uint8Array()));
   const useCase = new ParticipantTicketPdfUseCase({ render });

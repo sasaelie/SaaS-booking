@@ -23,7 +23,7 @@ export function HomeActions({ name }: { readonly name: string | null }) {
             <Link className="liquid-ice-button portal-button" href="/inscription">
               {SHARE_UI.START}
             </Link>
-            <Link className="liquid-ice-button portal-button" href="/connexion">
+            <Link className="home-secondary-link" href="/connexion">
               {SHARE_UI.LOGIN}
             </Link>
           </>

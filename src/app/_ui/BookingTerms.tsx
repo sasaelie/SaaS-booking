@@ -1,17 +1,18 @@
 import { FORM_LABELS } from '../../config/constants';
 import type { BookingPageData } from '../../core/use-cases/get-booking-page.use-case';
-export function BookingTerms({ terms }: { readonly terms: BookingPageData['terms'] }) {
+import { ParticipationTerms } from './ParticipationTerms';
+export function BookingTerms({
+  terms,
+  editUrl,
+  active,
+}: {
+  readonly terms: BookingPageData['terms'];
+  readonly editUrl?: string;
+  readonly active: boolean;
+}) {
   return (
     <section className="ice-terms" aria-label={FORM_LABELS.TERMS_TITLE}>
-      <a
-        href="#participant-terms"
-        onClick={() => {
-          const details = document.getElementById('participant-terms');
-          if (details instanceof HTMLDetailsElement) details.open = true;
-        }}
-      >
-        {FORM_LABELS.TERMS_TITLE}
-      </a>
+      {active ? <ParticipationTerms text={terms.fullText} editUrl={editUrl} /> : null}
       <label className="ice-check">
         <input name="acceptedAgeAttestation" type="checkbox" required />
         <span>{terms.ageAttestationLabel}</span>

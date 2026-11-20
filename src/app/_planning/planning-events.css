@@ -52,6 +52,9 @@ body .session-planning .planning-event {
     background-color 0.8s ease,
     box-shadow 0.8s ease;
 }
+.session-planning .planning-link-pending {
+  display: none;
+}
 .session-planning .planning-event strong {
   font-size: 13px;
   line-height: 18px;
@@ -74,7 +77,17 @@ body .session-planning .planning-event {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-body .session-planning .planning-event[aria-pressed='true'] {
+body .session-planning .planning-event[aria-pressed='true'],
+body
+  .session-planning
+  .portal-session-link[data-phase='future']:is(
+    :active,
+    :focus-visible,
+    [data-pointer-pressed='true']
+  ),
+body
+  .session-planning
+  .portal-session-link[data-phase='future']:has(.planning-link-pending:not([hidden])) {
   --planning-selected-shadow:
     var(--glass-button-relief),
     inset 0 0 24px color-mix(in srgb, var(--planning-light) 24%, transparent),
@@ -85,6 +98,10 @@ body .session-planning .planning-event[aria-pressed='true'] {
   border-color: var(--planning-light);
   background-color: color-mix(in srgb, var(--planning-light) 20%, transparent);
   box-shadow: var(--planning-selected-shadow);
+}
+body .session-planning .portal-session-link:is(:active, [data-pointer-pressed='true']),
+body .session-planning .portal-session-link:has(.planning-link-pending:not([hidden])) {
+  transition-duration: 120ms;
 }
 body .session-planning .planning-event:is([data-phase='past'], [data-phase='cancelled']) {
   --planning-light: var(--planning-off);

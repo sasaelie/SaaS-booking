@@ -1,5 +1,6 @@
 .story-canvas {
   position: relative;
+  container-type: inline-size;
   flex: 1;
   min-height: 300px;
   width: 100%;
@@ -76,4 +77,9 @@
 }
 .ice-story:has(> .story-canvas) .ice-story-bottom {
   margin-top: 0;
+}
+.story-positioned-title[data-long-title='true'],
+.story-positioned-title[data-long-title='true'] :is(h1, h2) {
+  font-size: clamp(18px, 7cqi, 28px);
+  line-height: 1.2;
 }

@@ -1,10 +1,10 @@
 :root {
-  --ice-scene: #e8eee6;
-  --ice-evergreen: #214b3b;
-  --ice-evergreen-deep: #16392d;
-  --ice-sage: #a9bfa6;
-  --ice-mist: #d9e8e5;
-  --ice-cream: #f4f2e7;
+  --ice-scene: var(--liquid-scene);
+  --ice-evergreen: var(--liquid-accent);
+  --ice-evergreen-deep: var(--liquid-ink);
+  --ice-sage: #d9c9ef;
+  --ice-mist: #cfe8f0;
+  --ice-cream: #f5f2fb;
   --ice-paper: #fff;
   --ice-on-dark: #f4faf6;
   --ice-quiet: color-mix(in srgb, var(--ui-text-primary) 73%, transparent);
@@ -23,18 +23,16 @@ body {
   color: var(--ui-text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 15px;
+  -webkit-font-smoothing: antialiased;
   line-height: 1.5;
   isolation: isolate;
 }
 body::before {
   content: '';
-  position: absolute;
+  position: fixed;
   z-index: -1;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 6% 82%, var(--ice-sage), transparent 54%),
-    radial-gradient(ellipse at 92% 14%, var(--ice-mist), transparent 52%),
-    radial-gradient(ellipse at 78% 95%, var(--ice-cream), transparent 48%);
+  background: var(--liquid-background);
   pointer-events: none;
 }
 main {

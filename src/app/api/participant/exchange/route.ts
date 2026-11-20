@@ -1,3 +1,4 @@
+import { clientSource } from '../../../../lib/client-source';
 import { participant, participantCookie } from '../../../../composition/participant';
 import { boundedJson } from '../../../../lib/http-body';
 import { trustedOrigin } from '../../../../lib/trusted-origin';
@@ -8,8 +9,7 @@ export async function POST(request: Request) {
   if (!app.ok) return Response.json({ success: false }, { status: HTTP_STATUS.UNAVAILABLE });
   if (!trustedOrigin(request, app.value.appUrl))
     return Response.json({ success: false }, { status: HTTP_STATUS.FORBIDDEN });
-  // Vercel overwrites this header; locally all requests share a conservative bucket.
-  const source = request.headers.get('x-vercel-forwarded-for') ?? 'local';
+  const source = clientSource(request.headers);
   const limited = await app.value.limiter.accept(`participant-exchange:${source}`);
   if (!limited.ok) return Response.json({ success: false }, { status: HTTP_STATUS.RATE_LIMITED });
   const body = await boundedJson(request);

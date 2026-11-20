@@ -3,6 +3,7 @@ import type { PublicCatalog } from '../../core/ports/public-catalog.port';
 import { SHARE_UI, AUDIENCE_LABELS } from '../../config/constants';
 import { PLAN_UI } from '../../config/commercial';
 import { simulationPath } from '../../config/simulation';
+import { websitePreviewPath } from '../../config/website-preview';
 import { StoryPanel } from './StoryPanel';
 import { ColorScene } from './ColorScene';
 import { BookingBrand } from './BookingBrand';
@@ -15,9 +16,11 @@ import { StoryCanvas } from './StoryCanvas';
 export function CatalogContent({
   data,
   simulationId,
+  embedded = false,
 }: {
   readonly data: PublicCatalog;
   readonly simulationId?: string;
+  readonly embedded?: boolean;
 }) {
   return (
     <div className="ice-branded-page participant-catalog">
@@ -31,7 +34,7 @@ export function CatalogContent({
       </div>
       <PortalHeading title={SHARE_UI.CATALOG_TITLE} />
       {!data.activities.length ? <PortalEmpty title={SHARE_UI.CATALOG_EMPTY} /> : null}
-      <CatalogActivities data={data} simulationId={simulationId} />
+      <CatalogActivities data={data} simulationId={simulationId} embedded={embedded} />
       {data.showPlatformSignature ? <PlatformSignature /> : null}
     </div>
   );
@@ -39,9 +42,11 @@ export function CatalogContent({
 function CatalogActivities({
   data,
   simulationId,
+  embedded = false,
 }: {
   readonly data: PublicCatalog;
   readonly simulationId?: string;
+  readonly embedded?: boolean;
 }) {
   return (
     <div className="portal-cards catalog-grid">
@@ -51,6 +56,7 @@ function CatalogActivities({
           data={data}
           activity={activity}
           simulationId={simulationId}
+          embedded={embedded}
         />
       ))}
     </div>
@@ -60,8 +66,9 @@ interface CatalogCardProps {
   readonly data: PublicCatalog;
   readonly activity: PublicCatalog['activities'][number];
   readonly simulationId?: string;
+  readonly embedded?: boolean;
 }
-function CatalogCard({ data, activity, simulationId }: CatalogCardProps) {
+function CatalogCard({ data, activity, simulationId, embedded }: CatalogCardProps) {
   const content = (
     <>
       <span className="portal-badge">{AUDIENCE_LABELS[activity.audiencePolicy]}</span>
@@ -87,8 +94,10 @@ function CatalogCard({ data, activity, simulationId }: CatalogCardProps) {
           className="liquid-ice-button portal-button"
           href={
             simulationId
-              ? `${simulationPath(simulationId)}/activite/${activity.id}`
-              : `/${data.slug}/${activity.id}`
+              ? embedded
+                ? websitePreviewPath(data.slug, activity.id)
+                : `${simulationPath(simulationId)}/activite/${activity.id}`
+              : `${embedded ? '/embed' : ''}/${data.slug}/${activity.id}`
           }
         >
           {activity.reservationsOpen === false ? PLAN_UI.VIEW_ONLY : SHARE_UI.CATALOG_OPEN}

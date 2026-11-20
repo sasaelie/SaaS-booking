@@ -5,8 +5,11 @@ import { createApplicationAuth, type ApplicationAuth } from '../adapters/auth/ap
 import { failure } from '../lib/errors';
 import { ok, type Result } from '../lib/result';
 import { ERROR_CODES } from '../config/constants';
+import { publicTestEnabled } from '../config/public-test';
 let instance: ApplicationAuth | undefined;
 export function authentication(): Result<ApplicationAuth> {
+  if (publicTestEnabled())
+    return failure(ERROR_CODES.UNAUTHORIZED, 'Authentication', 'public-test');
   if (instance) return ok(instance);
   const app = runtime();
   if (!app.ok) return app;

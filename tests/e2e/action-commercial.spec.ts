@@ -67,13 +67,13 @@ test('consumes a course-exchange voucher once through the Pro form and refuses a
       .rows[0].status,
   ).toBe('USED_FOR_EXTERNAL_BENEFIT');
   await page.getByRole('button', { name: 'Valider le report', exact: true }).click();
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByRole('main').getByRole('alert')).toBeVisible();
 });
 test('records one real exceptional cost through the administrator form', async ({ page }) => {
   const space = await browserSpace();
   const reference = `COST-${crypto.randomUUID()}`;
   await login(page, space);
-  await page.goto(`/plateforme?search=${space.slug}`);
+  await page.goto(`/plateforme/finances?view=ajustements&search=${space.slug}`);
   await page.getByText('Rapprocher un coût exceptionnel réel', { exact: true }).click();
   await page.getByLabel('Espace concerné', { exact: false }).selectOption(space.organizationId);
   await page.getByLabel('Montant réel (€)', { exact: true }).fill('1,23');

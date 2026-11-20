@@ -1,0 +1,178 @@
+/* Page rhythm shared by public, organizer, participant and administrator screens. */
+.liquid-ui {
+  --quality-space: 28px;
+  --link-ink: var(--liquid-accent);
+  --link-hover: var(--liquid-ink);
+  --ice-soft-fill: rgb(255 255 255 / 0.4);
+  --ice-line: color-mix(in srgb, var(--liquid-ink) 12%, transparent);
+  --ice-quiet: color-mix(in srgb, var(--ui-text-primary) 76%, transparent);
+}
+.liquid-ui :is(h1, h2, h3) {
+  font-family: inherit;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.liquid-ui
+  :is(
+    .portal-heading h1,
+    .portal-auth-card h1,
+    .public-result-content h1,
+    .portal-error h1,
+    .ice-booking-header h1,
+    .ice-result h1,
+    .booking-context-heading h1
+  ) {
+  font-family: inherit;
+  font-weight: 650;
+  line-height: 1.15;
+}
+.liquid-ui .portal-heading h1 {
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+}
+.liquid-ui
+  :is(
+    .portal-panel:not(.ice-story),
+    .portal-sidebar,
+    .portal-auth-card,
+    .ice-cube-shell,
+    .portal-dialog
+  ) {
+  border-radius: 22px;
+}
+.liquid-ui .portal-panel {
+  padding: 28px;
+}
+.liquid-ui
+  .portal-panel
+  :is(.portal-panel:not(.ice-story), .ice-cube-shell:not(.appearance-sample)) {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.liquid-ui .portal-panel .portal-panel::before {
+  content: none;
+}
+.liquid-ui :is(.portal-form-fields, .portal-form) {
+  gap: 24px;
+}
+.liquid-ui :is(.portal-input, .ice-field input, .ice-field textarea, .ice-field select) {
+  border: 1px solid var(--ice-line);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.65);
+  box-shadow: inset 0 1px 0 var(--liquid-rim);
+  min-height: 48px;
+  font-size: 16px;
+  color: var(--ui-text-primary);
+}
+.liquid-ui
+  :is(.portal-input, .ice-field input, .ice-field textarea, .ice-field select):focus-visible {
+  outline: 2px solid var(--liquid-accent);
+  outline-offset: 3px;
+}
+.liquid-ui :is(input, select, textarea) {
+  accent-color: var(--liquid-accent);
+}
+.liquid-ui .portal-field > :is(label, span) {
+  font-size: 13px;
+}
+.liquid-ui :is(.portal-fieldset, .portal-details, .event-information) {
+  border-radius: 0;
+  box-shadow: none;
+}
+.liquid-ui :is(.portal-notice, .simulation-notice, .participant-test-notice) {
+  border-radius: 12px;
+  box-shadow: none;
+}
+.liquid-ui :is(.portal-notice, .portal-muted, .ice-hint) {
+  line-height: 1.65;
+}
+.liquid-ui :is(.portal-panel, .ice-cube-shell) > :first-child {
+  margin-top: 0;
+}
+.liquid-ui .portal-auth {
+  max-width: 560px;
+  margin-block: 48px 64px;
+}
+.liquid-ui .portal-auth-card {
+  padding: 36px;
+}
+.liquid-ui .portal-auth-card h1 {
+  font-size: clamp(1.8rem, 4vw, 2.3rem);
+}
+.liquid-ui .portal-auth-card > p {
+  font-size: 14px;
+}
+.liquid-ui .portal-auth-note {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 20px;
+}
+.liquid-ui .auth-password-toggle {
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+.liquid-ui .portal-record-list > .portal-panel {
+  padding: 20px 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.liquid-ui .portal-record-list > .portal-panel:first-child {
+  padding-top: 0;
+}
+.liquid-ui .portal-record-list > .portal-panel:last-child {
+  padding-bottom: 0;
+}
+.liquid-ui .portal-dialog {
+  background: var(--liquid-surface);
+  backdrop-filter: var(--liquid-blur);
+}
+@media (max-width: 760px) {
+  .liquid-ui {
+    --quality-space: 24px;
+  }
+  .liquid-ui .portal-root {
+    padding: 14px;
+    gap: 20px;
+  }
+  .liquid-ui .portal-main {
+    padding: 24px 2px 36px;
+  }
+  .liquid-ui .portal-panel {
+    padding: 22px 18px;
+  }
+  .liquid-ui .portal-heading {
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .liquid-ui .portal-heading:has(> .portal-button) {
+    flex-wrap: wrap;
+  }
+  .liquid-ui .portal-auth {
+    margin-block: 24px 40px;
+  }
+  .liquid-ui .portal-auth-card {
+    padding: 28px 22px;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-ui {
+    --liquid-surface: #f1f3fa;
+    --liquid-blur: none;
+  }
+}
+@media (forced-colors: active) {
+  .liquid-ui {
+    --liquid-surface: Canvas;
+    --liquid-rim: CanvasText;
+    --liquid-shadow: none;
+  }
+  .liquid-ui .portal-nav .portal-nav-links a[aria-current='page'] {
+    outline: 2px solid Highlight;
+  }
+}

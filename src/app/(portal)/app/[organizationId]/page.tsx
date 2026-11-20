@@ -20,13 +20,13 @@ export default async function Page({ params }: WorkspacePageProps) {
         action={data.activities.length ? <ActivityCreationAction organization={data.organization} /> : undefined}
       />
       {data.activities.length ? <OverviewMetrics data={data} /> : null}
-      <DashboardTests id={organizationId} />
       {!data.activities.length ? <FirstActivityState organization={data.organization} /> : null}
       <div className="portal-section-heading">
         <h2>{PORTAL.NEXT_SESSIONS}</h2>
         <Link href={`/app/${organizationId}/activites`}>{PORTAL.VIEW_ACTIVITIES}</Link>
       </div>
       <SessionList sessions={data.sessions} timezone={data.organization.timezone} organizationId={organizationId} />
+      <DashboardTests id={organizationId} />
     </>
   );
 }

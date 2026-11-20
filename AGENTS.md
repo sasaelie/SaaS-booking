@@ -3,7 +3,8 @@
 ## 1. IDENTITÉ ET ARCHITECTURE DU PROJET
 Tu développes un **Moteur de Réservation Générique SaaS-Ready** en **Architecture Hexagonale stricte (Ports & Adapters)**.
 - **Stack :** Next.js (App Router), TypeScript (`strict: true`, `noUncheckedIndexedAccess: true`), PostgreSQL (UE), Drizzle ORM, Zod, Stripe, Resend, Vitest.
-- **Design System :** Crystal Ice Block & Liquid Meniscus (`src/app/_ui/ice-tokens.css`). Zéro couleur hexadécimale en dur dans les composants (utiliser les variables CSS).
+- **Design System :** Liquid Glass, selon le prototype validé le 20 novembre 2026 : palette violet, cyan et orange par défaut, personnalisation organisateur prioritaire, surfaces légères de 22 px, boutons de 8 px, navigation plate et actions hiérarchisées. Jetons dans `src/app/_ui/ice-tokens.css`, dispositions partagées dans `src/app/_ui/liquid/`. Éviter les cadres imbriqués et les rangées de gros boutons secondaires. Zéro couleur hexadécimale en dur dans les composants (utiliser les variables CSS).
+- **En-tête public :** conserver la navigation en verre sur toute la largeur, collée en haut au défilement, sans marge extérieure ni coins arrondis. Le contenu défile dessous avec une ombre portée ; les liens de section doivent laisser leurs titres visibles sous l'en-tête.
 
 ## 2. GLOSSAIRE UNIQUE (INTERDICTION D'INVENTER DES SYNONYMES)
 Utilise exclusivement ces identifiants anglais dans le code, les tables et les fichiers :
@@ -38,3 +39,6 @@ Utilise exclusivement ces identifiants anglais dans le code, les tables et les f
 Pour chaque fonctionnalité, respecte cet ordre strict :
 1. Schéma Zod (`validation`) -> 2. Contrat (`port`) -> 3. Test unitaire (`Vitest`) -> 4. Cœur métier (`use-case`) -> 5. Adaptateur -> 6. UI.
 Avant de considérer une tâche terminée, exécute `npm run verify` (`tsc --noEmit && eslint . && vitest run`). Si un seul contrôle échoue, corrige-le immédiatement avant de poursuivre.
+
+## 6. MÉMOIRE — FINITION AVANT LANCEMENT
+Lorsque l’utilisateur demande « fais la finition », lire [le plan de finition](docs/PLAN-FINITION-LANCEMENT.md), revérifier l’état réel du projet, puis décomposer et traiter ses étapes avec vérification après chaque modification. Cette mémoire ne demande pas d’activer les paiements réels ou de lancer les opérations dès maintenant.

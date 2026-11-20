@@ -1,16 +1,10 @@
-/* One surface for native buttons, button links and segmented controls. */
+/* Actual buttons share the glass material; navigation and secondary links stay quiet. */
 :where(
-  :is(
-    button,
-    [role='button'],
-    .liquid-ice-button,
-    .portal-secondary-action,
-    .portal-card-actions a,
-    .social-links a.social-link,
-    .portal-nav-links a,
-    .marketing-preview-switch span,
-    input:is([type='button'], [type='submit'], [type='reset'])
-  )
+  button,
+  [role='button'],
+  .liquid-ice-button,
+  .portal-button,
+  input:is([type='button'], [type='submit'], [type='reset'])
 ) {
   position: relative;
   isolation: isolate;
@@ -20,22 +14,18 @@ body
     button,
     [role='button'],
     .liquid-ice-button,
-    .portal-secondary-action,
-    .portal-card-actions a,
-    .social-links a.social-link,
-    .portal-nav-links a,
-    .marketing-preview-switch span,
+    .portal-button,
     input:is([type='button'], [type='submit'], [type='reset'])
   ) {
-  border: 1px solid var(--glass-button-light);
+  border: 1px solid var(--liquid-rim);
   border-radius: var(--glass-button-radius);
   color: inherit;
   background-color: var(--glass-control-fill, transparent);
   --glass-button-reflection: linear-gradient(
-    var(--button-shine-angle),
-    transparent 0%,
-    var(--glass-button-light) 40% 50%,
-    transparent 55%
+    115deg,
+    transparent,
+    rgb(255 255 255 / 0.3),
+    transparent
   );
   background-image: var(--glass-button-reflection), var(--glass-button-surface);
   background-size:
@@ -44,64 +34,19 @@ body
   background-position:
     0% 50%,
     center;
-  background-repeat: no-repeat;
   box-shadow: var(--glass-button-relief);
-  text-shadow: 0 0.25em 0.05em var(--glass-button-soft);
-  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  text-shadow: none;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  text-decoration: none;
   transition:
-    scale 400ms var(--glass-button-easing),
-    rotate 400ms var(--glass-button-easing),
-    box-shadow 400ms var(--glass-button-easing),
-    text-shadow 400ms var(--glass-button-easing),
-    background-position 500ms var(--glass-button-easing),
-    --button-shine-angle 500ms var(--glass-button-easing);
-}
-/* The contour never intercepts a click or uses the diode's ::after. */
-@supports (mask-composite: exclude) or (-webkit-mask-composite: xor) {
-  body
-    :is(
-      button,
-      [role='button'],
-      .liquid-ice-button,
-      .portal-secondary-action,
-      .portal-card-actions a,
-      .social-links a.social-link,
-      .portal-nav-links a,
-      .marketing-preview-switch span,
-      input:is([type='button'], [type='submit'], [type='reset'])
-    )::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    padding: 1px;
-    border-radius: inherit;
-    z-index: 1;
-    pointer-events: none;
-    background:
-      conic-gradient(
-        from var(--button-rim-angle) at 50% 50%,
-        var(--glass-button-rim),
-        transparent 5% 40%,
-        var(--glass-button-rim) 50%,
-        transparent 60% 95%,
-        var(--glass-button-rim)
-      ),
-      linear-gradient(var(--glass-button-light), var(--glass-button-light));
-    -webkit-mask:
-      linear-gradient(var(--ice-paper) 0 0) content-box,
-      linear-gradient(var(--ice-paper) 0 0);
-    mask:
-      linear-gradient(var(--ice-paper) 0 0) content-box,
-      linear-gradient(var(--ice-paper) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    transition: --button-rim-angle 500ms ease;
-  }
+    scale 180ms ease,
+    box-shadow 180ms ease,
+    background-position 400ms ease;
 }
 .liquid-ice-button {
-  min-height: 52px;
-  font-weight: 650;
+  min-height: var(--glass-action-height);
+  font-weight: 600;
   letter-spacing: -0.01em;
 }
 .ice-calendar-nav > div {

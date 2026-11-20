@@ -8,6 +8,10 @@ it('refreshes account entries and private navigation when returning through hist
     '/app',
     '/app/space/activites',
     '/plateforme/operations',
+    '/compte/securite',
+    '/apercu-site',
+    '/embed/studiocreatif360/preview',
+    '/embed/studiocreatif360/preview/activity',
   ])
     expect(isSessionNavigationPath(path)).toBe(true);
   expect(isSessionEntryPath('/')).toBe(true);

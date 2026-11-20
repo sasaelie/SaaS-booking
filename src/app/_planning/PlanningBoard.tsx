@@ -1,8 +1,10 @@
 import { useEffect, type CSSProperties } from 'react';
 import { CALENDAR_UI } from '../../config/constants';
+import { dayLabel } from '../_ui/calendar-dates';
 import { PLANNING } from '../../config/planning';
 import { dateNumber, weekdayLabel } from './planning-dates';
-import { positionSessions, timelineRange } from './planning-sessions';
+import { positionSessions } from './planning-sessions';
+import { planningRange } from './planning-range';
 import { PlanningEvent } from './PlanningEvent';
 import type { PlanningProps } from './types';
 import type { PlanningState } from './use-planning';
@@ -14,7 +16,7 @@ export function PlanningBoard({ state, ...props }: BoardProps) {
         ?.querySelector<HTMLElement>('.planning-day-heading[data-selected="true"]')
         ?.focus();
   }, [state.view, state.container]);
-  const range = timelineRange(state.sessions, props.timezone);
+  const range = planningRange(state.sessions, props.timezone, state.visibleDays, state.fullDay);
   const style = {
     '--planning-days': state.visibleDays.length,
     '--planning-duration': range.end - range.start,
@@ -58,16 +60,7 @@ function PlanningDay({
   const sessions = state.byDay.get(day) ?? [];
   return (
     <div className="planning-day">
-      <div
-        className="planning-day-heading"
-        tabIndex={-1}
-        aria-current={day === state.today ? 'date' : undefined}
-        data-selected={day === state.day}
-      >
-        <span>{weekdayLabel(day)}</span>
-        <strong>{dateNumber(day)}</strong>
-        <span className="ice-sr-only">{day === state.today ? PLANNING.TODAY : ''}</span>
-      </div>
+      <PlanningDayHeading state={state} day={day} />
       <div className="planning-lane">
         {positionSessions(sessions, props.timezone, day).map((row) => (
           <PlanningEvent
@@ -81,6 +74,42 @@ function PlanningDay({
           />
         ))}
       </div>
+    </div>
+  );
+}
+function PlanningDayHeading({
+  state,
+  day,
+}: {
+  readonly state: PlanningState;
+  readonly day: string;
+}) {
+  const content = (
+    <>
+      <span>{weekdayLabel(day)}</span>
+      <strong>{dateNumber(day)}</strong>
+    </>
+  );
+  return (
+    <div
+      className="planning-day-heading"
+      tabIndex={-1}
+      aria-current={day === state.today ? 'date' : undefined}
+      data-selected={day === state.day}
+    >
+      {state.view === 'week' ? (
+        <button
+          className="planning-open-day"
+          type="button"
+          aria-label={`${PLANNING.OPEN_DAY}, ${dayLabel(day)}`}
+          onClick={() => state.openDay(day)}
+        >
+          {content}
+        </button>
+      ) : (
+        content
+      )}
+      <span className="ice-sr-only">{day === state.today ? PLANNING.TODAY : ''}</span>
     </div>
   );
 }

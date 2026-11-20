@@ -21,7 +21,17 @@ export function PlanningNavigation({
         </div>
         <PlanningControls state={state} />
       </div>
-      {state.view !== 'month' ? <PlanningDays state={state} /> : null}
+      {state.view === 'day' || (state.view === 'week' && !state.compact) ? (
+        <label className="planning-hours-option">
+          <input
+            type="checkbox"
+            checked={state.fullDay}
+            onChange={(event) => state.setFullDay(event.target.checked)}
+          />
+          {PLANNING.FULL_DAY}
+        </label>
+      ) : null}
+      {state.view === 'day' ? <PlanningDays state={state} /> : null}
     </>
   );
 }
@@ -59,7 +69,7 @@ function PlanningDays({ state }: { readonly state: PlanningState }) {
           aria-label={`${dayLabel(day)}${day === state.today ? `, ${PLANNING.TODAY}` : ''}`}
           aria-current={day === state.today ? 'date' : undefined}
           aria-pressed={day === state.day}
-          onClick={() => state.setDay(day)}
+          onClick={() => state.openDay(day)}
         >
           <small>{weekdayLabel(day, true)}</small>
           <strong>{dateNumber(day)}</strong>

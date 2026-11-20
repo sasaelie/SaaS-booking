@@ -2,6 +2,8 @@ import { runtime } from '../../../../composition/runtime';
 import { UI_MESSAGES } from '../../../../config/constants';
 import { IceBookingWidget } from '../../../_ui/IceBookingWidget';
 import { EmbedHeightReporter } from '../../../_ui/EmbedHeightReporter';
+import { AppLink } from '../../../_ui/AppLink';
+import { PARTICIPANT_NAV } from '../../../../config/participant-navigation';
 export const dynamic = 'force-dynamic';
 export default async function Page({
   params,
@@ -10,27 +12,34 @@ export default async function Page({
 }) {
   const route = await params;
   const app = runtime();
-  if (!app.ok)
-    return (
-      <main className="booking-embed">
-        <p>{UI_MESSAGES.UNAVAILABLE}</p>
-        <EmbedHeightReporter />
-      </main>
-    );
+  if (!app.ok) return <Unavailable />;
   const result = await app.value.bookingPage.execute({
     slug: route.organization,
     activityId: route.activityId,
   });
-  if (result.ok && result.value.showPlatformSignature)
-    return (
-      <main className="booking-embed">
-        <p>{UI_MESSAGES.UNAVAILABLE}</p>
-        <EmbedHeightReporter />
-      </main>
-    );
+  if (result.ok && result.value.showPlatformSignature) return <Unavailable />;
   return (
     <main className="booking-embed">
-      {result.ok ? <IceBookingWidget data={result.value} /> : <p>{UI_MESSAGES.UNAVAILABLE}</p>}
+      {result.ok ? (
+        <div className="participant-navigation">
+          <AppLink href={`/embed/${route.organization}`}>
+            ← {PARTICIPANT_NAV.RETURN_ACTIVITIES}
+          </AppLink>
+        </div>
+      ) : null}
+      {result.ok ? (
+        <IceBookingWidget data={result.value} embedded />
+      ) : (
+        <p>{UI_MESSAGES.UNAVAILABLE}</p>
+      )}
+      <EmbedHeightReporter />
+    </main>
+  );
+}
+function Unavailable() {
+  return (
+    <main className="booking-embed">
+      <p>{UI_MESSAGES.UNAVAILABLE}</p>
       <EmbedHeightReporter />
     </main>
   );

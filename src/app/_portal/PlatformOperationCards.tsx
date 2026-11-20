@@ -2,29 +2,40 @@ import type { PlatformOperation } from '../../core/ports/platform-monitoring';
 import { ADMIN, ADMIN_JOBS } from '../../config/administration';
 import { ERROR_CODES } from '../../config/constants';
 import { portalDate } from './date-label';
+import { StatusBadge } from './StatusBadge';
 export function PlatformOperationCards({
   entries,
 }: {
   readonly entries: readonly PlatformOperation[];
 }) {
   return (
-    <div className="portal-list">
+    <div className="portal-list portal-panel portal-record-list">
       {entries.map((entry) => (
-        <article key={entry.id} className="portal-panel administration-entry">
+        <article key={entry.id} className="administration-entry administration-compact-row">
           <div className="administration-entry-heading">
             <strong>{entry.organizationName}</strong>
-            <span className="portal-badge">{entry.attempts ? ADMIN.RETRY : ADMIN.PENDING}</span>
+            <StatusBadge
+              status={{
+                tone: entry.attempts ? 'red' : 'orange',
+                label: entry.attempts ? ADMIN.RETRY : ADMIN.PENDING,
+              }}
+            />
           </div>
           <h2>{ADMIN_JOBS[entry.type] ?? ADMIN.ERROR}</h2>
-          <dl>
-            <dt>{ADMIN.ATTEMPTS}</dt>
-            <dd>{entry.attempts}</dd>
-            <dt>{ADMIN.CREATED}</dt>
-            <dd>{portalDate(entry.createdAt)}</dd>
-            <dt>{ADMIN.NEXT}</dt>
-            <dd>{portalDate(entry.availableAt)}</dd>
-          </dl>
-          <p className="portal-muted">{errorLabel(entry.lastError)}</p>
+          <details className="administration-row-details">
+            <summary>
+              {ADMIN.ATTEMPTS} : {entry.attempts} · {ADMIN.NEXT} : {portalDate(entry.availableAt)}
+            </summary>
+            <dl>
+              <dt>{ADMIN.ATTEMPTS}</dt>
+              <dd>{entry.attempts}</dd>
+              <dt>{ADMIN.CREATED}</dt>
+              <dd>{portalDate(entry.createdAt)}</dd>
+              <dt>{ADMIN.NEXT}</dt>
+              <dd>{portalDate(entry.availableAt)}</dd>
+            </dl>
+            <p className="portal-muted">{errorLabel(entry.lastError)}</p>
+          </details>
         </article>
       ))}
     </div>

@@ -4,21 +4,26 @@ import 'server-only';
 import { readEnvironment } from '../config/env';
 import { ok } from '../lib/result';
 import { createDatabase } from '../adapters/db/client';
-import { DrizzleSessionRepository } from '../adapters/db/drizzle-session.repository';
 import { DrizzleActivityRepository } from '../adapters/db/drizzle-activity.repository';
 import { DrizzlePaymentRepository } from '../adapters/db/drizzle-payment.repository';
 import { DrizzleJobRunner } from '../adapters/db/jobs/runner';
 import { ProductionJobHandler } from '../adapters/jobs/handler';
 import { DrizzleRateLimit } from '../adapters/db/drizzle-rate-limit';
-import { CreateBookingUseCase } from '../core/use-cases/create-booking.use-case';
+import { bookingCreation } from './booking-creation';
 import { GetBookingPageUseCase } from '../core/use-cases/get-booking-page.use-case';
 import { HandlePaymentWebhookUseCase } from '../core/use-cases/handle-stripe-webhook.use-case';
 import { providers } from './providers';
 import { PostgresProofStorageAdapter } from '../adapters/storage/postgres-proof.adapter';
 import { PrivateFileTokenAdapter } from '../adapters/storage/private-file-token.adapter';
+import { publicTestEnabled } from '../config/public-test';
 function assemble(env: Extract<ReturnType<typeof readEnvironment>, { ok: true }>['value']) {
   const { db, pool } = createDatabase(env.DATABASE_URL, env.DATABASE_SCHEMA, env.DATABASE_SSL_CA);
   const services = applicationProviders(env, db);
+  const code = {
+    secret: env.SELF_CANCEL_HMAC_SECRET,
+    test: publicTestEnabled(env),
+    skipNotifications: publicTestEnabled(env),
+  };
   const handler = new ProductionJobHandler({
     db,
     gateway: services.gateway,
@@ -29,22 +34,15 @@ function assemble(env: Extract<ReturnType<typeof readEnvironment>, { ok: true }>
     secret: env.SELF_CANCEL_HMAC_SECRET,
   });
   return {
-    voucherQuote: new QuoteVoucherUseCase(
-      new DrizzleVoucherQuoteRepository(db, { secret: env.SELF_CANCEL_HMAC_SECRET }),
-    ),
+    voucherQuote: new QuoteVoucherUseCase(new DrizzleVoucherQuoteRepository(db, code)),
     db,
     pool,
     env,
     services,
     runner: new DrizzleJobRunner(db, handler),
     limiter: new DrizzleRateLimit(db),
-    createBooking: new CreateBookingUseCase({
-      sessionRepo: new DrizzleSessionRepository(db, { secret: env.SELF_CANCEL_HMAC_SECRET }),
-      paymentGateway: services.gateway,
-      appUrl: env.NEXT_PUBLIC_APP_URL,
-      secret: env.SELF_CANCEL_HMAC_SECRET,
-    }),
-    bookingPage: new GetBookingPageUseCase(new DrizzleActivityRepository(db)),
+    createBooking: bookingCreation(db, env, services.gateway),
+    bookingPage: new GetBookingPageUseCase(new DrizzleActivityRepository(db), code.test),
     webhook: new HandlePaymentWebhookUseCase({
       paymentGateway: services.gateway,
       paymentRepo: new DrizzlePaymentRepository(db),

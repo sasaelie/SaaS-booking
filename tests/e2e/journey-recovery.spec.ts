@@ -1,3 +1,4 @@
+import { showPlanningDay } from './planning-fixtures';
 import { expect, test, type Page } from '@playwright/test';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { browserSpace, browserDatabase, closeBrowserDatabase } from './portal-fixtures';
@@ -39,13 +40,14 @@ test('recovers from a real last-seat collision without losing contacts or creati
   await completeContact(page, email);
   await reserveAuditSeat(space);
   await page.getByRole('button', { name: 'Confirmer ma place', exact: true }).click();
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByRole('main').getByRole('alert')).toBeVisible();
   await expect(
     page.getByRole('button', { name: 'Confirmer ma place', exact: true }),
   ).toBeDisabled();
   await page.getByRole('button', { name: 'Modifier la séance', exact: true }).click();
   const next = page.getByRole('button', { name: 'Semaine suivante', exact: true });
   if (await next.isEnabled()) await next.click();
+  await showPlanningDay(page);
   await page
     .locator('.planning-days button')
     .filter({ hasText: String(new Date(space.date.getTime() + 86400000).getUTCDate()) })

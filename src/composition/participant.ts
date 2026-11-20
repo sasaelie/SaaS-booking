@@ -8,6 +8,7 @@ import { PARTICIPANT, ERROR_CODES } from '../config/constants';
 import { ok } from '../lib/result';
 import { failure } from '../lib/errors';
 import { trustedOrigin } from '../lib/trusted-origin';
+import { publicTestEnabled } from '../config/public-test';
 export function participant() {
   const app = runtime();
   if (!app.ok) return app;
@@ -15,6 +16,7 @@ export function participant() {
     app.value.db,
     app.value.env.SELF_CANCEL_HMAC_SECRET,
     app.value.env.NEXT_PUBLIC_APP_URL,
+    publicTestEnabled(app.value.env),
   );
   return ok({
     access: new ParticipantAccessUseCase(repository),

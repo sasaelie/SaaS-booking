@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 const config: NextConfig = {
   poweredByHeader: false,
+  outputFileTracingIncludes: {
+    '/api/plateforme/billing': ['./public/fonts/DejaVuSans.ttf'],
+    '/apercu-site': ['./src/adapters/preview/studio-website.html'],
+  },
   devIndicators: false,
   agentRules: false,
   logging: { serverFunctions: false, browserToTerminal: false },
@@ -25,7 +29,6 @@ const config: NextConfig = {
       {
         source: '/manage',
         headers: [
-          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'Cache-Control', value: 'private, no-store' },
         ],

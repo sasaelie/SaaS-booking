@@ -1,0 +1,74 @@
+.portal-filters.portal-booking-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 16px;
+}
+.portal-booking-filters .portal-field {
+  min-width: 0;
+}
+.portal-booking-card > summary {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(0, 1fr) auto;
+  align-items: start;
+}
+.portal-booking-card summary strong,
+.portal-booking-card summary small {
+  overflow-wrap: anywhere;
+}
+.portal-booking-card summary .portal-booking-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  margin-top: 8px;
+  color: var(--ui-text-primary);
+  font-size: 12px;
+}
+.portal-booking-toggle .ice-icon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+.portal-booking-card[open] > summary .portal-booking-toggle .ice-icon {
+  transform: rotate(90deg);
+}
+.portal-booking-actions,
+.portal-booking-section {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.portal-booking-section {
+  justify-items: start;
+}
+.portal-booking-section h3 {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+}
+.portal-booking-section > :is(form, .ticket-code) {
+  width: 100%;
+}
+.portal-booking-actions > :not(:first-child) {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 24px;
+  margin-top: 8px;
+}
+.portal-booking-actions .portal-booking-cancellation {
+  margin-top: 16px;
+}
+.portal-booking-detail > dl {
+  margin: 0;
+  font-size: 13px;
+}
+@media (max-width: 1000px) {
+  .portal-filters.portal-booking-filters {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .portal-booking-filters .portal-field:nth-child(-n + 2) {
+    grid-column: 1 / -1;
+  }
+  .portal-booking-card > summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}

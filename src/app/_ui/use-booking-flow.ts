@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import type { BookingPageData } from '../../core/use-cases/get-booking-page.use-case';
 import { useBookingForm } from './use-booking-form';
 import { useVoucherQuote } from './use-voucher-quote';
-export function useBookingFlow(data: BookingPageData) {
+export function useBookingFlow(data: BookingPageData, embedded = false) {
   const form = useBookingForm(data);
   const quote = useVoucherQuote(data);
   const [details, setDetails] = useState(false);
@@ -30,6 +30,6 @@ export function useBookingFlow(data: BookingPageData) {
     }
     await form.submit(event);
   }
-  return { data, form, quote, details, navigate, submit, sessionHeading, contactHeading };
+  return { data, embedded, form, quote, details, navigate, submit, sessionHeading, contactHeading };
 }
 export type BookingFlowState = ReturnType<typeof useBookingFlow>;

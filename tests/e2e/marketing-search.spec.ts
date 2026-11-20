@@ -44,10 +44,10 @@ test('shows every professional field and keeps empty contact values inactive unt
     Array.from({ length: 7 }, () => 'À compléter'),
   );
   await page.goto('/contact');
-  await expect(page.locator('.marketing-document-identity dt')).toHaveText([
-    'Adresse e-mail',
-    'Téléphone',
-  ]);
+  await expect(page.locator('.marketing-document-identity dt')).toHaveCount(0);
+  await expect(page.locator('.marketing-document-identity')).toContainText(
+    'Le contact professionnel de l’équipe sera disponible',
+  );
   await expect(
     page.locator('a[href=""], a[href="#"], a[href="mailto:"], a[href="tel:"]'),
   ).toHaveCount(0);

@@ -1,4 +1,5 @@
 'use server';
+import { clientSource } from '../../lib/client-source';
 import { headers } from 'next/headers';
 import { scheduleBookingConfirmation } from '../../composition/booking-notifications';
 import { runtime } from '../../composition/runtime';
@@ -10,6 +11,8 @@ import {
   type ErrorCode,
 } from '../../config/constants';
 import type { CreateBookingOutput } from '../../core/use-cases/create-booking.use-case';
+import { PUBLIC_TEST, publicTestEnabled } from '../../config/public-test';
+import { publicTestBooking } from '../../core/validation/public-test';
 export interface BookingActionState {
   readonly success: boolean;
   readonly message: string;
@@ -20,19 +23,27 @@ export async function createBookingAction(raw: unknown): Promise<BookingActionSt
   const result = runtime();
   if (!result.ok) return { success: false, message: UI_MESSAGES.UNAVAILABLE };
   const requestHeaders = await headers();
-  const limit = await result.value.limiter.accept(
-    requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local',
-  );
+  const limit = await result.value.limiter.accept(clientSource(requestHeaders));
   if (!limit.ok) return { success: false, message: UI_MESSAGES.FAILURE };
-  const booked = await result.value.createBooking.execute(raw);
-  if (booked.ok)
+  const publicTest = publicTestEnabled(result.value.env);
+  const input = publicTest
+    ? publicTestBooking(raw, result.value.env.PUBLIC_TEST_ORGANIZATION_ID ?? '')
+    : raw;
+  const booked = await result.value.createBooking.execute(input);
+  if (booked.ok && !publicTest)
     scheduleBookingConfirmation(
       booked.value,
       result.value.runner,
       result.value.env.SELF_CANCEL_HMAC_SECRET,
     );
   return booked.ok
-    ? { success: true, message: bookingSuccessMessage(booked.value), booking: booked.value }
+    ? {
+        success: true,
+        message: booked.value.paymentSimulated
+          ? PUBLIC_TEST.PAYMENT_SUCCESS
+          : bookingSuccessMessage(booked.value),
+        booking: booked.value,
+      }
     : {
         success: false,
         message: bookingFailureMessage(booked.error.code),

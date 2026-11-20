@@ -5,6 +5,7 @@ import { AppLink as Link } from '../_ui/AppLink';
 import type { PortalActivity } from '../../core/ports/portal-models';
 import { PORTAL, AUDIENCE_LABELS, PAYMENT_LABELS } from '../../config/constants';
 import { formatMoney } from '../_ui/format-money';
+import { IceIcon } from '../_ui/IceIcon';
 export function ActivityCards({
   activities,
   organizationId,
@@ -32,14 +33,35 @@ export function ActivityCards({
             <span>{AUDIENCE_LABELS[activity.audiencePolicy]}</span>
             <span>{PAYMENT_LABELS[activity.paymentMode]}</span>
           </div>
-          <nav className="portal-card-actions" aria-label={activity.name}>
-            <Link href={`/app/${organizationId}/activites/${activity.id}`}>{PORTAL.MANAGE} →</Link>
-            <Link href={`/app/${organizationId}/reservations?activityId=${activity.id}`}>
-              {PORTAL.VIEW_ATTENDEES}
-            </Link>
-          </nav>
+          <ActivityActions activity={activity} organizationId={organizationId} />
         </article>
       ))}
     </div>
+  );
+}
+
+function ActivityActions({
+  activity,
+  organizationId,
+}: {
+  readonly activity: PortalActivity;
+  readonly organizationId: string;
+}) {
+  return (
+    <nav className="portal-card-actions" aria-label={activity.name}>
+      <Link
+        className="portal-secondary-action"
+        href={`/app/${organizationId}/activites/${activity.id}`}
+      >
+        {PORTAL.MANAGE}
+        <IceIcon name="arrow" />
+      </Link>
+      <Link
+        className="portal-secondary-action"
+        href={`/app/${organizationId}/reservations?activityId=${activity.id}`}
+      >
+        {PORTAL.VIEW_ATTENDEES}
+      </Link>
+    </nav>
   );
 }

@@ -7,21 +7,21 @@ import { ParticipantNavigation } from '../../_ui/ParticipantNavigation';
 import { runtime } from '../../../composition/runtime';
 import { IceBookingWidget } from '../../_ui/IceBookingWidget';
 import { UI_MESSAGES } from '../../../config/constants';
+import { INTERFACE_QUALITY as UI } from '../../../config/interface-quality';
+import { PortalError } from '../../_portal/PortalError';
 export const dynamic = 'force-dynamic';
-export default async function ActivityPage({
-  params,
-  searchParams,
-}: {
+interface Props {
   readonly searchParams: Promise<{ from?: string }>;
   readonly params: Promise<{ organization: string; activityId: string }>;
-}) {
+}
+export default async function ActivityPage({ params, searchParams }: Props) {
   const route = await params;
   const query = await searchParams;
   const app = runtime();
   if (!app.ok)
     return (
       <main>
-        <p>{UI_MESSAGES.UNAVAILABLE}</p>
+        <PortalError message={UI_MESSAGES.UNAVAILABLE} href="/" label={UI.HOME} />
       </main>
     );
   const result = await app.value.bookingPage.execute({
@@ -29,7 +29,9 @@ export default async function ActivityPage({
     activityId: route.activityId,
   });
   if (result.ok) await redirectAppearance(query, route, result.value.organizationId);
-  const edit = result.ok ? await editableTermsUrl(result.value.organizationId, route.activityId) : undefined;
+  const edit = result.ok
+    ? await editableTermsUrl(result.value.organizationId, route.activityId)
+    : undefined;
   return (
     <main className="participant-page">
       {result.ok ? (
@@ -39,16 +41,23 @@ export default async function ActivityPage({
             slug={route.organization}
             from={query.from}
           />
-          <IceBookingWidget key={result.value.activityId} data={{ ...result.value, termsEditUrl: edit }} />
+          <IceBookingWidget
+            key={result.value.activityId}
+            data={{ ...result.value, termsEditUrl: edit }}
+          />
         </>
       ) : (
-        <p>{UI_MESSAGES.UNAVAILABLE}</p>
+        <PortalError message={UI_MESSAGES.UNAVAILABLE} href="/" label={UI.HOME} />
       )}
     </main>
   );
 }
 
-async function redirectAppearance(query: { from?: string }, route: { activityId: string }, organizationId: string) {
+async function redirectAppearance(
+  query: { from?: string },
+  route: { activityId: string },
+  organizationId: string,
+) {
   if (query.from === 'appearance') {
     const own = await simulation(await headers(), organizationId);
     if (!own.ok) notFound();

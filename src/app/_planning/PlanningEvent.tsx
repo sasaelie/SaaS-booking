@@ -1,7 +1,8 @@
 import type { CSSProperties } from 'react';
 import { IceIcon } from '../_ui/IceIcon';
 import { PLANNING } from '../../config/planning';
-import { AppLink } from '../_ui/AppLink';
+import { PressableLink } from '../_ui/PressableLink';
+import { PlanningLinkFeedback } from './PlanningLinkFeedback';
 import { dayLabel, localDay, timeLabel } from '../_ui/calendar-dates';
 import { activityTone, sessionPhase, sessionStatus } from './planning-sessions';
 import type { PlanningProps, PositionedSession } from './types';
@@ -26,10 +27,11 @@ export function PlanningEvent({ row, timezone, now, rangeStart, selected, onSele
   const content = <EventContent name={session.name} times={times} status={status} />;
   if (session.href)
     return (
-      <AppLink {...common} className="planning-event portal-session-link" href={session.href}>
+      <PressableLink {...common} className="planning-event portal-session-link" href={session.href}>
         {content}
+        <PlanningLinkFeedback />
         <span className="ice-sr-only">{PLANNING.OPEN}</span>
-      </AppLink>
+      </PressableLink>
     );
   return (
     <button

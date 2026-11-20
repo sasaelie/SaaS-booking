@@ -1,0 +1,160 @@
+.administration-period {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 1.3fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+.administration-period:not(:has(select)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+}
+.administration-finance-tabs {
+  margin: 0;
+}
+.administration-finance-summary dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+}
+.administration-finance-summary dt {
+  font-size: 12px;
+  color: var(--ice-quiet);
+  line-height: 1.6;
+}
+.administration-finance-summary dd {
+  margin: 8px 0 0;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.administration-finance-summary [data-negative='true'] {
+  color: color-mix(in srgb, var(--status-red) 35%, var(--ui-text-primary));
+}
+.administration-ledger-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+}
+.administration-ledger-row p {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 6px 0 0;
+}
+.administration-ledger-row > details {
+  grid-column: 1 / -1;
+}
+.administration-ledger-amount {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+  align-content: start;
+}
+.administration-ledger-amount > strong {
+  font-variant-numeric: tabular-nums;
+}
+.administration-reference {
+  font-family: monospace;
+  overflow-wrap: anywhere;
+  margin-block: 12px;
+}
+.administration-records {
+  padding-block: 0;
+}
+.administration-reconciliation-details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  font-size: 13px;
+}
+.administration-reconciliation-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.administration-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.administration-export-actions > a {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 16px;
+  font-size: 13px;
+}
+.administration-export-actions > p {
+  flex-basis: 100%;
+}
+.administration-document-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 16px;
+}
+.administration-document-row > div {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.administration-document-row > div:first-child p {
+  margin: 0;
+}
+.administration-document-row > :is(a, button) {
+  padding: 10px 14px;
+  font-size: 12px;
+}
+.administration-invoice-draft > p {
+  font-size: 18px;
+}
+.administration-transmission {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 20px;
+  margin-top: 24px;
+}
+.administration-transmission h3 {
+  font-size: 16px;
+}
+.administration-transmission > a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  font-size: 12px;
+}
+@media (max-width: 1000px) {
+  .administration-period {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .administration-period > button {
+    justify-self: start;
+  }
+}
+@media (max-width: 600px) {
+  .administration-document-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .administration-document-row > :is(a, button) {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .administration-finance-summary dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 16px;
+  }
+  .administration-finance-summary dd {
+    font-size: 20px;
+  }
+  .administration-period:not(:has(select)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .administration-ledger-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .administration-ledger-amount {
+    justify-items: start;
+    grid-template-columns: auto auto;
+    justify-content: start;
+    align-items: center;
+    gap: 16px;
+  }
+}

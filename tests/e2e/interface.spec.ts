@@ -1,3 +1,4 @@
+import { showPlanningDay } from './planning-fixtures';
 import { expect, test, type Page, type Route } from '@playwright/test';
 async function openBooking(page: Page) {
   const path = process.env['BOOKING_TEST_PATH'];
@@ -23,6 +24,7 @@ test('supports week navigation, keyboard selection and preserved contact details
   await openBooking(page);
   const next = page.getByRole('button', { name: 'Semaine suivante', exact: true });
   if (await next.isEnabled()) await next.click();
+  await showPlanningDay(page);
   const day = page.locator('.planning-event:not(:disabled)').last();
   await day.focus();
   await day.press('Enter');

@@ -27,9 +27,11 @@ import './_portal/portal-layout.css';
 import './_portal/portal-components.css';
 import './_portal/portal-details.css';
 import './_portal/portal-forms.css';
+import './_portal/sharing.css';
 import './_portal/portal-media.css';
 import './_portal/portal-responsive.css';
 import './_portal/navigation.css';
+import './_portal/booking-layout.css';
 import './_portal/administration.css';
 import './_auth/auth.css';
 import './_ui/service.css';
@@ -46,6 +48,7 @@ import './_ui/modal.css';
 import './_ui/social-glass.css';
 import './_ui/interaction-polish.css';
 import './_ui/participant-polish.css';
+import './_ui/website-preview.css';
 import './_ui/glass-button-tokens.css';
 import './_ui/buttons.css';
 import './_ui/button-interactions.css';
@@ -57,8 +60,23 @@ import './_planning/planning-layout.css';
 import './_planning/planning-glass.css';
 import './_planning/planning-days.css';
 import './_planning/planning-month.css';
+import './_planning/planning-week.css';
 import './_planning/planning-events.css';
 import './manage/ticket-layout.css';
+import './_ui/quality-layout.css';
+import './_ui/quality-booking.css';
+import './_portal/quality-workspace.css';
+import './_portal/administration-workspace.css';
+import './_portal/administration-finance.css';
+import './_portal/administration-usage.css';
+import './_portal/platform-settings/platform-settings.css';
+import './_portal/administrator-security/administrator-security.css';
+import './_ui/liquid/layout.css';
+import './_ui/liquid/actions.css';
+import './_ui/liquid/workspace.css';
+import './_ui/liquid/public.css';
+import './_ui/liquid/sections.css';
+export const dynamic = 'force-dynamic';
 export const metadata = {
   title: `${PLATFORM_BRAND.NAME} — Réservations`,
   description: 'Réservez votre place à une activité.',
@@ -67,7 +85,7 @@ export const metadata = {
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (
     <html lang="fr">
-      <body>
+      <body className="liquid-ui">
         <PageNavigationProvider>
           <SessionExitGuard />
           <SessionHistorySync />

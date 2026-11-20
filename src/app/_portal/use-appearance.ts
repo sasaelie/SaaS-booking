@@ -34,6 +34,7 @@ export function useAppearance(organization: OrganizationSummary) {
     target,
     setTarget,
     hue,
+    customHue: colors[key],
     storyTextTone: colors.storyTextTone,
     storyLayout: colors.storyLayout,
     dirty,
@@ -62,10 +63,10 @@ function appearanceChanges(
     },
     reset: () => {
       setColors({
-        storyLayout: null,
+        storyLayout: colors.storyLayout,
         storyTextTone: 'WHITE',
-        organizerHue: UI.ORGANIZER,
-        participantHue: UI.PARTICIPANT,
+        organizerHue: null,
+        participantHue: null,
       });
       clear();
     },

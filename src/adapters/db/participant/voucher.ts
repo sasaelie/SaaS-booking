@@ -8,6 +8,7 @@ import { ERROR_CODES } from '../../../config/constants';
 export interface ParticipantCodeOptions {
   readonly secret: string;
   readonly test?: boolean;
+  readonly skipNotifications?: boolean;
 }
 export async function resolveBookingVoucher(
   db: Executor,
