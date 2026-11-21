@@ -43,12 +43,14 @@ jobs:
       - run: npm run test:integration
       - run: npm run build
       - run: npm run check:runtime-traces
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium firefox webkit
       - name: Prepare browser scenario
         run: |
           ALLOW_DEMO_SEED=true npm run db:seed > seed.log
           node -e "const fs=require('node:fs');const eol=String.fromCharCode(10);const path=fs.readFileSync('seed.log','utf8').trim().split(eol).at(-1);fs.appendFileSync(process.env.GITHUB_ENV,'BOOKING_TEST_PATH='+path+eol);"
       - run: npm run test:e2e
+      - name: Check embedded booking on Firefox and WebKit
+        run: npx playwright test --config playwright.embed.config.ts --project firefox --project webkit
 
       - name: Summarize verification
         if: always()

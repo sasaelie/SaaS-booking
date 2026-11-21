@@ -18,7 +18,9 @@ export default async function Page({
       ) : (
         <p>{UI_MESSAGES.UNAVAILABLE}</p>
       )}
-      <EmbedHeightReporter />
+      <EmbedHeightReporter
+        available={Boolean(result?.ok && result.value.showPlatformSignature === false)}
+      />
     </main>
   );
 }

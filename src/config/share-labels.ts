@@ -71,7 +71,7 @@ export const SHARING_MODES = [
   ['website', SHARE_UI.WEBSITE_MODE],
 ] as const;
 export const EMBED = {
-  CATALOG_VERSION: 3,
+  CATALOG_VERSION: 4,
   FLOATING_HEIGHT: 'min(720px, calc(90vh - 88px))',
   BUTTON_RADIUS: '8px',
   RESIZE_TYPE: 'booking-widget:resize',
