@@ -1,10 +1,10 @@
 -- SECURITY INVOKER: the public service cannot read the source or execute publication.
-CREATE FUNCTION booking_public_test.publish_configuration() RETURNS void
+CREATE OR REPLACE FUNCTION booking_public_test.publish_organization(tenant uuid) RETURNS void
  LANGUAGE plpgsql SECURITY INVOKER SET search_path=pg_catalog AS $publish$
-DECLARE tenant uuid; public_slug text; active boolean;
+DECLARE public_slug text; active boolean;
 BEGIN
- SELECT organization_id,slug,enabled INTO tenant,public_slug,active FROM booking_public_test.publication;
- IF tenant IS NULL THEN RETURN; END IF;
+ SELECT slug,enabled INTO public_slug,active FROM booking_public_test.publication WHERE organization_id=tenant;
+ IF public_slug IS NULL THEN RETURN; END IF;
  INSERT INTO booking_public_test.organizations(id,name,slug,timezone,primary_text_color,kind)
   SELECT id,name,public_slug,timezone,primary_text_color,kind FROM __SOURCE_SCHEMA__.organizations WHERE id=tenant
   ON CONFLICT(id) DO UPDATE SET name=excluded.name,slug=excluded.slug,timezone=excluded.timezone,
@@ -61,13 +61,22 @@ BEGIN
   ON CONFLICT(organization_id) DO UPDATE SET theme=excluded.theme,logo_storage_key=excluded.logo_storage_key,
    background_storage_key=excluded.background_storage_key,participant_hue=excluded.participant_hue,
    organizer_hue=excluded.organizer_hue,story_text_tone=excluded.story_text_tone,story_layout=excluded.story_layout;
- DELETE FROM booking_public_test.organization_branding b WHERE NOT EXISTS
+ DELETE FROM booking_public_test.organization_branding b WHERE b.organization_id=tenant AND NOT EXISTS
   (SELECT FROM __SOURCE_SCHEMA__.organization_branding source WHERE source.organization_id=b.organization_id);
- DELETE FROM booking_public_test.private_files f WHERE NOT EXISTS
+ DELETE FROM booking_public_test.private_files f WHERE f.organization_id=tenant AND NOT EXISTS
   (SELECT FROM booking_public_test.organization_branding b WHERE f.storage_key IN (b.logo_storage_key,b.background_storage_key));
 END $publish$;
+REVOKE ALL ON FUNCTION booking_public_test.publish_organization(uuid) FROM PUBLIC,anon,authenticated,booking_public_test_service;
+CREATE OR REPLACE FUNCTION booking_public_test.publish_configuration() RETURNS void
+ LANGUAGE plpgsql SECURITY INVOKER SET search_path=pg_catalog AS $all$
+DECLARE tenant uuid;
+BEGIN
+ FOR tenant IN SELECT organization_id FROM booking_public_test.publication LOOP
+  PERFORM booking_public_test.publish_organization(tenant);
+ END LOOP;
+END $all$;
 REVOKE ALL ON FUNCTION booking_public_test.publish_configuration() FROM PUBLIC,anon,authenticated,booking_public_test_service;
-CREATE FUNCTION booking_public_test.configuration_changed() RETURNS trigger
+CREATE OR REPLACE FUNCTION booking_public_test.configuration_changed() RETURNS trigger
  LANGUAGE plpgsql SECURITY INVOKER SET search_path=pg_catalog AS $changed$
 DECLARE changed_tenant uuid;
 BEGIN
@@ -80,7 +89,7 @@ BEGIN
  IF TG_TABLE_NAME='sessions' THEN
   IF TG_OP<>'DELETE' AND NOT NEW.is_manual AND NOT NEW.is_cancelled THEN RETURN NULL; END IF;
  END IF;
- PERFORM booking_public_test.publish_configuration();
+ PERFORM booking_public_test.publish_organization(changed_tenant);
  RETURN NULL;
 END $changed$;
 REVOKE ALL ON FUNCTION booking_public_test.configuration_changed() FROM PUBLIC,anon,authenticated,booking_public_test_service;
@@ -88,6 +97,7 @@ DO $triggers$
 DECLARE table_name text;
 BEGIN
  FOREACH table_name IN ARRAY ARRAY['organizations','activities','time_slots','pause_periods','sessions','organization_branding'] LOOP
+  EXECUTE format('DROP TRIGGER IF EXISTS publish_public_test ON __SOURCE_SCHEMA__.%I',table_name);
   EXECUTE format('CREATE TRIGGER publish_public_test AFTER INSERT OR UPDATE OR DELETE ON __SOURCE_SCHEMA__.%I FOR EACH ROW EXECUTE FUNCTION booking_public_test.configuration_changed()',table_name);
  END LOOP;
 END $triggers$;

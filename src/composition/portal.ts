@@ -4,6 +4,8 @@ import { LocalPauseUseCase } from '../core/use-cases/portal/local-pause.use-case
 import { ConnectUseCase } from '../core/use-cases/portal/connect.use-case';
 import { connectGateway } from './connect';
 import { ManageActivityUseCase } from '../core/use-cases/portal/manage-activity.use-case';
+import { BookingPublicationUseCase } from '../core/use-cases/portal/booking-publication.use-case';
+import { DrizzleBookingPublicationRepository } from '../adapters/db/drizzle-booking-publication.repository';
 import { ShareUseCase } from '../core/use-cases/portal/share.use-case';
 import { QrCodeAdapter } from '../adapters/share/qr-code.adapter';
 import 'server-only';
@@ -56,13 +58,7 @@ export function portal(headers: Headers) {
     pause: new LocalPauseUseCase(identity, repository, admin.pause),
     session: new PortalSessionUseCase(identity),
     connect: new ConnectUseCase(identity, connectGateway(app.value)),
-    share: new ShareUseCase(
-      identity,
-      repository,
-      new QrCodeAdapter(),
-      app.value.env.NEXT_PUBLIC_APP_URL,
-      publicationSettings(app.value),
-    ),
+    ...sharing(app.value, identity, repository),
     organizations: new OrganizationsUseCase(identity, repository),
     activities: new ActivitiesUseCase(identity, repository),
     management: new ManageActivityUseCase(identity, repository),
@@ -106,6 +102,28 @@ function platformReports(app: Runtime, identity: SessionIdentityAdapter) {
       identity,
       new DrizzlePlatformReportingRepository(app.db),
       new PlatformExportAdapter(),
+    ),
+  };
+}
+
+function sharing(
+  app: Runtime,
+  identity: SessionIdentityAdapter,
+  repository: DrizzlePortalRepository,
+) {
+  const publication = new BookingPublicationUseCase(
+    identity,
+    new DrizzleBookingPublicationRepository(app.db, app.env),
+  );
+  return {
+    publication,
+    share: new ShareUseCase(
+      identity,
+      repository,
+      new QrCodeAdapter(),
+      app.env.NEXT_PUBLIC_APP_URL,
+      publicationSettings(app),
+      publication,
     ),
   };
 }

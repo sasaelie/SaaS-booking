@@ -1,5 +1,6 @@
 import { AppLink as Link } from './AppLink';
 import { headers } from 'next/headers';
+import { publicTestEnabled } from '../../config/public-test';
 import { portal } from '../../composition/portal';
 import { PARTICIPANT_NAV as UI } from '../../config/participant-navigation';
 export async function ParticipantNavigation({
@@ -13,8 +14,9 @@ export async function ParticipantNavigation({
   readonly from?: string;
   readonly catalog?: boolean;
 }) {
-  const services = portal(new Headers(await headers()));
-  const organization = services.ok ? await services.value.organizations.get(organizationId) : null;
+  if (publicTestEnabled() && catalog) return null;
+  const services = publicTestEnabled() ? null : portal(new Headers(await headers()));
+  const organization = services?.ok ? await services.value.organizations.get(organizationId) : null;
   const own = organization?.ok;
   const appearance = from === UI.SOURCE;
   const href = own

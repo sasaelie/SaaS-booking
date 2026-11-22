@@ -90,3 +90,19 @@ Trois choix exclusifs (Blanc, Noir, Vert sapin) apparaissent sous « Texte de l�
 Migration 012 additive : `story_text_tone`, enum validée par Zod et CHECK PostgreSQL, blanc par défaut. Les mises à jour qui omettent cette propriété conservent le choix existant ; seuls les propriétaires peuvent le modifier. Aucun privilège client ajouté au schéma privé.
 
 La même photo et le même choix de texte s’appliquent aussi aux cartes du catalogue public. Le titre, la description et le tarif partagent le rendu de l’encart ; le bouton de réservation conserve un fond clair et son texte vert sapin. Sans photo, les cartes gardent leur présentation habituelle. Aucun nouveau réglage ni import supplémentaire n’est nécessaire.
+
+## Partage TEST autonome depuis le compte organisateur
+
+Dans Partager, une organisation non publiée voit « Activer mon partage TEST » et une confirmation explicite de publication de sa configuration (activités, horaires, prix et images). Aucun lien privé copiable n’est proposé pendant cette étape. Une fois activée, elle retrouve ses modes Sur mes réseaux sociaux / Sur mon site, avec le code correspondant à son propre identifiant et à l’origine publique.
+
+La publication est enregistrée dans `booking_public_test.publication` et vérifiée en base, sans redéployer pour chaque nouvelle organisation. Le propriétaire active sa propre copie ; la commande exige une session, la même origine, une confirmation et une autorisation propriétaire contrôlée dans la transaction. Les comptes, membres, réservations, coordonnées des participants et mouvements réels ne sont jamais copiés. Les tarifs sont conservés ; les paiements et e-mails restent simulés/désactivés.
+
+L’infrastructure `publication.sql` synchronise uniquement l’organisation concernée. `publication-upgrade.sql` permet aux politiques RLS de sélectionner plusieurs organisations explicitement publiées. Les fonctions restent SECURITY INVOKER avec search_path fixé et sans droit d’exécution pour le rôle public. Celui-ci ne peut ni publier une organisation ni modifier la liste des publications. Le contrôle des routes publiques refuse toujours les accès organisateur, administrateur et inscription ; les catalogues non publiés retournent 404.
+
+Vérification reproductible : `tests/public-test/self-service.ts` pour consentement, propriété, deux publications indépendantes et synchronisation des prix ; `tests/e2e/publication-self-service.spec.ts` pour activation, copie du lien et du script et largeurs 320/390/768/1440. Les scénarios publics vérifient ensuite réservation, paiement simulé, billet, PDF, accès par code et retour au site hôte.
+
+## Base de code destinée au lancement
+
+`main` contient l’implémentation commune de l’application. La page publique et la version intégrée emploient le même `CatalogContent`, le même formulaire de réservation, le même calendrier partagé et les mêmes cas d’usage métier. Les projets Vercel exécutent ce code avec une configuration et des données adaptées à leur environnement. La séparation des essais sert à préserver les comptes et réservations privés ; les fonctionnalités validées continuent d’évoluer dans la branche principale jusqu’au lancement.
+
+Les contrôles de taille de l’intégration attendent la confirmation `booking-widget:ready` avant de mesurer l’iframe. Une page HTML déjà présente pendant le chargement JavaScript ne signifie pas encore que le calendrier a terminé son initialisation.

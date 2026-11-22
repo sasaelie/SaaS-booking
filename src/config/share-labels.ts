@@ -1,4 +1,10 @@
 export const SHARE_UI = {
+  TEST_ACTIVATE: 'Activer mon partage TEST',
+  TEST_ACTIVATE_TITLE: 'Tester vos réservations sur votre site',
+  TEST_ACTIVATE_HINT:
+    'Activez une copie publique de vos activités pour tester le parcours de vos participants. Les noms, tarifs, horaires et images seront visibles ; les réservations, comptes et coordonnées des participants restent dans leur espace d’origine.',
+  TEST_ACKNOWLEDGE:
+    'Je souhaite rendre mes activités accessibles pour ce TEST, sans paiement réel ni e-mail.',
   TITLE: 'Votre activité, partout.',
   INTRO: 'Choisissez où proposer vos réservations : sur votre site ou avec un lien à partager.',
   CHOOSE_MODE: 'Où souhaitez-vous proposer vos réservations ?',

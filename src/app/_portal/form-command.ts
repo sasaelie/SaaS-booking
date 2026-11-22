@@ -4,6 +4,7 @@ import { text, cents } from './form-values';
 export { cents } from './form-values';
 import { commercialFormInput } from './commercial-form';
 export type PortalAction =
+  | 'publish-test-booking'
   | 'record-offline-payment'
   | 'platform-cost'
   | 'redeem-online-voucher'
@@ -80,6 +81,8 @@ function settingsInput(form: FormData, organizationId: string) {
 }
 function managementInput(action: PortalAction, form: FormData, organizationId: string) {
   switch (action) {
+    case 'publish-test-booking':
+      return { organizationId, acknowledged: form.has('acknowledged') };
     case 'manual-voucher':
       return manualVoucherInput(form, organizationId);
     case 'connect-stripe':

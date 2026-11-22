@@ -42,12 +42,12 @@ BEGIN
  FOR table_row IN SELECT tablename FROM pg_tables WHERE schemaname='booking_public_test' LOOP
   EXECUTE format('ALTER TABLE booking_public_test.%I ENABLE ROW LEVEL SECURITY',table_row.tablename);
   EXECUTE format('REVOKE ALL ON booking_public_test.%I FROM PUBLIC,anon,authenticated',table_row.tablename);
-  -- One published tenant, selected by an owner-only control row. The service cannot change it.
+  -- Only explicitly published tenants. The service cannot change the publication allowlist.
   SELECT column_name INTO tenant_column FROM information_schema.columns
    WHERE table_schema='booking_public_test' AND table_name=table_row.tablename AND column_name='organization_id';
   IF table_row.tablename='organizations' THEN tenant_column:='id'; END IF;
   IF table_row.tablename='publication' OR tenant_column IS NULL THEN definition:='true';
-  ELSE definition:=format('%I=(SELECT organization_id FROM booking_public_test.publication WHERE enabled)',tenant_column); END IF;
+  ELSE definition:=format('%I IN (SELECT organization_id FROM booking_public_test.publication WHERE enabled)',tenant_column); END IF;
   EXECUTE format('CREATE POLICY public_test_service ON booking_public_test.%I TO booking_public_test_service USING (%s) WITH CHECK (%s)',table_row.tablename,definition,definition);
  END LOOP;
 END $isolation$;

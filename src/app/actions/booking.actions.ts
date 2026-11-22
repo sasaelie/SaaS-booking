@@ -26,9 +26,7 @@ export async function createBookingAction(raw: unknown): Promise<BookingActionSt
   const limit = await result.value.limiter.accept(clientSource(requestHeaders));
   if (!limit.ok) return { success: false, message: UI_MESSAGES.FAILURE };
   const publicTest = publicTestEnabled(result.value.env);
-  const input = publicTest
-    ? publicTestBooking(raw, result.value.env.PUBLIC_TEST_ORGANIZATION_ID ?? '')
-    : raw;
+  const input = publicTest ? publicTestBooking(raw) : raw;
   const booked = await result.value.createBooking.execute(input);
   if (booked.ok && !publicTest)
     scheduleBookingConfirmation(

@@ -39,6 +39,7 @@ jobs:
           source /tmp/booking-public-test-env.sh
           node --import tsx tests/public-test/isolation.ts
           node --import tsx tests/public-test/schedule-publication.ts
+          node --import tsx tests/public-test/self-service.ts
       - name: Build the public TEST artifact
         run: |
           source /tmp/booking-public-test-env.sh
@@ -49,6 +50,17 @@ jobs:
           source /tmp/booking-public-test-env.sh
           npx playwright test --config playwright.public-test.config.ts
           node --import tsx tests/public-test/isolation.ts
+      - name: Verify organizer self-service activation and public installation code
+        run: |
+          source /tmp/booking-public-test-env.sh
+          export PUBLIC_TEST_MODE=false
+          export DATABASE_URL="$TEST_DATABASE_URL"
+          export DATABASE_SCHEMA=public
+          export NEXT_PUBLIC_APP_URL=http://127.0.0.1:3000
+          export PUBLIC_BOOKING_URL=https://public-test.example.com
+          export PUBLIC_BOOKING_ORGANIZATION_ID=9006c789-25a0-4455-8adb-0e8d17ba192b
+          export BETTER_AUTH_SECRET=local-browser-test-secret-not-a-live-credential
+          npx playwright test tests/e2e/publication-self-service.spec.ts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

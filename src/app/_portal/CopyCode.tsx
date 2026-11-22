@@ -20,7 +20,7 @@ export function CopyCode({
   return (
     <div className="portal-list">
       <code className="portal-share-code">{value}</code>
-      <button type="button" className="liquid-ice-button portal-button" onClick={copy}>
+      <button type="button" className="liquid-ice-button portal-secondary-action" onClick={copy}>
         {buttonLabel}
       </button>
       {message ? (

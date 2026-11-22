@@ -7,9 +7,10 @@ import { SESSION_NAVIGATION } from './config/session-navigation';
 import { PUBLIC_SITE } from './config/public-site';
 import { publicSiteSettings, isMarketingPath, isPublicSearchPath } from './lib/public-site';
 import { isWebsitePreviewFrame } from './config/website-preview';
-import { publicTestEnabled, publicTestPath } from './config/public-test';
-export function proxy(request: NextRequest) {
-  const restricted = publicTestResponse(request);
+import { publicTestCatalogAvailable } from './composition/public-test-catalog';
+import { publicTestCatalogSlug, publicTestEnabled, publicTestPath } from './config/public-test';
+export async function proxy(request: NextRequest) {
+  const restricted = await publicTestResponse(request);
   if (restricted) return restricted;
   const nonce = randomBytes(SECURITY.NONCE_BYTES).toString('base64');
   const policy = contentSecurityPolicy(
@@ -40,14 +41,16 @@ export function proxy(request: NextRequest) {
     response.headers.set('Cache-Control', 'private, no-store');
   return response;
 }
-function publicTestResponse(request: NextRequest) {
+async function publicTestResponse(request: NextRequest) {
   if (!publicTestEnabled()) return null;
   if (request.nextUrl.pathname === '/')
     return NextResponse.redirect(
       new URL(`/${process.env['PUBLIC_TEST_ORGANIZATION_SLUG']}`, request.url),
     );
-  return publicTestPath(request.nextUrl.pathname, process.env)
-    ? null
-    : new NextResponse(null, { status: 404, headers: { 'Cache-Control': 'no-store' } });
+  if (publicTestPath(request.nextUrl.pathname, process.env)) {
+    const slug = publicTestCatalogSlug(request.nextUrl.pathname);
+    if (!slug || (await publicTestCatalogAvailable(slug))) return null;
+  }
+  return new NextResponse(null, { status: 404, headers: { 'Cache-Control': 'no-store' } });
 }
 export const config = { matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'] };

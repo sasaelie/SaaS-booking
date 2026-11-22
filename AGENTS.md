@@ -42,3 +42,6 @@ Avant de considérer une tâche terminée, exécute `npm run verify` (`tsc --noE
 
 ## 6. MÉMOIRE — FINITION AVANT LANCEMENT
 Lorsque l’utilisateur demande « fais la finition », lire [le plan de finition](docs/PLAN-FINITION-LANCEMENT.md), revérifier l’état réel du projet, puis décomposer et traiter ses étapes avec vérification après chaque modification. Cette mémoire ne demande pas d’activer les paiements réels ou de lancer les opérations dès maintenant.
+
+## 7. SOURCE PRINCIPALE ET CALENDRIER COMMUN
+`main` est la source de référence de l’application destinée au lancement. Les corrections validées sont intégrées dans cette branche. Le catalogue public, le calendrier hebdomadaire/mensuel, la réservation autonome et l’intégration sur un site utilisent le même moteur et les composants partagés existants. Les environnements de recette/TEST isolent les données et désactivent les paiements réels ; ils ne constituent pas un calendrier à réimplémenter ensuite. Toute nouvelle évolution doit prolonger cette implémentation commune.

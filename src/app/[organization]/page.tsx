@@ -25,6 +25,7 @@ export default async function Page({
       </main>
     );
   const data = await service.value.execute(organization);
+  if (!data.ok && data.error.code === 'NOT_FOUND') notFound();
   if (!data.ok)
     return (
       <main>
