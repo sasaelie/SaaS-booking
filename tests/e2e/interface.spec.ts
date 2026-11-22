@@ -1,5 +1,6 @@
 import { showPlanningDay } from './planning-fixtures';
 import { expect, test, type Page, type Route } from '@playwright/test';
+import { SESSION_EDIT } from '../../src/config/session-edit';
 async function openBooking(page: Page) {
   const path = process.env['BOOKING_TEST_PATH'];
   if (!path) throw Error('BOOKING_TEST_PATH required');
@@ -31,14 +32,14 @@ test('supports week navigation, keyboard selection and preserved contact details
   const selection = await page.locator('input[name="startsAtIso"]').inputValue();
   await page.getByRole('button', { name: 'Continuer', exact: true }).click();
   await page
-    .getByRole('textbox', { name: 'Adresse e-mail', exact: true })
+    .getByRole('textbox', { name: SESSION_EDIT.PARENT_EMAIL, exact: true })
     .fill('mobile@example.com');
   await page.getByRole('button', { name: 'Modifier la séance', exact: true }).click();
   await expect(page.locator('input[name="startsAtIso"]')).toHaveValue(selection);
   await page.getByRole('button', { name: 'Continuer', exact: true }).click();
-  await expect(page.getByRole('textbox', { name: 'Adresse e-mail', exact: true })).toHaveValue(
-    'mobile@example.com',
-  );
+  await expect(
+    page.getByRole('textbox', { name: SESSION_EDIT.PARENT_EMAIL, exact: true }),
+  ).toHaveValue('mobile@example.com');
   await expect(
     page.getByRole('textbox', { name: 'Téléphone d’urgence', exact: true }),
   ).toHaveAttribute('required');
