@@ -1,6 +1,7 @@
 import { showPlanningDay } from './planning-fixtures';
 import { expect, test } from '@playwright/test';
 import { Pool } from 'pg';
+import { SESSION_EDIT } from '../../src/config/session-edit';
 const url = process.env['TEST_DATABASE_URL'];
 if (!url || new URL(url).hostname !== '127.0.0.1' || new URL(url).pathname !== '/booking_test')
   throw Error('Local test database required');
@@ -19,9 +20,9 @@ test('books through the browser and persists exactly one unpaid confirmation', a
   await showPlanningDay(page);
   await page.locator('.planning-event:not(:disabled)').first().click();
   await page.getByRole('button', { name: 'Continuer', exact: true }).click();
-  await page.getByRole('textbox', { name: 'Prénom', exact: true }).fill('Marie');
-  await page.getByRole('textbox', { name: 'Nom', exact: true }).fill('Test');
-  await page.getByRole('textbox', { name: 'Adresse e-mail', exact: true }).fill(email);
+  await page.getByRole('textbox', { name: SESSION_EDIT.CHILD_FIRST, exact: true }).fill('Marie');
+  await page.getByRole('textbox', { name: SESSION_EDIT.CHILD_LAST, exact: true }).fill('Test');
+  await page.getByRole('textbox', { name: SESSION_EDIT.PARENT_EMAIL, exact: true }).fill(email);
   await page
     .getByRole('textbox', { name: 'Téléphone d’urgence', exact: true })
     .fill('+32470123456');

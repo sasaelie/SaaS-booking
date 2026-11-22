@@ -33,10 +33,10 @@ export async function completeEmbeddedBooking(page: Page, submitLabel = 'Confirm
   await expect(frame.getByRole('button', { name: 'Continuer', exact: true })).toBeVisible();
   await assertEmbedFits(page);
   await frame.getByRole('button', { name: 'Continuer', exact: true }).click();
-  await frame.getByRole('textbox', { name: 'Prénom', exact: true }).fill('Marie');
-  await frame.getByRole('textbox', { name: 'Nom', exact: true }).fill('Essai');
+  await frame.getByRole('textbox', { name: /^Prénom(?: du participant mineur)?$/ }).fill('Marie');
+  await frame.getByRole('textbox', { name: /^Nom(?: du participant mineur)?$/ }).fill('Essai');
   await frame
-    .getByRole('textbox', { name: 'Adresse e-mail', exact: true })
+    .getByRole('textbox', { name: /^(?:Adresse e-mail|E-mail du représentant légal)$/ })
     .fill(`embed-${crypto.randomUUID()}@example.com`);
   const phone = frame.getByRole('textbox', { name: /Téléphone/ });
   if (await phone.count()) await phone.fill('+32470000000');
