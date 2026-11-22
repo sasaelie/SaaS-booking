@@ -60,7 +60,7 @@ jobs:
           export PUBLIC_BOOKING_URL=https://public-test.example.com
           export PUBLIC_BOOKING_ORGANIZATION_ID=9006c789-25a0-4455-8adb-0e8d17ba192b
           export BETTER_AUTH_SECRET=local-browser-test-secret-not-a-live-credential
-          npx playwright test tests/e2e/publication-self-service.spec.ts
+          npx playwright test --config playwright.publication.config.ts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -68,3 +68,5 @@ jobs:
           path: |
             test-results/
             qa-results/public-test-browser.json
+            qa-results/publication-browser.json
+            qa-results/publication-artifacts/

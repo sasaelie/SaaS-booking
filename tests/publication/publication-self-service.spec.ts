@@ -5,17 +5,15 @@ import {
   closeBrowserDatabase,
   login,
   noHorizontalOverflow,
-} from './portal-fixtures';
+} from '../e2e/portal-fixtures';
 import { SHARE_UI } from '../../src/config/constants';
 test.afterAll(closeBrowserDatabase);
 test('requires activation then supplies the organization’s public code without private URLs', async ({
   page,
   context,
 }, info) => {
-  test.skip(
-    !process.env['PUBLIC_BOOKING_URL'],
-    'Run with the isolated public TEST publication infrastructure.',
-  );
+  if (!process.env['PUBLIC_BOOKING_URL'])
+    throw Error('Public TEST publication infrastructure is required.');
   const space = await browserSpace();
   await page.request.get('/app');
   await page.request.get('/api/portal/command');
