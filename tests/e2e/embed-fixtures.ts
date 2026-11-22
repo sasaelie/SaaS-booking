@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import { expect, type Page } from '@playwright/test';
 import { EMBED } from '../../src/config/constants';
+import { EMBED_HEALTH } from '../../src/config/embed-health';
 import { embedInstallCode } from '../../src/lib/embed-install-code';
 export async function externalWebsite(
   space: { slug: string; activityId?: string },
@@ -46,6 +47,11 @@ export async function completeEmbeddedBooking(page: Page, submitLabel = 'Confirm
 }
 
 export async function assertEmbedFits(page: Page) {
+  await expect(page.locator('[data-booking-widget]')).toHaveAttribute(
+    'data-booking-state',
+    'ready',
+    { timeout: EMBED_HEALTH.TIMEOUT_MS },
+  );
   if (await page.locator('iframe').evaluate((element) => Boolean(element.closest('dialog')))) {
     await assertFloatingViewport(page);
     return;

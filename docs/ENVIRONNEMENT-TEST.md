@@ -100,3 +100,9 @@ La publication est enregistrée dans `booking_public_test.publication` et vérif
 L’infrastructure `publication.sql` synchronise uniquement l’organisation concernée. `publication-upgrade.sql` permet aux politiques RLS de sélectionner plusieurs organisations explicitement publiées. Les fonctions restent SECURITY INVOKER avec search_path fixé et sans droit d’exécution pour le rôle public. Celui-ci ne peut ni publier une organisation ni modifier la liste des publications. Le contrôle des routes publiques refuse toujours les accès organisateur, administrateur et inscription ; les catalogues non publiés retournent 404.
 
 Vérification reproductible : `tests/public-test/self-service.ts` pour consentement, propriété, deux publications indépendantes et synchronisation des prix ; `tests/e2e/publication-self-service.spec.ts` pour activation, copie du lien et du script et largeurs 320/390/768/1440. Les scénarios publics vérifient ensuite réservation, paiement simulé, billet, PDF, accès par code et retour au site hôte.
+
+## Base de code destinée au lancement
+
+`main` contient l’implémentation commune de l’application. La page publique et la version intégrée emploient le même `CatalogContent`, le même formulaire de réservation, le même calendrier partagé et les mêmes cas d’usage métier. Les projets Vercel exécutent ce code avec une configuration et des données adaptées à leur environnement. La séparation des essais sert à préserver les comptes et réservations privés ; les fonctionnalités validées continuent d’évoluer dans la branche principale jusqu’au lancement.
+
+Les contrôles de taille de l’intégration attendent la confirmation `booking-widget:ready` avant de mesurer l’iframe. Une page HTML déjà présente pendant le chargement JavaScript ne signifie pas encore que le calendrier a terminé son initialisation.
