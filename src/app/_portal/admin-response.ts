@@ -5,6 +5,7 @@ export const AdminResponseSchema = z.object({
   data: z
     .object({
       status: z.string().optional(),
+      sessionStartsAt: z.iso.datetime().optional(),
       affectedBookingsCount: z.number().int().optional(),
       confirmationHash: z.string().optional(),
       presignedUrl: z

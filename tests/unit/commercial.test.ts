@@ -29,6 +29,9 @@ it('does not debit a fixed fee on fully credited/free bookings or Pro', () => {
   expect(commercialQuote({ plan: 'LIBERTE', amountCents: 49 }).ok).toBe(false);
 });
 it('uses the cash amount after a voucher and a stable half-up rounding', () => {
+  expect(
+    commercialQuote({ plan: 'PRO', amountCents: 49, paymentMode: 'BANK_TRANSFER' }),
+  ).toMatchObject({ value: { amountCents: 49, commissionCents: 0 } });
   expect(commercialQuote({ plan: 'LIBERTE', amountCents: 1000 })).toMatchObject({
     value: { commissionCents: 80 },
   });

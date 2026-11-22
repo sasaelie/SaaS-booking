@@ -85,3 +85,26 @@
     font-size: 12px;
   }
 }
+
+.liquid-ui .portal-inline-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  margin-block: 8px 24px;
+}
+.liquid-ui .portal-inline-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ice-quiet);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.liquid-ui .portal-inline-links a[aria-current='page'] {
+  color: var(--liquid-accent);
+  border-bottom-color: currentColor;
+}
+.liquid-ui .portal-inline-links a:focus-visible {
+  outline: 2px solid var(--liquid-accent);
+  outline-offset: 2px;
+}

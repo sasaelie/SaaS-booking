@@ -12,6 +12,8 @@ import { failure } from '../../../lib/errors';
 import { ERROR_CODES, BOOKING_STATUSES, PAYMENT_MODES, JOB_TYPES } from '../../../config/constants';
 import type { BankTransferRepositoryPort } from '../../../core/ports/bank.port';
 import { accountingArchiveUntil } from '../../../core/domain/accounting-retention';
+import { consumeVoucher } from '../reservation/voucher';
+import { issueRemainder } from '../vouchers/remainder';
 function decisionValues(booking: BookingRow, approved: boolean, now: Date) {
   return {
     status: approved ? BOOKING_STATUSES.CONFIRMED : BOOKING_STATUSES.CANCELLED_BY_ORGANIZER,
@@ -58,18 +60,46 @@ export async function decideBankTransfer(
     (approved ? BOOKING_STATUSES.CONFIRMED : BOOKING_STATUSES.CANCELLED_BY_ORGANIZER)
   )
     return ok({ proofStorageKey });
-  if (booking.status !== BOOKING_STATUSES.PROOF_SUBMITTED)
+  const pending = booking.status === BOOKING_STATUSES.PENDING_PAYMENT;
+  if (booking.status !== BOOKING_STATUSES.PROOF_SUBMITTED && !(pending && approved))
     return failure(ERROR_CODES.CONFLICT, 'Bank', 'decide');
+  if (pending && !input.reference?.trim())
+    return failure(ERROR_CODES.VALIDATION_FAILED, 'Bank', 'reference');
   if (approved && !(await canConfirm(tx, context, input.now)))
     return failure(ERROR_CODES.SESSION_FULL, 'Bank', 'decide');
   await tx
     .update(bookings)
     .set(decisionValues(booking, approved, input.now))
     .where(eq(bookings.id, booking.id));
-  if (approved)
-    await recordFinancialPayment(tx, booking.id, booking.paymentReference ?? booking.id, input.now);
+  if (approved) await approveEffects(tx, booking, input.reference, input.now);
   await decisionEffects(tx, booking, approved, proofStorageKey);
   return ok({ proofStorageKey });
+}
+
+async function approveEffects(
+  tx: Transaction,
+  booking: BookingRow,
+  reference: string | undefined,
+  now: Date,
+) {
+  await consumeVoucher(
+    tx,
+    {
+      id: booking.appliedVoucherId,
+      discount: booking.voucherDiscountCents,
+      remaining: booking.unitPriceCents - booking.voucherDiscountCents,
+    },
+    booking.id,
+    null,
+    now,
+  );
+  await recordFinancialPayment(
+    tx,
+    booking.id,
+    `bank:${booking.id}:${reference || booking.paymentReference || booking.id}`,
+    now,
+  );
+  await issueRemainder(tx, booking.id, booking.organizationId);
 }
 
 async function proofToPurge(tx: Transaction, booking: BookingRow): Promise<string | null> {

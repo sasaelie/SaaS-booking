@@ -2,7 +2,7 @@ import { expect, it } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { db } from './database';
 import { request } from './fixtures';
-import { sessions, rescheduleVouchers, activities } from '../../src/adapters/db/schema';
+import { sessions, rescheduleVouchers, activities, bookings } from '../../src/adapters/db/schema';
 import { DrizzleSelfBookingRepository } from '../../src/adapters/db/drizzle-self-booking.repository';
 import { DrizzleSessionRepository } from '../../src/adapters/db/drizzle-session.repository';
 import { retainOperational } from '../../src/adapters/db/operational-retention';
@@ -37,8 +37,8 @@ it('does not close access for absent, created or payment-locked reports, includi
       lockedBookingId: null,
     })
     .where(eq(rescheduleVouchers.id, setup.voucher.id));
-  expect((await repository().authorizeCode(setup.ticket.code, new Date())).ok).toBe(false);
-  expect((await new DrizzleSelfBookingRepository(db).read(setup.payload)).ok).toBe(false);
+  expect((await repository().authorizeCode(setup.ticket.code, new Date())).ok).toBe(true);
+  expect((await new DrizzleSelfBookingRepository(db).read(setup.payload)).ok).toBe(true);
   await db
     .update(sessions)
     .set({
@@ -46,16 +46,20 @@ it('does not close access for absent, created or payment-locked reports, includi
       endsAt: new Date(setup.context.startsAt.getTime() + 7200000),
     })
     .where(eq(sessions.id, setup.booking.sessionId));
-  expect((await repository().authorizeCode(setup.ticket.code, new Date())).ok).toBe(false);
+  expect((await repository().authorizeCode(setup.ticket.code, new Date())).ok).toBe(true);
 });
 
-it('preserves historical access with no report and excludes it from automatic anonymization', async () => {
+it('closes fully settled historical access after 30 days and permits automatic anonymization', async () => {
   const setup = await confirmed();
   await past(setup.booking.sessionId);
+  await db
+    .update(bookings)
+    .set({ amountPaidCents: 3000, paidAt: new Date() })
+    .where(eq(bookings.id, setup.booking.bookingId));
   const future = new Date(Date.now() + 5184000000);
-  expect((await repository().authorizeCode(setup.ticket.code, future)).ok).toBe(true);
+  expect((await repository().authorizeCode(setup.ticket.code, future)).ok).toBe(false);
   const candidates = required(await retainOperational(db, future, true));
-  expect(candidates.eligible.map((b) => b.bookingId)).not.toContain(setup.booking.bookingId);
+  expect(candidates.eligible.map((b) => b.bookingId)).toContain(setup.booking.bookingId);
 });
 
 it('uses a client code as a report, preserves idempotency, and moves the remainder to the new ticket', async () => {
@@ -68,7 +72,7 @@ it('uses a client code as a report, preserves idempotency, and moves the remaind
   expect(required(await repo.reserveSeatAtomically(await request(raw))).bookingId).toBe(
     result.bookingId,
   );
-  expect((await repository().authorizeCode(setup.ticket.code, new Date())).ok).toBe(false);
+  expect((await repository().authorizeCode(setup.ticket.code, new Date())).ok).toBe(true);
   const next = required(
     await repository().ticket({ ...setup.payload, bookingId: result.bookingId }, new Date()),
   );

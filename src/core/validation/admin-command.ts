@@ -26,6 +26,7 @@ export const AdminCommandSchema = z.discriminatedUnion('action', [
     action: z.literal('review-bank'),
     bookingId: z.uuid(),
     decision: z.enum(['APPROVE', 'REJECT']),
+    reference: z.string().trim().max(INPUT_LIMITS.KEY_MAX).optional(),
   }),
   z.object({ ...base, action: z.literal('view-proof'), bookingId: z.uuid() }),
   z.object({

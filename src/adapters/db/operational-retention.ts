@@ -5,31 +5,19 @@ import { bookings, accountingArchives } from './schema';
 import { enqueue } from './jobs/enqueue';
 import { accountingArchiveUntil } from '../../core/domain/accounting-retention';
 import { COMMERCIAL } from '../../config/commercial';
-import { JOB_TYPES, TIME } from '../../config/constants';
+import { JOB_TYPES } from '../../config/constants';
 import { ok } from '../../lib/result';
 import { expireAccountingArchives } from './accounting-expiry';
+import { bookingClosedAt, bookingOperationsOpen } from './booking-lifecycle';
 export async function retainOperational(db: DrizzlePgDb, now: Date, dryRun: boolean) {
-  const cutoff = new Date(now.getTime() - COMMERCIAL.OPERATIONAL_RETENTION_DAYS * TIME.DAY_MS);
   return atomic(db, 'OperationalRetention', async (tx) => {
     if (!dryRun) await expireAccountingArchives(tx, now);
     const candidates = await rows<{ id: string; organization_id: string; closed_at: Date }>(
       tx,
       sql`
-      SELECT b.id,b.organization_id,GREATEST(s.ends_at,b.cancelled_at,b.paid_at,b.refund_updated_at,
-        (SELECT max(COALESCE(v.used_at,v.expires_at)) FROM reschedule_vouchers v WHERE v.organization_id=b.organization_id AND v.origin_booking_id=b.id),
-        (SELECT max(e.created_at) FROM financial_entries e WHERE e.organization_id=b.organization_id AND e.booking_id=b.id)) AS closed_at
+      SELECT b.id,b.organization_id,${bookingClosedAt()} AS closed_at
       FROM bookings b JOIN sessions s ON s.id=b.session_id AND s.organization_id=b.organization_id
-      WHERE b.anonymized_at IS NULL AND NOT b.legal_hold AND NOT b.dispute_open AND s.ends_at<=${cutoff}
-        AND NOT EXISTS(SELECT 1 FROM booking_access_credentials c WHERE c.organization_id=b.organization_id AND c.booking_id=b.id AND c.revoked_at IS NULL AND c.version=b.self_service_version AND c.closed_at IS NULL
-          AND NOT (s.ends_at<=${now} AND EXISTS(SELECT 1 FROM reschedule_vouchers v WHERE v.organization_id=b.organization_id AND v.origin_booking_id=b.id AND v.status IN ('USED_FOR_BOOKING','USED_FOR_EXTERNAL_BENEFIT'))
-            AND NOT EXISTS(SELECT 1 FROM reschedule_vouchers v WHERE v.organization_id=b.organization_id AND v.origin_booking_id=b.id AND v.status IN ('ACTIVE','LOCKED_PENDING_PAYMENT') AND v.expires_at>${now})))
-        AND (b.locked_until IS NULL OR b.locked_until<=${now})
-        AND COALESCE(b.refund_status,'') NOT IN ('PENDING','MANUAL_PENDING','FAILED')
-        AND NOT EXISTS(SELECT 1 FROM reschedule_vouchers v WHERE v.organization_id=b.organization_id AND v.origin_booking_id=b.id AND v.status IN ('ACTIVE','LOCKED_PENDING_PAYMENT') AND v.expires_at>${now})
-        AND NOT EXISTS(SELECT 1 FROM outbox_jobs j WHERE j.organization_id=b.organization_id AND j.payload->>'bookingId'=b.id::text AND j.completed_at IS NULL AND j.type IN ('REFUND','FINANCIAL_RECONCILE'))
-        AND GREATEST(s.ends_at,b.cancelled_at,b.paid_at,b.refund_updated_at,
-          (SELECT max(COALESCE(v.used_at,v.expires_at)) FROM reschedule_vouchers v WHERE v.organization_id=b.organization_id AND v.origin_booking_id=b.id),
-          (SELECT max(e.created_at) FROM financial_entries e WHERE e.organization_id=b.organization_id AND e.booking_id=b.id))<=${cutoff}
+      WHERE b.anonymized_at IS NULL AND NOT ${bookingOperationsOpen(now)}
       ORDER BY b.id LIMIT ${COMMERCIAL.RETENTION_BATCH_SIZE} FOR UPDATE OF b SKIP LOCKED`,
     );
     if (!dryRun)

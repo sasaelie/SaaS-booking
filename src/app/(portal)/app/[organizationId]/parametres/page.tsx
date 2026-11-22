@@ -1,3 +1,4 @@
+import { SettingsNavigation } from '../../../../_portal/SettingsNavigation';
 import { AppearanceEditor } from '../../../../_portal/AppearanceEditor';
 import { APPEARANCE } from '../../../../../config/appearance';
 import { MEMBER_ROLES } from '../../../../../config/constants';
@@ -13,6 +14,7 @@ export default async function Page({ params }: WorkspacePageProps) {
   const disabled = organization.role !== MEMBER_ROLES.OWNER;
   return (
     <>
+      <SettingsNavigation organizationId={organizationId} />
       <PortalHeading title={APPEARANCE.TITLE} description={APPEARANCE.INTRO} />
       <section className="portal-panel appearance-surface">
         <AppearanceEditor

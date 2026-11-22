@@ -10,6 +10,7 @@ import type { SelfBookingContext } from '../../core/validation/self-booking';
 import { ParticipantTicket } from './ParticipantTicket';
 import { ParticipantDetails } from './ParticipantDetails';
 import { EMBED } from '../../config/constants';
+import { CancellationPreview } from './CancellationPreview';
 type InlineManagement = {
   readonly token: string;
   readonly onBack: (booking: SelfBookingContext | null) => void;
@@ -138,6 +139,10 @@ function CancelBooking({ state }: { readonly state: ReturnType<typeof useManagem
   return (
     <details className="manage-cancel">
       <summary>{FORM_LABELS.CANCEL_HEADING}</summary>
+      <CancellationPreview
+        preview={state.context?.cancellationPreview}
+        timezone={state.context?.timezone ?? 'UTC'}
+      />
       <form onSubmit={state.cancel}>
         <label className="ice-check">
           <input type="checkbox" required />

@@ -21,7 +21,10 @@ async function oldClosedBooking() {
     .update(sessions)
     .set({ startsAt: new Date(old.getTime() - 3600000), endsAt: old })
     .where(eq(sessions.id, booking.sessionId));
-  await db.update(bookings).set({ createdAt: old }).where(eq(bookings.id, booking.bookingId));
+  await db
+    .update(bookings)
+    .set({ createdAt: old, amountPaidCents: 3000, paidAt: old })
+    .where(eq(bookings.id, booking.bookingId));
   // This fixture represents a dossier whose access was explicitly closed in the past.
   await db.execute(
     sql`UPDATE booking_access_credentials SET closed_at=${old} WHERE booking_id=${booking.bookingId}`,

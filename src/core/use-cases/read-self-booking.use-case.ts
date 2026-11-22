@@ -5,6 +5,7 @@ import { ok } from '../../lib/result';
 import { guardUseCase } from '../../lib/guard-use-case';
 import type { ParticipantAccessPort } from '../ports/participant-access.port';
 import type { SelfBookingSnapshot } from '../ports/self-booking.port';
+import { previewCancellation } from '../domain/cancellation-preview';
 export class ReadSelfBookingUseCase {
   constructor(
     private readonly repository: SelfBookingRepositoryPort,
@@ -29,6 +30,7 @@ function bookingContext(booking: SelfBookingSnapshot, now: Date) {
     booking.status === BOOKING_STATUSES.PENDING_PAYMENT ||
     booking.status === BOOKING_STATUSES.PROOF_SUBMITTED;
   return {
+    cancellationPreview: previewCancellation(booking, now),
     participantHue: booking.participantHue ?? null,
     organizationSlug: booking.organizationSlug,
     organizationName: booking.organizationName,

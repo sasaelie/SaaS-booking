@@ -3,6 +3,7 @@ import { SESSION_UI as UI } from '../../config/session-details';
 import { SessionCancellation } from './SessionList';
 import { portalDate } from './date-label';
 import { formatMoney } from '../_ui/format-money';
+import { EditSession } from './EditSession';
 export function SessionInformation({ data }: { readonly data: Details }) {
   const { organization: org, activity, session } = data;
   return (
@@ -36,6 +37,7 @@ export function SessionInformation({ data }: { readonly data: Details }) {
           <p>{activity.practicalInfo}</p>
         </details>
       ) : null}
+      <EditSession data={data} />
       <SessionCancellation session={session} organizationId={org.id} />
     </section>
   );

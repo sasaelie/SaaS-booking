@@ -2,6 +2,11 @@ import type { Result } from '../../lib/result';
 import type { BookingStatus, PaymentMode } from '../../config/constants';
 import type { SelfCancelTokenPayload } from '../validation/self-service';
 export interface SelfBookingSnapshot {
+  readonly amountPaidCents?: number;
+  readonly voucherDiscountCents?: number;
+  readonly currency?: string;
+  readonly noticeHoursForVoucher?: number;
+  readonly voucherValidityMonths?: number;
   readonly organizationSlug: string;
   readonly organizationName: string;
   readonly activityId: string;

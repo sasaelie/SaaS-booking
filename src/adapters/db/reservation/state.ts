@@ -6,8 +6,7 @@ export function initialState(
   voucher: VoucherApplication,
   now: Date,
 ) {
-  const paymentMode =
-    voucher.id && voucher.remaining > 0 ? PAYMENT_MODES.STRIPE : activity.paymentMode;
+  const paymentMode = activity.paymentMode;
   const confirmed = voucher.remaining === 0 || paymentMode === PAYMENT_MODES.NONE;
   const duration =
     paymentMode === PAYMENT_MODES.BANK_TRANSFER

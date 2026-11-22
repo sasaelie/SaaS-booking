@@ -7,7 +7,7 @@ type Booking = typeof bookings.$inferSelect;
 export async function initializeFinancial(tx: Transaction, booking: Booking) {
   const paid = booking.amountPaidCents;
   const amount =
-    booking.paymentMode === 'NONE' ? 0 : booking.unitPriceCents - booking.voucherDiscountCents;
+    booking.paymentMode === 'NONE' ? paid : booking.unitPriceCents - booking.voucherDiscountCents;
   await tx
     .insert(financialPayments)
     .values({
@@ -46,11 +46,12 @@ export async function recordFinancialPayment(
   bookingId: string,
   reference: string,
   paidAt: Date,
+  entryAmountCents?: number,
 ) {
   const [booking] = await tx.select().from(bookings).where(eq(bookings.id, bookingId));
   if (!booking) return;
   await initializeFinancial(tx, booking);
-  await markPayment(tx, booking, reference, paidAt);
+  await markPayment(tx, booking, reference, paidAt, entryAmountCents);
   if (booking.paymentMode === 'STRIPE' && booking.commercialPlan !== 'LEGACY')
     await enqueue(
       tx,
@@ -93,13 +94,20 @@ export async function recordFinancialRefund(
     );
 }
 
-async function markPayment(tx: Transaction, booking: Booking, reference: string, paidAt: Date) {
+async function markPayment(
+  tx: Transaction,
+  booking: Booking,
+  reference: string,
+  paidAt: Date,
+  entryAmountCents = booking.amountPaidCents,
+) {
   const bookingId = booking.id;
   await tx
     .update(financialPayments)
     .set({
       paymentReference: reference,
       paidAt,
+      ...(booking.paymentMode === 'NONE' ? { publicAmountCents: booking.amountPaidCents } : {}),
       ...(booking.paymentMode !== 'STRIPE'
         ? {
             stripeFeeCents: 0,
@@ -117,7 +125,7 @@ async function markPayment(tx: Transaction, booking: Booking, reference: string,
       bookingId,
       sourceKey: `paid:${reference}`,
       kind: 'PAYMENT',
-      amountCents: booking.amountPaidCents,
+      amountCents: entryAmountCents,
       reference,
     })
     .onConflictDoNothing();

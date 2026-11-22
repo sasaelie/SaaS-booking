@@ -61,6 +61,7 @@ export class BankTransferWorkflowUseCase {
     readonly organizationId: string;
     readonly bookingId: string;
     readonly decision: 'APPROVE' | 'REJECT';
+    readonly reference?: string;
   }): Promise<Result<void>> {
     return guardUseCase('bank-transfer-workflow.use-case.ts', 'reviewByAdmin', async () => {
       const auth = await this.deps.authorization.authorizeOrganizationAdmin(input.organizationId);

@@ -23,8 +23,9 @@ export function effectivePaymentMode(mode: PaymentMode, price: number, pro: bool
 export function commercialQuote(raw: unknown): Result<CommercialQuote> {
   const parsed = CommercialQuoteSchema.safeParse(raw);
   if (!parsed.success) return failure(ERROR_CODES.VALIDATION_FAILED, 'Commercial', 'quote');
-  const { plan, amountCents } = parsed.data;
-  if (amountCents > 0 && amountCents < COMMERCIAL.STRIPE_MINIMUM_CENTS)
+  const { plan, amountCents, paymentMode } = parsed.data;
+  const stripeMinimum = paymentMode === PAYMENT_MODES.STRIPE || plan === COMMERCIAL.LIBERTE;
+  if (stripeMinimum && amountCents > 0 && amountCents < COMMERCIAL.STRIPE_MINIMUM_CENTS)
     return failure(ERROR_CODES.VALIDATION_FAILED, 'Commercial', 'minimum');
   const commissionCents =
     plan === COMMERCIAL.LIBERTE && amountCents > 0

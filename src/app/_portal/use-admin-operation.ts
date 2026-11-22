@@ -22,9 +22,8 @@ export function useAdminOperation(command: Readonly<Record<string, unknown>>) {
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const input = managementCommand(command, form, confirmation);
     return state.run(async () => {
-      const result = await adminRequest(input);
+      const result = await adminRequest(managementCommand(command, form, confirmation));
       if ('error' in result) {
         state.setMessage(result.error ?? PORTAL.ERROR);
         return;
@@ -43,6 +42,7 @@ export function useAdminOperation(command: Readonly<Record<string, unknown>>) {
         return;
       }
       if (data?.presignedUrl) setProof(data.presignedUrl);
+      navigateToEditedSession(command, data?.sessionStartsAt, router);
       state.setMessage(
         data?.status === 'CLOSED_AND_REFUNDS_QUEUED'
           ? SESSION_UI.MAIL_PENDING
@@ -68,4 +68,19 @@ function managementCommand(
     confirmCancelExistingBookings: Boolean(confirmation.confirmation && confirmation.accepted),
     confirmationHash: confirmation.confirmation?.hash,
   };
+}
+
+function navigateToEditedSession(
+  command: Readonly<Record<string, unknown>>,
+  startsAt: string | undefined,
+  router: ReturnType<typeof useRouter>,
+) {
+  if (
+    startsAt &&
+    typeof command['organizationId'] === 'string' &&
+    typeof command['activityId'] === 'string'
+  )
+    router.replace(
+      `/app/${encodeURIComponent(command['organizationId'])}/seances/${encodeURIComponent(command['activityId'])}?startsAt=${encodeURIComponent(startsAt)}`,
+    );
 }

@@ -5,7 +5,15 @@ import { AdminCommandSchema } from '../core/validation/admin-command';
 import { scheduleCancellationNotifications } from './cancellation-notifications';
 import { dispatchAdmin } from './admin-dispatch';
 import { HTTP_STATUS } from '../config/constants';
+import { SessionEditSchema } from '../core/validation/session-edit';
 export async function managePortalCommand(raw: unknown, services: PortalServices) {
+  const edit = SessionEditSchema.safeParse(raw);
+  if (edit.success)
+    return respond(
+      await services.sessionEdit.execute(edit.data),
+      edit.data.organizationId,
+      services,
+    );
   const local = LocalPauseSchema.safeParse(raw);
   if (local.success)
     return respond(await services.pause.execute(local.data), local.data.organizationId, services);

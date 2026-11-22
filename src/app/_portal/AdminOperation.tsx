@@ -11,6 +11,7 @@ interface Props {
   readonly label: string;
   readonly reasonRequired?: boolean;
   readonly voucherOverride?: boolean;
+  readonly confirmationText?: string;
 }
 export function AdminOperation({
   command,
@@ -18,6 +19,7 @@ export function AdminOperation({
   label,
   reasonRequired = false,
   voucherOverride = false,
+  confirmationText = PORTAL.CLOSE_CONFIRM,
 }: Props) {
   const state = useAdminOperation(command);
   return (
@@ -26,7 +28,7 @@ export function AdminOperation({
         {children ? <div onChange={state.invalidate}>{children}</div> : null}
         {reasonRequired ? <ReasonField /> : null}
         {voucherOverride ? <VoucherOverride /> : null}
-        <AffectedConfirmation state={state} />
+        <AffectedConfirmation state={state} text={confirmationText} />
         <button
           className="liquid-ice-button portal-button portal-action-button"
           data-tone={managementTone(command)}
@@ -49,7 +51,13 @@ export function AdminOperation({
   );
 }
 
-function AffectedConfirmation({ state }: { readonly state: ReturnType<typeof useAdminOperation> }) {
+function AffectedConfirmation({
+  state,
+  text,
+}: {
+  readonly state: ReturnType<typeof useAdminOperation>;
+  readonly text: string;
+}) {
   return (
     <>
       {state.confirmation ? (
@@ -57,7 +65,7 @@ function AffectedConfirmation({ state }: { readonly state: ReturnType<typeof use
           <strong>
             {PORTAL.AFFECTED} : {state.confirmation.count}
           </strong>
-          <p>{PORTAL.CLOSE_CONFIRM}</p>
+          <p>{text}</p>
           <label className="portal-check">
             <input
               type="checkbox"
