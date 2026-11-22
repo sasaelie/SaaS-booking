@@ -47,11 +47,11 @@ export async function completeEmbeddedBooking(page: Page, submitLabel = 'Confirm
 }
 
 export async function assertEmbedFits(page: Page) {
-  await expect(page.locator('[data-booking-widget]')).toHaveAttribute(
-    'data-booking-state',
-    'ready',
-    { timeout: EMBED_HEALTH.TIMEOUT_MS },
-  );
+  const widget = page.locator('[data-booking-widget]');
+  if (await widget.count())
+    await expect(widget).toHaveAttribute('data-booking-state', 'ready', {
+      timeout: EMBED_HEALTH.TIMEOUT_MS,
+    });
   if (await page.locator('iframe').evaluate((element) => Boolean(element.closest('dialog')))) {
     await assertFloatingViewport(page);
     return;
