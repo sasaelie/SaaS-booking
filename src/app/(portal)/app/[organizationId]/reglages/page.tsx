@@ -1,3 +1,4 @@
+import { SettingsNavigation } from '../../../../_portal/SettingsNavigation';
 import { APPEARANCE } from '../../../../../config/appearance';
 import { headers } from 'next/headers';
 import { portal } from '../../../../../composition/portal';
@@ -16,13 +17,16 @@ export default async function Page({ params }: WorkspacePageProps) {
   const organization = result.value.organization;
   return (
     <>
+      <SettingsNavigation organizationId={organizationId} />
       <PortalHeading title={APPEARANCE.SETTINGS} description={SETTINGS_UI.INTRO} />
       <div className="portal-section-stack settings-workspace">
         <OrganizationSettings organization={organization} />
-        <ConnectSettings
-          organization={organization}
-          operator={Boolean(permission?.ok && permission.value)}
-        />
+        <div id="paiements">
+          <ConnectSettings
+            organization={organization}
+            operator={Boolean(permission?.ok && permission.value)}
+          />
+        </div>
       </div>
     </>
   );

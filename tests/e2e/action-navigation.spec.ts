@@ -1,38 +1,65 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { browserSpace, closeBrowserDatabase, login } from './portal-fixtures';
 import { captureActions } from './action-audit-fixtures';
 test.afterAll(closeBrowserDatabase);
-test('follows every organizer menu destination and mobile return through actual links', async ({ page }, info) => {
+test('follows every organizer menu destination and mobile return through actual links', async ({
+  page,
+}, info) => {
   const space = await browserSpace();
   await login(page, space);
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(`/app/${space.organizationId}`);
-    for (const [label, suffix] of [
-      ['Activités', '/activites'],
-      ['Réservations', '/reservations'],
-      ['Partager', '/partager'],
-      ['Apparence', '/parametres'],
-      ['Réglages', '/reglages'],
-      ['Ma formule', '/abonnement'],
-      ['Vue d’ensemble', ''],
-    ]) {
-      if (width === 390) await page.getByRole('button', { name: 'Menu', exact: true }).click();
-      await page.locator('.portal-nav').getByRole('link', { name: label, exact: true }).click();
-      await expect(page).toHaveURL(new RegExp(`/app/${space.organizationId}${suffix}$`));
-      await expect(page.locator('main h1')).toBeVisible();
-      await captureActions(page, info, `${width}-${label}`);
-      if (width === 390 && suffix) {
-        await page
-          .locator('.portal-mobile-bar')
-          .getByRole('link', { name: /Retour/ })
-          .click();
-        await expect(page).toHaveURL(new RegExp(`/app/${space.organizationId}$`));
-      }
-    }
+    await primaryDestinations(page, info, space.organizationId, width);
+    await settingsDestinations(page, space.organizationId, width);
   }
 });
-test('signs out, invalidates the real application session and follows account entry links', async ({ page }) => {
+async function primaryDestinations(
+  page: Page,
+  info: TestInfo,
+  organizationId: string,
+  width: number,
+) {
+  for (const [label, suffix] of [
+    ['Activités', '/activites'],
+    ['Participants', '/reservations'],
+    ['Partager', '/partager'],
+    ['Réglages', '/reglages'],
+    ['Vue d’ensemble', ''],
+  ]) {
+    if (width === 390) await page.getByRole('button', { name: 'Menu', exact: true }).click();
+    await page.locator('.portal-nav').getByRole('link', { name: label, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/app/${organizationId}${suffix}$`));
+    await expect(page.locator('main h1')).toBeVisible();
+    await captureActions(page, info, `${width}-${label}`);
+    if (width === 390 && suffix) {
+      await page
+        .locator('.portal-mobile-bar')
+        .getByRole('link', { name: /Retour/ })
+        .click();
+      await expect(page).toHaveURL(new RegExp(`/app/${organizationId}$`));
+    }
+  }
+}
+async function settingsDestinations(page: Page, organizationId: string, width: number) {
+  if (width === 390) await page.getByRole('button', { name: 'Menu', exact: true }).click();
+  await page.locator('.portal-nav').getByRole('link', { name: 'Réglages', exact: true }).click();
+  for (const [label, suffix] of [
+    ['Apparence', '/parametres'],
+    ['Formule de l’espace', '/abonnement'],
+    ['Paiements des participants', '/reglages#paiements'],
+  ]) {
+    await page
+      .getByRole('navigation', { name: 'Réglages', exact: true })
+      .getByRole('link', { name: label, exact: true })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`/app/${organizationId}${suffix}$`));
+    await expect(page.locator('main h1')).toBeVisible();
+  }
+}
+test('signs out, invalidates the real application session and follows account entry links', async ({
+  page,
+}) => {
   const space = await browserSpace();
   await login(page, space);
   await page.getByRole('button', { name: 'Se déconnecter', exact: true }).click();
@@ -59,7 +86,9 @@ test('copies the actual booking link and downloads PDF, PNG and accounting files
   await page.goto(`/app/${space.organizationId}/partager`);
   await page.getByRole('button', { name: 'Copier le lien', exact: true }).click();
   await expect(page.getByRole('status')).toContainText(/copié/i);
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(new URL(page.url()).origin + '/' + space.slug);
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    new URL(page.url()).origin + '/' + space.slug,
+  );
   const pdfPromise = page.waitForEvent('download');
   await page.locator('a[href*="format=pdf"]').click();
   const pdf = await pdfPromise;

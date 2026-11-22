@@ -58,6 +58,8 @@ export const BOOKING_UI = {
   ERROR_VALIDATION: 'Vérifiez les informations du formulaire avant de réessayer.',
   CHECKOUT_TITLE: 'Finalisez votre réservation.',
   CONTINUE_PAYMENT: 'Continuer vers le paiement sécurisé',
+  EMBEDDED_PAYMENT_NOTE:
+    'Le paiement s’ouvre dans une nouvelle fenêtre sécurisée. Votre réservation est enregistrée en attente de paiement ; gardez cette page ouverte.',
   REDIRECT: 'Votre place est en attente de paiement. Poursuivez vers le paiement sécurisé.',
   BANK_IBAN: 'IBAN',
   BANK_ACCOUNT: 'Bénéficiaire',

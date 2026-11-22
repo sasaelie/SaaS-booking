@@ -2,6 +2,15 @@ import { cents } from './form-values';
 import { text } from './form-values';
 export function commercialFormInput(action: string, form: FormData, organizationId: string) {
   switch (action) {
+    case 'record-offline-payment':
+      return {
+        organizationId,
+        bookingId: text(form, 'bookingId'),
+        amountCents: Number(form.get('amountCents')),
+        method: text(form, 'method'),
+        reference: text(form, 'reference'),
+        confirmed: form.has('confirmed'),
+      };
     case 'redeem-online-voucher':
       return { organizationId, code: text(form, 'code') };
     case 'platform-cost':

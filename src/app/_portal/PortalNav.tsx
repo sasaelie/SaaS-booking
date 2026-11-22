@@ -1,5 +1,4 @@
 'use client';
-import { SIMULATION } from '../../config/simulation';
 import { ADMIN } from '../../config/administration';
 import { ADMIN_SECURITY } from '../../config/administrator-security';
 import { SESSION_UI } from '../../config/session-details';
@@ -12,15 +11,13 @@ import type { OrganizationSummary } from '../../core/ports/portal-models';
 import { IceIcon } from '../_ui/IceIcon';
 import { portalReturnTarget } from './navigation-target';
 import { PortalBackLink } from './PortalBackLink';
+import { WORKSPACE_NAV, organizerSection } from '../../config/workspace-navigation';
 const sections = [
   ['', PORTAL.HOME, 'calendar'],
   ['/activites', PORTAL.ACTIVITIES, 'ticket'],
-  ['/reservations', PORTAL.BOOKINGS, 'person'],
+  ['/reservations', WORKSPACE_NAV.PARTICIPANTS, 'person'],
   ['/partager', PORTAL.SHARE, 'arrow'],
-  ['/tests', SIMULATION.LIST, 'calendar'],
-  ['/parametres', APPEARANCE.TITLE, 'person'],
-  ['/reglages', APPEARANCE.SETTINGS, 'calendar'],
-  ['/abonnement', PORTAL.BILLING, 'lock'],
+  ['/reglages', WORKSPACE_NAV.SETTINGS, 'calendar'],
 ] as const;
 interface Props {
   readonly organizations: readonly OrganizationSummary[];
@@ -103,7 +100,7 @@ function OrganizationNav({
       <p className="portal-nav-organization">{selected.name}</p>
       {sections.map(([suffix, label, icon]) => {
         const href = `/app/${selected.id}${suffix}`;
-        const active = suffix ? path.startsWith(href) : path === href;
+        const active = organizerSection(path, `/app/${selected.id}`) === suffix;
         return (
           <Link key={suffix} href={href} aria-current={active ? 'page' : undefined}>
             <IceIcon name={icon} />
@@ -156,9 +153,7 @@ function navigationTitle(selected: OrganizationSummary | undefined, path: string
   if (selected && path.startsWith(`/app/${selected.id}/seances/`)) return SESSION_UI.TITLE;
   if (path.startsWith('/plateforme')) return ADMIN.TITLE;
   const section = selected
-    ? sections.find(([suffix]) =>
-        suffix ? path.startsWith(`/app/${selected.id}${suffix}`) : path === `/app/${selected.id}`,
-      )
+    ? sections.find(([suffix]) => organizerSection(path, `/app/${selected.id}`) === suffix)
     : null;
   return section?.[1] ?? PORTAL.ORGANIZATIONS;
 }

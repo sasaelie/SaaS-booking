@@ -5,6 +5,9 @@ import { PORTAL, BOOKING_STATUSES, PAYMENT_MODES } from '../../config/constants'
 import { AdminOperation } from './AdminOperation';
 import { portalDate } from './date-label';
 import { ParticipantRecovery } from './ParticipantRecovery';
+import { RecordOfflinePayment } from './RecordOfflinePayment';
+import { PortalField } from './PortalField';
+import { RECORDED_PAYMENT } from '../../config/recorded-payment';
 interface Props {
   readonly booking: PortalBooking;
   readonly organizationId: string;
@@ -18,8 +21,11 @@ export function BookingManagement({ booking, organizationId, timezone }: Props) 
         <ParticipantRecovery organizationId={organizationId} bookingId={booking.id} />
       ) : null}
       <ManualVoucherForm booking={booking} organizationId={organizationId} timezone={timezone} />
+      <RecordOfflinePayment booking={booking} organizationId={organizationId} />
       {booking.paymentMode === PAYMENT_MODES.BANK_TRANSFER &&
-      booking.status === BOOKING_STATUSES.PROOF_SUBMITTED ? (
+      [BOOKING_STATUSES.PROOF_SUBMITTED, BOOKING_STATUSES.PENDING_PAYMENT].some(
+        (status) => status === booking.status,
+      ) ? (
         <BankReview base={base} hasProof={booking.hasProof} />
       ) : null}
       {booking.status === BOOKING_STATUSES.CONFIRMED ? (
@@ -63,7 +69,13 @@ function BankReview({
       <AdminOperation
         command={{ ...base, action: 'review-bank', decision: 'APPROVE' }}
         label={PORTAL.APPROVE}
-      />
+      >
+        <PortalField
+          name="reference"
+          label={RECORDED_PAYMENT.BANK_REFERENCE}
+          required={!hasProof}
+        />
+      </AdminOperation>
       <AdminOperation
         command={{ ...base, action: 'review-bank', decision: 'REJECT' }}
         label={PORTAL.REJECT}

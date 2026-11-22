@@ -1,7 +1,9 @@
 'use client';
 import { useEffect } from 'react';
 import { EMBED } from '../../config/constants';
-export function EmbedHeightReporter() {
+import { useEmbedStatus } from './use-embed-status';
+export function EmbedHeightReporter({ available = true }: { readonly available?: boolean }) {
+  useEmbedStatus(available);
   useEffect(() => {
     const element = document.body;
     function report() {

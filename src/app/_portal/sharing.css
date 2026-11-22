@@ -65,3 +65,26 @@
 .sharing-members p {
   line-height: 1.65;
 }
+.sharing-embed-check,
+.sharing-site-check {
+  border-top: 1px solid var(--ice-line);
+  padding-top: 20px;
+}
+.sharing-embed-check > .portal-list {
+  margin-top: 16px;
+}
+.sharing-check-preview {
+  max-height: 280px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.sharing-check-preview iframe {
+  display: block;
+  border: 1px solid var(--ice-line);
+  width: 100%;
+  height: 280px;
+  pointer-events: none;
+}
+.sharing-embed-check .status-badge {
+  white-space: normal;
+}

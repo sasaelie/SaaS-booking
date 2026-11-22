@@ -12,6 +12,7 @@ import {
   BOOKING_UI,
 } from '../../src/config/constants';
 import { PUBLIC_TEST } from '../../src/config/public-test';
+import { SESSION_EDIT } from '../../src/config/session-edit';
 const slug = process.env['PUBLIC_TEST_ORGANIZATION_SLUG'] ?? 'studio-demo';
 test('calendar commands stay disabled until JavaScript initializes the selected session', async ({
   page,
@@ -37,7 +38,9 @@ test('calendar commands stay disabled until JavaScript initializes the selected 
     release();
     await expect(next).toBeEnabled();
     await next.click();
-    await expect(page.getByRole('textbox', { name: 'Prénom', exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('textbox', { name: SESSION_EDIT.CHILD_FIRST, exact: true }),
+    ).toBeVisible();
   } finally {
     release();
   }

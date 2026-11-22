@@ -32,7 +32,7 @@ export default async function Page({
       ) : (
         <p>{UI_MESSAGES.UNAVAILABLE}</p>
       )}
-      <EmbedHeightReporter />
+      <EmbedHeightReporter available={result.ok} />
     </main>
   );
 }
@@ -40,7 +40,7 @@ function Unavailable() {
   return (
     <main className="booking-embed">
       <p>{UI_MESSAGES.UNAVAILABLE}</p>
-      <EmbedHeightReporter />
+      <EmbedHeightReporter available={false} />
     </main>
   );
 }

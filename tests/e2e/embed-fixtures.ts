@@ -3,15 +3,17 @@ import { readFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import { expect, type Page } from '@playwright/test';
 import { EMBED } from '../../src/config/constants';
+import { embedInstallCode } from '../../src/lib/embed-install-code';
 export async function externalWebsite(
   space: { slug: string; activityId?: string },
   mode: 'inline' | 'floating',
   provider: string,
+  headers: Readonly<Record<string, string>> = {},
 ) {
   const server = createServer((_req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', ...headers });
     res.end(
-      `<!doctype html><html lang="fr"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Site de l’association</title></head><body style="margin:0;background:#f7f5f0;font-family:system-ui"><header style="padding:24px"><h1>Les ateliers de notre association</h1><p>Réservez directement depuis notre site.</p></header><script src="${provider}/widget.js${space.activityId ? '' : '?v=' + EMBED.CATALOG_VERSION}" data-organization="${space.slug}" ${space.activityId ? `data-activity="${space.activityId}"` : ''} data-mode="${mode}" defer></script></body></html>`,
+      `<!doctype html><html lang="fr"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Site de l’association</title></head><body style="margin:0;background:#f7f5f0;font-family:system-ui"><header style="padding:24px"><h1>Les ateliers de notre association</h1><p>Réservez directement depuis notre site.</p></header>${embedInstallCode(provider, space.slug, mode, space.activityId)}</body></html>`,
     );
   });
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -28,12 +30,13 @@ export async function externalWebsite(
 }
 export async function completeEmbeddedBooking(page: Page, submitLabel = 'Confirmer ma place') {
   const frame = page.frameLocator('iframe');
+  await expect(frame.getByRole('button', { name: 'Continuer', exact: true })).toBeVisible();
   await assertEmbedFits(page);
   await frame.getByRole('button', { name: 'Continuer', exact: true }).click();
-  await frame.getByRole('textbox', { name: 'Prénom', exact: true }).fill('Marie');
-  await frame.getByRole('textbox', { name: 'Nom', exact: true }).fill('Essai');
+  await frame.getByRole('textbox', { name: /^Prénom(?: du participant mineur)?$/ }).fill('Marie');
+  await frame.getByRole('textbox', { name: /^Nom(?: du participant mineur)?$/ }).fill('Essai');
   await frame
-    .getByRole('textbox', { name: 'Adresse e-mail', exact: true })
+    .getByRole('textbox', { name: /^(?:Adresse e-mail|E-mail du représentant légal)$/ })
     .fill(`embed-${crypto.randomUUID()}@example.com`);
   const phone = frame.getByRole('textbox', { name: /Téléphone/ });
   if (await phone.count()) await phone.fill('+32470000000');

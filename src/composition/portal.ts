@@ -30,6 +30,10 @@ import { PlatformSettingsUseCase } from '../core/use-cases/portal/platform-setti
 import { DrizzlePlatformSettingsRepository } from '../adapters/db/drizzle-platform-settings.repository';
 import { platformBilling } from './platform-billing';
 import { administratorSecurity } from './administrator-security';
+import { RecordedPaymentUseCase } from '../core/use-cases/portal/recorded-payment.use-case';
+import { DrizzleRecordedPaymentRepository } from '../adapters/db/drizzle-recorded-payment.repository';
+import { DrizzleSessionEditRepository } from '../adapters/db/drizzle-session-edit.repository';
+import { SessionEditUseCase } from '../core/use-cases/portal/session-edit.use-case';
 export function portal(headers: Headers) {
   const app = runtime();
   if (!app.ok) return app;
@@ -40,6 +44,7 @@ export function portal(headers: Headers) {
   const authorization = new MembershipAuthorizationAdapter(identity, repository);
   const admin = administration(app.value, '', authorization);
   return ok({
+    ...recordedPayments(app.value, identity, repository),
     security: administratorSecurity(app.value, auth.value, identity, headers),
     ...platformReports(app.value, identity),
     financial: new FinancialUseCase(
@@ -69,6 +74,23 @@ export function portal(headers: Headers) {
   });
 }
 export type PortalServices = Extract<ReturnType<typeof portal>, { ok: true }>['value'];
+function recordedPayments(
+  app: Runtime,
+  identity: SessionIdentityAdapter,
+  repository: DrizzlePortalRepository,
+) {
+  return {
+    sessionEdit: new SessionEditUseCase(
+      identity,
+      repository,
+      new DrizzleSessionEditRepository(app.db),
+    ),
+    recordedPayment: new RecordedPaymentUseCase(
+      identity,
+      new DrizzleRecordedPaymentRepository(app.db),
+    ),
+  };
+}
 function publicationSettings(app: Runtime) {
   return {
     PUBLIC_BOOKING_URL: app.env.PUBLIC_BOOKING_URL,

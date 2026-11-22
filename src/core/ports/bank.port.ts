@@ -40,6 +40,7 @@ export interface BankTransferRepositoryPort {
     readonly organizationId: string;
     readonly bookingId: string;
     readonly decision: 'APPROVE' | 'REJECT';
+    readonly reference?: string;
     readonly now: Date;
   }): Promise<Result<{ readonly proofStorageKey: string | null }>>;
   getProofForAdmin(

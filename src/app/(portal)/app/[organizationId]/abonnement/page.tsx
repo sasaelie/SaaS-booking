@@ -1,3 +1,4 @@
+import { SettingsNavigation } from '../../../../_portal/SettingsNavigation';
 import { OnlineVoucher } from '../../../../_portal/OnlineVoucher';
 import { headers } from 'next/headers';
 import { portal } from '../../../../../composition/portal';
@@ -26,6 +27,7 @@ export default async function Page({
   const summary = services.ok ? await services.value.financial.summary(organizationId) : null;
   return (
     <>
+      <SettingsNavigation organizationId={organizationId} />
       <PortalHeading
         title={BILLING_UI.TITLE}
         description={BILLING_UI.INTRO}

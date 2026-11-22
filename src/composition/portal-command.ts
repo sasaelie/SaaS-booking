@@ -7,6 +7,8 @@ export function dispatchPortal(
   command: PortalCommand,
 ): Promise<Result<unknown>> {
   switch (command.action) {
+    case 'record-offline-payment':
+    case 'record-bank-refund':
     case 'platform-cost':
     case 'redeem-online-voucher':
     case 'liberty-selection':
@@ -24,8 +26,6 @@ export function dispatchPortal(
       return services.management.publish(command.input);
     case 'add-session':
       return services.management.addSession(command.input);
-    case 'record-bank-refund':
-      return services.management.refund(command.input);
     case 'create-organization':
       return services.organizations.create(command.input);
     case 'create-activity':

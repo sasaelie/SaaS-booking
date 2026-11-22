@@ -4,6 +4,7 @@ export function contentSecurityPolicy(
   path: string,
   appUrl: string,
   development: boolean,
+  publicBookingUrl?: string,
 ) {
   const scripts = `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${development ? " 'unsafe-eval'" : ''}`;
   return [
@@ -14,12 +15,23 @@ export function contentSecurityPolicy(
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
     `connect-src 'self'${development ? ' ws: wss:' : ''}`,
-    "frame-src 'self'",
+    `frame-src ${frameSources(path, publicBookingUrl)}`,
     "object-src 'none'",
     "base-uri 'none'",
     "form-action 'self'",
     `frame-ancestors ${frameAncestors(path, appUrl)}`,
   ].join('; ');
+}
+function frameSources(path: string, bookingUrl?: string) {
+  if (!bookingUrl || !path.startsWith('/app/') || !path.endsWith('/partager')) return "'self'";
+  try {
+    const url = new URL(bookingUrl);
+    return url.protocol === 'https:' && !url.username && !url.password
+      ? `'self' ${url.origin}`
+      : "'self'";
+  } catch {
+    return "'self'";
+  }
 }
 function frameAncestors(path: string, appUrl: string) {
   if (isWebsitePreviewFrame(path)) return "'self'";

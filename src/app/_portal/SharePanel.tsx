@@ -25,7 +25,7 @@ export function SharePanel({ data, appUrl, published = false }: Props) {
         social={<SocialSharing data={data} appUrl={appUrl} />}
         website={
           pro ? (
-            <WebsiteSharing data={data} appUrl={appUrl} />
+            <WebsiteSharing data={data} appUrl={appUrl} privatePreview={privatePreview} />
           ) : (
             <section className="sharing-content">
               <h2>{SHARE_UI.WEBSITE}</h2>

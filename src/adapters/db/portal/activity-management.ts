@@ -107,7 +107,10 @@ export async function recordBankRefund(
   await requireMembership(tx, actor, id);
   const context = await lockBookingContext(tx, id, bookingId);
   const booking = context?.booking;
-  if (!booking || booking.paymentMode !== PAYMENT_MODES.BANK_TRANSFER)
+  if (
+    !booking ||
+    ![PAYMENT_MODES.BANK_TRANSFER, PAYMENT_MODES.NONE].some((mode) => mode === booking.paymentMode)
+  )
     return failure(ERROR_CODES.NOT_FOUND, 'Refund', 'booking');
   if (booking.refundStatus === 'MANUAL_DONE') return ok(undefined);
   if (booking.refundStatus !== 'MANUAL_PENDING')

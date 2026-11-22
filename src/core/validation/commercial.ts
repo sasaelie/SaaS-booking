@@ -1,9 +1,10 @@
 import { z } from 'zod';
 import { COMMERCIAL, type CommercialPlan } from '../../config/commercial';
-import { INPUT_LIMITS } from '../../config/constants';
+import { INPUT_LIMITS, PAYMENT_MODES } from '../../config/constants';
 export const CommercialQuoteSchema = z.object({
   amountCents: z.number().int().min(0).max(INPUT_LIMITS.MAX_CENTS),
   plan: z.enum([COMMERCIAL.LIBERTE, COMMERCIAL.PRO, COMMERCIAL.LEGACY]),
+  paymentMode: z.enum(PAYMENT_MODES).default(PAYMENT_MODES.STRIPE),
 });
 export const LibertySelectionSchema = z.object({
   organizationId: z.uuid(),

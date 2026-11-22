@@ -4,6 +4,7 @@ import { text, cents } from './form-values';
 export { cents } from './form-values';
 import { commercialFormInput } from './commercial-form';
 export type PortalAction =
+  | 'record-offline-payment'
   | 'platform-cost'
   | 'redeem-online-voucher'
   | 'liberty-selection'
@@ -70,7 +71,9 @@ function settingsInput(form: FormData, organizationId: string) {
     theme: text(form, 'theme'),
     autoDeleteBankProof: form.has('autoDeleteBankProof'),
     socialLinks: {
-      ...Object.fromEntries(Object.keys(SOCIAL_NETWORKS).map((key) => [key, text(form, `social-${key}`)])),
+      ...Object.fromEntries(
+        Object.keys(SOCIAL_NETWORKS).map((key) => [key, text(form, `social-${key}`)]),
+      ),
       phone: text(form, 'contactPhone'),
     },
   };

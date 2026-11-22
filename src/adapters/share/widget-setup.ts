@@ -1,0 +1,25 @@
+export const widgetSetup = `
+ const script=document.currentScript;if(!script)return;
+ const organization=script.dataset.organization,activity=script.dataset.activity;
+ if(!organization||!/^[a-z0-9-]+$/.test(organization)||(activity!==undefined&&!/^[a-f0-9-]{36}$/.test(activity)))return;
+ const origin=new URL(script.src).origin,floating=script.dataset.mode==='floating';
+ const source=origin+'/embed/'+organization+(activity?'/'+activity:'');
+ const publicUrl=origin+'/'+organization+(activity?'/'+activity:'');
+ const diagnostic=new URL(location.href).searchParams.get(T.DIAGNOSTIC_PARAM)===organization;
+ const root=document.createElement('div');root.dataset.bookingWidget='';root.style.cssText=S.ROOT;
+ const panel=document.createElement('div');panel.style.cssText=S.PANEL;
+ const status=document.createElement('div');status.dataset.bookingStatus='';status.setAttribute('role','status');status.style.cssText=S.STATUS;
+ const description=document.createElement('p');description.style.cssText=S.TEXT;
+ const actions=document.createElement('div');actions.style.cssText=S.ACTIONS;
+ const retry=document.createElement('button');retry.type='button';retry.textContent=T.RETRY;retry.style.cssText=S.RETRY;
+ const previous=script.previousElementSibling;
+ const fallback=previous?.matches('a[data-booking-fallback]')?previous:document.createElement('a');
+ fallback.href=publicUrl;fallback.target='_blank';fallback.rel='noopener noreferrer';fallback.textContent=T.OPEN;fallback.style.cssText=S.LINK;
+ actions.append(retry,fallback);status.append(description,actions);
+ const frame=document.createElement('iframe');frame.title=U.IFRAME_TITLE;frame.referrerPolicy='no-referrer';frame.style.cssText=S.FRAME;
+ frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-popups-to-escape-sandbox');
+ frame.setAttribute('aria-hidden','true');frame.tabIndex=-1;frame.inert=true;
+ panel.append(status,frame);if(floating)document.body.append(root);else script.insertAdjacentElement('afterend',root);
+ let connected=false,started=false,disposed=false,timer,slowTimer,intersection;
+ let finish=()=>{window.scrollTo(0,0);document.querySelector('header a,header button')?.focus({preventScroll:true});};
+`;

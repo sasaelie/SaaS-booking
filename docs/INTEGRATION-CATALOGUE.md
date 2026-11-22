@@ -7,7 +7,8 @@ L’aide sur les espaces membres indique explicitement que le raccordement n’e
 Dans l’espace organisateur, **Partager → Sur votre site → Tous vos cours sur votre site** fournit un seul code à copier dans un bloc HTML autorisé par l’hébergeur. Il utilise l’adresse de l’application et le lien de l’organisation déjà enregistrés ; aucun identifiant d’activité n’est à renseigner.
 
 ```html
-<script src="https://reservation.example/widget.js?v=3" data-organization="votre-atelier" data-mode="inline" defer></script>
+<a href="https://reservation.example/votre-atelier" data-booking-fallback target="_blank" rel="noopener noreferrer">Ouvrir la réservation dans une nouvelle fenêtre</a>
+<script src="https://reservation.example/widget.js?v=4" data-organization="votre-atelier" data-mode="inline" defer></script>
 ```
 
 Le visiteur voit le catalogue, choisit un cours puis un créneau et remplit les coordonnées dans la même page du site. Il peut revenir au catalogue depuis le formulaire. Les cours publiés sont relus lors du chargement du catalogue : publier ou archiver une activité ne demande pas de remplacer le code d’installation.
@@ -17,6 +18,18 @@ Après confirmation, **Gérer ma réservation** ouvre la gestion dans le même e
 Les anciennes installations ciblant une activité restent compatibles avec `data-activity`. Le mode flottant reste disponible. Le paramètre de version du nouveau code évite de reprendre un ancien script en cache qui exigeait obligatoirement une activité.
 
 Le mode flottant utilise une hauteur stable adaptée à l’écran : le contenu défile dans le calendrier et le bouton de fermeture reste visible. Seul le mode dans la page adapte sa hauteur à tout le document. Les messages de retour restent filtrés par origine et fenêtre source dans les deux modes.
+
+## Disponibilité et contrôle d’installation
+
+Le calendrier envoie un message de disponibilité distinct de son redimensionnement. Le script hôte vérifie l’origine, la fenêtre émettrice, la version et le contenu du message. Un simple chargement de document, une redirection vers une connexion Vercel ou un message envoyé par une autre fenêtre ne suffit pas à confirmer que le calendrier fonctionne.
+
+Au démarrage, l’encart affiche « Connexion au calendrier… ». Après six secondes, il signale l’attente et propose l’accès direct ; après quinze secondes sans réponse, il propose aussi **Réessayer**. Le rechargement reste une action volontaire avant la première connexion réussie : aucun délai ne recharge automatiquement un formulaire commencé. Une réponse du serveur indiquant un calendrier indisponible affiche cet état explicitement.
+
+Le code v4 contient un lien public indépendant placé avant le script. Il reste utilisable si un bloqueur empêche le script lui-même de démarrer. Les anciennes installations restent compatibles lorsque leur script peut charger ; recopier une fois le code complet depuis **Partager → Sur mon site** ajoute cet accès indépendant. Le script ne peut pas contourner la politique de sécurité d’un site, un filtrage réseau ou la protection Vercel.
+
+Dans **Vérifier l’intégration**, le premier contrôle vérifie uniquement la réponse du calendrier. Si l’adresse correspond à une recette privée, le résultat indique qu’il est limité à la session courante et ne prétend pas valider l’accès des visiteurs. Le contrôle **Sur mon site** ouvre la page publiée avec un paramètre de diagnostic public : la confirmation apparaît sur cette page seulement après une réponse valide du calendrier. L’adresse du site n’est pas enregistrée ; aucune requête serveur ne la visite et la fenêtre ouverte ne peut pas accéder au compte organisateur. Aucun résultat distant n’est enregistré automatiquement dans le compte.
+
+La réservation et la gestion intégrées utilisent l’accès personnel du billet et ne demandent pas de cookie de connexion participant ni de stockage local sur le site tiers. Le paiement sécurisé s’ouvre après un clic dans une nouvelle fenêtre sans accès à la fenêtre hôte. La fermeture de cette fenêtre ne confirme pas le paiement : seule la réponse du serveur actualise le statut et le billet. Une erreur temporaire de lecture du billet propose une nouvelle lecture, sans soumettre une seconde réservation.
 
 ## Règles conservées
 

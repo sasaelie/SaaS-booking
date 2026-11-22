@@ -9,9 +9,9 @@ const after = new Date('2026-01-01T12:00:01Z');
 it.each(['ACTIVE', 'LOCKED_PENDING_PAYMENT', 'EXPIRED'])('keeps past access for %s', (status) => {
   expect(canKeepParticipantAccess(end, [{ status }], after)).toBe(true);
 });
-it('keeps access without a voucher and closes only after actual use and session end', () => {
+it('keeps access without a voucher and keeps a 30-day recovery period after full closure', () => {
   expect(canKeepParticipantAccess(end, [], after)).toBe(true);
-  expect(canKeepParticipantAccess(end, [{ status: 'USED_FOR_BOOKING' }], end)).toBe(false);
+  expect(canKeepParticipantAccess(end, [{ status: 'USED_FOR_BOOKING' }], end)).toBe(true);
   expect(
     canKeepParticipantAccess(
       end,
@@ -42,10 +42,18 @@ it('does not prolong an old code because a separate, unused credit has already e
     canKeepParticipantAccess(
       end,
       [{ status: 'USED_FOR_BOOKING' }, { status: 'ACTIVE', expiresAt: new Date(0) }],
-      after,
+      new Date(end.getTime() + 30 * 86400000),
     ),
   ).toBe(false);
 });
 it('does not accept an old RPT report code as an access credential', () => {
   expect(ParticipantCodeSchema.safeParse('RPT-ABCD-EFGH').success).toBe(false);
+});
+
+it('closes at 30 days without credit and protects unresolved money or disputes', () => {
+  const boundary = new Date(end.getTime() + 30 * 86400000);
+  expect(canKeepParticipantAccess(end, [], new Date(boundary.getTime() - 1))).toBe(true);
+  expect(canKeepParticipantAccess(end, [], boundary)).toBe(false);
+  expect(canKeepParticipantAccess(end, [], boundary, true)).toBe(true);
+  expect(canKeepParticipantAccess(end, [], boundary, false, after)).toBe(true);
 });

@@ -1,5 +1,18 @@
 import { expect, it } from 'vitest';
 import { contentSecurityPolicy } from '../../src/lib/content-security-policy';
+it('allows the configured public calendar only on the organizer sharing page', () => {
+  const origin = 'https://calendar.example';
+  const policy = (path: string, target = origin) =>
+    contentSecurityPolicy('nonce', path, 'https://app.example', false, target);
+  expect(policy('/app/organization/partager')).toContain("frame-src 'self' " + origin);
+  expect(policy('/plateforme')).toContain("frame-src 'self';");
+  expect(policy('/app/organization/partager', 'javascript:alert(1)')).toContain(
+    "frame-src 'self';",
+  );
+  expect(policy('/app/organization/partager', 'https://user:pass@calendar.example')).toContain(
+    "frame-src 'self';",
+  );
+});
 it('restricts the private website simulation to its own origin while leaving public embeds available', () => {
   for (const path of [
     '/embed/studiocreatif360/preview',

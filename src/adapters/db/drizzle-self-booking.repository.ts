@@ -4,12 +4,17 @@ import type { SelfBookingRepositoryPort } from '../../core/ports/self-booking.po
 import type { SelfCancelTokenPayload } from '../../core/validation/self-service';
 import type { DrizzlePgDb } from './client';
 import { atomic } from './transaction';
-import { bookings, organizations, sessions } from './schema';
+import { bookings, organizations, sessions, activities } from './schema';
 import { failure } from '../../lib/errors';
 import { ok } from '../../lib/result';
 import { ERROR_CODES } from '../../config/constants';
 import { hasBookingAccess } from './participant/access';
 const columns = {
+  amountPaidCents: bookings.amountPaidCents,
+  voucherDiscountCents: bookings.voucherDiscountCents,
+  currency: bookings.currency,
+  noticeHoursForVoucher: sql<number>`COALESCE(${bookings.noticeHoursForVoucher},${activities.noticeHoursForVoucher})`,
+  voucherValidityMonths: sql<number>`COALESCE(${bookings.voucherValidityMonths},${activities.voucherValidityMonths})`,
   participantHue: organizationBranding.participantHue,
   organizationSlug: organizations.slug,
   organizationName: organizations.name,
@@ -32,6 +37,13 @@ export class DrizzleSelfBookingRepository implements SelfBookingRepositoryPort {
         .select(columns)
         .from(bookings)
         .innerJoin(organizations, eq(organizations.id, bookings.organizationId))
+        .innerJoin(
+          activities,
+          and(
+            eq(activities.id, bookings.activityId),
+            eq(activities.organizationId, bookings.organizationId),
+          ),
+        )
         .leftJoin(
           organizationBranding,
           eq(organizationBranding.organizationId, bookings.organizationId),

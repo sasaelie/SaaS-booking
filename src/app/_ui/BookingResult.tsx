@@ -12,6 +12,7 @@ import { BookingResultActions } from './BookingResultActions';
 import { UI_MESSAGES } from '../../config/constants';
 import { EmbeddedBookingManagement } from './EmbeddedBookingManagement';
 import { PUBLIC_TEST } from '../../config/public-test';
+import { bookingResultState } from './booking-result-state';
 export function BookingResult({
   state,
   flow,
@@ -21,31 +22,30 @@ export function BookingResult({
 }) {
   const [managing, setManaging] = useState(false);
   const [cancelled, setCancelled] = useState(false);
+  const [confirmedToken, setConfirmedToken] = useState<string | null>(null);
   const token = state?.booking?.selfServiceToken;
+  const confirmPayment = () => {
+    if (token) setConfirmedToken(token);
+  };
   if (flow.embedded && managing && token)
     return (
       <EmbeddedBookingManagement
         simulationId={flow.data.simulationId}
         token={token}
         onBack={(booking) => {
+          if (booking?.status === BOOKING_STATUSES.CONFIRMED) confirmPayment();
           setCancelled(booking?.status === BOOKING_STATUSES.CANCELLED_BY_ATTENDEE);
           setManaging(false);
         }}
       />
     );
-  const result =
-    cancelled && state?.booking
-      ? {
-          ...state,
-          message: UI_MESSAGES.CANCEL_SUCCESS,
-          booking: { ...state.booking, status: BOOKING_STATUSES.CANCELLED_BY_ATTENDEE },
-        }
-      : state;
+  const result = bookingResultState(state, cancelled, Boolean(token && confirmedToken === token));
   return (
     <ResultContent
       state={result}
       flow={flow}
       onManage={flow.embedded ? () => setManaging(true) : undefined}
+      onConfirmed={confirmPayment}
     />
   );
 }
@@ -54,10 +54,12 @@ function ResultContent({
   state,
   flow,
   onManage,
+  onConfirmed,
 }: {
   readonly state: BookingActionState | null;
   readonly flow: BookingFlowState;
   readonly onManage?: () => void;
+  readonly onConfirmed: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -70,11 +72,12 @@ function ResultContent({
       <Heading>{resultTitle(state)}</Heading>
       <p role={state.success ? 'status' : 'alert'}>{state.message}</p>
       <OfflinePayment state={state} flow={flow} />
-      <PaymentInstructions state={state} />
+      <PaymentInstructions state={state} embedded={flow.embedded} />
       {state.booking?.selfServiceToken ? (
         <BookingProof
           token={state.booking.selfServiceToken}
           simulationId={flow.data.simulationId}
+          onConfirmed={state.booking.checkoutUrl ? onConfirmed : undefined}
         />
       ) : null}
       <BookingResultActions state={state} flow={flow} onManage={onManage} />
@@ -82,11 +85,18 @@ function ResultContent({
   );
 }
 
-function PaymentInstructions({ state }: { readonly state: BookingActionState }) {
+function PaymentInstructions({
+  state,
+  embedded,
+}: {
+  readonly state: BookingActionState;
+  readonly embedded: boolean;
+}) {
   const checkout = state.booking?.checkoutUrl;
   const bank = state.booking?.bankInstructions;
   return (
     <>
+      {checkout && embedded ? <p className="ice-hint">{BOOKING_UI.EMBEDDED_PAYMENT_NOTE}</p> : null}
       {checkout ? (
         <a
           className="liquid-ice-button ice-result-link"

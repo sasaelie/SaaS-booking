@@ -17,6 +17,7 @@ export function proxy(request: NextRequest) {
     request.nextUrl.pathname,
     process.env['NEXT_PUBLIC_APP_URL'] ?? '',
     process.env.NODE_ENV === 'development',
+    process.env['PUBLIC_BOOKING_URL'],
   );
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(SECURITY.NONCE_HEADER, nonce);

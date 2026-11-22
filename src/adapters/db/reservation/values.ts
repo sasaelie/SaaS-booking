@@ -56,6 +56,7 @@ function pricingSnapshot(activity: InsertContext['activity'], remaining: number,
     commercialQuote({
       plan: activity.commercialPlan ?? COMMERCIAL.PRO,
       amountCents: mode === 'NONE' ? 0 : remaining,
+      paymentMode: mode,
     }),
   );
   return {

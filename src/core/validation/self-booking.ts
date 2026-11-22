@@ -2,7 +2,9 @@ import { HueSchema } from './appearance';
 import { z } from 'zod';
 import { BOOKING_STATUSES } from '../../config/constants';
 import { ParticipantTicketSchema } from './participant';
+import { CancellationPreviewSchema } from './cancellation-preview';
 export const SelfBookingContextSchema = z.object({
+  cancellationPreview: CancellationPreviewSchema.nullable().optional(),
   ticket: ParticipantTicketSchema.nullable().optional(),
   participantHue: HueSchema.nullable().optional(),
   organizationSlug: z.string(),

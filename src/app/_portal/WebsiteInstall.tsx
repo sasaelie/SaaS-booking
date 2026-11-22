@@ -1,6 +1,7 @@
 'use client';
 import { useId, useState } from 'react';
-import { EMBED, SHARE_UI } from '../../config/constants';
+import { SHARE_UI } from '../../config/constants';
+import { embedInstallCode } from '../../lib/embed-install-code';
 import { CopyCode } from './CopyCode';
 export function WebsiteInstall({
   appUrl,
@@ -11,7 +12,7 @@ export function WebsiteInstall({
 }) {
   const [floating, setFloating] = useState(false);
   const id = useId();
-  const code = `<script src="${appUrl}/widget.js?v=${EMBED.CATALOG_VERSION}" data-organization="${slug}" data-mode="${floating ? 'floating' : 'inline'}" defer></script>`;
+  const code = embedInstallCode(appUrl, slug, floating ? 'floating' : 'inline');
   return (
     <>
       <fieldset className="sharing-placement">

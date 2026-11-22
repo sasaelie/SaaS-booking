@@ -2,7 +2,12 @@ import { expect, it } from 'vitest';
 import { sql, eq } from 'drizzle-orm';
 import { db } from './database';
 import { withVoucher, past, repository, secret } from './participant-fixtures';
-import { rescheduleVouchers } from '../../src/adapters/db/schema';
+import {
+  rescheduleVouchers,
+  bookings,
+  sessions,
+  financialEntries,
+} from '../../src/adapters/db/schema';
 import { required } from '../../src/adapters/db/transaction';
 import { mailContent } from '../../src/adapters/jobs/mail-content';
 it('provides a new code for a newly awarded credit without reviving a closed code or session', async () => {
@@ -13,6 +18,9 @@ it('provides a new code for a newly awarded credit without reviving a closed cod
     .update(rescheduleVouchers)
     .set({ status: 'USED_FOR_EXTERNAL_BENEFIT', usedAt: new Date() })
     .where(eq(rescheduleVouchers.id, setup.voucher.id));
+  await db.execute(
+    sql`UPDATE booking_access_credentials SET closed_at=now() WHERE booking_id=${setup.booking.bookingId}`,
+  );
   expect((await repository().authorizeCode(setup.ticket.code, new Date())).ok).toBe(false);
   const credit = await awardCredit(setup);
   const ticket = required(await repository().ticket({ ...setup.payload, version: 1 }, new Date()));
@@ -56,4 +64,34 @@ async function awardCredit(setup: Awaited<ReturnType<typeof withVoucher>>) {
     })
     .returning();
   return credit;
+}
+it('rotates an automatically closed code before granting a new credit after the recovery period', async () => {
+  const setup = await withVoucher();
+  await ageSettledBooking(setup);
+  expect((await repository().authorizeCode(setup.ticket.code, new Date())).ok).toBe(false);
+  const before = await db.execute(
+    sql`SELECT closed_at FROM booking_access_credentials WHERE booking_id=${setup.booking.bookingId}`,
+  );
+  expect(before.rows[0]?.['closed_at']).toBeNull();
+  await awardCredit(setup);
+  const ticket = required(await repository().ticket({ ...setup.payload, version: 1 }, new Date()));
+  expect(ticket?.code).not.toBe(setup.ticket.code);
+  expect((await repository().authorizeCode(setup.ticket.code, new Date())).ok).toBe(false);
+  expect(ticket?.code && (await repository().authorizeCode(ticket.code, new Date())).ok).toBe(true);
+});
+async function ageSettledBooking(setup: Awaited<ReturnType<typeof withVoucher>>) {
+  const old = new Date(Date.now() - 60 * 86400000);
+  await db
+    .update(rescheduleVouchers)
+    .set({ status: 'USED_FOR_EXTERNAL_BENEFIT', usedAt: old })
+    .where(eq(rescheduleVouchers.id, setup.voucher.id));
+  await db
+    .update(bookings)
+    .set({ paidAt: old, cancelledAt: old })
+    .where(eq(bookings.id, setup.booking.bookingId));
+  await db.update(financialEntries).set({ createdAt: old });
+  await db
+    .update(sessions)
+    .set({ startsAt: new Date(old.getTime() - 3600000), endsAt: old })
+    .where(eq(sessions.id, setup.booking.sessionId));
 }
