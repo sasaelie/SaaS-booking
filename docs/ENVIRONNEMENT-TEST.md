@@ -99,7 +99,7 @@ La publication est enregistrée dans `booking_public_test.publication` et vérif
 
 L’infrastructure `publication.sql` synchronise uniquement l’organisation concernée. `publication-upgrade.sql` permet aux politiques RLS de sélectionner plusieurs organisations explicitement publiées. Les fonctions restent SECURITY INVOKER avec search_path fixé et sans droit d’exécution pour le rôle public. Celui-ci ne peut ni publier une organisation ni modifier la liste des publications. Le contrôle des routes publiques refuse toujours les accès organisateur, administrateur et inscription ; les catalogues non publiés retournent 404.
 
-Vérification reproductible : `tests/public-test/self-service.ts` pour consentement, propriété, deux publications indépendantes et synchronisation des prix ; `tests/e2e/publication-self-service.spec.ts` pour activation, copie du lien et du script et largeurs 320/390/768/1440. Les scénarios publics vérifient ensuite réservation, paiement simulé, billet, PDF, accès par code et retour au site hôte.
+Vérification reproductible : `tests/public-test/self-service.ts` pour consentement, propriété, deux publications indépendantes et synchronisation des prix ; `tests/publication/publication-self-service.spec.ts` (commande `npx playwright test --config playwright.publication.config.ts`) pour activation, copie du lien et du script et largeurs 320/390/768/1440. Les scénarios publics vérifient ensuite réservation, paiement simulé, billet, PDF, accès par code et retour au site hôte.
 
 ## Base de code destinée au lancement
 
