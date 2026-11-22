@@ -20,12 +20,11 @@ export function dispatchPortal(
       return services.connect.authorize(command.input);
     case 'platform-stripe':
       return services.connect.platform(command.input);
+    case 'publish-test-booking':
     case 'update-activity':
-      return services.management.update(command.input);
     case 'publish-activity':
-      return services.management.publish(command.input);
     case 'add-session':
-      return services.management.addSession(command.input);
+      return dispatchManagement(services, command);
     case 'create-organization':
       return services.organizations.create(command.input);
     case 'create-activity':
@@ -40,5 +39,24 @@ export function dispatchPortal(
       return services.platform.suspend(command.input);
     case 'subscription':
       return services.subscription.execute(command.input);
+  }
+}
+
+function dispatchManagement(
+  services: PortalServices,
+  command: Extract<
+    PortalCommand,
+    { action: 'publish-test-booking' | 'update-activity' | 'publish-activity' | 'add-session' }
+  >,
+) {
+  switch (command.action) {
+    case 'publish-test-booking':
+      return services.publication.publish(command.input);
+    case 'update-activity':
+      return services.management.update(command.input);
+    case 'publish-activity':
+      return services.management.publish(command.input);
+    case 'add-session':
+      return services.management.addSession(command.input);
   }
 }

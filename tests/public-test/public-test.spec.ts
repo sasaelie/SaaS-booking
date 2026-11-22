@@ -110,6 +110,8 @@ test('private routes, other tenants and email recovery are unavailable on the pu
 }) => {
   for (const path of [
     '/app',
+    '/inscription',
+    '/compte',
     '/plateforme',
     '/apercu-site',
     '/api/auth/get-session',

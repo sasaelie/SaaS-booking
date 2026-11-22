@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
 import { EnvironmentSchema } from '../../src/config/env';
-import { PUBLIC_TEST, publicTestPath } from '../../src/config/public-test';
+import { PUBLIC_TEST, publicTestPath, publicTestCatalogSlug } from '../../src/config/public-test';
 import { bookingPublication } from '../../src/config/booking-publication';
 import { publicTestBooking } from '../../src/core/validation/public-test';
 const organizationId = '9006c789-25a0-4455-8adb-0e8d17ba192b';
@@ -18,9 +18,11 @@ const env = {
   NEXT_PUBLIC_APP_URL: 'https://demo.example.com',
   SELF_CANCEL_HMAC_SECRET: 'a'.repeat(32),
 };
-it('allows only the selected catalog and participant capabilities', () => {
+it('allows catalog routes for explicitly published organizations and participant capabilities', () => {
   for (const path of [
     '/studio-test',
+    '/another-org',
+    '/embed/another-org',
     '/embed/studio-test',
     '/studio-test/7d46bb31-ef6b-4a59-89c8-f8163691d234',
     '/widget.js',
@@ -32,14 +34,15 @@ it('allows only the selected catalog and participant capabilities', () => {
     expect(publicTestPath(path, settings)).toBe(true);
   for (const path of [
     '/app',
+    '/inscription',
+    '/mot-de-passe-oublie',
+    '/compte',
     '/plateforme',
     '/apercu-site',
     '/api/auth/sign-up/email',
     '/api/jobs',
     '/api/portal/activities',
     '/api/simulation/x',
-    '/another-org',
-    '/embed/another-org',
     '/api/participant/recover',
     '/embed/studio-test/%2e%2e/app',
     '/api/self-service/../auth',
@@ -115,4 +118,11 @@ it('accepts only an HTTPS origin without credentials, fragments or script attrib
   expect(EnvironmentSchema.safeParse({ ...base, PUBLIC_BOOKING_URL: undefined }).success).toBe(
     false,
   );
+});
+
+it('checks catalog publication before streaming without intercepting participant capabilities', () => {
+  expect(publicTestCatalogSlug('/embed/another-org')).toBe('another-org');
+  expect(publicTestCatalogSlug('/new-org/7d46bb31-ef6b-4a59-89c8-f8163691d234')).toBe('new-org');
+  for (const path of ['/manage', '/connexion', '/app', '/api/participant/exchange', '/widget.js'])
+    expect(publicTestCatalogSlug(path)).toBeNull();
 });

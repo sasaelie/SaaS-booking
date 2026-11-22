@@ -1,5 +1,6 @@
 import { z } from 'zod';
 export const PortalCommandSchema = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('publish-test-booking'), input: z.unknown() }),
   z.object({ action: z.literal('record-offline-payment'), input: z.unknown() }),
   z.object({ action: z.literal('platform-cost'), input: z.unknown() }),
   z.object({ action: z.literal('redeem-online-voucher'), input: z.unknown() }),

@@ -7,13 +7,16 @@ import { CopyCode } from './CopyCode';
 import { SharingModes } from './SharingModes';
 import { WebsiteSharing } from './WebsiteSharing';
 import { PUBLIC_TEST } from '../../config/public-test';
+import { TestBookingPublication } from './TestBookingPublication';
 import { STAGING } from '../../config/staging';
 type Props = {
   readonly data: PortalOverview;
   readonly appUrl: string;
   readonly published?: boolean;
+  readonly activationRequired?: boolean;
 };
-export function SharePanel({ data, appUrl, published = false }: Props) {
+export function SharePanel({ data, appUrl, published = false, activationRequired = false }: Props) {
+  if (activationRequired) return <TestBookingPublication organizationId={data.organization.id} />;
   const pro = canUsePro(data.organization.access, new Date());
   const privatePreview = process.env['APP_ENVIRONMENT'] === STAGING.MODE && !published;
   return (

@@ -68,7 +68,8 @@ async function publication() {
     const before = await admin.query('SELECT count(*)::int AS count FROM public.bookings');
     const row = (
       await admin.query(
-        'SELECT id,organization_id FROM booking_public_test.activities WHERE is_active AND organization_id=(SELECT organization_id FROM booking_public_test.publication) LIMIT 1',
+        'SELECT id,organization_id FROM booking_public_test.activities WHERE is_active AND organization_id=$1 LIMIT 1',
+        [process.env['PUBLIC_TEST_ORGANIZATION_ID']],
       )
     ).rows[0];
     assert.ok(row);

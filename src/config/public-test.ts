@@ -34,14 +34,46 @@ export function publicTestPath(path: string, settings: Settings) {
     path.includes('\\')
   )
     return false;
+  const organization = '[a-z0-9]+(?:-[a-z0-9]+)*';
+  const segment = path.replace(/^\/embed\//, '/').split('/')[1];
   const activity = '[0-9a-f-]{36}';
   return (
-    new RegExp(`^/(?:embed/)?${slug}(?:/${activity})?$`).test(path) ||
-    new RegExp(`^/api/branding/${organizationId}/(?:logo|background)$`).test(path) ||
+    (new RegExp(`^/(?:embed/)?${organization}(?:/${activity})?$`).test(path) &&
+      !PUBLIC_TEST_RESERVED.includes(segment ?? '')) ||
+    new RegExp(`^/api/branding/${activity}/(?:logo|background)$`).test(path) ||
     /^\/api\/(?:self-service(?:\/context)?|voucher-quote|participant\/(?:exchange|test\/(?:context|cancel)))$/.test(
       path,
     ) ||
     ['/connexion', '/manage', '/widget.js', '/favicon.ico', '/robots.txt'].includes(path) ||
     /^\/(?:_next\/(?:static|image)|fonts|images)\//.test(path)
   );
+}
+
+const PUBLIC_TEST_RESERVED = [
+  'app',
+  'plateforme',
+  'apercu-site',
+  'apercu-site-prive',
+  'api',
+  'simulation',
+  'embed',
+  'compte',
+  'inscription',
+  'mot-de-passe-oublie',
+  'nouveau-mot-de-passe',
+  'booking-result',
+  'apercu-chargement',
+  'accessibilite',
+  'confidentialite',
+  'mentions-legales',
+  'conditions',
+  'faq',
+  'contact',
+];
+
+export function publicTestCatalogSlug(path: string) {
+  const slug = path.match(/^\/(?:embed\/)?([a-z0-9]+(?:-[a-z0-9]+)*)(?:\/[0-9a-f-]{36})?$/)?.[1];
+  return slug && !PUBLIC_TEST_RESERVED.includes(slug) && !['connexion', 'manage'].includes(slug)
+    ? slug
+    : null;
 }
