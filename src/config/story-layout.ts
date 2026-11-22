@@ -6,7 +6,7 @@ export const STORY_LAYOUT = {
   LONG_TITLE_LENGTH: 60,
   DEFAULT: { title: { x: 0, y: 15 }, price: { x: 0, y: 95 } },
   TITLE: 'Position du titre et du tarif',
-  HINT: 'Déplacez les poignées dans l’encart. Les flèches du clavier et les curseurs permettent aussi un placement précis.',
+  HINT: 'Déplacez les poignées dans l’encart. Les flèches du clavier et les curseurs permettent aussi un placement précis. Le catalogue de plusieurs activités aligne automatiquement les textes pour rester lisible.',
   NAME: 'Nom et tarif de l’activité',
   ACTIVITY: 'Activité de l’aperçu',
   EDIT: 'Modifier le nom et le tarif',
