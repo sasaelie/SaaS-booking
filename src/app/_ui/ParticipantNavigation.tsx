@@ -14,6 +14,7 @@ export async function ParticipantNavigation({
   readonly from?: string;
   readonly catalog?: boolean;
 }) {
+  if (publicTestEnabled() && catalog) return null;
   const services = publicTestEnabled() ? null : portal(new Headers(await headers()));
   const organization = services?.ok ? await services.value.organizations.get(organizationId) : null;
   const own = organization?.ok;

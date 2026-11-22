@@ -10,6 +10,8 @@ test('books a newly published organization without changing the deployment or mi
   test.skip(!slug, 'The multi-organization fixture is prepared by self-service.ts.');
   if (!slug || !baseURL) throw Error('Public TEST fixture required');
   expect(slug).not.toBe(process.env['PUBLIC_TEST_ORGANIZATION_SLUG']);
+  await page.goto(`/${slug}`);
+  await expect(page.locator('.participant-navigation a[href="/"]')).toHaveCount(0);
   const site = await externalWebsite({ slug }, 'inline', baseURL);
   try {
     await page.goto(site.url);
