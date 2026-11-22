@@ -80,6 +80,7 @@ export const EMBED = {
   CATALOG_VERSION: 4,
   FLOATING_HEIGHT: 'min(720px, calc(90vh - 88px))',
   BUTTON_RADIUS: '8px',
+  SURFACE_RADIUS: '22px',
   RESIZE_TYPE: 'booking-widget:resize',
   RETURN_TYPE: 'booking-widget:return',
   RETURN_SITE: 'Terminer et revenir au site',
