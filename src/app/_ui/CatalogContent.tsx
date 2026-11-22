@@ -13,6 +13,7 @@ import { PortalHeading } from '../_portal/PortalHeading';
 import { PortalEmpty } from '../_portal/PortalEmpty';
 import { formatMoney } from './format-money';
 import { StoryCanvas } from './StoryCanvas';
+import { CATALOG_LAYOUT } from '../../config/catalog-layout';
 export function CatalogContent({
   data,
   simulationId,
@@ -48,31 +49,42 @@ function CatalogActivities({
   readonly simulationId?: string;
   readonly embedded?: boolean;
 }) {
+  const compact = data.activities.length > 1;
   return (
-    <div className="portal-cards catalog-grid">
-      {data.activities.map((activity) => (
-        <CatalogCard
-          key={activity.id}
-          data={data}
-          activity={activity}
-          simulationId={simulationId}
-          embedded={embedded}
-        />
-      ))}
+    <div className="catalog-layout">
+      <div
+        className="portal-cards catalog-grid"
+        data-density={compact ? 'compact' : 'poster'}
+        data-columns={
+          data.activities.length >= CATALOG_LAYOUT.THREE_COLUMN_MIN_ACTIVITIES ? 'three' : 'two'
+        }
+      >
+        {data.activities.map((activity) => (
+          <CatalogCard
+            key={activity.id}
+            data={data}
+            activity={activity}
+            simulationId={simulationId}
+            embedded={embedded}
+            compact={compact}
+          />
+        ))}
+      </div>
     </div>
   );
 }
 interface CatalogCardProps {
+  readonly compact: boolean;
   readonly data: PublicCatalog;
   readonly activity: PublicCatalog['activities'][number];
   readonly simulationId?: string;
   readonly embedded?: boolean;
 }
-function CatalogCard({ data, activity, simulationId, embedded }: CatalogCardProps) {
+function CatalogCard({ data, activity, simulationId, embedded, compact }: CatalogCardProps) {
   const content = (
     <>
       <span className="portal-badge">{AUDIENCE_LABELS[activity.audiencePolicy]}</span>
-      {data.storyLayout ? (
+      {data.storyLayout && !compact ? (
         <StoryCanvas
           layout={data.storyLayout}
           title={activity.name}
@@ -85,7 +97,7 @@ function CatalogCard({ data, activity, simulationId, embedded }: CatalogCardProp
         <p className="portal-muted catalog-description">{activity.description}</p>
       ) : null}
       <div className="catalog-booking-action">
-        {!data.storyLayout ? (
+        {!data.storyLayout || compact ? (
           <strong className="catalog-price">
             {formatMoney(activity.priceCents, activity.currency)}
           </strong>
